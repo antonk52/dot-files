@@ -1,0 +1,1 @@
+Here some of the aliases that I use on a daily basis on my personal mac and work linux machines.
