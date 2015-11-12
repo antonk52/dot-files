@@ -12,6 +12,7 @@ alias desk='cd ~/Desktop'
 alias docs='cd ~/Documents'
 
 # github
+alias g='git'
 alias gi='git init'
 alias ga='git add'
 alias gcl='git clone'
