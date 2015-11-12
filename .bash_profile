@@ -10,6 +10,7 @@ alias ....='cd ../../..'
 alias gd='cd ~/Google\ Drive/'
 alias desk='cd ~/Desktop'
 alias docs='cd ~/Documents'
+alias compare='diff -rq'
 
 # github
 alias g='git'
@@ -20,8 +21,8 @@ alias gs='git status'
 alias gc='git commit -m'
 alias gac='git add . && git commit -m'
 alias gt='git tag'
-alias go='git checkout'
-alias gl='git --no-pager log --oneline --decorate --graph --all'
+alias go='git checkout
+remin'alias gl='git --no-pager log --oneline --decorate --graph --all'
 
 # other aliases
 alias o='open .'
