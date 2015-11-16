@@ -25,10 +25,13 @@ alias go='git checkout'
 alias gp='git push'
 alias gl='git --no-pager log --oneline --decorate --graph --all'
 
+# npm aliases
+alias npminit='npm init --yes'
+alias gulpc='gulp --require coffee-script/register'
+
 # other aliases
 alias o='open .'
 alias h='history'
 alias q='quit'
 alias settings='subl ~/.bashrc'
-alias gulpc='gulp --require coffee-script/register'
 alias ssh-username='ssh -p 1234 username@example.com'
