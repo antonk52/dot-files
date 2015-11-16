@@ -21,8 +21,9 @@ alias gs='git status'
 alias gc='git commit -m'
 alias gac='git add . && git commit -m'
 alias gt='git tag'
-alias go='git checkout
-remin'alias gl='git --no-pager log --oneline --decorate --graph --all'
+alias go='git checkout'
+alias gp='git push'
+alias gl='git --no-pager log --oneline --decorate --graph --all'
 
 # other aliases
 alias o='open .'
