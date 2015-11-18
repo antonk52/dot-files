@@ -29,6 +29,7 @@ alias gCurrentProject='git clone https://github.com/currentproject.git'
 
 # npm aliases
 alias npminit='npm init --yes'
+alias ni='npm install'
 alias gulpc='gulp --require coffee-script/register'
 
 # other aliases
