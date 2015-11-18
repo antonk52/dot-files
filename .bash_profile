@@ -25,6 +25,8 @@ alias go='git checkout'
 alias gp='git push'
 alias gl='git --no-pager log --oneline --decorate --graph --all'
 
+alias gCurrentProject='git clone https://github.com/currentproject.git'
+
 # npm aliases
 alias npminit='npm init --yes'
 alias gulpc='gulp --require coffee-script/register'
