@@ -34,6 +34,9 @@ alias npminit='npm init --yes'
 alias ni='npm install'
 alias gulpc='gulp --require coffee-script/register'
 
+# ubuntu aliases
+alias update='sudo apt-get update && sudo apt-get upgrade && sudo apt-get dist-upgrade'
+
 # other aliases
 alias s='sudo'
 alias e='exit'
