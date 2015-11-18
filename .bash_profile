@@ -11,6 +11,8 @@ alias gd='cd ~/Google\ Drive/'
 alias desk='cd ~/Desktop'
 alias docs='cd ~/Documents'
 alias compare='diff -rq'
+# follow path and show content
+cl () { cd $@ && ls -F; }
 
 # github
 alias g='git'
