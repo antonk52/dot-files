@@ -35,6 +35,8 @@ alias ni='npm install'
 alias gulpc='gulp --require coffee-script/register'
 
 # other aliases
+alias s='sudo'
+alias e='exit'
 alias o='open .'
 alias h='history'
 alias q='quit'
