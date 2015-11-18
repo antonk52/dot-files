@@ -44,4 +44,5 @@ alias o='open .'
 alias h='history'
 alias q='quit'
 alias settings='subl ~/.bashrc'
+alias myip="curl http://ipecho.net/plain; echo"
 alias ssh-username='ssh -p 1234 username@example.com'
