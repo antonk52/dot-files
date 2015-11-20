@@ -45,6 +45,7 @@ alias e='exit'
 alias o='open .'
 alias h='history'
 alias q='quit'
+alias js='jekyll serve'
 # see which currently running apps are using most of your RAM
 alias memory='top -o MEM'
 alias settings='subl ~/.bashrc'
