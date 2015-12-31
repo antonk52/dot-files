@@ -31,9 +31,10 @@ alias gl='git --no-pager log --oneline --decorate --graph --all'
 
 alias gCurrentProject='git clone https://github.com/currentproject.git'
 
-# npm aliases
+# node aliases
+alias nm='nodemon'
 alias npminit='npm init --yes'
-alias ni='sudo npm install'
+alias sni='sudo npm install'
 alias gulpc='gulp --require coffee-script/register'
 
 # ubuntu aliases
