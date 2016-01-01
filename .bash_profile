@@ -10,6 +10,8 @@ alias ....='cd ../../..'
 alias gd='cd ~/Google\ Drive/'
 alias desk='cd ~/Desktop'
 alias docs='cd ~/Documents'
+alias mamp='cd ~/Documents/mamp'
+alias nodef='cd ~/Documents/node'
 alias compare='diff -rq'
 # follow path and show content
 cl () { cd $@ && ls -F; }
