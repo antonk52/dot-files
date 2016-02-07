@@ -54,6 +54,8 @@ alias sl='pmset sleepnow'
 alias js='jekyll serve'
 alias jb='jekyll build'
 alias jn='jekyll new'
+alias tar='tar -zcvf'
+alias untar='tar -zxvf'
 # see which currently running apps are using most of your RAM
 alias memory='top -o MEM'
 alias settings='subl ~/.bashrc'
