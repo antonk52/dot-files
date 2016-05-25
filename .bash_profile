@@ -41,6 +41,10 @@ alias npminit='npm init --yes'
 alias sni='sudo npm install'
 alias gulpc='gulp --require coffee-script/register'
 
+# FIX PHP MAMP for WP-CLI
+export PATH=/Applications/MAMP/bin/php/php5.6.10/bin:$PATH
+export PATH=$PATH:/Applications/MAMP/Library/bin/
+
 # linux aliases
 alias agi='sudo apt-get install'
 alias update='sudo apt-get update && sudo apt-get upgrade && sudo apt-get dist-upgrade'
