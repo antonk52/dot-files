@@ -41,6 +41,37 @@ alias npminit='npm init --yes'
 alias sni='sudo npm install'
 alias gulpc='gulp --require coffee-script/register'
 
+# wordpress
+alias wpi='wp plugin install'
+alias wpa='wp plugin activate'
+alias wpd='wp plugin delete'
+alias wpu='wp plugin update'
+alias wps='wp plugin status'
+
+alias wti='wp theme install'
+alias wta='wp theme activate'
+alias wtd='wp theme delete'
+alias wtu='wp theme update'
+alias wts='wp theme status'
+
+alias wpreimg='wp media regenerate'
+
+newwp() { mkdir $1;
+          cd $1;
+          wp core download;
+          wp core config --dbname=wp-$1 --dbuser=root --dbpass=root --dbhost=localhost --dbprefix=wp_;
+          wp db create wp_$1;
+          wp core install --url=http://localhost  --title="$1" --admin_user=local --admin_password=local --admin_email="admin@example.com";
+          wp theme delete twentyfourteen;
+          wp plugin delete akismet;
+          wp plugin install updraftplus wp-smushit woocommerce what-the-file;
+        }
+alias newwp='newwp '
+
+alias wpdevisover='wpi google-sitemap-generator google-analytics-dashboard-for-wp wordpress-seo --activate'
+
+alias updatewp='wp db export backup.sql; wp core update; wp core update-db;'
+
 # FIX PHP MAMP for WP-CLI
 export PATH=/Applications/MAMP/bin/php/php5.6.10/bin:$PATH
 export PATH=$PATH:/Applications/MAMP/Library/bin/
