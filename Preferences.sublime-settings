@@ -1,0 +1,31 @@
+{
+  "bold_folder_labels": true,
+  "caret_extra_width": 0,
+  "caret_style": "wide",
+  "color_scheme": "Packages/User/Color Highlighter/themes/base16-ocean.dark (SL).tmTheme",
+  "draw_white_space": "all",
+  "enable_tab_scrolling": false,
+  "folder_exclude_patterns":
+  [
+    ".DS_Store",
+    ".svn",
+    ".git",
+    ".hg",
+    "CVS",
+    "node_modules"
+  ],
+  "font_size": 13,
+  "ignored_packages":
+  [
+  ],
+  "scroll_past_end": true,
+  "spacegray_sidebar_tree_normal": true,
+  "spacegray_tabs_auto_width": false,
+  "spacegray_tabs_font_normal": true,
+  "spacegray_tabs_large": true,
+  "tab_size": 2,
+  "theme": "Spacegray.sublime-theme",
+  "translate_tabs_to_spaces": true,
+  "update_check": false,
+  "word_wrap": "true"
+}
