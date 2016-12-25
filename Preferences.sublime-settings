@@ -1,8 +1,26 @@
 {
+  "binary_file_patterns":
+  [
+    "*.jpg",
+    "*.jpeg",
+    "*.png",
+    "*.gif",
+    "*.ttf",
+    "*.tga",
+    "*.dds",
+    "*.ico",
+    "*.eot",
+    "*.pdf",
+    "*.swf",
+    "*.jar",
+    "*.zip",
+    "vendor/**",
+    "node_modules/**"
+  ],
   "bold_folder_labels": true,
   "caret_extra_width": 0,
   "caret_style": "wide",
-  "color_scheme": "Packages/User/Color Highlighter/themes/base16-ocean.dark (SL).tmTheme",
+  "color_scheme": "Packages/User/SublimeLinter/base16-ocean.dark (SL).tmTheme",
   "draw_white_space": "all",
   "enable_tab_scrolling": false,
   "folder_exclude_patterns":
@@ -12,13 +30,42 @@
     ".git",
     ".hg",
     "CVS",
-    "node_modules"
+    "node_modules/**"
   ],
-  "font_size": 13,
+  "font_size": 16,
   "ignored_packages":
   [
+    "ColorHighlighter"
+  ],
+  "installed_packages":
+  [
+    "AutoFileName",
+    "Base16",
+    "Better CoffeeScript",
+    "ChangeQuotes",
+    "CoffeeAngular",
+    "ColorHighlighter",
+    "ColorPicker",
+    "EasyMostion",
+    "EditorConfig",
+    "EJS 2",
+    "Emmet",
+    "Git",
+    "Handlebars",
+    "HTML-CSS-JS Prettify",
+    "JavaScript & NodeJS Snippets",
+    "jQuery Snippets for Coffeescript",
+    "jQuery Snippets pack",
+    "JS Snippets",
+    "Sass",
+    "SASS Snippets",
+    "SideBarEnhancements",
+    "SublimeLinter",
+    "Syntax Highlghting for Sass",
+    "WordPress"
   ],
   "scroll_past_end": true,
+  "show_definitions": false,
   "spacegray_sidebar_tree_normal": true,
   "spacegray_tabs_auto_width": false,
   "spacegray_tabs_font_normal": true,
