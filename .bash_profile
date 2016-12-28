@@ -85,7 +85,7 @@ alias agi='sudo apt-get install'
 alias update='sudo apt-get update && sudo apt-get upgrade && sudo apt-get dist-upgrade'
 
 # other aliases
-alias s='sudo'
+alias s='subl'
 alias e='exit'
 alias o='open .'
 alias h='history'
@@ -98,6 +98,7 @@ alias jn='jekyll new'
 alias tar='tar -zcvf'
 alias untar='tar -zxvf'
 alias ps='python -m SimpleHTTPServer 8088'
+alias please='sudo !!'
 # see which currently running apps are using most of your RAM
 alias memory='top -o MEM'
 alias settings='subl ~/.bashrc'
