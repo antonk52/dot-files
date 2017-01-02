@@ -4,6 +4,7 @@ alias la='ls -A'
 alias l='ls -CF'
 
 # directory manipulation
+alias ~='cd ~'
 alias ..='cd ..'
 alias ...='cd ../..'
 alias ....='cd ../../..'
