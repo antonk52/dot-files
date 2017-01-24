@@ -23,6 +23,7 @@ cl () { cd $@ && ls -F; }
 alias g='git'
 alias gi='git init'
 alias ga='git add'
+alias gap='git add -p'
 alias gd='git diff'
 alias gcl='git clone'
 alias gs='git status'
