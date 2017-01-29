@@ -47,6 +47,7 @@ alias nl2='npm list --depth=2'
 alias listnodes='ps -e|grep node'
 alias sni='sudo npm install'
 alias gulpc='gulp --require coffee-script/register'
+alias nodec='node --require coffee-script/register'
 
 # wordpress
 alias wpi='wp plugin install'
