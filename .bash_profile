@@ -48,6 +48,8 @@ alias listnodes='ps -e|grep node'
 alias sni='sudo npm install'
 alias gulpc='gulp --require coffee-script/register'
 alias nodec='node --require coffee-script/register'
+# current project quick start
+alias PROJECTNAME='cd ~/path/to/PROJECTNAME/ && subl . && gulp build && DEBUG=PROJECTNAME:* npm start'
 
 # wordpress
 alias wpi='wp plugin install'
