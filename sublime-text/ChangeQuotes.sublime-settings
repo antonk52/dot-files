@@ -1,0 +1,27 @@
+{
+  "debug": false,
+  "lists": {
+    "default": {
+      "quotes": [["'", "\""]]
+    },
+    "source.js": {
+      "quotes": [["'", "\"", "`"]]
+    },
+    "source.json": {
+      "quotes": [["\""]]
+    },
+    "source.coffee": {
+      "quotes": [["'", "\""], ["'''", "\"\"\""]]
+    },
+    "source.litcoffee": {
+      "quotes": [["'", "\""], ["'''", "\"\"\""]]
+    },
+    "source.python": {
+      "prefixes": [
+        "r", "u", "ur", "R", "U", "UR", "Ur", "uR",
+        "b", "B", "br", "Br", "bR", "BR"
+      ],
+      "quotes": [["'", "\""], ["'''", "\"\"\""]]
+    }
+  }
+}

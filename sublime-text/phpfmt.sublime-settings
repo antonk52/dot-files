@@ -1,0 +1,6 @@
+{
+	"DoubleToSingleQuote": false,
+	"format_on_save": false,
+	"php_bin": "/usr/local/php5/bin/php",
+	"version": 1
+}

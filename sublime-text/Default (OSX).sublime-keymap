@@ -1,0 +1,59 @@
+[
+{
+    "keys": ["ctrl+c"],
+    "command": "run_macro_file",
+    "args":
+    {
+        "file": "Packages/User/consolelog.sublime-macro"
+    }
+},
+{
+    "keys": ["ctrl+a"],
+    "command": "change_quotes"
+},
+{
+    "keys": ["ctrl+n"],
+    "command": "toggle_side_bar"
+},
+{
+    "context": [
+    {
+        "operand": "source.css, source.less, source.scss, source.postcss, text.xml, text.html - source, text.jsx - source"
+    }]
+},
+{
+    "keys": ["ctrl+shift+h"],
+    "command": "fmt_now",
+    "context": [
+    {
+        "key": "selector",
+        "operator": "equal",
+        "operand": "source.php"
+    }]
+},
+{
+    "keys": ["ctrl+p"],
+    "command": "show_overlay",
+    "args":
+    {
+        "overlay": "goto",
+        "show_files": true
+    }
+},
+{
+    "keys": ["tab"],
+    "command": "expand_abbreviation_by_tab",
+    "context": [
+    {
+        "operand": "source.js.jsx",
+        "operator": "equal",
+        "match_all": true,
+        "key": "selector"
+    },
+    {
+        "key": "selection_empty",
+        "operator": "equal",
+        "operand": true,
+        "match_all": true
+    }]
+}]
