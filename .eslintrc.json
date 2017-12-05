@@ -3,7 +3,8 @@
         "browser": true,
         "commonjs": true,
         "es6": true,
-        "node": true
+        "node": true,
+        "jquery": true
     },
     "extends": "eslint:recommended",
     "parserOptions": {
@@ -12,7 +13,8 @@
     "rules": {
         "indent": [
             "warn",
-            2
+            2,
+            {"SwitchCase": 1}
         ],
         "linebreak-style": [
             "error",
@@ -25,6 +27,10 @@
         "semi": [
             "error",
             "always"
+        ],
+        "max-len": [
+            "warn",
+            80
         ],
         "no-console": [
             "warn", {
