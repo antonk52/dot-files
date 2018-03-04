@@ -18,10 +18,14 @@ Plugin 'ervandew/supertab'
 Plugin 'Valloric/YouCompleteMe'
 " change surrounding chars
 Plugin 'tpope/vim-surround'
+" git gems
+Plugin 'tpope/vim-fugitive'
 " toggle comments duh
 Plugin 'scrooloose/nerdcommenter'
 " project file tree
 Plugin 'scrooloose/nerdtree'
+" file explorer from the current file
+Plugin 'tpope/vim-vinegar'
 " enahnced status line
 Plugin 'vim-airline/vim-airline'
 Plugin 'vim-airline/vim-airline-themes'
@@ -43,6 +47,8 @@ Plugin 'editorconfig/editorconfig-vim'
 Plugin 'maksimr/vim-jsbeautify'
 " quick html
 Plugin 'mattn/emmet-vim'
+" flowtype
+Plugin 'flowtype/vim-flow'
 "Plugin 'gko/vim-coloresque'
 
 " =========== syntax ===========
@@ -55,6 +61,7 @@ Plugin 'plasticboy/vim-markdown'
 Plugin 'maksimr/vim-yate'
 Plugin 'chase/vim-ansible-yaml'
 Plugin 'ap/vim-css-color'
+Plugin 'Yggdroot/indentLine'
 
 " themes
 Plugin 'flazz/vim-colorschemes'
@@ -67,7 +74,11 @@ syntax enable
 set background=dark
 
 " change gui font and size
-set guifont=Menlo:h15
+if has('gui_running')
+  set guifont=Menlo:h18
+else
+  set guifont=Menlo
+endif
 
 " highlight current cursor line
 set cursorline
@@ -87,7 +98,7 @@ let base16colorspace=256
 " only set color for gui vim
 " terminal vim inherits colors from the session
 if has('gui_running')
-  colorscheme base16-ocean
+  colorscheme base16-tomorrow-night
 endif
 
 " show current line number
@@ -163,10 +174,15 @@ autocmd Filetype javascript let &colorcolumn=join(range(121,999),",")
 " always show statusline
 set laststatus=2
 
+" enable mouse scroll and select
+set mouse=a
 
 "
 " ======================== Mapings ========================
 "
+
+let mapleader = ","
+
 
 " CTRL a - go to the command beggining
 cnoremap <C-a> <Home>
@@ -176,8 +192,10 @@ cnoremap <C-e> <End>
 " `<Tab>`/`<S-Tab>` to move between matches without leaving incremental search.
 " Note dependency on `'wildcharm'` being set to `<C-z>` in order for this to
 " work.
-cnoremap <expr> <Tab> getcmdtype() == '/' \|\| getcmdtype() == '?' ? '<CR>/<C-r>/' : '<C-z>'
-cnoremap <expr> <S-Tab> getcmdtype() == '/' \|\| getcmdtype() == '?' ? '<CR>?<C-r>/' : '<S-Tab>'
+" cnoremap <expr> <Tab> getcmdtype() == '/' \|\| getcmdtype() == '?' ? '<CR>/<C-r>/' : '<C-z>'
+" cnoremap <expr> <S-Tab> getcmdtype() == '/' \|\| getcmdtype() == '?' ? '<CR>?<C-r>/' : '<S-Tab>'
+cnoremap <expr> <C-n> getcmdtype() == '/' \|\| getcmdtype() == '?' ? '<CR>/<C-r>/' : '<C-z>'
+cnoremap <expr> <C-S-n> getcmdtype() == '/' \|\| getcmdtype() == '?' ? '<CR>?<C-r>/' : '<C-S-n>'
 
 " <Leader>p -- Show the path of the current file (mnemonic: path; useful when
 " you have a lot of splits and the status line gets truncated).
@@ -200,6 +218,12 @@ nnoremap <C-J> <C-W><C-J>
 nnoremap <C-K> <C-W><C-K>
 nnoremap <C-L> <C-W><C-L>
 nnoremap <C-H> <C-W><C-H>
+
+" ctrl shift j/k/l/h resize active split by 5
+nnoremap <leader>j <C-W>5-
+nnoremap <leader>k <C-W>5+
+nnoremap <leader>l <C-W>5>
+nnoremap <leader>h <C-W>5<
 
 " ctrl e to maximaze current window
 nnoremap <C-E> <C-W><C-_>
@@ -235,9 +259,9 @@ let g:EasyMotion_do_mapping = 0
 let g:EasyMotion_smartcase = 1
 " Leader is the prefix
 map <Leader> <Plug>(easymotion-prefix)
-"CTRL o - search
-nmap <C-o> <Plug>(easymotion-s)
 nmap § <Plug>(easymotion-s)
+" default mapping leader S to search for a letter
+nmap <Leader>s <Plug>(easymotion-s)
 
 " ======= ALE linting
 
@@ -283,3 +307,21 @@ let g:NERDCustomDelimiters = { 'javascript': { 'left': '// ','right': '' } }
 " runtimepath for fizzy search
 set runtimepath^=~/.vim/bundle/ctrlp.vim
 let g:ctrlp_custom_ignore = 'node_modules\|DS_Store\|git'
+
+" ======= Diminactive
+" bg color for inactive splits
+highlight ColorColumn ctermbg=0 guibg=#424949
+
+" ======= vim javascript
+" Enables syntax highlighting for Flow
+let g:javascript_plugin_flow = 1
+
+" ======= flow
+" Enables syntax highlighting for Flow
+let g:flow#showquickfix = 0
+nmap <leader>t <Esc>:FlowType<CR>
+
+" ======= indent line
+" do not show indent lines for help and nerdtree
+let g:indentLine_fileTypeExclude=['help']
+let g:indentLine_bufNameExclude=['NERD_tree.*']
