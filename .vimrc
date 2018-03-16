@@ -183,6 +183,10 @@ set mouse=a
 
 let mapleader = ","
 
+" leader c - copy to os clipboard
+vmap <leader>c "*y
+" leader v - paste from os clipboard
+map <leader>v "*p
 
 " CTRL a - go to the command beggining
 cnoremap <C-a> <Home>
