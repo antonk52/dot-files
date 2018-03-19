@@ -1,73 +1,69 @@
 set nocompatible
 filetype off
 
-set rtp+=~/.vim/bundle/Vundle.vim
-call vundle#begin()
-
-" to install plugins
-Plugin 'VundleVim/Vundle.vim'
+call plug#begin('~/.vim/plugged')
 
 " =========== essentials ===========
 " search in a project
-Plugin 'rking/ag.vim'
+Plug 'rking/ag.vim'
 " async linting
-Plugin 'w0rp/ale'
+Plug 'w0rp/ale'
 " tab completion
-Plugin 'ervandew/supertab'
+Plug 'ervandew/supertab'
 " word completion
-Plugin 'Valloric/YouCompleteMe'
+Plug 'Valloric/YouCompleteMe', { 'do': './install.py' }
 " change surrounding chars
-Plugin 'tpope/vim-surround'
+Plug 'tpope/vim-surround'
 " git gems
-Plugin 'tpope/vim-fugitive'
+Plug 'tpope/vim-fugitive'
 " toggle comments duh
-Plugin 'scrooloose/nerdcommenter'
+Plug 'scrooloose/nerdcommenter'
 " project file tree
-Plugin 'scrooloose/nerdtree'
+Plug 'scrooloose/nerdtree', { 'on':  'NERDTreeToggle' }
 " file explorer from the current file
-Plugin 'tpope/vim-vinegar'
+Plug 'tpope/vim-vinegar'
 " enahnced status line
-Plugin 'vim-airline/vim-airline'
-Plugin 'vim-airline/vim-airline-themes'
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
 " dims inactive splits
-Plugin 'blueyed/vim-diminactive'
+Plug 'blueyed/vim-diminactive'
 " search project by file path/name
-Plugin 'kien/ctrlp.vim'
+Plug 'kien/ctrlp.vim'
 " rapid code nav
-Plugin 'easymotion/vim-easymotion'
+Plug 'easymotion/vim-easymotion'
 " auto closes quotes and braces
-Plugin 'jiangmiao/auto-pairs'
+Plug 'jiangmiao/auto-pairs'
 " auto closes xml tags
-Plugin 'alvan/vim-closetag'
+Plug 'alvan/vim-closetag'
 " consistent coding style
-Plugin 'editorconfig/editorconfig-vim'
+Plug 'editorconfig/editorconfig-vim'
 
 " =========== front end ===========
 " format js
-Plugin 'maksimr/vim-jsbeautify'
+Plug 'maksimr/vim-jsbeautify', { 'for': 'javascript' }
 " quick html
-Plugin 'mattn/emmet-vim'
+Plug 'mattn/emmet-vim', { 'for': ['html', 'css', 'javascript'] }
 " flowtype
-Plugin 'flowtype/vim-flow'
-"Plugin 'gko/vim-coloresque'
+Plug 'flowtype/vim-flow', { 'for': 'javascript' }
+Plug 'gko/vim-coloresque'
 
 " =========== syntax ===========
-Plugin 'chriskempson/base16-vim'
-Plugin 'jelera/vim-javascript-syntax'
-Plugin 'kchmck/vim-coffee-script'
-Plugin 'mxw/vim-jsx'
-Plugin 'tpope/vim-liquid'
-Plugin 'plasticboy/vim-markdown'
-Plugin 'maksimr/vim-yate'
-Plugin 'chase/vim-ansible-yaml'
-Plugin 'ap/vim-css-color'
-Plugin 'Yggdroot/indentLine'
+Plug 'chriskempson/base16-vim'
+Plug 'jelera/vim-javascript-syntax'
+Plug 'kchmck/vim-coffee-script'
+Plug 'mxw/vim-jsx'
+Plug 'tpope/vim-liquid'
+Plug 'plasticboy/vim-markdown'
+Plug 'maksimr/vim-yate'
+Plug 'chase/vim-ansible-yaml'
+Plug 'ap/vim-css-color', { 'for': 'css' }
+Plug 'Yggdroot/indentLine'
 
 " themes
-Plugin 'flazz/vim-colorschemes'
+Plug 'flazz/vim-colorschemes'
 
-call vundle#end()            " required
-filetype plugin indent on    " required
+call plug#end()
+filetype plugin indent on
 
 " theme
 syntax enable
@@ -177,6 +173,8 @@ set laststatus=2
 " enable mouse scroll and select
 set mouse=a
 
+" Disaply quotes in json in all modes
+set conceallevel=0
 "
 " ======================== Mapings ========================
 "
