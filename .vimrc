@@ -28,7 +28,9 @@ Plug 'vim-airline/vim-airline-themes'
 " dims inactive splits
 Plug 'blueyed/vim-diminactive'
 " search project by file path/name
-Plug 'kien/ctrlp.vim'
+Plug 'ctrlpvim/ctrlp.vim'
+" async project file search
+Plug 'Yggdroot/LeaderF', { 'do': './install.sh' }
 " rapid code nav
 Plug 'easymotion/vim-easymotion'
 " auto closes quotes and braces
@@ -61,6 +63,7 @@ Plug 'Yggdroot/indentLine'
 
 " themes
 Plug 'flazz/vim-colorschemes'
+Plug 'wincent/terminus'
 
 call plug#end()
 filetype plugin indent on
