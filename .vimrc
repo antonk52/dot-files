@@ -94,11 +94,7 @@ set list
 " Access colors present in 256 colorspace
 let base16colorspace=256
 
-" only set color for gui vim
-" terminal vim inherits colors from the session
-if has('gui_running')
-  colorscheme base16-tomorrow-night
-endif
+colorscheme base16-tomorrow-night
 
 " show current line number
 set number
@@ -272,6 +268,11 @@ let g:ale_fixers = {
 \   'javascript': ['eslint', 'flow'],
 \   'css': ['stylelint'],
 \}
+
+" ======= Teremous
+
+" do not overwrite init behaviour of the coursor
+let g:TerminusCursorShape=0
 
 " ======= Airline
 
