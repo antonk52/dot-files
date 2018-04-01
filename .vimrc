@@ -10,8 +10,10 @@ Plug 'rking/ag.vim'
 Plug 'w0rp/ale'
 " tab completion
 Plug 'ervandew/supertab'
-" word completion
-Plug 'Valloric/YouCompleteMe', { 'do': './install.py' }
+" autocompletion
+Plug 'Shougo/deoplete.nvim'
+Plug 'roxma/nvim-yarp'
+Plug 'roxma/vim-hug-neovim-rpc'
 " change surrounding chars
 Plug 'tpope/vim-surround'
 " git gems
@@ -19,7 +21,7 @@ Plug 'tpope/vim-fugitive'
 " toggle comments duh
 Plug 'scrooloose/nerdcommenter'
 " project file tree
-Plug 'scrooloose/nerdtree', { 'on':  'NERDTreeToggle' }
+Plug 'scrooloose/nerdtree'
 " file explorer from the current file
 Plug 'tpope/vim-vinegar'
 " enahnced status line
@@ -71,6 +73,7 @@ filetype plugin indent on
 " theme
 syntax enable
 set background=dark
+set termguicolors
 
 " change gui font and size
 if has('gui_running')
@@ -88,13 +91,13 @@ set guicursor=a:hor7-Cursor
 let &t_SI .= "\<Esc>[4 q"
 
 " Show “invisible” characters
-set lcs=tab:▸\ ,trail:·,eol:¬,nbsp:_
 set list
+set lcs=tab:▸\ ,trail:∙,eol:¬,nbsp:_
 
 " Access colors present in 256 colorspace
 let base16colorspace=256
 
-colorscheme base16-tomorrow-night
+color base16-tomorrow-night
 
 " show current line number
 set number
@@ -151,9 +154,18 @@ endif
 " two spaces indentation for js files
 autocmd Filetype javascript setlocal ts=4 sts=4 sw=4
 
+" make current line number stand out a little
+set highlight+=N:DiffText
+
 " folding
-set foldmethod=indent
-set foldlevelstart=10
+if has('folding')
+  set foldmethod=indent
+  set foldlevelstart=10
+  if has('windows')
+    " use wider line for folding
+    set fillchars+=fold:⏤
+  endif
+endif
 
 " break long lines on breakable chars
 " instead of the last fitting character
@@ -274,6 +286,14 @@ let g:ale_fixers = {
 " do not overwrite init behaviour of the coursor
 let g:TerminusCursorShape=0
 
+" ======= Deoplete
+
+let g:deoplete#enable_at_startup = 1
+let g:deoplete#auto_complete_delay = 0
+let g:deoplete#enable_ignore_case = 1
+let g:deoplete#enable_smart_case = 1
+let g:deoplete#auto_complete_start_length = 2
+
 " ======= Airline
 
 " only show line and column numbers
@@ -306,6 +326,10 @@ map <D-_> <leader>c<Space>
 " custom comment schema
 let g:NERDCustomDelimiters = { 'javascript': { 'left': '// ','right': '' } }
 
+" ======= indentline
+
+let g:indentLine_char = '│'
+
 " ======= Ctrlp
 
 " runtimepath for fizzy search
@@ -323,6 +347,8 @@ let g:javascript_plugin_flow = 1
 " ======= flow
 " Enables syntax highlighting for Flow
 let g:flow#showquickfix = 0
+" do not run flow on save, ale will handle it
+let g:flow#enable = 0
 nmap <leader>t <Esc>:FlowType<CR>
 
 " ======= indent line
