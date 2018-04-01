@@ -296,12 +296,31 @@ let g:deoplete#auto_complete_start_length = 2
 
 " ======= Airline
 
+" separators
+let g:airline_left_sep = ''
+let g:airline_left_alt_sep = ''
+let g:airline_right_sep = ''
+let g:airline_right_alt_sep = ''
+if !exists('g:airline_symbols')
+  let g:airline_symbols = {}
+endif
+let g:airline_symbols.branch = ''
+let g:airline_symbols.readonly = ''
+let g:airline_symbols.linenr = '☰'
+let g:airline_symbols.maxlinenr = ''
+" truncate branch name prefix
+let g:airline#extensions#branch#format = 2
+" preformance lol
+let g:airline_highlighting_cache = 0
+let g:airline_skip_empty_sections = 1
 " only show line and column numbers
 let g:airline_section_z = '%l:%v'
 " do not show utf8
 let g:airline#parts#ffenc#skip_expected_string='utf-8[unix]'
 " disable word count
 let g:airline#extensions#wordcount#enabled = 1
+" use ale by default
+let g:airline#extensions#ale#enabled = 1
 
 " CTRL B to format js
 map <C-B> :call JsBeautify()<cr>
