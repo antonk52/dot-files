@@ -53,7 +53,7 @@ Plug 'gko/vim-coloresque'
 
 " =========== syntax ===========
 Plug 'chriskempson/base16-vim'
-Plug 'jelera/vim-javascript-syntax'
+Plug 'pangloss/vim-javascript'
 Plug 'kchmck/vim-coffee-script'
 Plug 'mxw/vim-jsx'
 Plug 'tpope/vim-liquid'
@@ -281,6 +281,11 @@ let g:ale_fixers = {
 \   'css': ['stylelint'],
 \}
 
+let g:ale_echo_cursor = 1
+let g:ale_enabled = 1
+let g:ale_set_highlights = 1
+let g:ale_set_signs = 1
+
 " ======= Teremous
 
 " do not overwrite init behaviour of the coursor
@@ -318,9 +323,24 @@ let g:airline_section_z = '%l:%v'
 " do not show utf8
 let g:airline#parts#ffenc#skip_expected_string='utf-8[unix]'
 " disable word count
-let g:airline#extensions#wordcount#enabled = 1
+let g:airline#extensions#wordcount#enabled = 0
 " use ale by default
 let g:airline#extensions#ale#enabled = 1
+let airline#extensions#ale#error_symbol = 'Err:'
+let airline#extensions#ale#warning_symbol = 'Warn:'
+
+" hide filetype by default
+let g:airline_section_x = ''
+
+" be able to toggle filetype display
+function! ToggleFiletype()
+  if (g:airline_section_x == '')
+    let g:airline_section_x = &filetype
+  else
+    let g:airline_section_x = ''
+  endif
+  :AirlineRefresh
+endfunction
 
 " CTRL B to format js
 map <C-B> :call JsBeautify()<cr>
