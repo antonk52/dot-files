@@ -190,7 +190,7 @@ set conceallevel=0
 " ======================== Mapings ========================
 "
 
-let mapleader = ","
+let mapleader="\<Space>"
 
 " leader c - copy to os clipboard
 vmap <leader>c "*y
@@ -356,11 +356,11 @@ let NERDTreeIgnore=['\.swp$', '\.DS_Store']
 " ======= Nerdcommenter
 
 " toggle comments with CTRL /
-map <C-_> <leader>c<Space>
-map <C-/> <leader>c<Space>
+map <C-_> <Plug>NERDCommenterToggle
+map <C-/> <Plug>NERDCommenterToggle
 " toggle comments with CMD /
-map <D-/> <leader>c<Space>
-map <D-_> <leader>c<Space>
+map <D-/> <Plug>NERDCommenterToggle
+map <D-_> <Plug>NERDCommenterToggle
 
 " custom comment schema
 let g:NERDCustomDelimiters = { 'javascript': { 'left': '// ','right': '' } }
