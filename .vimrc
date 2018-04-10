@@ -10,8 +10,19 @@ Plug 'rking/ag.vim'
 Plug 'w0rp/ale'
 " tab completion
 Plug 'ervandew/supertab'
-" autocompletion
-Plug 'Shougo/deoplete.nvim'
+" cross vim/nvim deoplete
+if has('nvim')
+  Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+else
+  Plug 'Shougo/deoplete.nvim'
+  Plug 'roxma/nvim-yarp'
+  Plug 'roxma/vim-hug-neovim-rpc'
+endif
+" LanguageClient server for flow
+Plug 'autozimu/LanguageClient-neovim', {
+  \ 'branch': 'next',
+  \ 'do': 'bash install.sh',
+  \ }
 Plug 'roxma/nvim-yarp'
 Plug 'roxma/vim-hug-neovim-rpc'
 " change surrounding chars
@@ -104,6 +115,7 @@ set number
 set relativenumber
 
 " search made easy
+set nohlsearch
 set incsearch
 
 " 1 tab == 2 spaces
@@ -155,7 +167,9 @@ endif
 autocmd Filetype javascript setlocal ts=4 sts=4 sw=4
 
 " make current line number stand out a little
-set highlight+=N:DiffText
+if has('highlight')
+  set highlight+=N:DiffText
+endif
 
 " folding
 if has('folding')
@@ -259,6 +273,9 @@ nmap <C-Tab> gt
 " CTRL Shift Tab - go to prev tab
 nmap <C-S-Tab> gT
 
+if has('nvim')
+  :tnoremap <Esc> <C-\><C-n>
+endif
 
 " ======================== Plugins ========================
 
@@ -388,7 +405,20 @@ let g:javascript_plugin_flow = 1
 let g:flow#showquickfix = 0
 " do not run flow on save, ale will handle it
 let g:flow#enable = 0
-nmap <leader>t <Esc>:FlowType<CR>
+
+" ======= LanguageClient (mostly used for flow-typed)
+" auto start server for these file types
+let g:LanguageClient_serverCommands={
+\   'javascript': ['flow-language-server', '--try-flow-bin', '--no-auto-download', '--stdio'],
+\   'javascript.jsx': ['flow-language-server', '--try-flow-bin', '--no-auto-download', '--stdio'],
+\}
+
+" leave the linting to ale plugin
+let g:LanguageClient_diagnosticsEnable=0
+
+" check the type under coursor w/ leader T
+nnoremap <leader>t :call LanguageClient_textDocument_hover()<CR>
+nnoremap <leader>y :call LanguageClient_textDocument_definition()<CR>
 
 " ======= indent line
 " do not show indent lines for help and nerdtree
