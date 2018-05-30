@@ -29,6 +29,7 @@ Plug 'roxma/vim-hug-neovim-rpc'
 Plug 'tpope/vim-surround'
 " git gems
 Plug 'tpope/vim-fugitive'
+Plug 'tommcdo/vim-fugitive-blame-ext'
 " toggle comments duh
 Plug 'scrooloose/nerdcommenter'
 " project file tree
@@ -267,12 +268,37 @@ map <Leader>e $
 " ======= Tabs
 
 " CTRL t - open new tab
-nmap <C-t> :tabedit<CR>
-" CTRL Tab - go to next tab
-nmap <C-Tab> gt
-" CTRL Shift Tab - go to prev tab
-nmap <C-S-Tab> gT
+nnoremap <C-t> :tabedit<CR>
+" Leader Tab - go to next tab
+nnoremap <leader><Tab> gt
+" leader Shift Tab - go to prev tab
+nnoremap <leader><S-Tab> gT
 
+" leader num to go to num tab
+for i in range(1, 9)
+  exec 'nnoremap <leader>' . i . ' :call TabberGoToTab('. i .')<CR>'
+endfor
+
+function! TabberGoToTab(tab_number)
+  let l:total_tabs = tabpagenr('$')
+
+  if l:total_tabs > 1
+    " go to first tab
+    if (a:tab_number == 1)
+      execute(':tabfirst')
+    " if required tab is larger than what is wanted
+    " always go to last tab
+    elseif (a:tab_number > l:total_tabs || a:tab_number == l:total_tabs)
+      execute(':tablast')
+    elseif (a:tab_number == 9)
+      execute(':tablast')
+    else
+      execute('normal! ' . a:tab_number . 'gt')
+    endif
+  endif
+endfunction
+
+" use Esc to go into normal mode in terminal
 if has('nvim')
   :tnoremap <Esc> <C-\><C-n>
 endif
@@ -372,6 +398,8 @@ let NERDTreeIgnore=['\.swp$', '\.DS_Store']
 
 " ======= Nerdcommenter
 
+let g:NERDDefaultAlign = 'left'
+
 " toggle comments with CTRL /
 map <C-_> <Plug>NERDCommenterToggle
 map <C-/> <Plug>NERDCommenterToggle
@@ -424,3 +452,4 @@ nnoremap <leader>y :call LanguageClient_textDocument_definition()<CR>
 " do not show indent lines for help and nerdtree
 let g:indentLine_fileTypeExclude=['help']
 let g:indentLine_bufNameExclude=['NERD_tree.*']
+
