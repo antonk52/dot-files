@@ -1,0 +1,95 @@
+# vim goodness
+alias :sp='test -n "$TMUX" && tmux split-window'
+alias :vs='test -n "$TMUX" && tmux split-window -h'
+alias :q='exit'
+
+# ls
+alias ll='ls -alF'
+alias la='ls -A'
+alias l='ls -CF'
+
+alias cl='clear'
+
+# dir manipulation
+alias ..='cd ..'
+alias ...='cd ../..'
+alias ....='cd ../../..'
+alias .4='cd ../../../../'
+alias .5='cd ../../../../..'
+alias desk='cd ~/Desktop'
+alias docs='cd ~/Documents'
+alias compare='diff -rq'
+
+# github
+alias g='git'
+alias gi='git init'
+alias ga='git add'
+alias gap='git add -p'
+alias gd='git diff'
+alias gcl='git clone'
+alias gs='git status -s'
+alias gss='git status'
+alias glf='git log --stat'
+alias gc='git commit -m'
+alias gb='git branch'
+alias gco='git checkout'
+alias gp='git push'
+alias gpd='git push origin develop'
+alias gpm='git push origin master'
+alias gl='git --no-pager log --oneline --decorate --graph --all'
+
+# tmux aliases
+alias t='tmux'
+alias tst='tmux start-server'
+alias tks='tmux kill-server'
+alias tl='tmux list-sessions'
+alias ta='tmux attach -t'
+
+# node aliases
+alias nm='nodemon'
+alias npminit='npm init --yes'
+alias nl0='npm list --depth=0'
+alias nl1='npm list --depth=1'
+alias nl2='npm list --depth=2'
+alias listnodes='ps -e|grep node'
+alias sni='sudo npm install'
+alias gulpc='gulp --require coffee-script/register'
+alias nodec='node --require coffee-script/register'
+alias lrhs='lr-http-server'
+alias hslr='lr-http-server'
+
+# linux aliases
+alias agi='sudo apt-get install'
+alias update='sudo apt-get update && sudo apt-get upgrade && sudo apt-get dist-upgrade'
+
+# other aliases
+alias s='subl'
+alias e='exit'
+alias o='open .'
+alias ax='chmod a+x'
+alias h='history'
+alias q='quit'
+alias bi='bower install'
+alias sl='pmset sleepnow'
+alias js='jekyll serve'
+alias jb='jekyll build'
+alias jn='jekyll new'
+alias ps='python -m SimpleHTTPServer 8088'
+alias please='sudo !!'
+# find all TODO from current dir down
+# do not look in dot files
+alias ftd='find ./ -type f ! -name ".*" | xargs grep TODO -n --color'
+alias findtodo='grep -r TODO ./ -n --color'
+
+# see which currently running apps are using most of your RAM
+alias memory='top -o MEM'
+alias settings='vim ~/.zshrc'
+alias vimsettings='vim ~/.vimrc'
+alias myip='curl http://ipecho.net/plain; echo'
+alias localip='ifconfig en0 | grep "inet" | cut -d: -f2'
+alias wifioff='networksetup -setairportpower airport off'
+alias wifion='networksetup -setairportpower airport on'
+alias topmem='top -stats "pid,command,mem,cpu" -o mem'
+alias topcpu='top -stats "pid,command,cpu,mem" -o cpu'
+alias findphp='find ./ -name "*.php" | grep --color -n -i'
+alias findjs='find ./ -name "*.js" | grep --color -n -i'
