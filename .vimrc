@@ -303,6 +303,12 @@ if has('nvim')
   :tnoremap <Esc> <C-\><C-n>
 endif
 
+" ======= helpers
+
+function! ToggleNumbers()
+  set number! relativenumber!
+endfunction
+
 " ======================== Plugins ========================
 
 " ======= EasyMotion
