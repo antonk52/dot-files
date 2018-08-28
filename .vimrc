@@ -104,7 +104,10 @@ let &t_SI .= "\<Esc>[4 q"
 
 " Show “invisible” characters
 set list
-set lcs=tab:▸\ ,trail:∙,eol:¬,nbsp:_
+set listchars=tab:▸\ ,
+\trail:∙,
+"\eol:¬,
+\nbsp:_
 
 " Access colors present in 256 colorspace
 let base16colorspace=256
@@ -261,9 +264,11 @@ nnoremap <C-D> <C-W><C-=>
 noremap <d-S> :update<CR>
 
 " go to the beggining of the line
-map <Leader>a ^
+nnoremap <Leader>a ^
+vnoremap <Leader>a ^
 " go to the end of the line
-map <Leader>e $
+nnoremap <Leader>e $
+vnoremap <Leader>e $h
 
 " ======= Tabs
 
@@ -288,9 +293,7 @@ function! TabberGoToTab(tab_number)
       execute(':tabfirst')
     " if required tab is larger than what is wanted
     " always go to last tab
-    elseif (a:tab_number > l:total_tabs || a:tab_number == l:total_tabs)
-      execute(':tablast')
-    elseif (a:tab_number == 9)
+    elseif (a:tab_number >= l:total_tabs)
       execute(':tablast')
     else
       execute('normal! ' . a:tab_number . 'gt')
@@ -365,7 +368,7 @@ let g:airline_symbols.maxlinenr = ''
 " truncate branch name prefix
 let g:airline#extensions#branch#format = 2
 " preformance lol
-let g:airline_highlighting_cache = 0
+let g:airline_highlighting_cache = 1
 let g:airline_skip_empty_sections = 1
 " only show line and column numbers
 let g:airline_section_z = '%l:%v'
@@ -392,7 +395,7 @@ function! ToggleFiletype()
 endfunction
 
 " CTRL B to format js
-map <C-B> :call JsBeautify()<cr>
+autocmd Filetype javascript nnoremap <C-B> :call JsBeautify()<cr>
 
 " ======= Nerdtree
 
