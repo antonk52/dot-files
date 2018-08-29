@@ -75,7 +75,23 @@ export LANG=en_US.UTF-8
 # Preferred editor for local and remote sessions
 export EDITOR='vim'
 
+# Make CTRL-Z background things and unbackground them.
+function fg-bg() {
+  if [[ $#BUFFER -eq 0 ]]; then
+    fg
+  else
+    zle push-input
+  fi
+}
+zle -N fg-bg
+bindkey '^Z' fg-bg
+
 source ~/dot-files/shell-aliases
+
+# Vi mode for command line
+bindkey -v
+# reduce the timeout between switching modes
+export KEYTIMEOUT=1
 
 # Load local settings
 if ls ~/.local_shellrc 1> /dev/null 2>&1; then source ~/.local_shellrc; fi

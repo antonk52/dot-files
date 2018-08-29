@@ -36,7 +36,7 @@ Plug 'scrooloose/nerdcommenter'
 Plug 'scrooloose/nerdtree'
 " file explorer from the current file
 Plug 'tpope/vim-vinegar'
-" enahnced status line
+" enhanced status line
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 " dims inactive splits
@@ -49,7 +49,7 @@ Plug 'Yggdroot/LeaderF', { 'do': './install.sh' }
 Plug 'easymotion/vim-easymotion'
 " auto closes quotes and braces
 Plug 'jiangmiao/auto-pairs'
-" auto closes xml tags
+" auto closes XML tags
 Plug 'alvan/vim-closetag'
 " consistent coding style
 Plug 'editorconfig/editorconfig-vim'
@@ -85,7 +85,9 @@ filetype plugin indent on
 " theme
 syntax enable
 set background=dark
-set termguicolors
+if has('termguicolors')
+  set termguicolors
+endif
 
 " change gui font and size
 if has('gui_running')
@@ -121,6 +123,9 @@ set relativenumber
 " search made easy
 set nohlsearch
 set incsearch
+if has('nvim')
+  set inccommand=split
+endif
 
 " 1 tab == 2 spaces
 set tabstop=2
@@ -132,7 +137,7 @@ set expandtab
 " always indent by multiple of shiftwidth
 set shiftround
 
-" indend/deindent at the beggining of a line
+" indend/deindent at the beginning of a line
 set smarttab
 
 " ignore swapfile messages
@@ -196,7 +201,7 @@ set sidescrolloff=3
 " highlight column 121 and onward
 autocmd Filetype javascript let &colorcolumn=join(range(121,999),",")
 
-" always show statusline
+" always show status line
 set laststatus=2
 
 " enable mouse scroll and select
@@ -205,17 +210,17 @@ set mouse=a
 " Disaply quotes in json in all modes
 set conceallevel=0
 "
-" ======================== Mapings ========================
+" ======================== Mappings ========================
 "
 
 let mapleader="\<Space>"
 
-" leader c - copy to os clipboard
+" leader c - copy to OS clipboard
 vmap <leader>c "*y
-" leader v - paste from os clipboard
+" leader v - paste from OS clipboard
 map <leader>v "*p
 
-" CTRL a - go to the command beggining
+" CTRL a - go to the command beginning
 cnoremap <C-a> <Home>
 " CTRL e - go to the command end
 cnoremap <C-e> <End>
@@ -242,28 +247,28 @@ vnoremap ˚ :m '<-2<CR>gv=gv
 vnoremap < <gv
 vnoremap > >gv
 
-" ctrl j/k/l/h shortcutes to navigate between multiple windows
+" ctrl j/k/l/h shortcuts to navigate between multiple windows
 nnoremap <C-J> <C-W><C-J>
 nnoremap <C-K> <C-W><C-K>
 nnoremap <C-L> <C-W><C-L>
 nnoremap <C-H> <C-W><C-H>
 
-" ctrl shift j/k/l/h resize active split by 5
+" leader j/k/l/h resize active split by 5
 nnoremap <leader>j <C-W>5-
 nnoremap <leader>k <C-W>5+
 nnoremap <leader>l <C-W>5>
 nnoremap <leader>h <C-W>5<
 
-" ctrl e to maximaze current window
+" ctrl e to maximize current window
 nnoremap <C-E> <C-W><C-_>
 
-" ctrl d to make all windows equal size
+" ctrl d to make all windows equal size vertically
 nnoremap <C-D> <C-W><C-=>
 
 " save with leader s
 noremap <d-S> :update<CR>
 
-" go to the beggining of the line
+" go to the beginning of the line
 nnoremap <Leader>a ^
 vnoremap <Leader>a ^
 " go to the end of the line
@@ -312,13 +317,15 @@ function! ToggleNumbers()
   set number! relativenumber!
 endfunction
 
-" ======================== Plugins ========================
+set spell spelllang=ru_ru,en_us
+
+" ======================== Plugging ========================
 
 " ======= EasyMotion
 
-" disable default keybindings
+" disable default key bindings
 let g:EasyMotion_do_mapping = 0
-" lazy targetting
+" lazy targeting
 let g:EasyMotion_smartcase = 1
 " Leader is the prefix
 map <Leader> <Plug>(easymotion-prefix)
@@ -338,9 +345,12 @@ let g:ale_enabled = 1
 let g:ale_set_highlights = 1
 let g:ale_set_signs = 1
 
+nmap <silent> <leader>[ <Plug>(ale_previous_wrap)
+nmap <silent> <leader>] <Plug>(ale_next_wrap)
+
 " ======= Teremous
 
-" do not overwrite init behaviour of the coursor
+" do not overwrite init behavior of the cursor
 let g:TerminusCursorShape=0
 
 " ======= Deoplete
@@ -367,12 +377,12 @@ let g:airline_symbols.linenr = '☰'
 let g:airline_symbols.maxlinenr = ''
 " truncate branch name prefix
 let g:airline#extensions#branch#format = 2
-" preformance lol
+" performance lol
 let g:airline_highlighting_cache = 1
 let g:airline_skip_empty_sections = 1
 " only show line and column numbers
 let g:airline_section_z = '%l:%v'
-" do not show utf8
+" do not show utf-8
 let g:airline#parts#ffenc#skip_expected_string='utf-8[unix]'
 " disable word count
 let g:airline#extensions#wordcount#enabled = 0
@@ -380,6 +390,10 @@ let g:airline#extensions#wordcount#enabled = 0
 let g:airline#extensions#ale#enabled = 1
 let airline#extensions#ale#error_symbol = 'Err:'
 let airline#extensions#ale#warning_symbol = 'Warn:'
+
+" do not notify when spell is on
+let g:airline_detect_spell=0
+let g:airline_detect_spelllang=0
 
 " hide filetype by default
 let g:airline_section_x = ''
@@ -425,9 +439,10 @@ let g:indentLine_char = '│'
 
 " ======= Ctrlp
 
-" runtimepath for fizzy search
+" runtime path for fizzy search
 set runtimepath^=~/.vim/bundle/ctrlp.vim
 let g:ctrlp_custom_ignore = 'node_modules\|DS_Store\|git'
+let g:ctrlp_root_markers=['package.json']
 
 " ======= Diminactive
 " bg color for inactive splits
@@ -436,6 +451,7 @@ highlight ColorColumn ctermbg=0 guibg=#424949
 " ======= vim javascript
 " Enables syntax highlighting for Flow
 let g:javascript_plugin_flow = 1
+let g:javascript_plugin_jsdoc=1
 
 " ======= flow
 " Enables syntax highlighting for Flow
@@ -453,7 +469,7 @@ let g:LanguageClient_serverCommands={
 " leave the linting to ale plugin
 let g:LanguageClient_diagnosticsEnable=0
 
-" check the type under coursor w/ leader T
+" check the type under cursor w/ leader T
 nnoremap <leader>t :call LanguageClient_textDocument_hover()<CR>
 nnoremap <leader>y :call LanguageClient_textDocument_definition()<CR>
 
@@ -461,4 +477,3 @@ nnoremap <leader>y :call LanguageClient_textDocument_definition()<CR>
 " do not show indent lines for help and nerdtree
 let g:indentLine_fileTypeExclude=['help']
 let g:indentLine_bufNameExclude=['NERD_tree.*']
-

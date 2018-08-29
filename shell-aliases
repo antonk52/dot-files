@@ -76,6 +76,7 @@ alias jb='jekyll build'
 alias jn='jekyll new'
 alias ps='python -m SimpleHTTPServer 8088'
 alias please='sudo !!'
+alias chux='chmod u+x'
 # find all TODO from current dir down
 # do not look in dot files
 alias ftd='find ./ -type f ! -name ".*" | xargs grep TODO -n --color'
