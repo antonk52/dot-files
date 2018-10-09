@@ -23,8 +23,6 @@ Plug 'autozimu/LanguageClient-neovim', {
   \ 'branch': 'next',
   \ 'do': 'bash install.sh',
   \ }
-Plug 'roxma/nvim-yarp'
-Plug 'roxma/vim-hug-neovim-rpc'
 " change surrounding chars
 Plug 'tpope/vim-surround'
 " git gems
@@ -50,18 +48,19 @@ Plug 'easymotion/vim-easymotion'
 " auto closes quotes and braces
 Plug 'jiangmiao/auto-pairs'
 " auto closes XML tags
-Plug 'alvan/vim-closetag'
+Plug 'alvan/vim-closetag', { 'for': ['html', 'php', 'javascript'] }
 " consistent coding style
 Plug 'editorconfig/editorconfig-vim'
+" snippets
+Plug 'SirVer/ultisnips'
 
 " =========== front end ===========
 " format js
 Plug 'maksimr/vim-jsbeautify', { 'for': 'javascript' }
 " quick html
 Plug 'mattn/emmet-vim', { 'for': ['html', 'css', 'javascript'] }
-" flowtype
-Plug 'flowtype/vim-flow', { 'for': 'javascript' }
-Plug 'gko/vim-coloresque'
+" css/less/sass/html color preview
+Plug 'gko/vim-coloresque', { 'for': ['html', 'css', 'javascript'] }
 
 " =========== syntax ===========
 Plug 'chriskempson/base16-vim'
@@ -69,10 +68,9 @@ Plug 'pangloss/vim-javascript'
 Plug 'kchmck/vim-coffee-script'
 Plug 'mxw/vim-jsx'
 Plug 'tpope/vim-liquid'
-Plug 'plasticboy/vim-markdown'
 Plug 'maksimr/vim-yate'
 Plug 'chase/vim-ansible-yaml'
-Plug 'ap/vim-css-color', { 'for': 'css' }
+Plug 'ap/vim-css-color', { 'for': ['html', 'css', 'javascript', 'javascript.jsx'] }
 Plug 'Yggdroot/indentLine'
 
 " themes
@@ -114,7 +112,7 @@ set listchars=tab:▸\ ,
 " Access colors present in 256 colorspace
 let base16colorspace=256
 
-color base16-tomorrow-night
+color base16-ocean
 
 " show current line number
 set number
@@ -219,6 +217,11 @@ let mapleader="\<Space>"
 vmap <leader>c "*y
 " leader v - paste from OS clipboard
 map <leader>v "*p
+" paste under current indentation level
+nnoremap p ]p
+
+" toggle highlight last search
+nnoremap <leader>n :set hlsearch!<cr>
 
 " CTRL a - go to the command beginning
 cnoremap <C-a> <Home>
@@ -243,7 +246,7 @@ inoremap ˚ <Esc>:m .-2<CR>==gi
 vnoremap ∆ :m '>+1<CR>gv=gv
 vnoremap ˚ :m '<-2<CR>gv=gv
 
-"make < > shifts keep selection
+" indentation shifts keep selection
 vnoremap < <gv
 vnoremap > >gv
 
@@ -259,14 +262,11 @@ nnoremap <leader>k <C-W>5+
 nnoremap <leader>l <C-W>5>
 nnoremap <leader>h <C-W>5<
 
-" ctrl e to maximize current window
+" ctrl e to maximize current split vertically
 nnoremap <C-E> <C-W><C-_>
 
-" ctrl d to make all windows equal size vertically
+" ctrl d to make all splits equal size vertically
 nnoremap <C-D> <C-W><C-=>
-
-" save with leader s
-noremap <d-S> :update<CR>
 
 " go to the beginning of the line
 nnoremap <Leader>a ^
@@ -306,9 +306,12 @@ function! TabberGoToTab(tab_number)
   endif
 endfunction
 
-" use Esc to go into normal mode in terminal
+" neovim terminal
 if has('nvim')
-  :tnoremap <Esc> <C-\><C-n>
+  " use Esc to go into normal mode in terminal
+  tnoremap <Esc> <C-\><C-n>
+  autocmd TermOpen * startinsert
+  autocmd TermOpen * setlocal nonumber norelativenumber
 endif
 
 " ======= helpers
@@ -317,7 +320,16 @@ function! ToggleNumbers()
   set number! relativenumber!
 endfunction
 
+com! -nargs=* -complete=file ToggleNumbers call ToggleNumbers()
+
 set spell spelllang=ru_ru,en_us
+
+" ======= fat fingers
+
+command! Wq :wq
+command! Ter :ter
+command! Sp :sp
+command! Vs :vs
 
 " ======================== Plugging ========================
 
@@ -335,8 +347,13 @@ nmap <Leader>s <Plug>(easymotion-s)
 
 " ======= ALE linting
 
-let g:ale_fixers = {
+let g:ale_linters = {
 \   'javascript': ['eslint', 'flow'],
+\   'css': ['stylelint'],
+\}
+
+let g:ale_fixers = {
+\   'javascript': ['eslint'],
 \   'css': ['stylelint'],
 \}
 
@@ -408,6 +425,8 @@ function! ToggleFiletype()
   :AirlineRefresh
 endfunction
 
+command! -nargs=* -complete=file ToggleFiletype call ToggleFiletype()
+
 " CTRL B to format js
 autocmd Filetype javascript nnoremap <C-B> :call JsBeautify()<cr>
 
@@ -431,7 +450,10 @@ map <D-/> <Plug>NERDCommenterToggle
 map <D-_> <Plug>NERDCommenterToggle
 
 " custom comment schema
-let g:NERDCustomDelimiters = { 'javascript': { 'left': '// ','right': '' } }
+let g:NERDCustomDelimiters = {
+  \'javascript': { 'left': '// ','right': '' },
+  \'css': { 'left': '/* ', 'right': ' */' }
+\}
 
 " ======= indentline
 
@@ -477,3 +499,19 @@ nnoremap <leader>y :call LanguageClient_textDocument_definition()<CR>
 " do not show indent lines for help and nerdtree
 let g:indentLine_fileTypeExclude=['help']
 let g:indentLine_bufNameExclude=['NERD_tree.*']
+
+" ======= ultisnips
+" Trigger configuration. Do not use <tab> if you use https://github.com/Valloric/YouCompleteMe.
+let g:UltiSnipsExpandTrigger="<tab>"
+let g:UltiSnipsJumpForwardTrigger="<c-b>"
+let g:UltiSnipsJumpBackwardTrigger="<c-z>"
+
+" If you want :UltiSnipsEdit to split your window.
+let g:UltiSnipsEditSplit="vertical"
+
+" ======= closetag
+
+" file extensions where this plugin is enabled
+let g:closetag_filenames = "*.html,*.xhtml,*.phtml,*.php,*.jsx,*.js"
+" make the list of non-closing tags self-closing in the specified files
+let g:closetag_xhtml_filenames = '*.xhtml,*.jsx,*.js'
