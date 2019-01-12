@@ -1,6 +1,13 @@
 set nocompatible
 filetype off
 
+" load vim plug if it is not installed
+if empty(glob('~/.vim/autoload/plug.vim'))
+  silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
+    \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+endif
+
 call plug#begin('~/.vim/plugged')
 
 " =========== essentials ===========
@@ -10,6 +17,7 @@ Plug 'rking/ag.vim'
 Plug 'w0rp/ale'
 " tab completion
 Plug 'ervandew/supertab'
+Plug 'antonk52/vim-tabber'
 " cross vim/nvim deoplete
 if has('nvim')
   Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
@@ -28,6 +36,8 @@ Plug 'tpope/vim-surround'
 " git gems
 Plug 'tpope/vim-fugitive'
 Plug 'tommcdo/vim-fugitive-blame-ext'
+" mercurial, avoid at all costs
+Plug 'jlfwong/vim-mercenary'
 " toggle comments duh
 Plug 'scrooloose/nerdcommenter'
 " project file tree
@@ -65,6 +75,8 @@ Plug 'gko/vim-coloresque', { 'for': ['html', 'css', 'javascript'] }
 " =========== syntax ===========
 Plug 'chriskempson/base16-vim'
 Plug 'pangloss/vim-javascript'
+Plug 'leafgarland/typescript-vim'
+Plug 'HerringtonDarkholme/yats.vim'
 Plug 'kchmck/vim-coffee-script'
 Plug 'mxw/vim-jsx'
 Plug 'tpope/vim-liquid'
@@ -72,6 +84,8 @@ Plug 'maksimr/vim-yate'
 Plug 'chase/vim-ansible-yaml'
 Plug 'ap/vim-css-color', { 'for': ['html', 'css', 'javascript', 'javascript.jsx'] }
 Plug 'Yggdroot/indentLine'
+Plug 'plasticboy/vim-markdown', { 'for': ['markdown'] }
+"Plug 'ruanyl/coverage.vim'
 
 " themes
 Plug 'flazz/vim-colorschemes'
@@ -284,28 +298,6 @@ nnoremap <leader><Tab> gt
 " leader Shift Tab - go to prev tab
 nnoremap <leader><S-Tab> gT
 
-" leader num to go to num tab
-for i in range(1, 9)
-  exec 'nnoremap <leader>' . i . ' :call TabberGoToTab('. i .')<CR>'
-endfor
-
-function! TabberGoToTab(tab_number)
-  let l:total_tabs = tabpagenr('$')
-
-  if l:total_tabs > 1
-    " go to first tab
-    if (a:tab_number == 1)
-      execute(':tabfirst')
-    " if required tab is larger than what is wanted
-    " always go to last tab
-    elseif (a:tab_number >= l:total_tabs)
-      execute(':tablast')
-    else
-      execute('normal! ' . a:tab_number . 'gt')
-    endif
-  endif
-endfunction
-
 " neovim terminal
 if has('nvim')
   " use Esc to go into normal mode in terminal
@@ -349,6 +341,10 @@ nmap <Leader>s <Plug>(easymotion-s)
 
 let g:ale_linters = {
 \   'javascript': ['eslint', 'flow'],
+\   'typescript': [
+\       'eslint',
+\       'tsserver'
+\   ],
 \   'css': ['stylelint'],
 \}
 
@@ -452,6 +448,9 @@ map <D-_> <Plug>NERDCommenterToggle
 " custom comment schema
 let g:NERDCustomDelimiters = {
   \'javascript': { 'left': '// ','right': '' },
+  \'javascript.jsx': { 'left': '// ','right': '' },
+  \'typescript': { 'left': '// ','right': '' },
+  \'typescript.tsx': { 'left': '// ','right': '' },
   \'css': { 'left': '/* ', 'right': ' */' }
 \}
 
@@ -486,6 +485,8 @@ let g:flow#enable = 0
 let g:LanguageClient_serverCommands={
 \   'javascript': ['flow-language-server', '--try-flow-bin', '--no-auto-download', '--stdio'],
 \   'javascript.jsx': ['flow-language-server', '--try-flow-bin', '--no-auto-download', '--stdio'],
+\   'typescript': ['typescript-language-server', '--stdio'],
+\   'typescript.tsx': ['typescript-language-server', '--stdio'],
 \}
 
 " leave the linting to ale plugin
@@ -512,6 +513,11 @@ let g:UltiSnipsEditSplit="vertical"
 " ======= closetag
 
 " file extensions where this plugin is enabled
-let g:closetag_filenames = "*.html,*.xhtml,*.phtml,*.php,*.jsx,*.js"
+let g:closetag_filenames = "*.html,*.xhtml,*.phtml,*.php,*.jsx,*.js,*.ts,*.tsx"
 " make the list of non-closing tags self-closing in the specified files
-let g:closetag_xhtml_filenames = '*.xhtml,*.jsx,*.js'
+let g:closetag_xhtml_filenames = '*.xhtml,*.jsx,*.js,*.ts,*.tsx'
+
+
+" ======= markdown
+
+let g:vim_markdown_conceal = 0

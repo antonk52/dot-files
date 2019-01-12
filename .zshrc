@@ -60,6 +60,7 @@ plugins=(
   node
   npm
   osx
+  mercurial
   zsh-autosuggestions
 )
 
