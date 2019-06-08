@@ -96,3 +96,19 @@ export KEYTIMEOUT=1
 
 # Load local settings
 if ls ~/.local_shellrc 1> /dev/null 2>&1; then source ~/.local_shellrc; fi
+
+merge-in-default() {
+  hg update default;
+  hg pull -u;
+  hg update $1;
+  hg merge default;
+  echo '';
+  echo '-----------------------';
+  echo 'resolve your trash mate';
+  echo '';
+  echo 'hg resolve -m path/to/file.sht';
+  echo 'hg commit "resolved bruh"';
+  echo '';
+  echo '-----------------------';
+  echo '';
+}
