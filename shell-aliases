@@ -93,3 +93,5 @@ alias topmem='top -stats "pid,command,mem,cpu" -o mem'
 alias topcpu='top -stats "pid,command,cpu,mem" -o cpu'
 alias findphp='find ./ -name "*.php" | grep --color -n -i'
 alias findjs='find ./ -name "*.js" | grep --color -n -i'
+
+alias bang='notify -t "Well hello there" -m "Your time has come" -i "https://thenib.imgix.net/usq/1d97429f-4a64-4d52-bfdb-c36172c05228/this-is-not-fine-001-dae9d5.png" >/dev/null 2>&1'
