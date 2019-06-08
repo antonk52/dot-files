@@ -18,6 +18,7 @@ Plug 'w0rp/ale'
 " tab completion
 Plug 'ervandew/supertab'
 Plug 'antonk52/vim-tabber'
+Plug 'dkprice/vim-easygrep'
 " cross vim/nvim deoplete
 if has('nvim')
   Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
@@ -26,6 +27,8 @@ else
   Plug 'roxma/nvim-yarp'
   Plug 'roxma/vim-hug-neovim-rpc'
 endif
+" javascript completion turn + deoplete
+Plug 'carlitux/deoplete-ternjs', { 'do': 'npm install -g tern' }
 " LanguageClient server for flow
 Plug 'autozimu/LanguageClient-neovim', {
   \ 'branch': 'next',
@@ -79,12 +82,36 @@ Plug 'leafgarland/typescript-vim'
 Plug 'HerringtonDarkholme/yats.vim'
 Plug 'kchmck/vim-coffee-script'
 Plug 'mxw/vim-jsx'
+Plug 'jxnblk/vim-mdx-js'
 Plug 'tpope/vim-liquid'
 Plug 'maksimr/vim-yate'
 Plug 'chase/vim-ansible-yaml'
 Plug 'ap/vim-css-color', { 'for': ['html', 'css', 'javascript', 'javascript.jsx'] }
 Plug 'Yggdroot/indentLine'
 Plug 'plasticboy/vim-markdown', { 'for': ['markdown'] }
+Plug 'prettier/vim-prettier', {
+  \ 'do': 'yarn install',
+  \ 'branch': 'release/1.x',
+  \ 'for': [
+    \ 'javascript',
+    \ 'typescript',
+    \ 'css',
+    \ 'less',
+    \ 'scss',
+    \ 'json',
+    \ 'graphql',
+    \ 'markdown',
+    \ 'markdown.mdx',
+    \ 'mdx',
+    \ 'vue',
+    \ 'lua',
+    \ 'php',
+    \ 'python',
+    \ 'ruby',
+    \ 'html',
+    \ 'swift'
+  \ ]
+\ }
 "Plug 'ruanyl/coverage.vim'
 
 " themes
@@ -103,25 +130,28 @@ endif
 
 " change gui font and size
 if has('gui_running')
-  set guifont=Menlo:h18
+  set guifont=Fira\ Code:h18
 else
-  set guifont=Menlo
+  set guifont=Fira\ Code:h13
 endif
 
 " highlight current cursor line
 set cursorline
 
 " cursor in gvim setting
-set guicursor+=a:blinkon0
-set guicursor=a:hor7-Cursor
-let &t_SI .= "\<Esc>[4 q"
+if has('gui_running')
+  set guicursor=a:hor7-Cursor
+  set guicursor+=a:blinkon0
+endif
 
 " Show “invisible” characters
 set list
-set listchars=tab:▸\ ,
-\trail:∙,
+if has('nvim')
+  set listchars=tab:▸\ ,
+endif
+"\trail:∙,
 "\eol:¬,
-\nbsp:_
+"\nbsp:_
 
 " Access colors present in 256 colorspace
 let base16colorspace=256
@@ -196,7 +226,7 @@ endif
 if has('folding')
   set foldmethod=indent
   set foldlevelstart=10
-  if has('windows')
+  if has('windows') && has('fillchars')
     " use wider line for folding
     set fillchars+=fold:⏤
   endif
@@ -219,7 +249,7 @@ set laststatus=2
 " enable mouse scroll and select
 set mouse=a
 
-" Disaply quotes in json in all modes
+" Display quotes in json in all modes
 set conceallevel=0
 "
 " ======================== Mappings ========================
@@ -357,6 +387,7 @@ let g:ale_echo_cursor = 1
 let g:ale_enabled = 1
 let g:ale_set_highlights = 1
 let g:ale_set_signs = 1
+let g:ale_fix_on_save = 1
 
 nmap <silent> <leader>[ <Plug>(ale_previous_wrap)
 nmap <silent> <leader>] <Plug>(ale_next_wrap)
@@ -373,6 +404,10 @@ let g:deoplete#auto_complete_delay = 0
 let g:deoplete#enable_ignore_case = 1
 let g:deoplete#enable_smart_case = 1
 let g:deoplete#auto_complete_start_length = 2
+
+au FileType html setl omnifunc=csscomplete#CompleteCSS
+au FileType javascript setl omnifunc=csscomplete#CompleteCSS
+au FileType javascript.jsx setl omnifunc=csscomplete#CompleteCSS
 
 " ======= Airline
 
@@ -411,7 +446,7 @@ let g:airline_detect_spelllang=0
 " hide filetype by default
 let g:airline_section_x = ''
 
-" be able to toggle filetype display
+" be able to toggle airline filetype display
 function! ToggleFiletype()
   if (g:airline_section_x == '')
     let g:airline_section_x = &filetype
@@ -476,17 +511,27 @@ let g:javascript_plugin_jsdoc=1
 
 " ======= flow
 " Enables syntax highlighting for Flow
-let g:flow#showquickfix = 0
+let g:flow#showquickfix = 1
 " do not run flow on save, ale will handle it
 let g:flow#enable = 0
 
 " ======= LanguageClient (mostly used for flow-typed)
+" preview in a window
+"let g:LanguageClient_hoverPreview = 'Always'
+" easy project root detection
+let g:LanguageClient_rootMarkers = {
+\   'javascript': ['tsconfig.json', '.flowconfig', 'package.json'],
+\   'typescript': ['tsconfig.json', '.flowconfig', 'package.json']
+\ }
 " auto start server for these file types
+let g:flow_js_new = ['flow', 'lsp']
+let g:flow_js_old = ['flow-language-server', '--try-flow-bin', '--no-auto-download', '--stdio']
+let g:LSP_ts_command = ['typescript-language-server', '--stdio']
 let g:LanguageClient_serverCommands={
-\   'javascript': ['flow-language-server', '--try-flow-bin', '--no-auto-download', '--stdio'],
-\   'javascript.jsx': ['flow-language-server', '--try-flow-bin', '--no-auto-download', '--stdio'],
-\   'typescript': ['typescript-language-server', '--stdio'],
-\   'typescript.tsx': ['typescript-language-server', '--stdio'],
+\   'javascript': g:flow_js_old,
+\   'javascript.jsx': g:flow_js_old,
+\   'typescript': g:LSP_ts_command,
+\   'typescript.tsx': g:LSP_ts_command,
 \}
 
 " leave the linting to ale plugin
@@ -521,3 +566,19 @@ let g:closetag_xhtml_filenames = '*.xhtml,*.jsx,*.js,*.ts,*.tsx'
 " ======= markdown
 
 let g:vim_markdown_conceal = 0
+
+" ======= tern js
+" include types in the result data
+let g:deoplete#sources#ternjs#types = 1
+" include docs in the result data
+let g:deoplete#sources#ternjs#docs = 1
+
+" ======= prettier
+"
+let g:prettier#autoformat = 0
+"let g:prettier#quickfix_enabled = 0
+"autocmd BufWritePre *.js,*.jsx,*.mjs,*.mdx,*.ts,*.tsx,*.css,*.less,*.scss,*.json,*.graphql,*.md,*.vue,*.yaml,*.html PrettierAsync
+let g:prettier#exec_cmd_async = 1
+let g:prettier#config#tab_width = 4
+let g:prettier#config#single_quote = 'true'
+let g:prettier#config#bracket_spacing = 'false'
