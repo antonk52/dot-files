@@ -344,7 +344,11 @@ endfunction
 
 com! -nargs=* -complete=file ToggleNumbers call ToggleNumbers()
 
-set spell spelllang=ru_ru,en_us
+" check spell in neovim exclusively
+" vim is mostly run remotely w/ no access to my dictionary
+if has('nvim')
+  set spell spelllang=ru_ru,en_us
+endif
 
 " ======= fat fingers
 
