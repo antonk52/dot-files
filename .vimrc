@@ -142,7 +142,11 @@ set cursorline
 if has('gui_running')
   set guicursor=a:hor7-Cursor
   set guicursor+=a:blinkon0
+  let &t_SI .= "\<Esc>[4 q"
 endif
+
+" insert mode caret is an underline
+set guicursor+=i-ci-ve:hor24
 
 " Show “invisible” characters
 set list
