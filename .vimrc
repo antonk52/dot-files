@@ -13,8 +13,6 @@ call plug#begin('~/.vim/plugged')
 " =========== essentials ===========
 " search in a project
 Plug 'rking/ag.vim'
-" async linting
-Plug 'w0rp/ale'
 " tab completion
 Plug 'ervandew/supertab'
 Plug 'antonk52/vim-tabber'
@@ -29,11 +27,8 @@ else
 endif
 " javascript completion turn + deoplete
 Plug 'carlitux/deoplete-ternjs', { 'do': 'npm install -g tern' }
-" LanguageClient server for flow
-Plug 'autozimu/LanguageClient-neovim', {
-  \ 'branch': 'next',
-  \ 'do': 'bash install.sh',
-  \ }
+" types & linting
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
 " change surrounding chars
 Plug 'tpope/vim-surround'
 " git gems
@@ -89,30 +84,6 @@ Plug 'chase/vim-ansible-yaml'
 Plug 'ap/vim-css-color', { 'for': ['html', 'css', 'javascript', 'javascript.jsx'] }
 Plug 'Yggdroot/indentLine'
 Plug 'plasticboy/vim-markdown', { 'for': ['markdown'] }
-Plug 'prettier/vim-prettier', {
-  \ 'do': 'yarn install',
-  \ 'branch': 'release/1.x',
-  \ 'for': [
-    \ 'javascript',
-    \ 'typescript',
-    \ 'css',
-    \ 'less',
-    \ 'scss',
-    \ 'json',
-    \ 'graphql',
-    \ 'markdown',
-    \ 'markdown.mdx',
-    \ 'mdx',
-    \ 'vue',
-    \ 'lua',
-    \ 'php',
-    \ 'python',
-    \ 'ruby',
-    \ 'html',
-    \ 'swift'
-  \ ]
-\ }
-"Plug 'ruanyl/coverage.vim'
 
 " themes
 Plug 'flazz/vim-colorschemes'
@@ -390,31 +361,6 @@ nmap § <Plug>(easymotion-s)
 " default mapping leader S to search for a letter
 nmap <Leader>s <Plug>(easymotion-s)
 
-" ======= ALE linting
-
-let g:ale_linters = {
-\   'javascript': ['eslint', 'flow'],
-\   'typescript': [
-\       'eslint',
-\       'tsserver'
-\   ],
-\   'css': ['stylelint'],
-\}
-
-let g:ale_fixers = {
-\   'javascript': ['eslint'],
-\   'css': ['stylelint'],
-\}
-
-let g:ale_echo_cursor = 1
-let g:ale_enabled = 1
-let g:ale_set_highlights = 1
-let g:ale_set_signs = 1
-let g:ale_fix_on_save = 1
-
-nmap <silent> <leader>[ <Plug>(ale_previous_wrap)
-nmap <silent> <leader>] <Plug>(ale_next_wrap)
-
 " ======= Teremous
 
 " do not overwrite init behavior of the cursor
@@ -457,11 +403,8 @@ let g:airline_section_z = '%l:%v'
 let g:airline#parts#ffenc#skip_expected_string='utf-8[unix]'
 " disable word count
 let g:airline#extensions#wordcount#enabled = 0
-" use ale by default
-let g:airline#extensions#ale#enabled = 1
-let airline#extensions#ale#error_symbol = 'Err:'
-let airline#extensions#ale#warning_symbol = 'Warn:'
-
+" use coc by default
+let g:airline#extensions#coc#enabled = 1
 " do not notify when spell is on
 let g:airline_detect_spell=0
 let g:airline_detect_spelllang=0
@@ -532,37 +475,84 @@ highlight ColorColumn ctermbg=0 guibg=#424949
 let g:javascript_plugin_flow = 1
 let g:javascript_plugin_jsdoc=1
 
-" ======= flow
-" Enables syntax highlighting for Flow
-let g:flow#showquickfix = 1
-" do not run flow on save, ale will handle it
-let g:flow#enable = 0
+" ======= coc
+set updatetime=300
+set shortmess+=c
 
-" ======= LanguageClient (mostly used for flow-typed)
-" preview in a window
-"let g:LanguageClient_hoverPreview = 'Always'
-" easy project root detection
-let g:LanguageClient_rootMarkers = {
-\   'javascript': ['tsconfig.json', '.flowconfig', 'package.json'],
-\   'typescript': ['tsconfig.json', '.flowconfig', 'package.json']
-\ }
-" auto start server for these file types
-let g:flow_js_new = ['flow', 'lsp']
-let g:flow_js_old = ['flow-language-server', '--try-flow-bin', '--no-auto-download', '--stdio']
-let g:LSP_ts_command = ['typescript-language-server', '--stdio']
-let g:LanguageClient_serverCommands={
-\   'javascript': g:flow_js_old,
-\   'javascript.jsx': g:flow_js_old,
-\   'typescript': g:LSP_ts_command,
-\   'typescript.tsx': g:LSP_ts_command,
-\}
+" Use <c-space> to trigger completion.
+inoremap <silent><expr> <c-space> coc#refresh()
 
-" leave the linting to ale plugin
-let g:LanguageClient_diagnosticsEnable=0
+" Use <cr> to confirm completion, `<C-g>u` means break undo chain at current position.
+" Coc only does snippet and additional edit on confirm.
+inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
 
-" check the type under cursor w/ leader T
-nnoremap <leader>t :call LanguageClient_textDocument_hover()<CR>
-nnoremap <leader>y :call LanguageClient_textDocument_definition()<CR>
+" Use K to show documentation in preview window
+nnoremap <leader>t :call <SID>show_documentation()<CR>
+
+function! s:show_documentation()
+  if (index(['vim','help'], &filetype) >= 0)
+    execute 'h '.expand('<cword>')
+  else
+    call CocAction('doHover')
+  endif
+endfunction
+
+" Highlight symbol under cursor on CursorHold
+autocmd CursorHold * silent call CocActionAsync('highlight')
+
+" instead of having ~/.vim/coc-settings.json
+let s:LSP_CONFIG = {
+      \  'flow': {
+      \    'command': exepath('flow'),
+      \    'args': ['lsp'],
+      \    'filetypes': ['javascript', 'javascriptreact'],
+      \    'initializationOptions': {},
+      \    'requireRootPattern': 1,
+      \    'settings': {},
+      \    'rootPatterns': ['.flowconfig']
+      \  }
+      \}
+
+call coc#config('coc.preferences', {
+      \ 'autoTrigger': 'always',
+      \ 'colorSupport': 1,
+      \ 'diagnostic.errorSign': '●',
+      \ 'diagnostic.warningSign': '●',
+      \ 'diagnostic.infoSign': '!',
+      \ 'diagnostic.hintSign': '!',
+      \ })
+
+call coc#config('highlight', {
+      \ 'colors': 1,
+      \ 'disableLanguages': ['vim']
+      \ })
+
+call coc#config('eslint', {
+      \ 'autoFixOnSave': 1
+      \ })
+
+call coc#config('styleline', {
+      \ 'enabled': 1
+      \ })
+
+call coc#config('tsserver', {
+      \ 'enableJavascript': 0
+      \ })
+
+let s:languageservers = {}
+for [lsp, config] in items(s:LSP_CONFIG)
+  let s:not_empty_cmd = !empty(get(config, 'command'))
+  if s:not_empty_cmd | let s:languageservers[lsp] = config | endif
+endfor
+
+if !empty(s:languageservers)
+  call coc#config('languageserver', s:languageservers)
+endif
+
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gy <Plug>(coc-type-definition)
+nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gr <Plug>(coc-references)
 
 " ======= indent line
 " do not show indent lines for help and nerdtree
@@ -595,13 +585,14 @@ let g:vim_markdown_conceal = 0
 let g:deoplete#sources#ternjs#types = 1
 " include docs in the result data
 let g:deoplete#sources#ternjs#docs = 1
-
-" ======= prettier
 "
-let g:prettier#autoformat = 0
-"let g:prettier#quickfix_enabled = 0
-"autocmd BufWritePre *.js,*.jsx,*.mjs,*.mdx,*.ts,*.tsx,*.css,*.less,*.scss,*.json,*.graphql,*.md,*.vue,*.yaml,*.html PrettierAsync
-let g:prettier#exec_cmd_async = 1
-let g:prettier#config#tab_width = 4
-let g:prettier#config#single_quote = 'true'
-let g:prettier#config#bracket_spacing = 'false'
+" node exac util
+function! Node()
+  let l:line = getline('.')
+  let l:trimmed = trim(l:line)
+  let l:console = '"console.log(' . l:trimmed . ')"'
+  let l:result = execute(':!node -e ' . l:console)
+  echo l:result
+endfunction
+
+command! -nargs=* -complete=file Node call Node()
