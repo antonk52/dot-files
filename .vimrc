@@ -479,6 +479,8 @@ let g:javascript_plugin_jsdoc=1
 set updatetime=300
 set shortmess+=c
 
+let g:coc_node_path = "/usr/local/bin/node"
+
 " Use <c-space> to trigger completion.
 inoremap <silent><expr> <c-space> coc#refresh()
 
