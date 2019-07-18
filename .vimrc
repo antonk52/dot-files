@@ -574,7 +574,13 @@ let g:vim_markdown_conceal = 0
 let g:deoplete#sources#ternjs#types = 1
 " include docs in the result data
 let g:deoplete#sources#ternjs#docs = 1
-"
+
+" ======= supertab
+" navigate through auto completion options where:
+" - tab takes to the next one - one down 
+" - shift tab takes to previous one - one up
+let g:SuperTabDefaultCompletionType = '<c-n>'
+
 " node exac util
 function! Node()
   let l:line = getline('.')
