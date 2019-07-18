@@ -138,12 +138,10 @@ let base16colorspace=256
 color base16-ocean
 
 " show current line number
-set number
-set relativenumber
+set number relativenumber
 
 " search made easy
-set nohlsearch
-set incsearch
+set nohlsearch incsearch
 if has('nvim')
   set inccommand=split
 endif
@@ -193,7 +191,7 @@ if has('vertsplit')
   set splitright
 endif
 
-" two spaces indentation for js files
+" four spaces indentation for js files
 autocmd Filetype javascript setlocal ts=4 sts=4 sw=4
 
 " make current line number stand out a little
@@ -317,10 +315,6 @@ vnoremap <Leader>e $h
 
 " CTRL t - open new tab
 nnoremap <C-t> :tabedit<CR>
-" Leader Tab - go to next tab
-nnoremap <leader><Tab> gt
-" leader Shift Tab - go to prev tab
-nnoremap <leader><S-Tab> gT
 
 " neovim terminal
 if has('nvim')
@@ -332,11 +326,7 @@ endif
 
 " ======= helpers
 
-function! ToggleNumbers()
-  set number! relativenumber!
-endfunction
-
-com! -nargs=* -complete=file ToggleNumbers call ToggleNumbers()
+com! -nargs=* -complete=file ToggleNumbers set number! relativenumber!
 
 " check spell in neovim exclusively
 " vim is mostly run remotely w/ no access to my dictionary
@@ -418,11 +408,7 @@ let g:airline_section_x = ''
 
 " be able to toggle airline filetype display
 function! ToggleFiletype()
-  if (g:airline_section_x == '')
-    let g:airline_section_x = &filetype
-  else
-    let g:airline_section_x = ''
-  endif
+  let g:airline_section_x = empty(g:airline_section_x) ? &filetype : ''
   :AirlineRefresh
 endfunction
 
@@ -446,9 +432,6 @@ let g:NERDDefaultAlign = 'left'
 " toggle comments with CTRL /
 map <C-_> <Plug>NERDCommenterToggle
 map <C-/> <Plug>NERDCommenterToggle
-" toggle comments with CMD /
-map <D-/> <Plug>NERDCommenterToggle
-map <D-_> <Plug>NERDCommenterToggle
 
 " custom comment schema
 let g:NERDCustomDelimiters = {
@@ -567,7 +550,8 @@ let g:indentLine_fileTypeExclude=['help']
 let g:indentLine_bufNameExclude=['NERD_tree.*']
 
 " ======= ultisnips
-" Trigger configuration. Do not use <tab> if you use https://github.com/Valloric/YouCompleteMe.
+
+" Trigger configuration.
 let g:UltiSnipsExpandTrigger="<tab>"
 let g:UltiSnipsJumpForwardTrigger="<c-b>"
 let g:UltiSnipsJumpBackwardTrigger="<c-z>"
@@ -582,9 +566,7 @@ let g:closetag_filenames = "*.html,*.xhtml,*.phtml,*.php,*.jsx,*.js,*.ts,*.tsx"
 " make the list of non-closing tags self-closing in the specified files
 let g:closetag_xhtml_filenames = '*.xhtml,*.jsx,*.js,*.ts,*.tsx'
 
-
 " ======= markdown
-
 let g:vim_markdown_conceal = 0
 
 " ======= tern js
