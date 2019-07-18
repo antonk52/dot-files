@@ -29,6 +29,10 @@ endif
 Plug 'carlitux/deoplete-ternjs', { 'do': 'npm install -g tern' }
 " types & linting
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
+" support for coc in regular vim
+if !has('nvim')
+  Plug 'neoclide/vim-node-rpc'
+endif
 " change surrounding chars
 Plug 'tpope/vim-surround'
 " git gems
@@ -479,7 +483,8 @@ let g:javascript_plugin_jsdoc=1
 set updatetime=300
 set shortmess+=c
 
-let g:coc_node_path = "/usr/local/bin/node"
+let g:coc_node_path = '/usr/local/bin/node'
+let g:coc_global_extensions=['coc-eslint', 'coc-stylelint']
 
 " Use <c-space> to trigger completion.
 inoremap <silent><expr> <c-space> coc#refresh()
