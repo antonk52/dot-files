@@ -525,8 +525,9 @@ call coc#config('styleline', {
       \ 'enabled': 1
       \ })
 
+" essentially avoid turning on typescript in a flow project
 call coc#config('tsserver', {
-      \ 'enableJavascript': 0
+      \ 'enableJavascript': globpath('.', '.flowconfig') == ''
       \ })
 
 let s:languageservers = {}
