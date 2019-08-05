@@ -28,7 +28,7 @@ endif
 " javascript completion turn + deoplete
 Plug 'carlitux/deoplete-ternjs', { 'do': 'npm install -g tern' }
 " types & linting
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'neoclide/coc.nvim', {'branch': 'release', 'do': ':CocInstall'}
 " support for coc in regular vim
 if !has('nvim')
   Plug 'neoclide/vim-node-rpc'
@@ -467,7 +467,9 @@ set updatetime=300
 set shortmess+=c
 
 let g:coc_node_path = '/usr/local/bin/node'
-let g:coc_global_extensions=['coc-eslint', 'coc-stylelint']
+let g:coc_global_extensions=['coc-eslint', 'coc-stylelint', 'coc-tsserver', 'coc-prettier']
+
+command! -nargs=0 Prettier :call CocAction('runCommand', 'prettier.formatFile')
 
 " Use <c-space> to trigger completion.
 inoremap <silent><expr> <c-space> coc#refresh()
@@ -518,10 +520,11 @@ call coc#config('highlight', {
       \ })
 
 call coc#config('eslint', {
-      \ 'autoFixOnSave': 1
+      \ 'autoFixOnSave': 1,
+      \ 'filetypes': ['javascript', 'javascriptreact', 'typescript', 'typescriptreact']
       \ })
 
-call coc#config('styleline', {
+call coc#config('stylelint', {
       \ 'enabled': 1
       \ })
 
