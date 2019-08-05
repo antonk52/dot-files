@@ -127,6 +127,9 @@ set guicursor+=i-ci-ve:hor24
 set list
 if has('nvim')
   set listchars=tab:▸\ ,
+else
+  " remove $ from line endings
+  set nolist
 endif
 "\trail:∙,
 "\eol:¬,
