@@ -81,6 +81,7 @@ Plug 'leafgarland/typescript-vim'
 Plug 'HerringtonDarkholme/yats.vim'
 Plug 'kchmck/vim-coffee-script'
 Plug 'mxw/vim-jsx'
+Plug 'JulesWang/css.vim'
 Plug 'jxnblk/vim-mdx-js'
 Plug 'tpope/vim-liquid'
 Plug 'maksimr/vim-yate'
@@ -536,13 +537,19 @@ call coc#config('eslint', {
       \ 'filetypes': ['javascript', 'javascriptreact', 'typescript', 'typescriptreact']
       \ })
 
-call coc#config('stylelint', {
-      \ 'enabled': 1
-      \ })
+call coc#config('stylelint', {'enabled': 1})
+
+call coc#config('css.validate', 0)
 
 " essentially avoid turning on typescript in a flow project
 call coc#config('tsserver', {
       \ 'enableJavascript': globpath('.', '.flowconfig') == ''
+      \ })
+
+" disable typescript warning ie
+" 'File is a CommonJS module; it may be converted to an ES6 module.'
+call coc#config('javascript', {
+      \ 'suggestionActions': {'enabled': 0}
       \ })
 
 let s:languageservers = {}
