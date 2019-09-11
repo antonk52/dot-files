@@ -522,7 +522,16 @@ call coc#config('highlight', {
       \ 'disableLanguages': ['vim']
       \ })
 
+function HasEslintConfig()
+  for name in ['.eslintrc', '.eslintrc.js', '.eslintrc.json']
+    if globpath('.', name) != ''
+      return 1
+    endif
+  endfor
+endfunction
+
 call coc#config('eslint', {
+      \ 'enable': HasEslintConfig(),
       \ 'autoFixOnSave': 1,
       \ 'filetypes': ['javascript', 'javascriptreact', 'typescript', 'typescriptreact']
       \ })
