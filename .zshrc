@@ -21,6 +21,7 @@ plugins=(
   osx
   mercurial
   zsh-autosuggestions
+  tmuxinator
 )
 
 source $ZSH/oh-my-zsh.sh

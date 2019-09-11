@@ -45,6 +45,7 @@ alias tst='tmux start-server'
 alias tks='tmux kill-server'
 alias tl='tmux list-sessions'
 alias ta='tmux attach -t'
+alias tmuxr='tmuxinator'
 
 # node aliases
 alias nm='nodemon'
