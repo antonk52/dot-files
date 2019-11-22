@@ -41,16 +41,18 @@ autoload -U promptinit; promptinit
 
 PURE_PROMPT_SYMBOL="▲" # triangle
 PURE_PROMPT_VICMD_SYMBOL="✔︎" # tick
+PURE_GIT_DOWN_ARROW="↓"
+PURE_GIT_UP_ARROW="↑"
 
 zstyle :prompt:pure:path color blue
 zstyle :prompt:pure:git:branch color green
+zstyle :prompt:pure:git:arrow color white
 zstyle :prompt:pure:prompt:success color '#ffffff'
 zstyle :prompt:pure:prompt:error color red
 zstyle ':vcs_info:*:*' unstagedstr '!'
 zstyle ':vcs_info:*:*' stagedstr '+'
 zstyle ':vcs_info:*:*' formats "$FX[bold]%r$FX[no-bold]/%S" "%s/%b" "%%u%c"
 zstyle ':vcs_info:*:*' actionformats "$FX[bold]%r$FX[no-bold]/%S" "%s/%b" "%u%c (%a)"
-zstyle ':vcs_info:*:*' nvcsformats "%~" "" ""
 
 prompt pure
 
