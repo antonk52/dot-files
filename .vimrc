@@ -88,7 +88,6 @@ Plug 'maksimr/vim-yate'
 Plug 'chase/vim-ansible-yaml'
 Plug 'ap/vim-css-color', { 'for': ['html', 'css', 'javascript', 'javascript.jsx'] }
 Plug 'Yggdroot/indentLine'
-Plug 'plasticboy/vim-markdown', { 'for': ['markdown'] }
 
 " themes
 Plug 'flazz/vim-colorschemes'
@@ -588,9 +587,6 @@ let g:UltiSnipsEditSplit="vertical"
 let g:closetag_filenames = "*.html,*.xhtml,*.phtml,*.php,*.jsx,*.js,*.ts,*.tsx"
 " make the list of non-closing tags self-closing in the specified files
 let g:closetag_xhtml_filenames = '*.xhtml,*.jsx,*.js,*.ts,*.tsx'
-
-" ======= markdown
-let g:vim_markdown_conceal = 0
 
 " ======= tern js
 " include types in the result data
