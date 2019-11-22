@@ -13,14 +13,9 @@ export ZSH=$HOME/.oh-my-zsh
 
 # oh my zsh plugins
 plugins=(
-  brew
-  git
-  node
   npm
-  osx
-  mercurial
+  # https://github.com/zsh-users/zsh-autosuggestions
   zsh-autosuggestions
-  tmuxinator
 )
 
 source $ZSH/oh-my-zsh.sh
@@ -31,17 +26,7 @@ export LANG=en_US.UTF-8
 # Preferred editor for local and remote sessions
 export EDITOR='vim'
 
-# Make CTRL-Z background things and unbackground them.
-function fg-bg() {
-  if [[ $#BUFFER -eq 0 ]]; then
-    fg
-  else
-    zle push-input
-  fi
-}
-zle -N fg-bg
-bindkey '^Z' fg-bg
-
+# source personal aliases
 source ~/dot-files/shell-aliases
 
 # Vi mode for command line
