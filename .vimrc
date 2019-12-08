@@ -451,8 +451,19 @@ let g:javascript_plugin_jsdoc=1
 set updatetime=300
 set shortmess+=c
 
-let g:coc_node_path = '/usr/local/bin/node'
-let g:coc_global_extensions=['coc-eslint', 'coc-stylelint', 'coc-tsserver', 'coc-prettier']
+" Let coc use a newer nodejs version
+" since I have to continiusly switch between older ones
+if filereadable('/usr/local/n/versions/node/12.13.1/bin/node')
+  let g:coc_node_path = '/usr/local/n/versions/node/12.13.1/bin/node'
+endif
+let g:coc_global_extensions=[
+    \ 'coc-tsserver',
+    \ 'coc-eslint',
+    \ 'coc-css',
+    \ 'coc-stylelint',
+    \ 'coc-json',
+    \ 'coc-prettier'
+    \]
 
 command! -nargs=0 Prettier :call CocAction('runCommand', 'prettier.formatFile')
 
