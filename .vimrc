@@ -49,10 +49,13 @@ Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 " dims inactive splits
 Plug 'blueyed/vim-diminactive'
-" search project by file path/name
-Plug 'ctrlpvim/ctrlp.vim'
-" async project file search
-Plug 'Yggdroot/LeaderF', { 'do': './install.sh' }
+if v:version < 800
+  " older vim versions or not neovim
+  Plug 'ctrlpvim/ctrlp.vim'
+else
+  " async project file search
+  Plug 'Yggdroot/LeaderF', { 'do': './install.sh' }
+endif
 " rapid code nav
 Plug 'easymotion/vim-easymotion'
 " auto closes quotes and braces
@@ -575,9 +578,17 @@ let g:deoplete#sources#ternjs#docs = 1
 
 " ======= supertab
 " navigate through auto completion options where:
-" - tab takes to the next one - one down 
+" - tab takes to the next one - one down
 " - shift tab takes to previous one - one up
 let g:SuperTabDefaultCompletionType = '<c-n>'
+
+" ======= ctrlp
+
+if v:version < 800
+  let g:ctrlp_map = '<Leader>f'
+  " ignore version control dirs and node_modules
+  let g:ctrlp_custom_ignore = '\v[\/](\.(git|hg|svn)|node_modules)$'
+endif
 
 " node exac util
 function! Node()
