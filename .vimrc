@@ -38,8 +38,6 @@ Plug 'tpope/vim-surround'
 " git gems
 Plug 'tpope/vim-fugitive'
 Plug 'tommcdo/vim-fugitive-blame-ext'
-" mercurial, avoid at all costs
-Plug 'jlfwong/vim-mercenary'
 " toggle comments duh
 Plug 'scrooloose/nerdcommenter'
 " project file tree
@@ -60,37 +58,31 @@ Plug 'easymotion/vim-easymotion'
 " auto closes quotes and braces
 Plug 'jiangmiao/auto-pairs'
 " auto closes XML tags
-Plug 'alvan/vim-closetag', { 'for': ['html', 'php', 'javascript'] }
+Plug 'alvan/vim-closetag', { 'for': ['html', 'php', 'javascript', 'javascript.jsx', 'typescript', 'typescript.tsx'] }
 " consistent coding style
 Plug 'editorconfig/editorconfig-vim'
 " snippets
 Plug 'SirVer/ultisnips'
 
 " =========== front end ===========
-" format js
-Plug 'maksimr/vim-jsbeautify', { 'for': 'javascript' }
 " quick html
 Plug 'mattn/emmet-vim', { 'for': ['html', 'css', 'javascript'] }
-" css/less/sass/html color preview
-Plug 'gko/vim-coloresque', { 'for': ['html', 'css', 'javascript'] }
+" color highlight preview
+Plug 'ap/vim-css-color', { 'for': ['html', 'css', 'javascript', 'javascript.jsx', 'typescript', 'typescript.tsx'] }
 
 " =========== syntax ===========
-Plug 'chriskempson/base16-vim'
 Plug 'pangloss/vim-javascript'
 Plug 'leafgarland/typescript-vim'
 Plug 'HerringtonDarkholme/yats.vim'
-Plug 'kchmck/vim-coffee-script'
 Plug 'mxw/vim-jsx'
 Plug 'JulesWang/css.vim'
 Plug 'jxnblk/vim-mdx-js'
 Plug 'tpope/vim-liquid'
 Plug 'maksimr/vim-yate'
-Plug 'chase/vim-ansible-yaml'
-Plug 'ap/vim-css-color', { 'for': ['html', 'css', 'javascript', 'javascript.jsx'] }
 Plug 'Yggdroot/indentLine'
 
 " themes
-Plug 'flazz/vim-colorschemes'
+Plug 'chriskempson/base16-vim'
 Plug 'wincent/terminus'
 
 call plug#end()
@@ -277,14 +269,6 @@ cnoremap <expr> <C-p> getcmdtype() == '/' \|\| getcmdtype() == '?' ? '<CR>?<C-r>
 " you have a lot of splits and the status line gets truncated).
 nnoremap <Leader>p :echo expand('%')<CR>
 
-" move lines up and down with alt j/k
-nnoremap ∆ :m .+1<CR>==
-nnoremap ˚ :m .-2<CR>==
-inoremap ∆ <Esc>:m .+1<CR>==gi
-inoremap ˚ <Esc>:m .-2<CR>==gi
-vnoremap ∆ :m '>+1<CR>gv=gv
-vnoremap ˚ :m '<-2<CR>gv=gv
-
 " indentation shifts keep selection
 vnoremap < <gv
 vnoremap > >gv
@@ -417,13 +401,8 @@ endfunction
 
 command! -nargs=* -complete=file ToggleFiletype call ToggleFiletype()
 
-" CTRL B to format js
-autocmd Filetype javascript nnoremap <C-B> :call JsBeautify()<cr>
-
 " ======= Nerdtree
 
-" toggle nerdtree with CTRL N
-map <C-N> :NERDTreeToggle<CR>
 " show dot files
 let NERDTreeShowHidden=1
 let NERDTreeIgnore=['\.swp$', '\.DS_Store']
