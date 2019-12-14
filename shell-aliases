@@ -40,12 +40,23 @@ alias gpm='git push origin master'
 alias gl='git --no-pager log --oneline --decorate --graph --all'
 
 # tmux aliases
-alias t='tmux'
 alias tst='tmux start-server'
 alias tks='tmux kill-server'
 alias tl='tmux list-sessions'
 alias ta='tmux attach -t'
 alias tmuxr='tmuxinator'
+
+# start a named session by providing a name
+# or a blank session by calling `t`
+function t()
+{
+  if [ $# -eq 1 ]
+  then
+    tmux new-session -s $@
+  else
+    tmux
+  fi
+}
 
 # node aliases
 alias nm='nodemon'
