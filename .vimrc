@@ -11,8 +11,6 @@ endif
 call plug#begin('~/.vim/plugged')
 
 " =========== essentials ===========
-" search in a project
-Plug 'rking/ag.vim'
 " tab completion
 Plug 'ervandew/supertab'
 Plug 'antonk52/vim-tabber'
@@ -53,8 +51,9 @@ if v:version < 800
   " older vim versions or not neovim
   Plug 'ctrlpvim/ctrlp.vim'
 else
-  " async project file search
-  Plug 'Yggdroot/LeaderF', { 'do': './install.sh' }
+  " async project in-file/file search
+  Plug 'junegunn/fzf', { 'do': './install --bin' }
+  Plug 'junegunn/fzf.vim'
 endif
 " rapid code nav
 Plug 'easymotion/vim-easymotion'
@@ -309,7 +308,9 @@ nnoremap <C-t> :tabedit<CR>
 " neovim terminal
 if has('nvim')
   " use Esc to go into normal mode in terminal
-  tnoremap <Esc> <C-\><C-n>
+  au TermOpen * tnoremap <Esc> <c-\><c-n> 
+  " cancel the mapping above for fzf terminal
+  au FileType fzf tunmap <Esc>
   autocmd TermOpen * startinsert
   autocmd TermOpen * setlocal nonumber norelativenumber
 endif
@@ -430,13 +431,6 @@ let g:NERDCustomDelimiters = {
 " ======= indentline
 
 let g:indentLine_char = '│'
-
-" ======= Ctrlp
-
-" runtime path for fizzy search
-set runtimepath^=~/.vim/bundle/ctrlp.vim
-let g:ctrlp_custom_ignore = 'node_modules\|DS_Store\|git'
-let g:ctrlp_root_markers=['package.json']
 
 " ======= Diminactive
 " bg color for inactive splits
@@ -574,6 +568,26 @@ let g:UltiSnipsJumpBackwardTrigger="<c-z>"
 " If you want :UltiSnipsEdit to split your window.
 let g:UltiSnipsEditSplit="vertical"
 
+" ======= fzf / ctrlp
+if v:version < 800
+  " ctrlp
+  " runtime path for fizzy search
+  set runtimepath^=~/.vim/bundle/ctrlp.vim
+  let g:ctrlp_map = '<Leader>f'
+  let g:ctrlp_root_markers=['package.json']
+  " ignore version control dirs and node_modules
+  let g:ctrlp_custom_ignore = '\v[\/](\.(git|hg|svn)|node_modules)$'
+else
+  " fzf
+  " enable file preview for both Files & GFiles
+  command! -bang -nargs=? -complete=dir Files
+      \ call fzf#vim#files(<q-args>, fzf#vim#with_preview(), <bang>0)
+  command! -bang -nargs=? -complete=dir GFiles
+      \ call fzf#vim#gitfiles(<q-args>, fzf#vim#with_preview(), <bang>0)
+  " user leader f to search for not ignored file paths
+  nnoremap <leader>f :GFiles<cr>
+endif
+
 " ======= closetag
 
 " file extensions where this plugin is enabled
@@ -592,14 +606,6 @@ let g:deoplete#sources#ternjs#docs = 1
 " - tab takes to the next one - one down
 " - shift tab takes to previous one - one up
 let g:SuperTabDefaultCompletionType = '<c-n>'
-
-" ======= ctrlp
-
-if v:version < 800
-  let g:ctrlp_map = '<Leader>f'
-  " ignore version control dirs and node_modules
-  let g:ctrlp_custom_ignore = '\v[\/](\.(git|hg|svn)|node_modules)$'
-endif
 
 " node exac util
 function! Node()
