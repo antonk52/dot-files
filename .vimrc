@@ -49,7 +49,7 @@ Plug 'easymotion/vim-easymotion'
 " auto closes quotes and braces
 Plug 'jiangmiao/auto-pairs'
 " auto closes XML tags
-Plug 'alvan/vim-closetag', { 'for': ['html', 'php', 'javascript', 'javascript.jsx', 'typescript', 'typescript.tsx'] }
+Plug 'alvan/vim-closetag', { 'for': ['html', 'php', 'javascript', 'javascript.jsx', 'typescript.tsx'] }
 " consistent coding style
 Plug 'editorconfig/editorconfig-vim'
 " snippets
@@ -123,8 +123,8 @@ let base16colorspace=256
 
 color base16-ocean
 
-" show current line number
-set number relativenumber
+" no numbers by default
+set nonumber norelativenumber
 
 " search made easy
 set nohlsearch incsearch
@@ -132,9 +132,8 @@ if has('nvim')
   set inccommand=split
 endif
 
-" 1 tab == 2 spaces
-set tabstop=2
-set shiftwidth=2
+" 1 tab == 4 spaces
+set tabstop=4 shiftwidth=4
 
 " use spaces instead of tabs
 set expandtab
@@ -180,6 +179,10 @@ endif
 " four spaces indentation for js files
 autocmd Filetype javascript setlocal ts=4 sts=4 sw=4
 
+" keep indentLine disabled for json files to preserve pretty concealing
+autocmd BufEnter *.json set conceallevel=1 call IndentLineDisable
+autocmd BufLeave *.json set conceallevel=0 call IndentLineEnable
+
 " make current line number stand out a little
 if has('highlight')
   set highlight+=N:DiffText
@@ -215,8 +218,7 @@ endif
 set linebreak
 
 " always keep 3 lines around the cursor
-set scrolloff=3
-set sidescrolloff=3
+set scrolloff=3 sidescrolloff=3
 
 " highlight column 121 and onward
 autocmd Filetype javascript let &colorcolumn=join(range(121,999),",")
@@ -227,8 +229,6 @@ set laststatus=2
 " enable mouse scroll and select
 set mouse=a
 
-" Display quotes in json in all modes
-set conceallevel=0
 "
 " ======================== Mappings ========================
 "
@@ -568,7 +568,7 @@ endif
 " ======= closetag
 
 " file extensions where this plugin is enabled
-let g:closetag_filenames = "*.html,*.xhtml,*.phtml,*.php,*.jsx,*.js,*.ts,*.tsx"
+let g:closetag_filenames = "*.html,*.xhtml,*.phtml,*.php,*.jsx,*.js,*.tsx"
 " make the list of non-closing tags self-closing in the specified files
 let g:closetag_xhtml_filenames = '*.xhtml,*.jsx,*.js,*.tsx'
 
