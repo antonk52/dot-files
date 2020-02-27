@@ -26,7 +26,7 @@ describe('$1', () => {
 endsnippet
 
 snippet jestit
-it('', {
+it('', () => {
     const result = func();
     const expected = {};
 
@@ -64,4 +64,8 @@ export const mapStateToProps = ({page}) => ({
 const enhance: HOC<Props, {}> = connect(mapStateToProps, {});
 
 export default enhance(MyComponent);
+endsnippet
+
+snippet defSleep
+const sleep = async (ms) => new Promise(r => setTimeout(r, ms));
 endsnippet

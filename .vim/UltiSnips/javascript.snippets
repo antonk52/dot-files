@@ -28,7 +28,7 @@ describe('$1', () => {
 endsnippet
 
 snippet jestit
-it('', {
+it('', () => {
     const result = func();
     const expected = {};
 
@@ -48,30 +48,57 @@ snippet us
 $1
 endsnippet
 
-snippet reactfile
-/* @flow */
+#
+# react + flowtype + redux file template
+# - names component same as the directory the file is into
+snippet reactfile "react flow redux template"
+// @flow
 
 import React from 'react';
 import {connect} from 'react-redux';
 import {type HOC} from 'recompose';
 
 type Props = {|
-    error: void,
+    className?: string,
 |};
 
-const MyComponent = ({}: Props) => (
-    <div></div>
+const ${1:`!v expand('%:t:r') == 'index' ? expand('%:p:h:t') : expand('%:t:r')`} = ({}: Props) => (
+    ${2:<div />}
 );
 
-export {MyComponent as Base};
+export {$1 as Base};
 
 export const mapStateToProps = ({
-
+    $3
 }) => ({
-
+    $4
 });
 
 const enhance: HOC<*, {||}> = connect(mapStateToProps, {});
 
-export default enhance(MyComponent);
+export default enhance($1);
+endsnippet
+
+snippet defSleep
+const sleep = async (ms) => new Promise(r => setTimeout(r, ms));
+endsnippet
+
+snippet func "function declaration"
+function ${1:name}(${2:arg}) {
+    return ${3:arg};
+}
+$0
+endsnippet
+
+snippet /* "documentation block"
+/**
+ * $1
+ */
+$0
+endsnippet
+
+snippet todo "do this later"
+/**
+ * TODO: $1
+ */
 endsnippet
