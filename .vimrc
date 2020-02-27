@@ -14,17 +14,6 @@ call plug#begin('~/.vim/plugged')
 " tab completion
 Plug 'ervandew/supertab'
 Plug 'antonk52/vim-tabber'
-Plug 'dkprice/vim-easygrep'
-" cross vim/nvim deoplete
-if has('nvim')
-  Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-else
-  Plug 'Shougo/deoplete.nvim'
-  Plug 'roxma/nvim-yarp'
-  Plug 'roxma/vim-hug-neovim-rpc'
-endif
-" javascript completion turn + deoplete
-Plug 'carlitux/deoplete-ternjs', { 'do': 'npm install -g tern' }
 " types & linting
 Plug 'neoclide/coc.nvim', {'branch': 'release', 'do': ':CocInstall'}
 " support for coc in regular vim
@@ -332,7 +321,7 @@ command! Ter :ter
 command! Sp :sp
 command! Vs :vs
 
-" ======================== Plugging ========================
+" ======================== plugins ========================
 
 " ======= EasyMotion
 
@@ -350,18 +339,6 @@ nmap <Leader>s <Plug>(easymotion-s)
 
 " do not overwrite init behavior of the cursor
 let g:TerminusCursorShape=0
-
-" ======= Deoplete
-
-let g:deoplete#enable_at_startup = 1
-let g:deoplete#auto_complete_delay = 0
-let g:deoplete#enable_ignore_case = 1
-let g:deoplete#enable_smart_case = 1
-let g:deoplete#auto_complete_start_length = 2
-
-au FileType html setl omnifunc=csscomplete#CompleteCSS
-au FileType javascript setl omnifunc=csscomplete#CompleteCSS
-au FileType javascript.jsx setl omnifunc=csscomplete#CompleteCSS
 
 " ======= Airline
 
@@ -593,13 +570,7 @@ endif
 " file extensions where this plugin is enabled
 let g:closetag_filenames = "*.html,*.xhtml,*.phtml,*.php,*.jsx,*.js,*.ts,*.tsx"
 " make the list of non-closing tags self-closing in the specified files
-let g:closetag_xhtml_filenames = '*.xhtml,*.jsx,*.js,*.ts,*.tsx'
-
-" ======= tern js
-" include types in the result data
-let g:deoplete#sources#ternjs#types = 1
-" include docs in the result data
-let g:deoplete#sources#ternjs#docs = 1
+let g:closetag_xhtml_filenames = '*.xhtml,*.jsx,*.js,*.tsx'
 
 " ======= supertab
 " navigate through auto completion options where:
