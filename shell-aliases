@@ -1,3 +1,4 @@
+alias mvim='nvim -u ~/.mvimrc'
 # vim goodness
 alias :sp='test -n "$TMUX" && tmux split-window'
 alias :vs='test -n "$TMUX" && tmux split-window -h'
@@ -48,7 +49,7 @@ alias tmuxr='tmuxinator'
 
 # start a named session by providing a name
 # or a blank session by calling `t`
-function t()
+function tm()
 {
   if [ $# -eq 1 ]
   then
