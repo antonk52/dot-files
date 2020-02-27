@@ -20,6 +20,10 @@ plugins=(
 
 source $ZSH/oh-my-zsh.sh
 
+# toggle themes using `base16`
+BASE16_SHELL=$HOME/dot-files/base16-shell/
+[ -n "$PS1" ] && [ -s $BASE16_SHELL/profile_helper.sh ] && eval "$($BASE16_SHELL/profile_helper.sh)"
+
 # You may need to manually set your language environment
 export LANG=en_US.UTF-8
 
@@ -84,3 +88,5 @@ merge-in-default() {
   echo '-----------------------';
   echo '';
 }
+
+eval "$(rbenv init -)"
