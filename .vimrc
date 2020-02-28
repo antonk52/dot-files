@@ -391,17 +391,20 @@ let NERDTreeIgnore=['\.swp$', '\.DS_Store']
 " ======= Nerdcommenter
 
 let g:NERDDefaultAlign = 'left'
+let g:NERDSpaceDelims = 1
+let g:NERDCreateDefaultMappings = 0
 
 " toggle comments with CTRL /
 map <C-_> <Plug>NERDCommenterToggle
 map <C-/> <Plug>NERDCommenterToggle
 
 " custom comment schema
+let g:jsComments = { 'left': '//', 'leftAlt': '{/*', 'rightAlt': '*/}' }
 let g:NERDCustomDelimiters = {
-  \'javascript': { 'left': '// ','right': '' },
-  \'javascript.jsx': { 'left': '// ','right': '' },
-  \'typescript': { 'left': '// ','right': '' },
-  \'typescript.tsx': { 'left': '// ','right': '' },
+  \'javascript': g:jsComments,
+  \'javascript.jsx': g:jsComments,
+  \'typescript': g:jsComments,
+  \'typescript.tsx': g:jsComments,
   \'css': { 'left': '/* ', 'right': ' */' }
 \}
 
