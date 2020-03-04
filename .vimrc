@@ -36,14 +36,9 @@ Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 " dims inactive splits
 Plug 'blueyed/vim-diminactive'
-if v:version < 800
-  " older vim versions or not neovim
-  Plug 'ctrlpvim/ctrlp.vim'
-else
-  " async project in-file/file search
-  Plug 'junegunn/fzf', { 'do': './install --bin' }
-  Plug 'junegunn/fzf.vim'
-endif
+" async project in-file/file search
+Plug 'junegunn/fzf', { 'do': './install --bin' }
+Plug 'junegunn/fzf.vim'
 " rapid code nav
 Plug 'easymotion/vim-easymotion'
 " auto closes quotes and braces
@@ -548,25 +543,14 @@ let g:UltiSnipsJumpBackwardTrigger="<c-z>"
 " If you want :UltiSnipsEdit to split your window.
 let g:UltiSnipsEditSplit="vertical"
 
-" ======= fzf / ctrlp
-if v:version < 800
-  " ctrlp
-  " runtime path for fizzy search
-  set runtimepath^=~/.vim/bundle/ctrlp.vim
-  let g:ctrlp_map = '<Leader>f'
-  let g:ctrlp_root_markers=['package.json']
-  " ignore version control dirs and node_modules
-  let g:ctrlp_custom_ignore = '\v[\/](\.(git|hg|svn)|node_modules)$'
-else
-  " fzf
-  " enable file preview for both Files & GFiles
-  command! -bang -nargs=? -complete=dir Files
-      \ call fzf#vim#files(<q-args>, fzf#vim#with_preview(), <bang>0)
-  command! -bang -nargs=? -complete=dir GFiles
-      \ call fzf#vim#gitfiles(<q-args>, fzf#vim#with_preview(), <bang>0)
-  " user leader f to search for not ignored file paths
-  nnoremap <leader>f :GFiles<cr>
-endif
+" ======= fzf
+" enable file preview for both Files & GFiles
+command! -bang -nargs=? -complete=dir Files
+    \ call fzf#vim#files(<q-args>, fzf#vim#with_preview(), <bang>0)
+command! -bang -nargs=? -complete=dir GFiles
+    \ call fzf#vim#gitfiles(<q-args>, fzf#vim#with_preview(), <bang>0)
+" user leader f to search for not ignored file paths
+nnoremap <leader>f :GFiles<cr>
 
 " ======= closetag
 
