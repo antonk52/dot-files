@@ -361,7 +361,7 @@ let g:airline#parts#ffenc#skip_expected_string='utf-8[unix]'
 " disable word count
 let g:airline#extensions#wordcount#enabled = 0
 " use coc by default
-let g:airline#extensions#coc#enabled = 1
+let g:airline#extensions#coc#enabled = 0
 " do not notify when spell is on
 let g:airline_detect_spell=0
 let g:airline_detect_spelllang=0
@@ -427,11 +427,12 @@ if filereadable('/usr/local/n/versions/node/12.13.1/bin/node')
 endif
 let g:coc_global_extensions=[
     \ 'coc-tsserver',
+    \ 'coc-prettier',
     \ 'coc-eslint',
     \ 'coc-css',
-    \ 'coc-stylelint',
-    \ 'coc-json',
-    \ 'coc-prettier'
+    \ 'coc-cssmodules',
+    \ 'coc-stylelintplus',
+    \ 'coc-json'
     \]
 
 command! -nargs=0 Prettier :call CocAction('runCommand', 'prettier.formatFile')
@@ -441,9 +442,9 @@ inoremap <silent><expr> <c-space> coc#refresh()
 
 " Use <cr> to confirm completion, `<C-g>u` means break undo chain at current position.
 " Coc only does snippet and additional edit on confirm.
-inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+"inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
 
-" Use K to show documentation in preview window
+" Use leader T to show documentation in preview window
 nnoremap <leader>t :call <SID>show_documentation()<CR>
 
 function! s:show_documentation()
@@ -470,20 +471,6 @@ let s:LSP_CONFIG = {
       \  }
       \}
 
-call coc#config('coc.preferences', {
-      \ 'autoTrigger': 'always',
-      \ 'colorSupport': 1,
-      \ 'diagnostic.errorSign': '●',
-      \ 'diagnostic.warningSign': '●',
-      \ 'diagnostic.infoSign': '!',
-      \ 'diagnostic.hintSign': '!',
-      \ })
-
-call coc#config('highlight', {
-      \ 'colors': 1,
-      \ 'disableLanguages': ['vim']
-      \ })
-
 function HasEslintConfig()
   for name in ['.eslintrc', '.eslintrc.js', '.eslintrc.json']
     if globpath('.', name) != ''
@@ -492,25 +479,12 @@ function HasEslintConfig()
   endfor
 endfunction
 
-call coc#config('eslint', {
-      \ 'enable': HasEslintConfig(),
-      \ 'autoFixOnSave': 1,
-      \ 'filetypes': ['javascript', 'javascriptreact', 'typescript', 'typescriptreact']
-      \ })
-
-call coc#config('stylelint', {'enabled': 1})
-
-call coc#config('css.validate', 0)
+" turn off eslint when cannot find eslintrc
+call coc#config('eslint', { 'enable': HasEslintConfig() })
 
 " essentially avoid turning on typescript in a flow project
 call coc#config('tsserver', {
       \ 'enableJavascript': globpath('.', '.flowconfig') == ''
-      \ })
-
-" disable typescript warning ie
-" 'File is a CommonJS module; it may be converted to an ES6 module.'
-call coc#config('javascript', {
-      \ 'suggestionActions': {'enabled': 0}
       \ })
 
 let s:languageservers = {}
