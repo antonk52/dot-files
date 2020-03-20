@@ -43,3 +43,13 @@ brew install yarn # npm alternative
 brew install youtube-dl # download youtube videos
 brew install zsh # bash but better
 brew install zsh-completions # zsh extension
+
+brew cask install alfred # spotlight but useful
+brew cask install chromium # chrome but pure
+brew cask install cyberduck # when ftp is still relevant
+brew cask install docker # docker desktop app
+brew cask install firefox
+brew cask install gimp
+brew cask install iterm2 # terminal
+brew cask install keycastr # useful for demos
+brew cask install vlc # media player
