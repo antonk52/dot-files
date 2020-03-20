@@ -69,6 +69,8 @@ bindkey "^P" history-search-backward
 bindkey "^Y" accept-and-hold
 bindkey "^N" insert-last-word
 bindkey "^Q" push-line-or-edit
+# ctrl+v to edit command in vim
+bindkey "^v" edit-command-line
 
 # Load local settings
 if ls ~/.local_shellrc 1> /dev/null 2>&1; then source ~/.local_shellrc; fi
