@@ -419,9 +419,9 @@ set shortmess+=c
 
 " Let coc use a newer nodejs version
 " since I have to continiusly switch between older ones
-if filereadable('/usr/local/n/versions/node/12.13.1/bin/node')
-  let g:coc_node_path = '/usr/local/n/versions/node/12.13.1/bin/node'
-endif
+let s:local_latest_node = '/usr/local/n/versions/node/13.9.0/bin/node'
+if filereadable(s:local_latest_node) | let g:coc_node_path = s:local_latest_node | endif
+
 let g:coc_global_extensions=[
     \ 'coc-tsserver',
     \ 'coc-prettier',
@@ -435,10 +435,6 @@ command! -nargs=0 Prettier call CocAction('runCommand', 'prettier.formatFile')
 
 " Use <c-space> to trigger completion.
 inoremap <silent><expr> <c-space> coc#refresh()
-
-" Use <cr> to confirm completion, `<C-g>u` means break undo chain at current position.
-" Coc only does snippet and additional edit on confirm.
-"inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
 
 " Use leader T to show documentation in preview window
 nnoremap <leader>t :call <SID>show_documentation()<CR>
@@ -454,21 +450,8 @@ endfunction
 " Highlight symbol under cursor on CursorHold
 autocmd CursorHold * silent call CocActionAsync('highlight')
 
-" instead of having ~/.vim/coc-settings.json
-let s:LSP_CONFIG = {
-      \  'flow': {
-      \    'command': exepath('flow'),
-      \    'args': ['lsp'],
-      \    'filetypes': ['javascript', 'javascriptreact'],
-      \    'initializationOptions': {},
-      \    'requireRootPattern': 1,
-      \    'settings': {},
-      \    'rootPatterns': ['.flowconfig']
-      \  }
-      \}
-
-function HasEslintConfig()
-  for name in ['.eslintrc', '.eslintrc.js', '.eslintrc.json']
+function! HasEslintConfig()
+  for name in ['.eslintrc.js', '.eslintrc.json', '.eslintrc']
     if globpath('.', name) != ''
       return 1
     endif
@@ -476,22 +459,32 @@ function HasEslintConfig()
 endfunction
 
 " turn off eslint when cannot find eslintrc
-call coc#config('eslint', { 'enable': HasEslintConfig() })
+call coc#config('eslint.enable', HasEslintConfig())
 
 " essentially avoid turning on typescript in a flow project
-call coc#config('tsserver', {
-      \ 'enableJavascript': globpath('.', '.flowconfig') == ''
-      \ })
+call coc#config('tsserver.enableJavascript', globpath('.', '.flowconfig') == '')
 
-let s:languageservers = {}
-for [lsp, config] in items(s:LSP_CONFIG)
-  let s:not_empty_cmd = !empty(get(config, 'command'))
-  if s:not_empty_cmd | let s:languageservers[lsp] = config | endif
-endfor
+" lookup local flow executable
+" and turn on flow for coc is executable exists
+function! SetFlow()
+    let s:flow_in_project = findfile('node_modules/.bin/flow')
+    let s:flow_exe = empty(s:flow_in_project) ? '' : getcwd() . '/' . s:flow_in_project
+    let s:flow_config = {
+    \    'command': s:flow_exe,
+    \    'args': ['lsp'],
+    \    'filetypes': ['javascript', 'javascriptreact'],
+    \    'initializationOptions': {},
+    \    'requireRootPattern': 1,
+    \    'settings': {},
+    \    'rootPatterns': ['.flowconfig']
+    \}
+    " turn on flow when flow executable exists
+    if !empty(s:flow_exe)
+        call coc#config('languageserver', {'flow': s:flow_config})
+    endif
+endfunction
 
-if !empty(s:languageservers)
-  call coc#config('languageserver', s:languageservers)
-endif
+call SetFlow()
 
 nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> gy <Plug>(coc-type-definition)
