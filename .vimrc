@@ -292,7 +292,7 @@ nnoremap <C-t> :tabedit<CR>
 " neovim terminal
 if has('nvim')
   " use Esc to go into normal mode in terminal
-  au TermOpen * tnoremap <Esc> <c-\><c-n> 
+  au TermOpen * tnoremap <Esc> <c-\><c-n>
   " cancel the mapping above for fzf terminal
   au FileType fzf tunmap <Esc>
   autocmd TermOpen * startinsert
@@ -324,13 +324,10 @@ command! Vs :vs
 let g:EasyMotion_do_mapping = 0
 " lazy targeting
 let g:EasyMotion_smartcase = 1
-" Leader is the prefix
-map <Leader> <Plug>(easymotion-prefix)
-nmap § <Plug>(easymotion-s)
-" default mapping leader S to search for a letter
+" default mapping leader S to search for a character
 nmap <Leader>s <Plug>(easymotion-s)
 
-" ======= Teremous
+" ======= terminus
 
 " do not overwrite init behavior of the cursor
 let g:TerminusCursorShape=0
@@ -434,8 +431,7 @@ let g:coc_global_extensions=[
     \ 'coc-stylelintplus',
     \ 'coc-json'
     \]
-
-command! -nargs=0 Prettier :call CocAction('runCommand', 'prettier.formatFile')
+command! -nargs=0 Prettier call CocAction('runCommand', 'prettier.formatFile')
 
 " Use <c-space> to trigger completion.
 inoremap <silent><expr> <c-space> coc#refresh()
