@@ -102,3 +102,48 @@ snippet todo "do this later"
  * TODO: $1
  */
 endsnippet
+
+snippet switch
+switch (${0:condition}) {
+    case ${1:when}:
+        ${2:expr}
+    case ${3:cond}:
+        ${4:expr}
+    default:
+        ${5:expr}
+}
+endsnippet
+
+snippet cl "console.log"
+console.log(${1:logme})
+endsnippet
+
+snippet fn "Named function expr"
+function ${1:name}(${2:arg}) {
+    return ${3}
+}
+endsnippet
+
+snippet iif "ignore the whole file"
+/* istanbul ignore file */
+endsnippet
+
+snippet iin "ignore the next thing"
+/* istanbul ignore next */
+endsnippet
+
+snippet ednl "eslint-disable-next-line comment"
+eslint-disable-next-line ${0:rule-name}
+endsnippet
+
+snippet fi "$FlowIgnore"
+$FlowIgnore<'${0:why do you ignore?}'>
+endsnippet
+
+snippet ffm "$FlowFixMe"
+$FlowFixMe<'${0:what is broken?}'>
+endsnippet
+
+snippet ee "$ExpectError"
+$ExpectError<'${0:why is it expected?}'>
+endsnippet
