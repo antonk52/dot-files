@@ -1,3 +1,4 @@
+#!/bin/bash
 #
 # Reference
 # https://github.com/kevinSuttle/macOS-Defaults/blob/master/REFERENCE.md

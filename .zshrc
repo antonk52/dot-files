@@ -1,3 +1,17 @@
+# XDG directories
+export XDG_CONFIG_HOME=$HOME/.config
+export XDG_DATA_HOME=$HOME/.local/share
+export XDG_BIN_HOME=$HOME/.local/bin
+export XDG_LIB_HOME=$HOME/.local/lib
+export XDG_CACHE_HOME=$HOME/.cache
+
+# env setup
+export LESSHISTFILE="$XDG_DATA_HOME/less/history"
+export NPM_CONFIG_USERCONFIG="$XDG_CONFIG_HOME/npm/npmrc"
+export NODE_REPL_HISTORY=$XDG_DATA_HOME/node/repl_history
+export NODE_REPL_HISTORY_SIZE=10000
+export NODE_REPL_MODE=strict
+
 # use base16 colors
 BASE16_SHELL=$HOME/dot-files/base16-shell
 [ -n "$PS1" ] && [ -s $BASE16_SHELL/profile_helper.sh ] && eval "$($BASE16_SHELL/profile_helper.sh)"
@@ -73,22 +87,6 @@ bindkey "^Q" push-line-or-edit
 bindkey "^v" edit-command-line
 
 # Load local settings
-if ls ~/.local_shellrc 1> /dev/null 2>&1; then source ~/.local_shellrc; fi
-
-merge-in-default() {
-  hg update default;
-  hg pull -u;
-  hg update $1;
-  hg merge default;
-  echo '';
-  echo '-----------------------';
-  echo 'resolve your trash mate';
-  echo '';
-  echo 'hg resolve -m path/to/file.sht';
-  echo 'hg commit "resolved bruh"';
-  echo '';
-  echo '-----------------------';
-  echo '';
-}
+[ -f ~/.config/.local_shellrc ] && source ~/.config/.local_shellrc
 
 eval "$(rbenv init -)"
