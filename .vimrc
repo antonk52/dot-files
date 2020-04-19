@@ -224,6 +224,16 @@ set laststatus=2
 " enable mouse scroll and select
 set mouse=a
 
+" persistent undo
+set undofile
+
+" store undo files awat from the project
+if $XDG_DATA_HOME != ''
+    set undodir="$XDG_DATA_HOME/nvim/undo"
+else
+    set undodir="$HOME/.vim/undo-dir"
+endif
+
 "
 " ======================== Mappings ========================
 "
