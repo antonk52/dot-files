@@ -21,6 +21,7 @@ alias .4='cd ../../../../'
 alias .5='cd ../../../../..'
 alias desk='cd ~/Desktop'
 alias docs='cd ~/Documents'
+alias dev='cd ~/Documents/dev'
 alias compare='diff -rq'
 
 # github
@@ -55,7 +56,7 @@ function tm()
 {
   if [ $# -eq 1 ]
   then
-    tmux new-session -s $@
+    tmux new-session -s "$@"
   else
     tmux
   fi
