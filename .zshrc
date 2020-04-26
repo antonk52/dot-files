@@ -1,3 +1,4 @@
+#!/bin/sh
 # XDG directories
 export XDG_CONFIG_HOME=$HOME/.config
 export XDG_DATA_HOME=$HOME/.local/share
@@ -13,17 +14,14 @@ export NODE_REPL_HISTORY_SIZE=10000
 export NODE_REPL_MODE=strict
 
 # use base16 colors
-BASE16_SHELL=$HOME/dot-files/base16-shell
-[ -n "$PS1" ] && [ -s $BASE16_SHELL/profile_helper.sh ] && eval "$($BASE16_SHELL/profile_helper.sh)"
-
-# If you come from bash you might have to change your $PATH.
-export PATH=$HOME/bin:/usr/local/bin:$PATH
+BASE16_SHELL="$HOME"/dot-files/base16-shell
+[ -n "$PS1" ] && [ -s "$BASE16_SHELL"/profile_helper.sh ] && eval "$("$BASE16_SHELL"/profile_helper.sh)"
 
 # path for global node modules
-export PATH=~/.npm-global/bin:$PATH
+export PATH="$HOME"/.npm-global/bin:$PATH
 
 # Path to your oh-my-zsh installation.
-export ZSH=$HOME/.oh-my-zsh
+export ZSH="$HOME"/.oh-my-zsh
 
 # oh my zsh plugins
 plugins=(
@@ -32,11 +30,7 @@ plugins=(
   zsh-autosuggestions
 )
 
-source $ZSH/oh-my-zsh.sh
-
-# toggle themes using `base16`
-BASE16_SHELL=$HOME/dot-files/base16-shell/
-[ -n "$PS1" ] && [ -s $BASE16_SHELL/profile_helper.sh ] && eval "$($BASE16_SHELL/profile_helper.sh)"
+source "$ZSH"/oh-my-zsh.sh
 
 # You may need to manually set your language environment
 export LANG=en_US.UTF-8
@@ -57,10 +51,10 @@ export KEYTIMEOUT=1
 # requires `npm i -g pure-prompt`
 autoload -U promptinit; promptinit
 
-PURE_PROMPT_SYMBOL="▲" # triangle
-PURE_PROMPT_VICMD_SYMBOL="✔︎" # tick
-PURE_GIT_DOWN_ARROW="↓"
-PURE_GIT_UP_ARROW="↑"
+export PURE_PROMPT_SYMBOL="▲" # triangle
+export PURE_PROMPT_VICMD_SYMBOL="✔︎" # tick
+export PURE_GIT_DOWN_ARROW="↓"
+export PURE_GIT_UP_ARROW="↑"
 
 zstyle :prompt:pure:path color blue
 zstyle :prompt:pure:git:branch color green
@@ -87,6 +81,7 @@ bindkey "^Q" push-line-or-edit
 bindkey "^v" edit-command-line
 
 # Load local settings
-[ -f ~/.config/.local_shellrc ] && source ~/.config/.local_shellrc
+LOCAL_SHELLRC="$XDG_CONFIG_HOME"/local_shellrc
+[ -f "$LOCAL_SHELLRC" ] && source "$LOCAL_SHELLRC"
 
 eval "$(rbenv init -)"
