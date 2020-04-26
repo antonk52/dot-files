@@ -1,5 +1,5 @@
-snippet jesttest
-/* @flow */
+snippet jestfile
+// @flow
 
 import React from 'react';
 import {shallow} from 'enzyme';
@@ -27,17 +27,23 @@ describe('$1', () => {
 });
 endsnippet
 
-snippet jestit
-it('', () => {
-    const result = func();
-    const expected = {};
-
-    expect(result).toEqual(expected);
+snippet jestdesc
+describe('${1:what are we testing}', () => {
+	$3
 })
 endsnippet
 
+snippet jestit
+it('${1:what to test}', () => {
+	const result = ${2:funcName}(${3:args});
+	const expected = ${4:'what do we expect?'};
+
+	expect(result).toEqual(expected);
+});
+endsnippet
+
 snippet flow
-/* @flow */
+// @flow
 
 $1
 endsnippet
@@ -51,32 +57,54 @@ endsnippet
 #
 # react + flowtype + redux file template
 # - names component same as the directory the file is into
-snippet reactfile "react flow redux template"
+snippet rrfile "react flow redux template"
 // @flow
 
 import React from 'react';
 import {connect} from 'react-redux';
-import {type HOC} from 'recompose';
+import type {HOC} from 'recompose';
 
-type Props = {|
-    className?: string,
+type OuterProps = {|
+	className?: string,
 |};
 
-const ${1:`!v expand('%:t:r') == 'index' ? expand('%:p:h:t') : expand('%:t:r')`} = ({}: Props) => (
-    ${2:<div />}
+type InnerProps = {|
+	...OuterProps,
+	stuff: string,
+|};
+const ${1:`!v expand('%:t:r') == 'index' ? expand('%:p:h:t') : expand('%:t:r')`} = ({${2:propName}}: InnerProps) => (
+	${3:<div />}
 );
 
 export {$1 as Base};
 
 export const mapStateToProps = ({
-    $3
+	$4
 }) => ({
-    $4
+	$5
 });
 
-const enhance: HOC<*, {||}> = connect(mapStateToProps, {});
+const enhance: HOC<InnerProps, OuterProps> = connect(mapStateToProps, {});
 
 export default enhance($1);
+endsnippet
+
+snippet rfile "react flow template"
+// @flow
+
+import React from 'react';
+
+import css from './style.css';
+
+type Props = {|
+	className?: string,
+|};
+
+const ${1:`!v expand('%:t:r') == 'index' ? expand('%:p:h:t') : expand('%:t:r')`} = ({${2:propName}}: Props) => (
+	${3:<div />}
+);
+
+export default $1;
 endsnippet
 
 snippet defSleep
@@ -114,14 +142,8 @@ switch (${0:condition}) {
 }
 endsnippet
 
-snippet cl "console.log"
+snippet con "console.log"
 console.log(${1:logme})
-endsnippet
-
-snippet fn "Named function expr"
-function ${1:name}(${2:arg}) {
-    return ${3}
-}
 endsnippet
 
 snippet iif "ignore the whole file"
@@ -146,4 +168,12 @@ endsnippet
 
 snippet ee "$ExpectError"
 $ExpectError<'${0:why is it expected?}'>
+endsnippet
+
+snippet logme "logger generator"
+const log = txt => console.log('\n\n${txt}\n\n');
+endsnippet
+
+snippet imp "import statement"
+import ${1:package} from '${2:package}';
 endsnippet
