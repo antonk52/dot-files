@@ -15,6 +15,7 @@ call plug#begin('~/.vim/plugged')
 Plug 'ervandew/supertab'
 Plug 'antonk52/vim-tabber'
 " types & linting
+Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app & yarn install', 'for': ['markdown', 'mdx'] }
 Plug 'neoclide/coc.nvim', {'branch': 'release', 'do': ':CocInstall'}
 " support for coc in regular vim
 if !has('nvim')
@@ -24,6 +25,7 @@ endif
 Plug 'tpope/vim-surround'
 " git gems
 Plug 'tpope/vim-fugitive'
+" commit messages in the status line in a blame split
 Plug 'tommcdo/vim-fugitive-blame-ext'
 " toggle comments duh
 Plug 'scrooloose/nerdcommenter'
