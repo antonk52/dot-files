@@ -130,6 +130,9 @@ endif
 " 1 tab == 4 spaces
 set tabstop=4 shiftwidth=4
 
+" consider that not all emojis take up full width
+set noemoji
+
 " use spaces instead of tabs
 set expandtab
 
@@ -146,6 +149,9 @@ set shortmess+=I
 
 " draw less
 set lazyredraw
+
+" detect filechanges outside of the editor
+set autoread
 
 " never ring the bell for any reason
 if exists('&belloff')
