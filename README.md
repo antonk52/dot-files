@@ -19,7 +19,7 @@ git submodule update --init --recursive
 - [iterm2](https://iterm2.com)
 - [homebrew](https://brew.sh)
 - [alfred](https://www.alfredapp.com)
-- [spectacle](https://www.spectacleapp.com)
 - [giphy capture](https://giphy.com/apps/giphycapture)
 - [FiraCode](https://github.com/tonsky/FiraCode)
 - [npmrc](https://github.com/deoxxa/npmrc)
+- [Rectangle](https://rectangleapp.com)
