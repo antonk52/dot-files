@@ -25,8 +25,6 @@ endif
 Plug 'tpope/vim-surround'
 " git gems
 Plug 'tpope/vim-fugitive'
-" commit messages in the status line in a blame split
-Plug 'tommcdo/vim-fugitive-blame-ext'
 " toggle comments duh
 Plug 'scrooloose/nerdcommenter'
 " project file tree
@@ -54,7 +52,7 @@ Plug 'SirVer/ultisnips'
 
 " =========== front end ===========
 " quick html
-Plug 'mattn/emmet-vim', { 'for': ['html', 'css', 'javascript'] }
+Plug 'mattn/emmet-vim', { 'for': ['html', 'css', 'javascript', 'typescript'] }
 " color highlight preview
 Plug 'ap/vim-css-color', { 'for': ['html', 'css', 'javascript', 'javascript.jsx', 'typescript', 'typescript.tsx'] }
 
@@ -71,6 +69,10 @@ Plug 'Yggdroot/indentLine'
 
 " themes
 Plug 'chriskempson/base16-vim'
+Plug 'fxn/vim-monochrome'
+Plug 'kcsongor/vim-monochrome-light'
+
+" sensible defaults
 Plug 'wincent/terminus'
 
 call plug#end()
@@ -83,37 +85,14 @@ if has('termguicolors')
   set termguicolors
 endif
 
-" change gui font and size
-if has('gui_running')
-  set guifont=Fira\ Code:h18
-else
-  set guifont=Fira\ Code:h13
-endif
-
 " highlight current cursor line
 set cursorline
-
-" cursor in gvim setting
-if has('gui_running')
-  set guicursor=a:hor7-Cursor
-  set guicursor+=a:blinkon0
-  let &t_SI .= "\<Esc>[4 q"
-endif
 
 " insert mode caret is an underline
 set guicursor+=i-ci-ve:hor24
 
 " Show “invisible” characters
-set list
-if has('nvim')
-  set listchars=tab:▸\ ,
-else
-  " remove $ from line endings
-  set nolist
-endif
-"\trail:∙,
-"\eol:¬,
-"\nbsp:_
+set list listchars=tab:▸\ ,\trail:∙,
 
 " Access colors present in 256 colorspace
 let base16colorspace=256
@@ -181,10 +160,6 @@ endif
 
 " four spaces indentation for js files
 autocmd Filetype javascript setlocal ts=4 sts=4 sw=4
-
-" keep indentLine disabled for json files to preserve pretty concealing
-autocmd BufEnter *.json set conceallevel=1 call IndentLineDisable
-autocmd BufLeave *.json set conceallevel=0 call IndentLineEnable
 
 " make current line number stand out a little
 if has('highlight')
@@ -302,9 +277,7 @@ vnoremap <Leader>a ^
 nnoremap <Leader>e $
 vnoremap <Leader>e $h
 
-" ======= Tabs
-
-" CTRL t - open new tab
+" open a new tab
 nnoremap <C-t> :tabedit<CR>
 
 " neovim terminal
@@ -371,12 +344,10 @@ let g:airline_highlighting_cache = 1
 let g:airline_skip_empty_sections = 1
 " only show line and column numbers
 let g:airline_section_z = '%l:%v'
+
+let g:airline_extensions = ['branch']
 " do not show utf-8
 let g:airline#parts#ffenc#skip_expected_string='utf-8[unix]'
-" disable word count
-let g:airline#extensions#wordcount#enabled = 0
-" use coc by default
-let g:airline#extensions#coc#enabled = 0
 " do not notify when spell is on
 let g:airline_detect_spell=0
 let g:airline_detect_spelllang=0
