@@ -219,6 +219,12 @@ endif
 "
 
 let mapleader="\<Space>"
+let maplocalleader="\\"
+
+" working with location lists made easy
+nnoremap <leader>] :lprevious<cr>
+nnoremap <leader>] :lNext<cr>
+nnoremap <leader>o :lopen<cr>
 
 " leader c - copy to OS clipboard
 vmap <leader>c "*y
@@ -226,9 +232,13 @@ vmap <leader>c "*y
 map <leader>v "*p
 " paste under current indentation level
 nnoremap p ]p
+" toggle folds
+nnoremap <Tab> za
 
 " toggle highlight last search
 nnoremap <leader>n :set hlsearch!<cr>
+" easy quit
+nnoremap <leader>q :q<cr>
 
 " CTRL a - go to the command beginning
 cnoremap <C-a> <Home>
@@ -241,11 +251,21 @@ cnoremap <C-e> <End>
 cnoremap <expr> <C-n> getcmdtype() == '/' \|\| getcmdtype() == '?' ? '<CR>/<C-r>/' : '<C-z>'
 cnoremap <expr> <C-p> getcmdtype() == '/' \|\| getcmdtype() == '?' ? '<CR>?<C-r>/' : '<C-p>'
 
-" <Leader>p -- Show the path of the current file (mnemonic: path; useful when
-" you have a lot of splits and the status line gets truncated).
-nnoremap <Leader>p :echo expand('%')<CR>
+" Show the current file path.
+" Useful when you have many splits & the status line gets truncated
+nnoremap <LocalLeader>p :echo expand('%')<CR>
+" Puts an absolute file path in the system clipboard
+nnoremap <LocalLeader>P :silent !echo '%:p' \| pbcopy<CR>
 
-" indentation shifts keep selection
+" manipulate numbers, convenient since my tmux prefix is <C-a>
+nnoremap <LocalLeader>a <C-a>
+nnoremap <LocalLeader>x <C-x>
+vnoremap <LocalLeader>a <C-a>
+vnoremap <LocalLeader>x <C-x>
+vnoremap <LocalLeader><LocalLeader>a g<C-a>
+vnoremap <LocalLeader><LocalLeader>x g<C-x>
+
+" indentation shifts keep selection(`=` should still be preferred)
 vnoremap < <gv
 vnoremap > >gv
 
@@ -261,16 +281,18 @@ nnoremap <leader>k <C-W>5+
 nnoremap <leader>l <C-W>5>
 nnoremap <leader>h <C-W>5<
 
-" ctrl e to maximize current split vertically
-nnoremap <C-E> <C-W><C-_>
+" leader = to maximize current split vertically,
+" mnemonic `equals` is the same key as plus, makes current split larger
+nnoremap <Leader>= <C-W><C-_>
 
-" ctrl d to make all splits equal size vertically
-nnoremap <C-D> <C-W><C-=>
+" leader - to make all splits equal size vertically,
+" mnemonic `minus` makes current split smaller
+nnoremap <Leader>- <C-W><C-=>
 
-" go to the beginning of the line
+" go to the beginning of the line (^ is too far)
 nnoremap <Leader>a ^
 vnoremap <Leader>a ^
-" go to the end of the line
+" go to the end of the line ($ is too far)
 nnoremap <Leader>e $
 vnoremap <Leader>e $h
 
@@ -491,11 +513,22 @@ let g:UltiSnipsEditSplit="vertical"
 " ======= fzf
 " enable file preview for both Files & GFiles
 command! -bang -nargs=? -complete=dir Files
-    \ call fzf#vim#files(<q-args>, fzf#vim#with_preview(), <bang>0)
+    \ call fzf#vim#files(<q-args>, fzf#vim#with_preview(), <bang>1)
 command! -bang -nargs=? -complete=dir GFiles
     \ call fzf#vim#gitfiles(<q-args>, fzf#vim#with_preview(), <bang>0)
 " user leader f to search for not ignored file paths
 nnoremap <leader>f :GFiles<cr>
+nnoremap <leader>F :Files<cr>
+" buffer list with fuzzy search
+nnoremap <leader>b :Buffers<cr>
+" list available snippets
+nnoremap <leader>s :Snippets<cr>
+" list opened windows
+nnoremap <leader>W :Windows<cr>
+" list opened file history
+nnoremap <leader>H :History<cr>
+" start in a popup
+let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.6 } }
 
 " ======= closetag
 
