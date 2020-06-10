@@ -39,8 +39,6 @@ Plug 'blueyed/vim-diminactive'
 " async project in-file/file search
 Plug 'junegunn/fzf', { 'do': './install --bin' }
 Plug 'junegunn/fzf.vim'
-" rapid code nav
-Plug 'easymotion/vim-easymotion'
 " auto closes quotes and braces
 Plug 'jiangmiao/auto-pairs'
 " auto closes XML tags
@@ -61,11 +59,10 @@ Plug 'pangloss/vim-javascript'
 Plug 'leafgarland/typescript-vim'
 Plug 'HerringtonDarkholme/yats.vim'
 Plug 'mxw/vim-jsx'
-Plug 'JulesWang/css.vim'
-Plug 'jxnblk/vim-mdx-js'
-Plug 'tpope/vim-liquid'
-Plug 'maksimr/vim-yate'
-Plug 'Yggdroot/indentLine'
+Plug 'JulesWang/css.vim' " TODO try out 'hail2u/vim-css3-syntax'
+Plug 'jxnblk/vim-mdx-js', { 'for': ['mdx'] }
+Plug 'maksimr/vim-yate', { 'for': ['yate'] } " TODO defeat, forget, get drunk
+Plug 'Yggdroot/indentLine', { 'for': ['javascript', 'typescript', 'vimscript'] }
 
 " themes
 Plug 'chriskempson/base16-vim'
@@ -309,15 +306,6 @@ command! Vs :vs
 
 " ======================== plugins ========================
 
-" ======= EasyMotion
-
-" disable default key bindings
-let g:EasyMotion_do_mapping = 0
-" lazy targeting
-let g:EasyMotion_smartcase = 1
-" default mapping leader S to search for a character
-nmap <Leader>s <Plug>(easymotion-s)
-
 " ======= terminus
 
 " do not overwrite init behavior of the cursor
@@ -348,6 +336,7 @@ let g:airline_section_z = '%l:%v'
 let g:airline_extensions = ['branch']
 " do not show utf-8
 let g:airline#parts#ffenc#skip_expected_string='utf-8[unix]'
+
 " do not notify when spell is on
 let g:airline_detect_spell=0
 let g:airline_detect_spelllang=0
@@ -388,6 +377,10 @@ let g:NERDCustomDelimiters = {
   \'typescript.tsx': g:jsComments,
   \'css': { 'left': '/* ', 'right': ' */' }
 \}
+
+" ======= auto-pairs
+" avoid inserting extra space inside surrounding objects `{([`
+let g:AutoPairsMapSpace = 0
 
 " ======= indentline
 
