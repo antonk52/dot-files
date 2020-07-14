@@ -128,3 +128,10 @@ function notes()
     $EDITOR "$FILE_PATH" -c "+normal G"
   fi
 }
+
+function colors()
+{
+    theme_name=$(ls "$BASE16_SHELL"/scripts | sed 's/\.sh$//g' | sed 's/base16-//g' | fzf)
+
+    [ "$theme_name" ] && eval "base16_$theme_name" || echo ''
+}
