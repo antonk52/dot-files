@@ -31,9 +31,9 @@ Plug 'scrooloose/nerdcommenter'
 Plug 'scrooloose/nerdtree'
 " file explorer from the current file
 Plug 'tpope/vim-vinegar'
-" enhanced status line
-Plug 'vim-airline/vim-airline'
-Plug 'vim-airline/vim-airline-themes'
+" status line
+Plug 'antonk52/vim-lightline-ocean'
+Plug 'itchyny/lightline.vim'
 " dims inactive splits
 Plug 'blueyed/vim-diminactive'
 " async project in-file/file search
@@ -341,46 +341,14 @@ command! Vs :vs
 " do not overwrite init behavior of the cursor
 let g:TerminusCursorShape=0
 
-" ======= Airline
+" ======= lightline
 
-" separators
-let g:airline_left_sep = ''
-let g:airline_left_alt_sep = ''
-let g:airline_right_sep = ''
-let g:airline_right_alt_sep = ''
-if !exists('g:airline_symbols')
-  let g:airline_symbols = {}
-endif
-let g:airline_symbols.branch = ''
-let g:airline_symbols.readonly = ''
-let g:airline_symbols.linenr = '☰'
-let g:airline_symbols.maxlinenr = ''
-" truncate branch name prefix
-let g:airline#extensions#branch#format = 2
-" performance lol
-let g:airline_highlighting_cache = 1
-let g:airline_skip_empty_sections = 1
-" only show line and column numbers
-let g:airline_section_z = '%l:%v'
+let g:lightline = {'colorscheme': 'ocean'}
 
-let g:airline_extensions = ['branch']
-" do not show utf-8
-let g:airline#parts#ffenc#skip_expected_string='utf-8[unix]'
-
-" do not notify when spell is on
-let g:airline_detect_spell=0
-let g:airline_detect_spelllang=0
-
-" hide filetype by default
-let g:airline_section_x = ''
-
-" be able to toggle airline filetype display
-function! ToggleFiletype()
-  let g:airline_section_x = empty(g:airline_section_x) ? &filetype : ''
-  :AirlineRefresh
-endfunction
-
-command! -nargs=* -complete=file ToggleFiletype call ToggleFiletype()
+let g:lightline.enable = { 'tabline': 0 }
+let g:lightline.active = { 'right': [ [ 'lineinfo' ], [ 'filetype' ] ] }
+let g:lightline.inactive = { 'left': [ ['filename'] ], 'right': [] }
+let g:lightline.tabline = { 'left': [ [ 'tabs' ] ], 'right': [] }
 
 " ======= Nerdtree
 
