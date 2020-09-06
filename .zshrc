@@ -8,7 +8,6 @@ export XDG_CACHE_HOME=$HOME/.cache
 
 # env setup
 export LESSHISTFILE="$XDG_DATA_HOME/less/history"
-export NPM_CONFIG_USERCONFIG="$XDG_CONFIG_HOME/npm/npmrc"
 export NODE_REPL_HISTORY=$XDG_DATA_HOME/node/repl_history
 export NODE_REPL_HISTORY_SIZE=10000
 export NODE_REPL_MODE=strict
