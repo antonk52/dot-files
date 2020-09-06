@@ -66,8 +66,6 @@ Plug 'Yggdroot/indentLine', { 'for': ['javascript', 'typescript', 'vimscript'] }
 
 " themes
 Plug 'chriskempson/base16-vim'
-Plug 'fxn/vim-monochrome'
-Plug 'kcsongor/vim-monochrome-light'
 
 " sensible defaults
 Plug 'wincent/terminus'
@@ -94,15 +92,8 @@ set list listchars=tab:▸\ ,\trail:∙,
 " Access colors present in 256 colorspace
 let base16colorspace=256
 
-let g:monochrome_italic_comments = 1
-color monochrome
-" monochrome doesn't get bright fold lines
-hi Folded guibg=16 guifg='#555555'
-" monochrome doesn't get to have a bright sign column
-hi SignColumn guibg=16 guifg='#555555'
-" darken popup menu background
-" since warning on bright blue are barely readable
-hi Pmenu ctermfg=15 ctermbg=237 guifg=White guibg=#3d444c
+color base16-ocean
+hi Comment gui=italic
 
 " no numbers by default
 set nonumber norelativenumber
