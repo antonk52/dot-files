@@ -369,11 +369,13 @@ map <C-/> <Plug>NERDCommenterToggle
 " custom comment schema
 let g:jsComments = { 'left': '//', 'leftAlt': '{/*', 'rightAlt': '*/}' }
 let g:NERDCustomDelimiters = {
-  \'javascript': g:jsComments,
-  \'javascript.jsx': g:jsComments,
-  \'typescript': g:jsComments,
-  \'typescript.tsx': g:jsComments,
-  \'css': { 'left': '/* ', 'right': ' */' }
+    \ 'javascript': g:jsComments,
+    \ 'javascript.jsx': g:jsComments,
+    \ 'javascript.jsx.jest': g:jsComments,
+    \ 'typescript': g:jsComments,
+    \ 'typescript.tsx': g:jsComments,
+    \ 'typescript.tsx.jest': g:jsComments,
+    \ 'css': { 'left': '/* ', 'right': ' */' }
 \}
 
 " ======= auto-pairs
@@ -411,10 +413,16 @@ let g:coc_global_extensions=[
     \ 'coc-stylelintplus',
     \ 'coc-json'
     \]
-command! -nargs=0 Prettier call CocAction('runCommand', 'prettier.formatFile')
 
-" Use <c-space> to trigger completion.
-inoremap <silent><expr> <c-space> coc#refresh()
+
+let g:coc_filetype_map = {
+    \ 'javascript.jest': 'javascript',
+    \ 'javascript.jsx.jest': 'javascript.jsx',
+    \ 'typescript.jest': 'typescript',
+    \ 'typescript.tsx.jest': 'typescript.tsx'
+    \ }
+
+command! -nargs=0 Prettier call CocAction('runCommand', 'prettier.formatFile')
 
 " Use leader T to show documentation in preview window
 nnoremap <leader>t :call <SID>show_documentation()<CR>
