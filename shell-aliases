@@ -135,3 +135,11 @@ function colors()
 
     [ "$theme_name" ] && eval "base16_$theme_name" || echo ''
 }
+
+function gob()
+{
+    branch_name="$(git branch | fzf | sed 's/ *//g')"
+
+    git checkout $branch_name
+
+}
