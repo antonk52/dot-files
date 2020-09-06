@@ -1,0 +1,42 @@
+snippet desc
+describe('${1:what are we testing}', () => {
+	$3
+})
+endsnippet
+
+snippet it
+it('${1:what to test}', () => {
+	const result = ${2:funcName}(${3:args});
+	const expected = ${4:'what do we expect?'};
+
+	expect(result).toEqual(expected);
+});
+endsnippet
+
+snippet testfile
+import React from 'react';
+import {shallow} from 'enzyme';
+
+import {Base} from '../';
+
+describe('$1', () => {
+	it('$2', () => {
+		const wrapper = shallow(<Base $3/>);
+
+		expect(wrapper).toMatchSnapshot();
+	});
+
+	it('mapStateToProps', () => {
+		const result = mapStateToProps({
+			$4
+		});
+
+		const expected = {
+			$5
+		};
+
+		expect(result).toEqual(expected);
+	});
+});
+endsnippet
+

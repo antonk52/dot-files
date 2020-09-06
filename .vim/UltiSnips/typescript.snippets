@@ -1,39 +1,3 @@
-snippet jesttest
-import React from 'react';
-import {shallow} from 'enzyme';
-
-import {Base} from '../';
-
-describe('$1', () => {
-    it('$2', () => {
-        const wrapper = shallow(<Base $3/>);
-
-        expect(wrapper).toMatchSnapshot();
-    });
-
-    it('mapStateToProps', () => {
-        const result = mapStateToProps({
-            $4
-        });
-
-        const expected = {
-            $5
-        };
-
-        expect(result).toEqual(expected);
-    });
-});
-endsnippet
-
-snippet jestit
-it('', () => {
-    const result = func();
-    const expected = {};
-
-    expect(result).toEqual(expected);
-})
-endsnippet
-
 snippet us
 'use strict'
 
@@ -69,3 +33,8 @@ endsnippet
 snippet defSleep
 const sleep = async (ms) => new Promise(r => setTimeout(r, ms));
 endsnippet
+
+snippet import "import statement"
+import ${2:thing} from '${1:package}';
+endsnippet
+
