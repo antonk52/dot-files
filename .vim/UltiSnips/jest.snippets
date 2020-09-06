@@ -40,3 +40,8 @@ describe('$1', () => {
 });
 endsnippet
 
+snippet mock
+jest.mock('${1:file/path/to/mock}', () => ({
+	${2:exportedFunc}: jest.fn($3),
+}));
+endsnippet
