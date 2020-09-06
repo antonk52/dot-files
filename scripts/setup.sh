@@ -10,6 +10,8 @@ ln -s ~/.vimrc "$XDG_CONFIG_HOME"/nvim/init.vim
 
 ln -s ~/coc-settings.json "$HOME"/.vim/coc-settings.json
 
+ln -s ~/dot-files/.gitconfig ~/.gitconfig
+
 ln -s ~/dot-files/.zshrc ~/.zshrc
 ln -s ~/dot-files/tmux "${XDG_CONFIG_HOME}"/tmux
 

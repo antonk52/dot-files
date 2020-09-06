@@ -1,0 +1,23 @@
+[user]
+    email = halloy52@gmail.ru
+    name = antonk52
+[core]
+    excludesfile = ~/.gitignore
+[push]
+    default = current
+[pull]
+    default = current
+[filter "lfs"]
+    clean = git-lfs clean -- %f
+    smudge = git-lfs smudge -- %f
+    process = git-lfs filter-process
+    required = true
+[alias]
+    go = checkout
+    l = log -n 100
+[includeIf "gitdir:~/Documents/dev/work/"]
+    path = ~/Documents/dev/work/.gitconfig
+[branch]
+    sort = -committerdate
+[pager]
+    diff = less --tabs 4 # display tabs as 4 spces
