@@ -17,3 +17,7 @@ ln -s ~/dot-files/tmux "${XDG_CONFIG_HOME}"/tmux
 
 echo 'symlinks created'
 
+[ ! -d ~/.local/share/less ] && mkdir -p ~/.local/share/less
+[ ! -d ~/.local/share/zsh ] && mkdir -p ~/.local/share/zsh
+[ ! -d ~/.local/share/node ] && mkdir -p ~/.local/share/node
+
