@@ -335,11 +335,46 @@ let g:TerminusCursorShape=0
 " ======= lightline
 
 let g:lightline = {'colorscheme': 'ocean'}
-
+let g:lightline.separator = { 'left': '', 'right': '' }
 let g:lightline.enable = { 'tabline': 0 }
-let g:lightline.active = { 'right': [ [ 'lineinfo' ], [ 'filetype' ] ] }
-let g:lightline.inactive = { 'left': [ ['filename'] ], 'right': [] }
+let g:lightline.active = {
+    \ 'left': [ ['mode'], ['readonly', 'filename'] ],
+    \ 'right': [ [ 'lineinfo' ], [ 'filetype' ] ] }
+let g:lightline.inactive = { 'left': [ ['relativepath'] ], 'right': [] }
 let g:lightline.tabline = { 'left': [ [ 'tabs' ] ], 'right': [] }
+let g:lightline.component_function = {
+    \ 'mode': 'LightlineMode',
+    \ 'filename': 'LightlineFilename',
+    \ 'filetype': 'LightlineFiletype' }
+
+function! LightlineFilename() abort
+    let expanded = expand('%:f')
+    let filename = expanded !=# '' ? expanded : '[No Name]'
+    " substitute other status line sections
+    let win_size = winwidth(0) - 28
+    let too_short = win_size <= len(filename)
+    return too_short ? pathshorten(filename) : filename
+endfunction
+
+function! LightlineMode() abort
+    return &modified ? '*' : ' '
+endfunction
+
+let g:ft_map = {
+    \ 'typescript': 'ts',
+    \ 'typescript.jest': 'ts',
+    \ 'typescript.tsx': 'tsx',
+    \ 'typescript.tsx.jest': 'tsx',
+    \ 'javascript': 'js',
+    \ 'javascript.jest': 'js',
+    \ 'javascript.jsx': 'jsx',
+    \ 'javascript.jsx.jest': 'jsx',
+    \ 'yaml': 'yml' }
+
+function! LightlineFiletype() abort
+    let ft = &filetype
+    return get(g:ft_map, ft, ft)
+endfunction
 
 " ======= Nerdtree
 
