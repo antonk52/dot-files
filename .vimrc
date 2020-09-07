@@ -553,14 +553,7 @@ let g:closetag_xhtml_filenames = '*.xhtml,*.jsx,*.js,*.tsx'
 " - shift tab takes to previous one - one up
 let g:SuperTabDefaultCompletionType = '<c-n>'
 
-" node exac util
-function! Node()
-  let l:line = getline('.')
-  let l:trimmed = trim(l:line)
-  let l:console = '"console.log(' . l:trimmed . ')"'
-  let l:result = execute(':!node -e ' . l:console)
-  echo l:result
-endfunction
+command! Todo call antonk52#todo#find()
 
 if !exists('g:local_vimrc_loaded')
     call s:LoadLocalVimrc()
