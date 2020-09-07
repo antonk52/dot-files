@@ -195,7 +195,7 @@ set linebreak
 set scrolloff=3 sidescrolloff=3
 
 " highlight column 121 and onward
-autocmd Filetype javascript let &colorcolumn=join(range(121,999),",")
+autocmd Filetype javascript let &colorcolumn=121
 
 " always show status line
 set laststatus=2
