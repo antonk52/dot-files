@@ -116,17 +116,17 @@ alias bang='notify -t "Well hello there" -m "Your time has come" -i "https://the
 function notes()
 {
   NOTES_PATH="$HOME"/Documents/notes
-  [ ! -d "$NOTES_PATH" ] && mkdir -p "$NOTES_PATH"
-  TODAY="$(date '+%Y-%m-%d')"
-  FILE_PATH="$NOTES_PATH"/"$TODAY".md
-  if [ -f "$FILE_PATH" ]; then
-    # when file exists open it
-    $EDITOR "$FILE_PATH"
-  else
-    # otherwise write set the title and open it
-    printf "# %s\n\n\n" "$TODAY" >> "$FILE_PATH"
-    $EDITOR "$FILE_PATH" -c "+normal G"
+  YEAR="$(date '+%Y')"
+  MONTH="$(date '+%m')"
+  DATE="$(date '+%d')"
+  DIR_PATH="$NOTES_PATH"/"$YEAR"/"$MONTH"
+  FILE_PATH="$DIR_PATH"/"$DATE".md
+
+  if [ ! -d "$DIR_PATH" ]; then
+      mkdir -p "$DIR_PATH"
   fi
+
+  $EDITOR "$FILE_PATH"
 }
 
 function colors()
