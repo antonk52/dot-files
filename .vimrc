@@ -297,7 +297,7 @@ endif
 
 " ======= helpers
 
-com! -nargs=* -complete=file ToggleNumbers set number! relativenumber!
+command! ToggleNumbers set number! relativenumber!
 
 " check spell in neovim exclusively
 " vim is mostly run remotely w/ no access to my dictionary
@@ -435,7 +435,7 @@ let g:coc_filetype_map = {
     \ 'typescript.tsx.jest': 'typescript.tsx'
     \ }
 
-command! -nargs=0 Prettier call CocAction('runCommand', 'prettier.formatFile')
+command! Prettier call CocAction('runCommand', 'prettier.formatFile')
 
 " Use leader T to show documentation in preview window
 nnoremap <leader>t :call <SID>show_documentation()<CR>
@@ -560,7 +560,7 @@ autocmd VimEnter * call LocadLocalVimrc()
 " This could've been an actual `:make` command, but since flowtype is non
 " trivial to detect and there are many candidates to be set as a `makeprg` for
 " javascript files, flowtype should stay as its own command to avoid confusion
-command! -nargs=0 MakeFlow call antonk52#flow#check()
+command! MakeFlow call antonk52#flow#check()
 
 " close quickfix window after going to an error
 autocmd FileType qf nnoremap <buffer> <cr> <cr>:cclose<cr>:echo ''<cr>
