@@ -543,3 +543,16 @@ let g:SuperTabDefaultCompletionType = '<c-n>'
 command! Todo call antonk52#todo#find()
 
 autocmd FileType * call antonk52#jest#detect()
+
+" any project can have a '.local_vimrc'
+function! LocadLocalVimrc() abort
+    let root_path = expand('%:p')
+    let project_file_path = expand('%')
+    let project_path = substitute(root_path, project_file_path, '', '')
+    let local_vimrc_path = '/' . project_path . '.local_vimrc'
+    if filereadable(local_vimrc_path)
+        source local_vimrc_path
+    endif
+endfunction
+
+autocmd VimEnter * call LocadLocalVimrc()
