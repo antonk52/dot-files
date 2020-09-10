@@ -561,3 +561,6 @@ autocmd VimEnter * call LocadLocalVimrc()
 " trivial to detect and there are many candidates to be set as a `makeprg` for
 " javascript files, flowtype should stay as its own command to avoid confusion
 command! -nargs=0 MakeFlow call antonk52#flow#check()
+
+" close quickfix window after going to an error
+autocmd FileType qf nnoremap <buffer> <cr> <cr>:cclose<cr>:echo ''<cr>
