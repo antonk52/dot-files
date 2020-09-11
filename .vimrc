@@ -27,10 +27,9 @@ Plug 'tpope/vim-surround'
 Plug 'tpope/vim-fugitive'
 " toggle comments duh
 Plug 'scrooloose/nerdcommenter'
-" project file tree
-Plug 'scrooloose/nerdtree'
-" file explorer from the current file
-Plug 'tpope/vim-vinegar'
+" project file viewer
+Plug 'justinmk/vim-dirvish'
+Plug 'antonk52/dirvish-fs.vim'
 " status line
 Plug 'antonk52/vim-lightline-ocean'
 Plug 'itchyny/lightline.vim'
@@ -363,11 +362,10 @@ function! LightlineFiletype() abort
     return get(g:ft_map, ft, ft)
 endfunction
 
-" ======= Nerdtree
+" ======= dirvish
 
-" show dot files
-let NERDTreeShowHidden=1
-let NERDTreeIgnore=['\.swp$', '\.DS_Store']
+let g:dirvish_relative_paths = 1
+let g:dirvish_mode = ':sort ,^\v(.*[\/])|\ze,' " folders on top
 
 " ======= Nerdcommenter
 
@@ -491,11 +489,6 @@ nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> gy <Plug>(coc-type-definition)
 nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
-
-" ======= indent line
-" do not show indent lines for help and nerdtree
-let g:indentLine_fileTypeExclude=['help']
-let g:indentLine_bufNameExclude=['NERD_tree.*']
 
 " ======= ultisnips
 
