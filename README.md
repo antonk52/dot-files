@@ -2,8 +2,6 @@
 
 Config files to simplify the machine migration process.
 
-To make good use of it, clone the repository to a directory of your choice, and create symlinks to the appropriate files. Here is an example below.
-
 ## Setup
 
 ```sh
@@ -11,7 +9,7 @@ cd ~
 git clone https://github.com/antonk52/dot-files.git
 cd dot-files
 git submodule update --init --recursive
-./scripts/setup.sh
+./scripts/init.sh
 ```
 
 ## Useful links
