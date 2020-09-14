@@ -567,3 +567,5 @@ command! MakeFlow call antonk52#flow#check()
 
 " close quickfix window after going to an error
 autocmd FileType qf nnoremap <buffer> <cr> <cr>:cclose<cr>:echo ''<cr>
+
+autocmd FileType markdown nnoremap <silent> <leader>T :call antonk52#markdown#toggle_checkbox()<cr>
