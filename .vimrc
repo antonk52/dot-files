@@ -300,9 +300,14 @@ command! ToggleNumbers set number! relativenumber!
 
 " check spell in neovim exclusively
 " vim is mostly run remotely w/ no access to my dictionary
-if has('nvim')
-  set spell spelllang=ru_ru,en_us
-endif
+function! SetSpell()
+    if has('nvim')
+        set spell spelllang=ru_ru,en_us
+    endif
+endfunction
+
+" delay loading spell&spelllang until something is on the screen
+autocmd! CursorHold * ++once call SetSpell()
 
 " ======= fat fingers
 
@@ -457,19 +462,18 @@ function! HasEslintConfig()
   endfor
 endfunction
 
-" turn off eslint when cannot find eslintrc
-call coc#config('eslint.enable', HasEslintConfig())
-
-" essentially avoid turning on typescript in a flow project
-call coc#config('tsserver.enableJavascript', globpath('.', '.flowconfig') == '')
 
 " lookup local flow executable
 " and turn on flow for coc is executable exists
-function! SetFlow()
-    let s:flow_in_project = findfile('node_modules/.bin/flow')
-    let s:flow_exe = empty(s:flow_in_project) ? '' : getcwd() . '/' . s:flow_in_project
-    let s:flow_config = {
-    \    'command': s:flow_exe,
+function! SetFlow() abort
+    let flow_path = 'node_modules/.bin/flow'
+    let has_flow = filereadable(flow_path)
+    if (!has_flow)
+        return 0
+    endif
+    let flow_bin = getcwd() . '/' . flow_path
+    let flow_config = {
+    \    'command': flow_bin,
     \    'args': ['lsp'],
     \    'filetypes': ['javascript', 'javascriptreact'],
     \    'initializationOptions': {},
@@ -477,13 +481,22 @@ function! SetFlow()
     \    'settings': {},
     \    'rootPatterns': ['.flowconfig']
     \}
-    " turn on flow when flow executable exists
-    if !empty(s:flow_exe)
-        call coc#config('languageserver', {'flow': s:flow_config})
-    endif
+    call coc#config('languageserver.flow', flow_config)
 endfunction
 
-call SetFlow()
+function! SetupCocStuff()
+    call SetFlow()
+
+    " turn off eslint when cannot find eslintrc
+    call coc#config('eslint.enable', HasEslintConfig())
+
+    " essentially avoid turning on typescript in a flow project
+    call coc#config('tsserver.enableJavascript', filereadable('.flowconfig') == 0)
+    redraw!
+endfunction
+
+" delay file system calls until something is on the screen
+autocmd! CursorHold * ++once silent call SetupCocStuff()
 
 nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> gy <Plug>(coc-type-definition)
@@ -539,10 +552,7 @@ autocmd FileType * call antonk52#jest#detect()
 
 " any project can have a '.local_vimrc'
 function! LocadLocalVimrc() abort
-    let root_path = expand('%:p')
-    let project_file_path = expand('%')
-    let project_path = substitute(root_path, project_file_path, '', '')
-    let local_vimrc_path = '/' . project_path . '.local_vimrc'
+    let local_vimrc_path = getcwd() . '/.local_vimrc'
     if filereadable(local_vimrc_path)
         source local_vimrc_path
     endif
