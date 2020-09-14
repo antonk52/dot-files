@@ -31,4 +31,10 @@ function! antonk52#flow#check() abort
     echo ''
 
     let &errorformat = old_fmt
+
+    " Syntax `qf` means quickfix window has opened, therefore we have errors.
+    " If it didn't flow timed out(handled above) or we have no errors
+    if (&syntax != 'qf')
+        echo 'No errors!'
+    endif
 endfunction
