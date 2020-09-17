@@ -243,6 +243,9 @@ vnoremap <LocalLeader>x <C-x>
 vnoremap <LocalLeader><LocalLeader>a g<C-a>
 vnoremap <LocalLeader><LocalLeader>x g<C-x>
 
+" Fixes (most) syntax highlighting problems in current buffer
+nnoremap <silent> <leader>§ :syntax sync fromstart<CR>
+
 " indentation shifts keep selection(`=` should still be preferred)
 vnoremap < <gv
 vnoremap > >gv
@@ -276,6 +279,10 @@ vnoremap <Leader>e $h
 
 " open a new tab
 nnoremap <C-t> :tabedit<CR>
+
+" to navigate between buffers
+nnoremap <Left> :prev<CR>
+nnoremap <Right> :next<CR>
 
 " neovim terminal
 if has('nvim')
@@ -436,6 +443,9 @@ command! Prettier call CocAction('runCommand', 'prettier.formatFile')
 " Use leader T to show documentation in preview window
 nnoremap <leader>t :call <SID>show_documentation()<CR>
 
+" quietly restart coc
+nnoremap <leader>R :silent CocRestart<CR>
+
 function! s:show_documentation()
   if (index(['vim','help'], &filetype) >= 0)
     execute 'h '.expand('<cword>')
@@ -495,6 +505,10 @@ nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> gy <Plug>(coc-type-definition)
 nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
+" Navigate between warnings & errors
+nmap <silent> <leader>[ <Plug>(coc-diagnostic-prev)
+nmap <silent> <leader>] <Plug>(coc-diagnostic-next)
+nmap <silent> <leader>r <Plug>(coc-rename)
 
 " ======= ultisnips
 
@@ -517,6 +531,8 @@ nnoremap <leader>f :GFiles<cr>
 nnoremap <leader>F :Files<cr>
 " buffer list with fuzzy search
 nnoremap <leader>b :Buffers<cr>
+" In current buffer search with a preview
+nnoremap <leader>/ :BLines<cr>
 " list available snippets
 nnoremap <leader>s :Snippets<cr>
 " list opened windows
