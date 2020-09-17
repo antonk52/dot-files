@@ -222,13 +222,6 @@ nnoremap <Tab> za
 
 " toggle highlight last search
 nnoremap <leader>n :set hlsearch!<cr>
-" easy quit
-nnoremap <leader>q :q<cr>
-
-" CTRL a - go to the command beginning
-cnoremap <C-a> <Home>
-" CTRL e - go to the command end
-cnoremap <C-e> <End>
 
 " `CTRL-n`/`CTRL-p` to move between matches without leaving incremental search.
 " Note dependency on `'wildcharm'` being set to `<C-z>` in order for this to
