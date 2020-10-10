@@ -107,7 +107,9 @@ endif
 set tabstop=4 shiftwidth=4
 
 " consider that not all emojis take up full width
-set noemoji
+if has('emoji')
+    set noemoji
+endif
 
 " use spaces instead of tabs
 set expandtab
@@ -307,7 +309,11 @@ function! SetSpell()
 endfunction
 
 " delay loading spell&spelllang until something is on the screen
-autocmd! CursorHold * ++once call SetSpell()
+if has('nvim') || has('patch-8.2.18.12')
+    autocmd! CursorHold * ++once call SetSpell()
+else
+    call SetSpell()
+endif
 
 " ======= fat fingers
 
@@ -501,7 +507,11 @@ function! SetupCocStuff()
 endfunction
 
 " delay file system calls until something is on the screen
-autocmd! CursorHold * ++once silent call SetupCocStuff()
+if has('nvim') || has('patch-8.2.18.12')
+    autocmd! CursorHold * ++once silent call SetupCocStuff()
+else
+    call SetupCocStuff()
+endif
 
 nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> gy <Plug>(coc-type-definition)
