@@ -9,7 +9,8 @@
     "scss.validate": false,
     "wxss.validate": false,
 
-    "eslint.autoFixOnSave": true,
+    "eslint.enable": false,
+    "eslint.autoFixOnSave": false,
     "eslint.filetypes": [
         "javascript",
         "javascriptreact",

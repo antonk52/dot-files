@@ -490,8 +490,10 @@ endfunction
 function! SetupCocStuff()
     call SetFlow()
 
+    let eslint_config_found = HasEslintConfig()
     " turn off eslint when cannot find eslintrc
-    call coc#config('eslint.enable', HasEslintConfig())
+    call coc#config('eslint.enable', eslint_config_found)
+    call coc#config('eslint.autoFixOnSave', eslint_config_found)
 
     " essentially avoid turning on typescript in a flow project
     call coc#config('tsserver.enableJavascript', filereadable('.flowconfig') == 0)
