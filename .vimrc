@@ -15,7 +15,6 @@ call plug#begin('~/.vim/plugged')
 Plug 'ervandew/supertab'
 Plug 'antonk52/vim-tabber'
 " types & linting
-Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app & yarn install', 'for': ['markdown', 'mdx'] }
 Plug 'neoclide/coc.nvim', {'branch': 'release', 'do': ':CocInstall'}
 " support for coc in regular vim
 if !has('nvim')
@@ -65,9 +64,14 @@ Plug 'Yggdroot/indentLine', { 'for': ['javascript', 'typescript', 'vimscript'] }
 
 " themes
 Plug 'chriskempson/base16-vim'
+Plug 'morhetz/gruvbox'
+Plug 'andreypopp/vim-colors-plain'
 
 " sensible defaults
 Plug 'wincent/terminus'
+
+" live preview markdown files in browser
+Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app & yarn install', 'for': ['markdown', 'mdx'] }
 
 call plug#end()
 filetype plugin indent on
@@ -422,7 +426,7 @@ set updatetime=300
 set shortmess+=c
 
 " Let coc use a newer nodejs version
-" since I have to continiusly switch between older ones
+" since I have to continuously switch between older ones
 let s:local_latest_node = '/usr/local/n/versions/node/13.9.0/bin/node'
 if filereadable(s:local_latest_node) | let g:coc_node_path = s:local_latest_node | endif
 
@@ -590,4 +594,6 @@ command! MakeTs call antonk52#typescript#check()
 " close quickfix window after going to an error
 autocmd FileType qf nnoremap <buffer> <cr> <cr>:cclose<cr>:echo ''<cr>
 
-autocmd FileType markdown nnoremap <silent> <leader>T :call antonk52#markdown#toggle_checkbox()<cr>
+autocmd FileType markdown nnoremap <silent> <localleader>t :call antonk52#markdown#toggle_checkbox()<cr>
+
+command! MarkdownConcealIntensifies call antonk52#markdown#conceal_intensifies()
