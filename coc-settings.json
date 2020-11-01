@@ -3,6 +3,8 @@
     "diagnostic.warningSign": "●",
     "diagnostic.infoSign": "!",
     "diagnostic.hintSign": "!",
+    "diagnostic.virtualText": true,
+    "diagnostic.virtualTextCurrentLineOnly": false,
 
     "css.validate": false,
     "less.validate": false,
