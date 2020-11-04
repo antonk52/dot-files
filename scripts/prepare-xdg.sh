@@ -14,6 +14,7 @@ ln -s ~/.vimrc "$XDG_CONFIG_HOME"/nvim/init.vim
 ln -s ~/dot-files/coc-settings.json "$HOME"/.vim/coc-settings.json
 
 ln -s ~/dot-files/git "$XDG_CONFIG_HOME"/git
+ln -s ~/dot-files/karabiner "$XDG_CONFIG_HOME"/karabiner
 
 ln -s ~/dot-files/.zshrc ~/.zshrc
 ln -s ~/dot-files/tmux "${XDG_CONFIG_HOME}"/tmux

@@ -1,2 +1,6 @@
 .vim/autoload/plug.vim
 .vim/autoload/plug.vim.old
+
+# there's more stuff, we only care for personal config
+karabiner/*
+!karabiner/karabiner.json

@@ -54,3 +54,4 @@ brew cask install iterm2 # terminal
 brew cask install keycastr # useful for demos
 brew cask install vlc # media player
 brew cask install rectangle # macos window management
+brew cask install karabiner-elements # advanced key mapping
