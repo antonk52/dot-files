@@ -24,6 +24,8 @@ endif
 Plug 'tpope/vim-surround'
 " git gems
 Plug 'tpope/vim-fugitive'
+" enables Gbrowse for github.com
+Plug 'tpope/vim-rhubarb'
 " toggle comments duh
 Plug 'scrooloose/nerdcommenter'
 " project file viewer
@@ -158,9 +160,6 @@ if has('vertsplit')
   " open vertical splits to the right of the current window
   set splitright
 endif
-
-" four spaces indentation for js files
-autocmd Filetype javascript setlocal ts=4 sts=4 sw=4
 
 " make current line number stand out a little
 if has('highlight')
@@ -370,7 +369,8 @@ let g:ft_map = {
     \ 'javascript.jest': 'js',
     \ 'javascript.jsx': 'jsx',
     \ 'javascript.jsx.jest': 'jsx',
-    \ 'yaml': 'yml' }
+    \ 'yaml': 'yml',
+    \ 'markdown': 'md' }
 
 function! LightlineFiletype() abort
     let ft = &filetype
@@ -457,22 +457,22 @@ nnoremap <leader>t :call <SID>show_documentation()<CR>
 nnoremap <leader>R :silent CocRestart<CR>
 
 function! s:show_documentation()
-  if (index(['vim','help'], &filetype) >= 0)
-    execute 'h '.expand('<cword>')
-  else
-    call CocAction('doHover')
-  endif
+    if (index(['vim','help'], &filetype) >= 0)
+        execute 'h '.expand('<cword>')
+    else
+        call CocAction('doHover')
+    endif
 endfunction
 
 " Highlight symbol under cursor on CursorHold
 autocmd CursorHold * silent call CocActionAsync('highlight')
 
 function! HasEslintConfig()
-  for name in ['.eslintrc.js', '.eslintrc.json', '.eslintrc']
-    if globpath('.', name) != ''
-      return 1
-    endif
-  endfor
+    for name in ['.eslintrc.js', '.eslintrc.json', '.eslintrc']
+        if globpath('.', name) != ''
+            return 1
+        endif
+    endfor
 endfunction
 
 
@@ -497,8 +497,11 @@ function! SetFlow() abort
     call coc#config('languageserver.flow', flow_config)
 endfunction
 
-function! SetupCocStuff()
-    call SetFlow()
+function! SetupCocStuff() abort
+    let has_flowconfig = filereadable('.flowconfig')
+    if has_flowconfig
+        call SetFlow()
+    endif
 
     let eslint_config_found = HasEslintConfig()
     " turn off eslint when cannot find eslintrc
@@ -506,7 +509,9 @@ function! SetupCocStuff()
     call coc#config('eslint.autoFixOnSave', eslint_config_found)
 
     " essentially avoid turning on typescript in a flow project
-    call coc#config('tsserver.enableJavascript', filereadable('.flowconfig') == 0)
+    call coc#config('tsserver.enableJavascript', !has_flowconfig)
+    " lazy coc settings require restarting coc to pickup newer configuration
+    call coc#client#restart_all()
     redraw!
 endfunction
 
