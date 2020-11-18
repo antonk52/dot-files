@@ -27,8 +27,6 @@
     "prettier.requireConfig": true,
     "prettier.onlyUseLocalVersion": false,
 
-    "tabnine.priority": 4,
-
     "typescript.format.enabled": false,
     "javascript.format.enabled": false
 }
