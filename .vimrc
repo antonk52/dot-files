@@ -236,9 +236,11 @@ cnoremap <expr> <C-p> getcmdtype() == '/' \|\| getcmdtype() == '?' ? '<CR>?<C-r>
 
 " Show the current file path.
 " Useful when you have many splits & the status line gets truncated
-nnoremap <LocalLeader>p :echo expand('%')<CR>
+nnoremap <leader>p :echo expand('%')<CR>
 " Puts an absolute file path in the system clipboard
-nnoremap <LocalLeader>P :silent !echo '%:p' \| pbcopy<CR>
+nnoremap <localleader>p :silent !echo '%:p' \| pbcopy<CR>
+" Puts a project file path in the system clipboard
+nnoremap <silent> <leader>P :silent !echo '%' \| pbcopy<CR>
 
 " manipulate numbers, convenient since my tmux prefix is <C-a>
 nnoremap <LocalLeader>a <C-a>
