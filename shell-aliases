@@ -139,8 +139,8 @@ function colors()
 
 function gob()
 {
-    branch_name="$(git branch | fzf | sed 's/ *//g')"
+    branch_name="$(git branch | fzf-tmux | sed 's/^\(\s\)*\*//g' | sed 's/^ *//g')"
 
-    git checkout $branch_name
+    git go $branch_name
 
 }
