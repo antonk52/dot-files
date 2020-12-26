@@ -555,8 +555,10 @@ command! -bang -nargs=? -complete=dir Files
     \ call fzf#vim#files(<q-args>, fzf#vim#with_preview(), <bang>1)
 command! -bang -nargs=? -complete=dir GFiles
     \ call fzf#vim#gitfiles(<q-args>, fzf#vim#with_preview(), <bang>0)
-" user leader f to search for not ignored file paths
-nnoremap <leader>f :GFiles<cr>
+
+let g:has_git = isdirectory(getcwd() . '/.git')
+" use GFiles for projects with git, otherwise gracefully fall-back to all files search
+nnoremap <expr> <leader>f g:has_git ? ':GFiles<cr>' : ':Files<cr>'
 nnoremap <leader>F :Files<cr>
 " buffer list with fuzzy search
 nnoremap <leader>b :Buffers<cr>
