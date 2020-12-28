@@ -558,9 +558,8 @@ command! -bang -nargs=? -complete=dir Files
 command! -bang -nargs=? -complete=dir GFiles
     \ call fzf#vim#gitfiles(<q-args>, fzf#vim#with_preview(), <bang>0)
 
-let g:has_git = isdirectory(getcwd() . '/.git')
 " use GFiles for projects with git, otherwise gracefully fall-back to all files search
-nnoremap <expr> <leader>f g:has_git ? ':GFiles<cr>' : ':Files<cr>'
+nnoremap <expr> <leader>f isdirectory(getcwd() . '/.git') ? ':GFiles<cr>' : ':Files<cr>'
 nnoremap <leader>F :Files<cr>
 " buffer list with fuzzy search
 nnoremap <leader>b :Buffers<cr>
