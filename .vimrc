@@ -63,6 +63,8 @@ Plug 'JulesWang/css.vim' " TODO try out 'hail2u/vim-css3-syntax'
 Plug 'jxnblk/vim-mdx-js', { 'for': ['mdx'] }
 Plug 'maksimr/vim-yate', { 'for': ['yate'] } " TODO defeat, forget, get drunk
 Plug 'Yggdroot/indentLine', { 'for': ['javascript', 'typescript', 'vimscript'] }
+" fold by heading
+Plug 'masukomi/vim-markdown-folding'
 
 " themes
 Plug 'chriskempson/base16-vim'
@@ -585,6 +587,12 @@ let g:closetag_xhtml_filenames = '*.xhtml,*.jsx,*.js,*.tsx'
 " - tab takes to the next one - one down
 " - shift tab takes to previous one - one up
 let g:SuperTabDefaultCompletionType = '<c-n>'
+
+" ======= markdown fold
+" fold underlying sections if any
+let g:markdown_fold_style = 'nested'
+" preserve my custom folding style
+let g:markdown_fold_override_foldtext = 0
 
 command! Todo call antonk52#todo#find()
 
