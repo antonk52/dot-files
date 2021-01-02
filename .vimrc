@@ -41,8 +41,6 @@ Plug 'junegunn/fzf', { 'do': './install --bin' }
 Plug 'junegunn/fzf.vim'
 " auto closes quotes and braces
 Plug 'jiangmiao/auto-pairs'
-" auto closes XML tags
-Plug 'alvan/vim-closetag', { 'for': ['html', 'php', 'javascript', 'javascript.jsx', 'typescript.tsx'] }
 " consistent coding style
 Plug 'editorconfig/editorconfig-vim'
 " snippets
@@ -58,7 +56,7 @@ Plug 'ap/vim-css-color', { 'for': ['html', 'css', 'javascript', 'javascript.jsx'
 Plug 'pangloss/vim-javascript'
 Plug 'leafgarland/typescript-vim'
 Plug 'HerringtonDarkholme/yats.vim'
-Plug 'mxw/vim-jsx'
+Plug 'MaxMEllon/vim-jsx-pretty'
 Plug 'JulesWang/css.vim' " TODO try out 'hail2u/vim-css3-syntax'
 Plug 'jxnblk/vim-mdx-js', { 'for': ['mdx'] }
 Plug 'maksimr/vim-yate', { 'for': ['yate'] } " TODO defeat, forget, get drunk
@@ -574,12 +572,8 @@ nnoremap <leader>H :History<cr>
 " start in a popup
 let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.6 } }
 
-" ======= closetag
-
-" file extensions where this plugin is enabled
-let g:closetag_filenames = "*.html,*.xhtml,*.phtml,*.php,*.jsx,*.js,*.tsx"
-" make the list of non-closing tags self-closing in the specified files
-let g:closetag_xhtml_filenames = '*.xhtml,*.jsx,*.js,*.tsx'
+" ======= vim-jsx-pretty
+let g:vim_jsx_pretty_highlight_close_tag = 1
 
 " ======= supertab
 " navigate through auto completion options where:
