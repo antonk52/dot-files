@@ -114,9 +114,10 @@ alias findjs='find ./ -name "*.js" | grep --color -n -i'
 alias bang='notify -t "Well hello there" -m "Your time has come" -i "https://thenib.imgix.net/usq/1d97429f-4a64-4d52-bfdb-c36172c05228/this-is-not-fine-001-dae9d5.png" >/dev/null 2>&1'
 alias imgcat='~/dot-files/scripts/imgcat'
 
+NOTES_PATH="$HOME"/Documents/notes
+alias tasks='"$EDITOR" "$NOTES_PATH"/tasks.md'
 function notes()
 {
-  NOTES_PATH="$HOME"/Documents/notes
   YEAR="$(date '+%Y')"
   MONTH="$(date '+%m')"
   DATE="$(date '+%d')"
