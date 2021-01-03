@@ -39,7 +39,7 @@ source "$ZSH"/oh-my-zsh.sh
 export LANG=en_US.UTF-8
 
 # Preferred editor for local and remote sessions
-export EDITOR='vim'
+export EDITOR='nvim'
 
 # source personal aliases
 source ~/dot-files/shell-aliases
