@@ -307,21 +307,12 @@ command! ToggleNumbers set number! relativenumber!
 
 " check spell in neovim exclusively
 " vim is mostly run remotely w/ no access to my dictionary
-function! SetSpell()
-    if has('nvim')
-        set spell spelllang=ru_ru,en_us
-    endif
-endfunction
-
-" delay loading spell&spelllang until something is on the screen
 if has('nvim') || has('patch-8.2.18.12')
-    autocmd! CursorHold * ++once call SetSpell()
-else
-    call SetSpell()
+    " delay loading spell&spelllang until something is on the screen
+    autocmd! CursorHold * ++once set spell spelllang=ru_ru,en_us
 endif
 
 " ======= fat fingers
-
 command! Wq :wq
 command! Ter :ter
 command! Sp :sp
