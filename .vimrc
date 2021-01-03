@@ -499,10 +499,8 @@ else
 endif
 
 " useful in untyped utilitarian corners in flow projects, sigh
-function! CocTsserverForceEnable()
-    call coc#config('tsserver.enableJavascript', 1)
-endfunction
-command! CocTsserverForceEnable call CocTsserverForceEnable()
+command! CocTsserverForceEnable call coc#config('tsserver.enableJavascript', 1)
+command! CocTsserverForceDisable call coc#config('tsserver.enableJavascript', 0)
 
 nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> gy <Plug>(coc-type-definition)
