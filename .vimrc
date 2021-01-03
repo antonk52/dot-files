@@ -55,11 +55,10 @@ Plug 'ap/vim-css-color', { 'for': ['html', 'css', 'javascript', 'javascript.jsx'
 " =========== syntax ===========
 Plug 'pangloss/vim-javascript'
 Plug 'leafgarland/typescript-vim'
-Plug 'HerringtonDarkholme/yats.vim'
 Plug 'MaxMEllon/vim-jsx-pretty'
 Plug 'JulesWang/css.vim' " TODO try out 'hail2u/vim-css3-syntax'
 Plug 'jxnblk/vim-mdx-js', { 'for': ['mdx'] }
-Plug 'maksimr/vim-yate', { 'for': ['yate'] } " TODO defeat, forget, get drunk
+Plug 'maksimr/vim-yate' " TODO defeat, forget, get drunk
 Plug 'Yggdroot/indentLine', { 'for': ['javascript', 'typescript', 'vimscript'] }
 " fold by heading
 Plug 'masukomi/vim-markdown-folding'
@@ -167,7 +166,6 @@ if has('highlight')
 endif
 
 " folding
-
 if has('folding')
   set foldmethod=indent
   set foldlevelstart=10
@@ -185,9 +183,6 @@ set linebreak
 " always keep 3 lines around the cursor
 set scrolloff=3 sidescrolloff=3
 
-" highlight column 121 and onward
-autocmd Filetype javascript let &colorcolumn=121
-
 " always show status line
 set laststatus=2
 
@@ -197,12 +192,8 @@ set mouse=a
 " persistent undo
 set undofile
 
-" store undo files awat from the project
-if $XDG_DATA_HOME != ''
-    set undodir="$XDG_DATA_HOME/nvim/undo"
-else
-    set undodir="$HOME/.vim/undo-dir"
-endif
+" store undo files away from the project
+set undodir="$HOME/.vim/undo_dir"
 
 "
 " ======================== Mappings ========================
@@ -210,11 +201,6 @@ endif
 
 let mapleader="\<Space>"
 let maplocalleader="\\"
-
-" working with location lists made easy
-nnoremap <leader>] :lprevious<cr>
-nnoremap <leader>] :lNext<cr>
-nnoremap <leader>o :lopen<cr>
 
 " leader c - copy to OS clipboard
 vmap <leader>c "*y
@@ -227,12 +213,6 @@ nnoremap <Tab> za
 
 " toggle highlight last search
 nnoremap <leader>n :set hlsearch!<cr>
-
-" `CTRL-n`/`CTRL-p` to move between matches without leaving incremental search.
-" Note dependency on `'wildcharm'` being set to `<C-z>` in order for this to
-" work.
-cnoremap <expr> <C-n> getcmdtype() == '/' \|\| getcmdtype() == '?' ? '<CR>/<C-r>/' : '<C-z>'
-cnoremap <expr> <C-p> getcmdtype() == '/' \|\| getcmdtype() == '?' ? '<CR>?<C-r>/' : '<C-p>'
 
 " Show the current file path.
 " Useful when you have many splits & the status line gets truncated
@@ -473,7 +453,6 @@ function! HasEslintConfig()
     endfor
 endfunction
 
-
 " lookup local flow executable
 " and turn on flow for coc is executable exists
 function! SetFlow() abort
@@ -505,7 +484,6 @@ function! SetupCocStuff() abort
     " turn off eslint when cannot find eslintrc
     call coc#config('eslint.enable', eslint_config_found)
     call coc#config('eslint.autoFixOnSave', eslint_config_found)
-
     " essentially avoid turning on typescript in a flow project
     call coc#config('tsserver.enableJavascript', !has_flowconfig)
     " lazy coc settings require restarting coc to pickup newer configuration
