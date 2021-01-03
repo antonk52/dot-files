@@ -13,6 +13,8 @@ export NODE_REPL_HISTORY_SIZE=10000
 export NODE_REPL_MODE=strict
 export DOCKER_CONFIG="$XDG_CONFIG_HOME"/docker
 export TS_NODE_HISTORY="$XDG_DATA_HOME"/ts-node/history
+export GEM_HOME="$XDG_DATA_HOME"/gem
+export GEM_SPEC_CACHE="$XDG_CACHE_HOME"/gem
 
 # use base16 colors
 BASE16_SHELL="$HOME"/dot-files/base16-shell
