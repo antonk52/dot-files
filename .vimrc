@@ -291,6 +291,11 @@ nnoremap <C-t> :tabedit<CR>
 nnoremap <Left> :prev<CR>
 nnoremap <Right> :next<CR>
 
+" to navigate between errors
+" useful after populating quickfix window
+nnoremap <up> :cprev<CR>
+nnoremap <down> :cnext<CR>
+
 " neovim terminal
 if has('nvim')
   " use Esc to go into normal mode in terminal
