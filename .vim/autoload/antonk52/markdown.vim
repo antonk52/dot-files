@@ -22,4 +22,15 @@ function! antonk52#markdown#conceal_intensifies()
     syn region markdownUrl matchgroup=markdownUrlDelimiter start="<" end=">"
         \ contained conceal
     setlocal conceallevel=3
+    " hide tilde sign on empty lines
+    hi! EndOfBuffer ctermbg=bg ctermfg=bg guibg=bg guifg=bg
+endfunction
+
+function! antonk52#markdown#setup()
+    nnoremap <silent> <localleader>t :call antonk52#markdown#toggle_checkbox()<cr>
+    nnoremap <buffer> j gj
+    nnoremap <buffer> k gk
+
+    " enable spell & turn on autocompletion from the spell file
+    autocmd! CursorHold * ++once setlocal spell spelllang=ru_ru,en_us spellsuggest
 endfunction

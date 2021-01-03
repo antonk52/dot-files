@@ -598,9 +598,9 @@ autocmd VimEnter * call LocadLocalVimrc()
 command! MakeFlow call antonk52#flow#check()
 command! MakeTs call antonk52#typescript#check()
 
-" close quickfix window after going to an error
+" close quickfix window after jumping to an error
 autocmd FileType qf nnoremap <buffer> <cr> <cr>:cclose<cr>:echo ''<cr>
 
-autocmd FileType markdown nnoremap <silent> <localleader>t :call antonk52#markdown#toggle_checkbox()<cr>
+autocmd FileType markdown call antonk52#markdown#setup()
 
 command! MarkdownConcealIntensifies call antonk52#markdown#conceal_intensifies()
