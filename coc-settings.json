@@ -22,7 +22,7 @@
 
     "javascript.suggestionActions.enabled": false,
 
-    "coc.preferences.formatOnSaveFiletypes": ["css", "typescript", "typescriptreact"],
+    "coc.preferences.formatOnSaveFiletypes": ["css"],
 
     "prettier.requireConfig": true,
     "prettier.onlyUseLocalVersion": false,
