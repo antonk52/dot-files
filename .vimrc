@@ -341,7 +341,7 @@ let g:lightline.component_function = {
     \ 'filetype': 'LightlineFiletype' }
 
 function! LightlineFilename() abort
-    let expanded = expand('%:f')
+    let expanded = substitute(expand('%:f'), getcwd().'/', '', '')
     let filename = expanded !=# '' ? expanded : '[No Name]'
     " substitute other status line sections
     let win_size = winwidth(0) - 28
