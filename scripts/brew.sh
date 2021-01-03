@@ -23,7 +23,6 @@ brew install jpeg # image manipulation lib
 brew install jq # cli for working with json
 brew install neovim # vim but better
 brew install nginx
-brew install nnn # vim like file manager
 brew install node # nodejs & npm
 brew install openssl
 brew install openssl@1.1
@@ -31,7 +30,6 @@ brew install python
 brew install rbenv # ruby version manager
 brew install ruby
 brew install ruby-build
-brew install the_silver_searcher # fuzzy finder
 brew install tmux # terminal multiplexer
 brew install tree # cli to display directories as trees
 brew install vim # get the recent vim version
