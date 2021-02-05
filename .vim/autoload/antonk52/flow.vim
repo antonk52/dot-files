@@ -1,40 +1,43 @@
+let s:output = ''
+
+function! s:OnEvent(job_id, data, event) dict
+    " collect stdout
+    if a:event == 'stdout'
+        let s:output = s:output . join(a:data, '\n')
+    " report an error
+    elseif a:event == 'stderr'
+        echohl WarningMsg
+        echomsg 'An error occured: ' . join(a:data, '\n')
+        echohl None
+    " report and clean up
+    else
+        let flow_errorfmt = '%EFile "%f"\, line %l\, characters %c-%.%#,%Z%m,%-G%.%#'
+        let old_fmt = &errorformat
+        let &errorformat = flow_errorfmt
+
+        cgete s:output
+        cwindow
+        echo ''
+
+        let &errorformat = old_fmt
+
+        if (&syntax != 'qf')
+            echo 'No errors!'
+        endif
+
+        let s:output = ''
+    endif
+endfunction
+
+let s:callbacks = {
+\ 'on_stdout': function('s:OnEvent'),
+\ 'on_stderr': function('s:OnEvent'),
+\ 'on_exit': function('s:OnEvent')
+\ }
+
 function! antonk52#flow#check() abort
-    let exe = 'npx flow --timeout 5 --retry-if-init false --from vim'
-    let cmd = exe.' "'.expand('%:p').'" 2> /dev/null'
-    let flow_result = system(cmd)
-
-    " Handle the server still initializing
-    if v:shell_error == 1
-        echohl WarningMsg
-        echomsg 'Flow server is still initializing...'
-        echohl None
-        cclose
-        return 0
-    endif
-
-    " Handle timeout
-    if v:shell_error == 3
-        echohl WarningMsg
-        echomsg 'Flow timed out, please try again!'
-        echohl None
-        cclose
-        return 0
-    endif
-
-    let flow_errorfmt = '%EFile "%f"\, line %l\, characters %c-%.%#,%Z%m,%-G%.%#'
-    let old_fmt = &errorformat
-    let &errorformat = flow_errorfmt
-
-    cgete flow_result
-    " open quickfix window from arg but do not jump to locations
-    cwindow
-    echo ''
-
-    let &errorformat = old_fmt
-
-    " Syntax `qf` means quickfix window has opened, therefore we have errors.
-    " If it didn't flow timed out(handled above) or we have no errors
-    if (&syntax != 'qf')
-        echo 'No errors!'
-    endif
+    let job_id = jobstart(
+        \ ['npx', 'flow', '--timeout', '5', '--retry-if-init', 'false', '--from', 'vim'],
+        \ extend({'shell': 'shell MakeFlow'}, s:callbacks)
+        \ )
 endfunction
