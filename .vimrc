@@ -585,3 +585,5 @@ autocmd FileType qf nnoremap <buffer> <cr> <cr>:cclose<cr>:echo ''<cr>
 autocmd FileType markdown call antonk52#markdown#setup()
 
 command! MarkdownConcealIntensifies call antonk52#markdown#conceal_intensifies()
+
+command! -complete=customlist,antonk52#gitignore#completion -nargs=1 GetGitignore call antonk52#gitignore#impl("<args>")
