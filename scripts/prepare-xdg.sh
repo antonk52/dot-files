@@ -2,16 +2,8 @@
 
 # symlink .vim & .vimrc to ~/config/nvim & ~/config/nvim/init.vim respectively
 mkdir -p "${XDG_CONFIG_HOME:=$HOME/.config}"
-if [ ! -d ~/.vim ]; then
-  mkdir ~/.vim
-fi
 
-mkdir -p "$XDG_CONFIG_HOME"/foo/{coc,docker,gh,htop,less,nvimtmux,zsh}
-
-ln -s ~/.vim "$XDG_CONFIG_HOME"/nvim
-ln -s ~/.vimrc "$XDG_CONFIG_HOME"/nvim/init.vim
-
-ln -s ~/dot-files/coc-settings.json "$HOME"/.vim/coc-settings.json
+mkdir -p "$XDG_CONFIG_HOME"/{coc,docker,gh,htop,less,nvim,tmux,zsh}
 
 ln -s ~/dot-files/git "$XDG_CONFIG_HOME"/git
 ln -s ~/dot-files/karabiner "$XDG_CONFIG_HOME"/karabiner
