@@ -20,8 +20,12 @@ export GEM_SPEC_CACHE="$XDG_CACHE_HOME"/gem
 BASE16_SHELL="$HOME"/dot-files/base16-shell
 [ -n "$PS1" ] && [ -s "$BASE16_SHELL"/profile_helper.sh ] && eval "$("$BASE16_SHELL"/profile_helper.sh)"
 
-# path for global node modules
+# global node modules
 export PATH="$HOME"/.npm-global/bin:$PATH
+# cargo crates
+export PATH="$HOME"/.cargo/bin:$PATH
+# pip packages
+export PATH="$HOME"/Library/Python/3.9/bin:$PATH
 
 # Path to your oh-my-zsh installation.
 export ZSH="$HOME"/.oh-my-zsh
