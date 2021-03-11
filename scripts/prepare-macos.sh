@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# Close any open System Preferences panes, to prevent them from overriding
+# settings we’re about to change
+osascript -e 'tell application "System Preferences" to quit'
+
 # Save screenshots in ~/Screenshots
 [ ! -d ~/Screenshots ] && mkdir ~/Screenshots \
     && defaults write com.apple.screencapture location "$HOME"/Screenshots \
@@ -28,6 +32,16 @@ default write -g AppleKeyboardUIMode -int 2 \
 defaults write -g KeyRepeat -int 2 \
     && defaults write -g InitialKeyRepeat -int 15 \
     && echo '✅ key repeat is increased';
+
+defaults write com.apple.Safari HomePage -string "about:blank" \
+    && defaults write com.apple.Safari AutoOpenSafeDownloads -bool false \
+    && defaults write com.apple.Safari ShowFavoritesBar -bool false \
+    && defaults write com.apple.Safari ShowSidebarInTopSites -bool false \
+    && defaults write com.apple.Safari IncludeDevelopMenu -int 1 \
+    && defaults write com.apple.Safari WebKitDeveloperExtrasEnabledPreferenceKey -bool true \
+    && echo '✅ safari settings' \
+    || echo '⚠️ could not set settings for safari';
+
 
 echo ''
 echo 'MacOS preparation is done'
