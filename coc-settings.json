@@ -11,14 +11,7 @@
     "scss.validate": false,
     "wxss.validate": false,
 
-    "eslint.enable": false,
     "eslint.autoFixOnSave": false,
-    "eslint.filetypes": [
-        "javascript",
-        "javascriptreact",
-        "typescript",
-        "typescriptreact"
-    ],
 
     "javascript.suggestionActions.enabled": false,
 
