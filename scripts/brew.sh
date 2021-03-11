@@ -13,10 +13,12 @@ brew upgrade
 brew install bat # modern cat
 brew install deno # nodejs but hip
 brew install exa # modern ls
+brew install fd # modern find
 brew install freetype # library to render fonts
 brew install fzf # cli fuzzy finder written in Go
 brew install gh # github cli
 brew install git-lfs # github large file storage
+brew install git # updated version
 brew install htop # top but better
 brew install hub # yet another github cli
 brew install jpeg # image manipulation lib
@@ -27,7 +29,9 @@ brew install node # nodejs & npm
 brew install openssl
 brew install openssl@1.1
 brew install python
+brew install python3
 brew install rbenv # ruby version manager
+brew install ripgrep
 brew install ruby
 brew install ruby-build
 brew install tmux # terminal multiplexer
@@ -42,14 +46,17 @@ brew install youtube-dl # download youtube videos
 brew install zsh # bash but better
 brew install zsh-completions # zsh extension
 
-brew cask install alfred # spotlight but useful
-brew cask install chromium # chrome but pure
-brew cask install cyberduck # when ftp is still relevant
-brew cask install docker # docker desktop app
-brew cask install firefox
-brew cask install gimp
-brew cask install iterm2 # terminal
-brew cask install keycastr # useful for demos
-brew cask install vlc # media player
-brew cask install rectangle # macos window management
-brew cask install karabiner-elements # advanced key mapping
+# cask apps
+brew install alfred # spotlight but useful
+brew install chromium # chrome but pure
+brew install cyberduck # when ftp is still relevant
+brew install docker # docker desktop app
+brew install firefox
+brew install gimp
+brew install iterm2 # terminal
+brew install karabiner-elements # advanced key mapping
+brew install keycastr # useful for demos
+brew install monitorcontrol # control brightness for external monitors from keyboard
+brew install rectangle # macos window management
+brew install telegram # advanced key mapping
+brew install vlc # media player
