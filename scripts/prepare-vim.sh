@@ -27,7 +27,7 @@ ln -s "$DOT_FILES"/.vim/UltiSnips "$NVIM_DIR"/UltiSnips
 ln -s "$DOT_FILES"/.vim/spell "$VIM_DIR"/spell
 ln -s "$DOT_FILES"/.vim/spell "$NVIM_DIR"/spell
 
-# neovim dependecy
+# neovim dependency
 python3 -m pip install --user --upgrade pynvim
 
 echo ''
