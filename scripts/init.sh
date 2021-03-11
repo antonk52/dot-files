@@ -19,7 +19,8 @@ echo 'Init started'
 cd scripts
 
 ask_for "prepare XDG envs?" "./prepare-xdg.sh"
-ask_for "prepare macos essentials?" "./mac-essentials.sh"
+ask_for "prepare macos essentials?(system settings)" "./prepare-macos.sh"
+ask_for "prepare [n]vim?" "./prepare-vim.sh"
 ask_for "install brew and other apps with it?" "./brew.sh"
 
 cd ..
