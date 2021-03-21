@@ -13,7 +13,7 @@ endsnippet
 #
 # react + flowtype + redux file template
 # - names component same as the directory the file is into
-snippet rrfile "react flow redux template"
+snippet reactreduxfile "react flow redux template"
 // @flow
 
 import React from 'react';
@@ -45,7 +45,7 @@ const enhance: HOC<InnerProps, OuterProps> = connect(mapStateToProps, {});
 export default enhance($1);
 endsnippet
 
-snippet rfile "react flow template"
+snippet reactfile "react flow template"
 // @flow
 
 import React from 'react';
@@ -130,7 +130,7 @@ snippet logme "logger generator"
 const log = txt => console.log('\n\n${txt}\n\n');
 endsnippet
 
-snippet import "import statement"
+snippet  "^import" "import statement" rbA
 import ${2:thing} from '${1:package}';
 endsnippet
 
