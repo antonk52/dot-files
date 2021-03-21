@@ -10,6 +10,7 @@ ln -s ~/dot-files/karabiner "$XDG_CONFIG_HOME"/karabiner
 
 ln -s ~/dot-files/.zshrc ~/.zshrc
 ln -s ~/dot-files/tmux "${XDG_CONFIG_HOME}"/tmux
+ln -s ~/dot-files/alacritty.yml "${XDG_CONFIG_HOME}"/alacritty.yml
 
 echo 'symlinks created'
 

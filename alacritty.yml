@@ -1,0 +1,25 @@
+window:
+    opacity: 1
+    padding:
+            x: 0
+            y: 0
+    # hide title bar & close icons
+    decorations: 'none'
+
+font:
+    normal:
+        family: 'Fira Code'
+    size: 16.0
+
+colors:
+    cursor:
+        cursor: '#cdcecf'
+
+# Solved
+# - hide window bar
+# - same cursor shape/color
+#
+# Issues(no resolution)
+# - no support for ligatures
+#
+# Issues(needs research)
