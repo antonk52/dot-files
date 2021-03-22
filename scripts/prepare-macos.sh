@@ -4,6 +4,10 @@
 # settings we’re about to change
 osascript -e 'tell application "System Preferences" to quit'
 
+
+# install xcode tools
+xcode-select --install || echo 'xcode tools are already installed';
+
 # Save screenshots in ~/Screenshots
 [ ! -d ~/Screenshots ] && mkdir ~/Screenshots \
     && defaults write com.apple.screencapture location "$HOME"/Screenshots \
