@@ -15,6 +15,7 @@ export DOCKER_CONFIG="$XDG_CONFIG_HOME"/docker
 export TS_NODE_HISTORY="$XDG_DATA_HOME"/ts-node/history
 export GEM_HOME="$XDG_DATA_HOME"/gem
 export GEM_SPEC_CACHE="$XDG_CACHE_HOME"/gem
+export CARGO_HOME="$XDG_DATA_HOME"/cargo
 
 # use base16 colors
 BASE16_SHELL="$HOME"/dot-files/base16-shell
@@ -92,3 +93,6 @@ LOCAL_SHELLRC="$XDG_CONFIG_HOME"/local_shellrc
 [ -f "$LOCAL_SHELLRC" ] && source "$LOCAL_SHELLRC"
 
 eval "$(rbenv init -)"
+
+# needed for `j` (autojump) to work
+[ -f /usr/local/etc/profile.d/autojump.sh ] && . /usr/local/etc/profile.d/autojump.sh

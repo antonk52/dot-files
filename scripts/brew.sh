@@ -10,6 +10,7 @@ brew update
 
 brew upgrade
 
+brew install autojump # smart cd
 brew install bat # modern cat
 brew install deno # nodejs but hip
 brew install exa # modern ls
