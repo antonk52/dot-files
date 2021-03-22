@@ -409,13 +409,14 @@ let s:local_latest_node = '/usr/local/n/versions/node/13.9.0/bin/node'
 if filereadable(s:local_latest_node) | let g:coc_node_path = s:local_latest_node | endif
 
 let g:coc_global_extensions=[
-    \ 'coc-tsserver',
-    \ 'coc-prettier',
-    \ 'coc-eslint',
     \ 'coc-css',
     \ 'coc-cssmodules',
-    \ 'coc-stylelintplus',
-    \ 'coc-json'
+    \ 'coc-eslint',
+    \ 'coc-json',
+    \ 'coc-prettier',
+    \ 'coc-tsserver',
+    \ 'coc-rust-analyzer',
+    \ 'coc-stylelintplus'
     \]
 
 

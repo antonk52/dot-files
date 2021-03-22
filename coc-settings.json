@@ -21,5 +21,6 @@
     "prettier.onlyUseLocalVersion": false,
 
     "typescript.format.enabled": false,
-    "javascript.format.enabled": false
+    "javascript.format.enabled": false,
+    "rust-analyzer.server.path": "/usr/local/bin/rust-analyzer"
 }
