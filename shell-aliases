@@ -24,23 +24,13 @@ alias docs='cd ~/Documents'
 alias dev='cd ~/Documents/dev'
 alias compare='diff -rq'
 
-# github
+# git
 alias g='git'
 alias it='git' # fat fitngers
-alias gi='git init'
 alias ga='git add'
 alias gap='git add -p'
-alias gd='git diff'
-alias gcl='git clone'
 alias gs='git status -s'
-alias gss='git status'
-alias glf='git log --stat'
 alias gc='git commit -m'
-alias gb='git branch'
-alias gco='git checkout'
-alias gp='git push'
-alias gpd='git push origin develop'
-alias gpm='git push origin master'
 alias gl='git --no-pager log --oneline --decorate --graph --all'
 
 # tmux aliases
@@ -51,7 +41,7 @@ alias ta='tmux attach -t'
 alias tmuxr='tmuxinator'
 
 # start a named session by providing a name
-# or a blank session by calling `t`
+# or a blank session by calling `tm`
 function tm()
 {
   if [ $# -eq 1 ]
@@ -62,36 +52,19 @@ function tm()
   fi
 }
 
-# node aliases
-alias nm='nodemon'
-alias npminit='npm init --yes'
-alias nl0='npm list --depth=0'
-alias nl1='npm list --depth=1'
-alias nl2='npm list --depth=2'
 alias listnodes='ps -e|grep node'
-alias sni='sudo npm install'
-alias gulpc='gulp --require coffee-script/register'
-alias nodec='node --require coffee-script/register'
-alias lrhs='lr-http-server'
-alias hslr='lr-http-server'
 
 # linux aliases
 alias agi='sudo apt-get install'
 alias update='sudo apt-get update && sudo apt-get upgrade && sudo apt-get dist-upgrade'
 
 # other aliases
-alias s='subl'
 alias e='exit'
 alias o='open .'
 alias ax='chmod a+x'
 alias h='history'
 alias q='quit'
-alias bi='bower install'
 alias sl='pmset sleepnow'
-alias js='jekyll serve'
-alias jb='jekyll build'
-alias jn='jekyll new'
-alias please='sudo !!'
 alias chux='chmod u+x'
 # find all TODO from current dir down
 # do not look in dot files
@@ -100,8 +73,6 @@ alias findtodo='grep -r TODO ./ -n --color'
 
 # see which currently running apps are using most of your RAM
 alias memory='top -o MEM'
-alias settings='vim ~/.zshrc'
-alias vimsettings='vim ~/.vimrc'
 alias myip='curl http://ipecho.net/plain; echo'
 alias localip='ifconfig en0 | grep "inet" | cut -d: -f2'
 alias wifioff='networksetup -setairportpower airport off'
