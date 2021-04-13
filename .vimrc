@@ -249,13 +249,9 @@ nnoremap <leader>k <C-W>5+
 nnoremap <leader>l <C-W>5>
 nnoremap <leader>h <C-W>5<
 
-" leader = to maximize current split vertically,
-" mnemonic `equals` is the same key as plus, makes current split larger
-nnoremap <Leader>= <C-W><C-_>
-
-" leader - to make all splits equal size vertically,
-" mnemonic `minus` makes current split smaller
-nnoremap <Leader>- <C-W><C-=>
+nnoremap <Leader>- :call antonk52#layout#zoom_split()<cr>
+nnoremap <Leader>= :call antonk52#layout#equalify_splits()<cr>
+nnoremap <Leader>+ :call antonk52#layout#restore_layout()<cr>
 
 " go to the beginning of the line (^ is too far)
 nnoremap <Leader>a ^
