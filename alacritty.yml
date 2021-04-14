@@ -1,3 +1,7 @@
+env:
+    # needed for appropriate colors
+    TERM: 'xterm-256color'
+
 window:
     opacity: 1
     padding:
