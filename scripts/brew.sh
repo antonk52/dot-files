@@ -48,13 +48,13 @@ brew install zsh # bash but better
 brew install zsh-completions # zsh extension
 
 # cask apps
+brew install alacritty # terminal
 brew install alfred # spotlight but useful
 brew install chromium # chrome but pure
 brew install cyberduck # when ftp is still relevant
 brew install docker # docker desktop app
 brew install firefox
 brew install gimp
-brew install iterm2 # terminal
 brew install karabiner-elements # advanced key mapping
 brew install keycastr # useful for demos
 brew install monitorcontrol # control brightness for external monitors from keyboard
