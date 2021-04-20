@@ -249,8 +249,8 @@ nnoremap <leader>k <C-W>5+
 nnoremap <leader>l <C-W>5>
 nnoremap <leader>h <C-W>5<
 
-nnoremap <Leader>- :call antonk52#layout#zoom_split()<cr>
-nnoremap <Leader>= :call antonk52#layout#equalify_splits()<cr>
+nnoremap <Leader>= :call antonk52#layout#zoom_split()<cr>
+nnoremap <Leader>- :call antonk52#layout#equalify_splits()<cr>
 nnoremap <Leader>+ :call antonk52#layout#restore_layout()<cr>
 
 " go to the beginning of the line (^ is too far)

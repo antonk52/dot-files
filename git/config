@@ -15,6 +15,15 @@
 [alias]
     go = checkout
     l = log -n 100
+    s = status -s
+    p = add -p
+    patch = add -p
+    c = commit
+    cm = commit -m
+    amend = commit --amend --no-edit
+    reword = commit --amend --only -v --
+[advice]
+    statusHints = false
 [includeIf "gitdir:~/Documents/dev/work/"]
     path = ~/Documents/dev/work/.gitconfig
 [branch]
