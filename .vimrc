@@ -59,6 +59,8 @@ if !has('nvim')
 endif
 " change surrounding chars
 Plug 'tpope/vim-surround'
+" change vim dit to project root dir automatically
+Plug 'airblade/vim-rooter'
 " git gems
 Plug 'tpope/vim-fugitive'
 " enables Gbrowse for github.com
