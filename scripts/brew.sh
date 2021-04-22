@@ -62,3 +62,7 @@ brew install obs # streaming & screen recording
 brew install rectangle # macos window management
 brew install telegram # advanced key mapping
 brew install vlc # media player
+
+# fonts
+brew tap homebrew/cask-fonts
+brew install --cask font-fira-code
