@@ -57,7 +57,8 @@ brew install firefox
 brew install gimp
 brew install karabiner-elements # advanced key mapping
 brew install keycastr # useful for demos
-brew install monitorcontrol # control brightness for external monitors from keyboard
+brew install monitorcontrol # control external monitors brightness from keyboard
+brew install obs # streaming & screen recording
 brew install rectangle # macos window management
 brew install telegram # advanced key mapping
 brew install vlc # media player
