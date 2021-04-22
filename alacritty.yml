@@ -59,8 +59,20 @@ key_bindings:
 # Solved
 # - hide window bar
 # - same cursor shape/color
+# - alt + num shortcuts for tmux auto layouts
+# - open links by clicking on them, works using `url launcher` but neither works inside vim nor tmux
+#     hold `shift` to bypass apps that capture mouse clicks from [github](https://github.com/alacritty/alacritty/blob/master/docs/features.md#opening-urls-with-the-mouse)
 #
 # Issues(no resolution)
 # - no support for ligatures
+# - `ctrl + /` beeps with no effect [issue](https://github.com/alacritty/alacritty/issues/3014)
+#     - temporary workarount as `ctrl + minus` for toggling comments
+# - no support for emoji shortcut on mac `ctrl + cmd + space`
 #
 # Issues(needs research)
+# - focus on alacritty window by clicking it with a mouse
+#   atm when clicking with a mouse focus goes to Finder instead of Alacritty,
+#   not sure if Amethyst is to blame
+#   though was able to reproduce with amethyst off
+#
+# https://example.com
