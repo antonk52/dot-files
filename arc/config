@@ -1,0 +1,8 @@
+[alias]
+    go = checkout
+    s = status -s
+    p = add -p
+    patch = add -p
+
+[branch "trunk"]
+    allowCommit = false
