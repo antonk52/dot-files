@@ -1,6 +1,8 @@
 [user]
     email = halloy52@gmail.com
     name = antonk52
+[github]
+    username = antonk52
 [core]
     excludesfile = ~/.gitignore
 [push]
