@@ -92,7 +92,8 @@ bindkey "^v" edit-command-line
 LOCAL_SHELLRC="$XDG_CONFIG_HOME"/local_shellrc
 [ -f "$LOCAL_SHELLRC" ] && source "$LOCAL_SHELLRC"
 
-eval "$(rbenv init -)"
+# if you need ruby, do use this
+# eval "$(rbenv init -)"
 
 # needed for `j` (autojump) to work
 [ -f /usr/local/etc/profile.d/autojump.sh ] && . /usr/local/etc/profile.d/autojump.sh
