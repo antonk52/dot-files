@@ -9,7 +9,8 @@
 1. Create symlinks before installing applications
     <br>`./scripts/prepare-xdg.sh`
 1. Clone git submodules
-1. Run brew file to install brew and default apps
+1. Install `brew` from the [website](https://brew.sh/#install)
+1. Run brew file to install cli apps, gui apps and fonts
     <br>`./scripts/brew.sh`
 1. Change shell to zsh if it's not zsh already
     <br>`chsh -s $(which zsh)`
