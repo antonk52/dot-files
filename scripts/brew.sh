@@ -60,7 +60,6 @@ brew install keycastr # useful for demos
 brew install lookpback # virtual devises to pass audio to obs
 brew install monitorcontrol # control external monitors brightness from keyboard
 brew install obs # streaming & screen recording
-brew install rectangle # macos window management
 brew install telegram # advanced key mapping
 brew install vlc # media player
 
