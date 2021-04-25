@@ -99,7 +99,7 @@ function notes()
       mkdir -p "$DIR_PATH"
   fi
 
-  $EDITOR "$FILE_PATH" -c "cd $NOTES_PATH"
+  $EDITOR "$FILE_PATH" -c "cd $NOTES_PATH" -c "SourceRussianMacKeymap"
 }
 
 function colors()
