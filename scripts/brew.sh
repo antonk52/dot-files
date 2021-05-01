@@ -15,6 +15,7 @@ brew upgrade
 brew install autojump # smart cd
 brew install bat # modern cat
 brew install deno # nodejs but hip
+brew install dust # like du but more intuitive.
 brew install exa # modern ls
 brew install fd # modern find
 brew install freetype # library to render fonts
