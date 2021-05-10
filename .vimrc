@@ -332,6 +332,11 @@ if has('nvim') || has('patch-8.2.18.12')
     autocmd! CursorHold * ++once set spell spelllang=ru_ru,en_us
 endif
 
+if has('nvim-0.5')
+    " blink yanked text after yanking it
+    autocmd TextYankPost * lua return (not vim.v.event.visual) and require('vim.highlight').on_yank({higroup = 'Substitute', timeout = 250})
+endif
+
 " ======= fat fingers
 command! Wq :wq
 command! Ter :ter
