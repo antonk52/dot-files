@@ -17,8 +17,10 @@ export GEM_HOME="$XDG_DATA_HOME"/gem
 export GEM_SPEC_CACHE="$XDG_CACHE_HOME"/gem
 export CARGO_HOME="$XDG_DATA_HOME"/cargo
 
+DOT_FILES="$HOME"/dot-files
+
 # use base16 colors
-BASE16_SHELL="$HOME"/dot-files/base16-shell
+BASE16_SHELL="$DOT_FILES"/base16-shell
 [ -n "$PS1" ] && [ -s "$BASE16_SHELL"/profile_helper.sh ] && eval "$("$BASE16_SHELL"/profile_helper.sh)"
 
 # global node modules
@@ -28,17 +30,16 @@ export PATH="$HOME"/.cargo/bin:$PATH
 # pip packages
 export PATH="$HOME"/Library/Python/3.9/bin:$PATH
 
-# Path to your oh-my-zsh installation.
-export ZSH="$HOME"/.oh-my-zsh
+# --- zsh plugins start
 
-# oh my zsh plugins
-plugins=(
-  npm
-  # https://github.com/zsh-users/zsh-autosuggestions
-  zsh-autosuggestions
-)
+npm_complitions="$DOT_FILES/scripts/npm-complitions.zsh"
 
-source "$ZSH"/oh-my-zsh.sh
+[ ! -f "$npm_complitions" ] && npm complitions >> "$npm_complitions";
+source "$npm_complitions"
+
+source "$DOT_FILES/zsh-autosuggestions/zsh-autosuggestions.zsh"
+
+# --- zsh plugins end
 
 # You may need to manually set your language environment
 export LANG=en_US.UTF-8
@@ -47,7 +48,7 @@ export LANG=en_US.UTF-8
 export EDITOR='nvim'
 
 # source personal aliases
-source ~/dot-files/shell-aliases
+source "$DOT_FILES/shell-aliases"
 
 # Vi mode for command line
 bindkey -v

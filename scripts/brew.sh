@@ -48,7 +48,6 @@ brew install xz # compression lib
 brew install yarn # npm alternative
 brew install youtube-dl # download youtube videos
 brew install zsh # bash but better
-brew install zsh-completions # zsh extension
 
 # cask apps
 brew install alacritty # terminal

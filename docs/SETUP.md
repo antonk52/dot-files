@@ -16,7 +16,6 @@
     <br>`chsh -s $(which zsh)`
 1. Open new terminal
 1. Set shell theme as tomorrow night by running `base16_tomorrow-night`
-1. Install zsh-autocomplitions([readme](https://github.com/zsh-users/zsh-autosuggestions/blob/master/INSTALL.md#oh-my-zsh))
 1. Install global npm deps
     <br>`./scripts/prepare-npm.sh`
 1. Set up [n]vim

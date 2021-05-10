@@ -6,4 +6,6 @@
 karabiner/*
 !karabiner/karabiner.json
 
+scripts/npm-complitions.zsh
+
 **/.DS_Store
