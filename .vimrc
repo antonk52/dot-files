@@ -423,6 +423,10 @@ let g:NERDCustomDelimiters = {
     \ 'css': { 'left': '/* ', 'right': ' */' }
 \}
 
+" ======= editorconfig
+" let's keep this setting as 4 regardless
+let g:EditorConfig_disable_rules = ['tab_width']
+
 " ======= auto-pairs
 " avoid inserting extra space inside surrounding objects `{([`
 let g:AutoPairsMapSpace = 0
