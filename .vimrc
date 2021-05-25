@@ -618,16 +618,6 @@ command! Todo call antonk52#todo#find()
 
 autocmd FileType * call antonk52#jest#detect()
 
-" any project can have a '.local_vimrc'
-function! LocadLocalVimrc() abort
-    let local_vimrc_path = getcwd() . '/.local_vimrc'
-    if filereadable(local_vimrc_path)
-        source local_vimrc_path
-    endif
-endfunction
-
-autocmd VimEnter * call LocadLocalVimrc()
-
 " This could've been an actual `:make` command, but since flowtype is non
 " trivial to detect and there are many candidates to be set as a `makeprg` for
 " javascript files, flowtype should stay as its own command to avoid confusion
