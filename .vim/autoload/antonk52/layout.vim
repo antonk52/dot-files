@@ -18,10 +18,12 @@ endfunction
 function! antonk52#layout#equalify_splits()
     let s:layout_cmd = winrestcmd()
     " only double quotes would work here
-    execute "normal! \<c-w>\<c-=>"
+    silent execute "normal! \<c-w>\<c-=>"
+    echo ''
 endfunction
 
 function! antonk52#layout#zoom_split()
     let s:layout_cmd = winrestcmd()
-    execute "normal! \<c-w>\<c-_>"
+    silent execute "normal! \<c-w>\<c-_>"
+    echo ''
 endfunction
