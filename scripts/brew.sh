@@ -12,8 +12,11 @@ brew update
 
 brew upgrade
 
+brew tap clementtsang/bottom
+
 brew install autojump # smart cd
 brew install bat # modern cat
+brew install clementtsang/bottom/bottom # top/htop alternative
 brew install deno # nodejs but hip
 brew install dust # like du but more intuitive.
 brew install exa # modern ls
@@ -32,6 +35,7 @@ brew install nginx
 brew install node # nodejs & npm
 brew install openssl
 brew install openssl@1.1
+brew install procs # ps in rust
 brew install python
 brew install python3
 brew install rbenv # ruby version manager
