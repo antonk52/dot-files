@@ -534,7 +534,7 @@ function! SetupFlow() abort
 endfunction
 
 function! SetupCocStuff() abort
-    let has_flowconfig = call SetupFlow()
+    let has_flowconfig = SetupFlow()
     let has_eslint_config = HasEslintConfig()
     " turn off eslint when cannot find eslintrc
     call coc#config('eslint.enable', has_eslint_config)
