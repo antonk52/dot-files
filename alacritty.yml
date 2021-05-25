@@ -43,6 +43,8 @@ key_bindings:
       mods: Command
       action: ReceiveChar
 
+    - { key: Key0, mods: Command, action: ResetFontSize }
+
     # needed for appropriate handling of alt shorcuts
     # like tmux's `prefix alt + num` for auto layouts
     - { key: Key0, mods: Alt, chars: "\x1b0" }
