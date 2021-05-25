@@ -38,11 +38,11 @@
                         ]
                     },
                     {
-                        "description": "fn + i - activates iTerm2",
+                        "description": "fn + a - activates Alacritty",
                         "manipulators": [
                             {
                                 "from": {
-                                    "key_code": "i",
+                                    "key_code": "a",
                                     "modifiers": {
                                         "mandatory": [
                                             "fn"
@@ -51,7 +51,7 @@
                                 },
                                 "to": [
                                     {
-                                        "shell_command": "osascript -e 'tell application \"iTerm2\" to activate'"
+                                        "shell_command": "osascript -e 'tell application \"Alacritty\" to activate'"
                                     }
                                 ],
                                 "type": "basic"
