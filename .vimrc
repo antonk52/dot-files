@@ -366,7 +366,13 @@ let g:lightline.tabline = { 'left': [ [ 'tabs' ] ], 'right': [] }
 let g:lightline.component_function = {
     \ 'mode': 'LightlineMode',
     \ 'filename': 'LightlineFilename',
+    \ 'lineinfo': 'LightlineLineinfo',
     \ 'filetype': 'LightlineFiletype' }
+
+" use virtcol() instead of col()
+function! LightlineLineinfo() abort
+    return line('.').':'.virtcol('.')
+endfunction
 
 function! LightlineFilename() abort
     let expanded = substitute(expand('%:f'), getcwd().'/', '', '')
