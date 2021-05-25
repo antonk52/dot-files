@@ -636,3 +636,6 @@ command! SourceRussianMacKeymap call antonk52#markdown#source_rus_keymap()
 " for some reason :help colorcolumn suggest setting it via `set colorcolumn=123`
 " that has no effect, but setting it using `let &colorcolumn=123` works
 command! -nargs=1 SetColorColumn let &colorcolumn=<args>
+
+autocmd FileType qf map <buffer> dd :call antonk52#quickfix#remove_item()<cr>
+
