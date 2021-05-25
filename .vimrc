@@ -1,6 +1,8 @@
+" vi: foldmethod=marker foldlevelstart=1 foldlevel=1
 set nocompatible
 filetype off
 
+" Preset {{{1
 let g:did_install_default_menus = 1 " Skip loading menu.vim, saves ~100ms
 let g:loaded_getscript = 1
 let g:loaded_getscriptPlugin = 1
@@ -38,6 +40,7 @@ if has('nvim')
     let g:loaded_perl_provider = 0
 endif
 
+" Plugins {{{1
 " load vim plug if it is not installed
 if empty(glob('~/.vim/autoload/plug.vim'))
   silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
@@ -235,9 +238,7 @@ set undofile
 " store undo files away from the project
 set undodir="$HOME/.vim/undo_dir"
 
-"
-" ======================== Mappings ========================
-"
+" Mappings {{{1
 
 let mapleader="\<Space>"
 let maplocalleader="\\"
@@ -322,7 +323,8 @@ if has('nvim')
   autocmd TermOpen * setlocal nonumber norelativenumber
 endif
 
-" ======= helpers
+" }}}
+" Helpers {{{1
 
 command! ToggleNumbers set number! relativenumber!
 
@@ -338,20 +340,20 @@ if has('nvim-0.5')
     autocmd TextYankPost * lua return (not vim.v.event.visual) and require('vim.highlight').on_yank({higroup = 'Substitute', timeout = 250})
 endif
 
-" ======= fat fingers
+" fat fingers {{{2
 command! Wq :wq
 command! Ter :ter
 command! Sp :sp
 command! Vs :vs
 
-" ======================== plugins ========================
+" Plugins {{{1
 
-" ======= terminus
+" terminus {{{2
 
 " do not overwrite init behavior of the cursor
 let g:TerminusCursorShape=0
 
-" ======= lightline
+" lightline {{{2
 
 let g:lightline = {'colorscheme': 'ocean'}
 let g:lightline.separator = { 'left': '', 'right': '' }
@@ -396,12 +398,12 @@ function! LightlineFiletype() abort
     return get(g:ft_map, ft, ft)
 endfunction
 
-" ======= dirvish
+" dirvish {{{2
 
 let g:dirvish_relative_paths = 1
 let g:dirvish_mode = ':sort ,^\v(.*[\/])|\ze,' " folders on top
 
-" ======= Nerdcommenter
+" Nerdcommenter {{{2
 
 let g:NERDDefaultAlign = 'left'
 let g:NERDSpaceDelims = 1
@@ -423,28 +425,28 @@ let g:NERDCustomDelimiters = {
     \ 'css': { 'left': '/* ', 'right': ' */' }
 \}
 
-" ======= editorconfig
+" editorconfig {{{2
 " let's keep this setting as 4 regardless
 let g:EditorConfig_disable_rules = ['tab_width']
 
-" ======= auto-pairs
+" auto-pairs {{{2
 " avoid inserting extra space inside surrounding objects `{([`
 let g:AutoPairsMapSpace = 0
 
-" ======= indentline
+" indentline {{{2
 
 let g:indentLine_char = '│'
 
-" ======= Diminactive
+" Diminactive {{{2
 " bg color for inactive splits
 highlight ColorColumn ctermbg=0 guibg=#424949
 
-" ======= vim javascript
+" vim javascript {{{2
 " Enables syntax highlighting for Flow
 let g:javascript_plugin_flow = 1
 let g:javascript_plugin_jsdoc=1
 
-" ======= coc
+" coc {{{2
 set updatetime=300
 set shortmess+=c
 
@@ -557,7 +559,7 @@ nmap <silent> <leader>[ <Plug>(coc-diagnostic-prev)
 nmap <silent> <leader>] <Plug>(coc-diagnostic-next)
 nmap <silent> <leader>r <Plug>(coc-rename)
 
-" ======= ultisnips
+" ultisnips {{{2
 
 " Trigger configuration.
 let g:UltiSnipsExpandTrigger="<tab>"
@@ -567,7 +569,7 @@ let g:UltiSnipsJumpBackwardTrigger="<c-z>"
 " If you want :UltiSnipsEdit to split your window.
 let g:UltiSnipsEditSplit="vertical"
 
-" ======= fzf
+" fzf {{{2
 " enable file preview for both Files & GFiles
 command! -bang -nargs=? -complete=dir Files
     \ call fzf#vim#files(<q-args>, fzf#vim#with_preview(), <bang>1)
@@ -590,16 +592,16 @@ nnoremap <leader>H :History<cr>
 " start in a popup
 let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.6 } }
 
-" ======= vim-jsx-pretty
+" vim-jsx-pretty {{{2
 let g:vim_jsx_pretty_highlight_close_tag = 1
 
-" ======= supertab
+" supertab {{{2
 " navigate through auto completion options where:
 " - tab takes to the next one - one down
 " - shift tab takes to previous one - one up
 let g:SuperTabDefaultCompletionType = '<c-n>'
 
-" ======= markdown fold
+" markdown fold {{{2
 " fold underlying sections if any
 let g:markdown_fold_style = 'nested'
 " preserve my custom folding style
