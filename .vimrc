@@ -509,7 +509,11 @@ endfunction
 
 " lookup local flow executable
 " and turn on flow for coc is executable exists
-function! SetFlow() abort
+function! SetupFlow() abort
+    let has_flowconfig = filereadable('.flowconfig')
+    if !has_flowconfig
+        return 0
+    endif
     let flow_path = 'node_modules/.bin/flow'
     let has_flow = filereadable(flow_path)
     if (!has_flow)
@@ -526,18 +530,15 @@ function! SetFlow() abort
     \    'rootPatterns': ['.flowconfig']
     \}
     call coc#config('languageserver.flow', flow_config)
+    return 1
 endfunction
 
 function! SetupCocStuff() abort
-    let has_flowconfig = filereadable('.flowconfig')
-    if has_flowconfig
-        call SetFlow()
-    endif
-
-    let eslint_config_found = HasEslintConfig()
+    let has_flowconfig = call SetupFlow()
+    let has_eslint_config = HasEslintConfig()
     " turn off eslint when cannot find eslintrc
-    call coc#config('eslint.enable', eslint_config_found)
-    call coc#config('eslint.autoFixOnSave', eslint_config_found)
+    call coc#config('eslint.enable', has_eslint_config)
+    call coc#config('eslint.autoFixOnSave', has_eslint_config)
     " essentially avoid turning on typescript in a flow project
     call coc#config('tsserver.enableJavascript', !has_flowconfig)
     " lazy coc settings require restarting coc to pickup newer configuration
