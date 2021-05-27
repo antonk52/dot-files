@@ -42,13 +42,13 @@ endif
 
 " Plugins {{{1
 " load vim plug if it is not installed
-if empty(glob('~/.vim/autoload/plug.vim'))
-  silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
+if empty(glob('~/.config/nvim/autoload/plug.vim'))
+  silent !curl -fLo ~/.config/nvim/autoload/plug.vim --create-dirs
     \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
   autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
 endif
 
-call plug#begin('~/.vim/plugged')
+call plug#begin('~/.config/nvim/plugged')
 
 " =========== essentials ===========
 " tab completion
@@ -69,7 +69,9 @@ Plug 'tpope/vim-surround'
 Plug 'airblade/vim-rooter'
 " git gems
 Plug 'tpope/vim-fugitive'
-Plug 'antonk52/gitignore-grabber.nvim'
+if has('nvim-0.5')
+    Plug 'antonk52/gitignore-grabber.nvim'
+endif
 " enables Gbrowse for github.com
 Plug 'tpope/vim-rhubarb'
 " toggle comments duh

@@ -1,6 +1,8 @@
-.vim/autoload/plug.vim
-.vim/spell/*
-!.vim/spell/*.add
+nvim/autoload/plug.vim
+nvim/.netrwhist
+nvim/plugged
+nvim/spell/*
+!nvim/spell/*.add
 
 # there's more stuff, we only care for personal config
 karabiner/*
