@@ -4,7 +4,7 @@ function! antonk52#markdown#toggle_checkbox()
     let content = getline('.')
     let res = match(content, '\[ \]')
     if res == -1
-        execute('.s/\[x\]/[ ]')
+        execute('.s/\[[x~]\]/[ ]')
     else
         execute('.s/\[ \]/[x]')
     endif
