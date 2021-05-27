@@ -13,6 +13,22 @@
 
     "eslint.autoFixOnSave": false,
 
+    "Lua.diagnostics.globals": [
+        "vim",
+        "ERR",
+        "OUT",
+        "IN",
+        "log",
+        "_G",
+        "GC",
+        "ID",
+        "DEVELOP",
+        "DBGPORT",
+        "DBGWAIT",
+        "tracy",
+        "LOCALE"
+    ],
+
     "javascript.suggestionActions.enabled": false,
 
     "coc.preferences.formatOnSaveFiletypes": ["css"],
