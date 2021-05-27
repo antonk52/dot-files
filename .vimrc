@@ -54,6 +54,9 @@ call plug#begin('~/.vim/plugged')
 " tab completion
 Plug 'ervandew/supertab'
 Plug 'antonk52/vim-tabber'
+if has('nvim-0.5')
+    Plug 'antonk52/vim-bad-practices'
+endif
 " types & linting
 Plug 'neoclide/coc.nvim', {'branch': 'release', 'do': ':CocInstall'}
 " support for coc in regular vim
