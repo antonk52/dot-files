@@ -246,6 +246,11 @@ set undodir="$HOME/.vim/undo_dir"
 let mapleader="\<Space>"
 let maplocalleader="\\"
 
+" closes a window
+nnoremap <leader>q :q<cr>
+" closes a buffer
+nnoremap <localleader>q :bd<cr>
+
 " leader c - copy to OS clipboard
 vmap <leader>c "*y
 " leader v - paste from OS clipboard
