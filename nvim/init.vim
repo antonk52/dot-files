@@ -624,7 +624,7 @@ let g:markdown_fold_style = 'nested'
 " preserve my custom folding style
 let g:markdown_fold_override_foldtext = 0
 
-command! Todo call antonk52#todo#find()
+command! Todo lua require'antonk52.todo'.find_todo()
 
 autocmd FileType * call antonk52#jest#detect()
 
@@ -636,6 +636,7 @@ command! MakeTs call antonk52#typescript#check()
 
 " close quickfix window after jumping to an error
 autocmd FileType qf nnoremap <buffer> <cr> <cr>:cclose<cr>:echo ''<cr>
+autocmd FileType qf map <buffer> dd :call antonk52#quickfix#remove_item()<cr>
 
 autocmd FileType markdown call antonk52#markdown#setup()
 
@@ -646,6 +647,3 @@ command! SourceRussianMacKeymap call antonk52#markdown#source_rus_keymap()
 " for some reason :help colorcolumn suggest setting it via `set colorcolumn=123`
 " that has no effect, but setting it using `let &colorcolumn=123` works
 command! -nargs=1 SetColorColumn let &colorcolumn=<args>
-
-autocmd FileType qf map <buffer> dd :call antonk52#quickfix#remove_item()<cr>
-
