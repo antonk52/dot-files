@@ -636,7 +636,7 @@ command! MakeTs call antonk52#typescript#check()
 
 " close quickfix window after jumping to an error
 autocmd FileType qf nnoremap <buffer> <cr> <cr>:cclose<cr>:echo ''<cr>
-autocmd FileType qf map <buffer> dd :call antonk52#quickfix#remove_item()<cr>
+autocmd FileType qf map <buffer> dd :lua require'antonk52.quickfix'.remove_item()<cr>
 
 autocmd FileType markdown call antonk52#markdown#setup()
 
