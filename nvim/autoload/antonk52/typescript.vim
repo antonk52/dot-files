@@ -11,11 +11,19 @@ function! s:OnEvent(job_id, data, event) dict
         echohl None
     " report and clean up
     else
-        let tsc_errorfmt='%+A\ %#%f\ %#(%l\\\,%c):\ %m,%C%m'
+        let tsc_errorfmt='%E\ %#%f\ %#(%l\\\,%c):\ error\ TS%n:\ %m,%C%m'
         let old_fmt = &errorformat
         let &errorformat = tsc_errorfmt
 
-        cgete s:output
+        let lines = split(s:output, '\\n')
+
+        " empty quickfix list prior to populating it
+        call setqflist([])
+
+        " populate quickfix list by parsing each line separately
+        for line in lines
+            caddexpr line
+        endfor
         cwindow
         echo ''
 
