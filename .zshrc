@@ -77,6 +77,10 @@ zstyle ':vcs_info:*:*' actionformats "$FX[bold]%r$FX[no-bold]/%S" "%s/%b" "%u%c 
 
 prompt pure
 
+# load edit-command-line widget
+autoload -U edit-command-line
+zle -N edit-command-line
+
 # handy key bindings
 bindkey "^A" beginning-of-line
 bindkey "^E" end-of-line
