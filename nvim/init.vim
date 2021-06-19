@@ -1,4 +1,4 @@
-" vi: foldmethod=marker foldlevelstart=1 foldlevel=1
+" vim: foldmethod=marker foldlevelstart=0 foldlevel=0
 set nocompatible
 filetype off
 
@@ -50,9 +50,10 @@ endif
 
 call plug#begin('~/.config/nvim/plugged')
 
-" =========== essentials ===========
+" Essentials {{{2
 " tab completion
 Plug 'ervandew/supertab'
+" tab navigation
 Plug 'antonk52/vim-tabber'
 if has('nvim-0.5')
     Plug 'antonk52/vim-bad-practices'
@@ -93,38 +94,44 @@ Plug 'jiangmiao/auto-pairs'
 Plug 'editorconfig/editorconfig-vim'
 " snippets
 Plug 'SirVer/ultisnips'
+" sensible defaults
+Plug 'wincent/terminus'
+" live preview markdown files in browser
+Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app & yarn install', 'for': ['markdown', 'mdx'] }
 
-" =========== front end ===========
+" Front end {{{2
 " quick html
 Plug 'mattn/emmet-vim', { 'for': ['html', 'css', 'javascript', 'typescript'] }
-" color highlight preview
-Plug 'ap/vim-css-color', { 'for': ['html', 'css', 'javascript', 'javascript.jsx', 'typescript', 'typescript.tsx'] }
 
-" =========== syntax ===========
+" Syntax {{{2
+" hex/rgb color highlight preview
+if has('nvim')
+    Plug 'norcalli/nvim-colorizer.lua'
+endif
 Plug 'pangloss/vim-javascript'
 Plug 'leafgarland/typescript-vim'
+Plug 'purescript-contrib/purescript-vim'
 Plug 'MaxMEllon/vim-jsx-pretty'
 Plug 'JulesWang/css.vim' " TODO try out 'hail2u/vim-css3-syntax'
 Plug 'jxnblk/vim-mdx-js', { 'for': ['mdx'] }
 Plug 'maksimr/vim-yate' " TODO defeat, forget, get drunk
-Plug 'Yggdroot/indentLine', { 'for': ['javascript', 'typescript', 'vimscript'] }
+if has('nvim-0.5')
+    Plug 'lukas-reineke/indent-blankline.nvim', {'branch': 'lua'}
+endif
 " fold by heading
 Plug 'masukomi/vim-markdown-folding'
 
-" themes
+" Themes {{{2
 Plug 'chriskempson/base16-vim'
 Plug 'morhetz/gruvbox'
 Plug 'andreypopp/vim-colors-plain'
-
-" sensible defaults
-Plug 'wincent/terminus'
-
-" live preview markdown files in browser
-Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app & yarn install', 'for': ['markdown', 'mdx'] }
+Plug 'NLKNguyen/papercolor-theme'
+" 2}}}
 
 call plug#end()
 filetype plugin indent on
 
+" Defaults {{{1
 " theme
 syntax enable
 set background=dark
@@ -449,7 +456,7 @@ let g:EditorConfig_disable_rules = ['tab_width']
 " avoid inserting extra space inside surrounding objects `{([`
 let g:AutoPairsMapSpace = 0
 
-" indentline {{{2
+" indent-blankline.nvim {{{2
 
 let g:indentLine_char = '│'
 
