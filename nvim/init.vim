@@ -61,6 +61,7 @@ Plug 'ervandew/supertab'
 " tab navigation
 Plug 'antonk52/vim-tabber'
 if has('nvim-0.5')
+    Plug 'antonk52/amake.nvim'
     Plug 'antonk52/vim-bad-practices'
 endif
 " types & linting
@@ -636,15 +637,26 @@ let g:markdown_fold_style = 'nested'
 " preserve my custom folding style
 let g:markdown_fold_override_foldtext = 0
 
+" colorizer {{{2
+" color highlight wont work on the first file opened,
+" but shaves off 10ms from the startup time
+if has('nvim-0.5')
+    " delay loading spell&spelllang until something is on the screen
+    autocmd! CursorHold * ++once lua require'colorizer'.setup()
+endif
+
+" amake {{{2
+let g:amake_jobs = {
+    \ 'flow': {
+    \    'cmd': ['npx', 'flow', '--timeout', '5', '--retry-if-init', 'false', '--from', 'vim'],
+    \    'error_format': '%EFile "%f"\, line %l\, characters %c-%.%#,%Z%m,%-G%.%#'
+    \  }
+    \}
+" }}}
+
 command! Todo lua require'antonk52.todo'.find_todo()
 
 autocmd FileType * call antonk52#jest#detect()
-
-" This could've been an actual `:make` command, but since flowtype is non
-" trivial to detect and there are many candidates to be set as a `makeprg` for
-" javascript files, flowtype should stay as its own command to avoid confusion
-command! MakeFlow call antonk52#flow#check()
-command! MakeTs call antonk52#typescript#check()
 
 " close quickfix window after jumping to an error
 autocmd FileType qf nnoremap <buffer> <cr> <cr>:cclose<cr>:echo ''<cr>
