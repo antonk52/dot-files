@@ -20,6 +20,17 @@
     s = status -s
     p = add -p
     patch = add -p
+    # get origin
+    # - git@github.foobar.com:user/repo.git
+    # - https://github.foobar.com:user/repo
+    #
+    # sed commands:
+    # 1. replace `:` between host and user
+    # 2. remove `git@` in the beginning if present
+    # 3. remove `.git` in the end if present
+    # 4. remove `:` in the protocol if it was affected by step 1
+    repourl = "!f() { git config remote.origin.url | sed 's/:/\\//' | sed -re 's/^git@/https:\\/\\//g' | sed 's/\\.git$//' | sed 's/^https\\//https:/'; }; f"
+    pr = "!f() { open \"$(git repourl)/compare/$(git branch --show-current)\"; }; f"
     c = commit
     cm = commit -m
     amend = commit --amend --no-edit
