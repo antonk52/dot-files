@@ -67,6 +67,10 @@ if has('nvim-0.5')
     " tests
     Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}  " We recommend updating the parsers on update
     Plug 'nvim-treesitter/playground'
+    " telescope only
+    Plug 'nvim-lua/popup.nvim'
+    Plug 'nvim-lua/plenary.nvim'
+    Plug 'nvim-telescope/telescope.nvim'
 endif
 " types & linting
 Plug 'neoclide/coc.nvim', {'branch': 'release', 'do': ':CocInstall'}
