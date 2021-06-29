@@ -26,17 +26,6 @@ function! antonk52#markdown#conceal_intensifies()
     hi! EndOfBuffer ctermbg=bg ctermfg=bg guibg=bg guifg=bg
 endfunction
 
-function! antonk52#markdown#source_rus_keymap() abort
-    let filename = "keymap/russian-jcukenmac.vim"
-    let rus_keymap = trim(globpath(&rtp, filename))
-    if (filereadable(rus_keymap))
-        execute("source " . rus_keymap)
-        echo 'Russian keymap sourced'
-    else
-        echom 'Cannot locate Russian keymap file named "' . filename . '"'
-    endif
-endfunction
-
 function! antonk52#markdown#setup()
     nnoremap <silent> <localleader>t :call antonk52#markdown#toggle_checkbox()<cr>
     nnoremap <buffer> j gj

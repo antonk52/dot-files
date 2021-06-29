@@ -686,7 +686,8 @@ autocmd FileType markdown call antonk52#markdown#setup()
 
 command! MarkdownConcealIntensifies call antonk52#markdown#conceal_intensifies()
 
-command! SourceRussianMacKeymap call antonk52#markdown#source_rus_keymap()
+command! SourceRussianMacKeymap call antonk52#notes#source_rus_keymap()
+command! NotesMode call antonk52#notes#setup()
 
 " for some reason :help colorcolumn suggest setting it via `set colorcolumn=123`
 " that has no effect, but setting it using `let &colorcolumn=123` works
