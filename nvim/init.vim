@@ -64,6 +64,9 @@ Plug 'antonk52/vim-tabber'
 if has('nvim-0.5')
     Plug 'antonk52/amake.nvim'
     Plug 'antonk52/vim-bad-practices'
+    " tests
+    Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}  " We recommend updating the parsers on update
+    Plug 'nvim-treesitter/playground'
 endif
 " types & linting
 Plug 'neoclide/coc.nvim', {'branch': 'release', 'do': ':CocInstall'}
@@ -705,3 +708,33 @@ command! NotesMode call antonk52#notes#setup()
 " for some reason :help colorcolumn suggest setting it via `set colorcolumn=123`
 " that has no effect, but setting it using `let &colorcolumn=123` works
 command! -nargs=1 SetColorColumn let &colorcolumn=<args>
+
+" nvim 0.5 {{{2
+if !has('nvim-0.5')
+    finish
+endif
+lua << EOF
+require "nvim-treesitter.configs".setup {
+    ensure_installed = "maintained",
+    playground = {
+        enable = true,
+        disable = {},
+        -- Debounced time for highlighting nodes in the playground from source code
+        updatetime = 25,
+        -- Whether the query persists across vim sessions
+        persist_queries = false,
+        keybindings = {
+            toggle_query_editor = 'o',
+            toggle_hl_groups = 'i',
+            toggle_injected_languages = 't',
+            toggle_anonymous_nodes = 'a',
+            toggle_language_display = 'I',
+            focus_language = 'f',
+            unfocus_language = 'F',
+            update = 'R',
+            goto_node = '<cr>',
+            show_help = '?',
+        },
+    }
+}
+EOF
