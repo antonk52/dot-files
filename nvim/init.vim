@@ -229,7 +229,8 @@ endif
 " folding
 if has('folding')
   set foldmethod=indent
-  set foldlevelstart=10
+  set foldlevelstart=20
+  set foldlevel=20
   if has('windows')
     " use wider line for folding
     set fillchars+=fold:⏤
@@ -464,7 +465,26 @@ let g:AutoPairsMapSpace = 0
 
 " indent-blankline.nvim {{{2
 
-let g:indentLine_char = '│'
+" avoid the first indent & increment dashes furer ones
+let g:indent_blankline_char_list = ['|', '¦']
+let g:indent_blankline_show_first_indent_level = v:false
+let g:indent_blankline_show_trailing_blankline_indent = v:false
+let g:indent_blankline_filetype_exclude = [
+\ "help",
+\ "startify",
+\ "dashboard",
+\ "packer",
+\ "neogitstatus",
+\ "NvimTree",
+\ "Trouble",
+\ ]
+
+" refresh blank lines after toggleing folds
+" to avoid intent lines overlaying the fold line characters
+nnoremap zr zr:IndentBlanklineRefresh<cr>
+nnoremap za za:IndentBlanklineRefresh<cr>
+nnoremap zm zm:IndentBlanklineRefresh<cr>
+nnoremap zo zo:IndentBlanklineRefresh<cr>
 
 " Diminactive {{{2
 " bg color for inactive splits
