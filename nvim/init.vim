@@ -502,7 +502,7 @@ set shortmess+=c
 
 " Let coc use a newer nodejs version
 " since I have to continuously switch between older ones
-let s:local_latest_node = '/usr/local/n/versions/node/13.9.0/bin/node'
+let s:local_latest_node = '/usr/local/n/versions/node/16.3.0/bin/node'
 if filereadable(s:local_latest_node) | let g:coc_node_path = s:local_latest_node | endif
 
 let g:coc_global_extensions=[
