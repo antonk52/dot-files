@@ -352,9 +352,28 @@ if has('nvim')
 endif
 
 " }}}
-" Helpers {{{1
+" Commands {{{1
 
 command! ToggleNumbers set number! relativenumber!
+
+command! Todo lua require'antonk52.todo'.find_todo()
+
+command! MarkdownConcealIntensifies call antonk52#markdown#conceal_intensifies()
+
+command! SourceRussianMacKeymap call antonk52#notes#source_rus_keymap()
+command! NotesMode call antonk52#notes#setup()
+
+" for some reason :help colorcolumn suggest setting it via `set colorcolumn=123`
+" that has no effect, but setting it using `let &colorcolumn=123` works
+command! -nargs=1 SetColorColumn let &colorcolumn=<args>
+
+" fat fingers {{{2
+command! Wq :wq
+command! Ter :ter
+command! Sp :sp
+command! Vs :vs
+
+" Autocommands {{{1
 
 " check spell in neovim exclusively
 " vim is mostly run remotely w/ no access to my dictionary
@@ -368,11 +387,13 @@ if has('nvim-0.5')
     autocmd TextYankPost * lua return (not vim.v.event.visual) and require('vim.highlight').on_yank({higroup = 'Substitute', timeout = 250})
 endif
 
-" fat fingers {{{2
-command! Wq :wq
-command! Ter :ter
-command! Sp :sp
-command! Vs :vs
+autocmd FileType * call antonk52#jest#detect()
+
+" close quickfix window after jumping to an error
+autocmd FileType qf nnoremap <buffer> <cr> <cr>:cclose<cr>:echo ''<cr>
+autocmd FileType qf map <buffer> dd :lua require'antonk52.quickfix'.remove_item()<cr>
+
+autocmd FileType markdown call antonk52#markdown#setup()
 
 " Plugins {{{1
 
@@ -689,26 +710,6 @@ if g:colors_name == 'base16-ocean'
     hi mkdHeading ctermfg=4 guifg=#8fa1b3
 endif
 " }}}
-
-command! Todo lua require'antonk52.todo'.find_todo()
-
-autocmd FileType * call antonk52#jest#detect()
-
-" close quickfix window after jumping to an error
-autocmd FileType qf nnoremap <buffer> <cr> <cr>:cclose<cr>:echo ''<cr>
-autocmd FileType qf map <buffer> dd :lua require'antonk52.quickfix'.remove_item()<cr>
-
-autocmd FileType markdown call antonk52#markdown#setup()
-
-command! MarkdownConcealIntensifies call antonk52#markdown#conceal_intensifies()
-
-command! SourceRussianMacKeymap call antonk52#notes#source_rus_keymap()
-command! NotesMode call antonk52#notes#setup()
-
-" for some reason :help colorcolumn suggest setting it via `set colorcolumn=123`
-" that has no effect, but setting it using `let &colorcolumn=123` works
-command! -nargs=1 SetColorColumn let &colorcolumn=<args>
-
 " nvim 0.5 {{{2
 if !has('nvim-0.5')
     finish
