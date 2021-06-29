@@ -56,6 +56,7 @@ endif
 call plug#begin('~/.config/nvim/plugged')
 
 " Essentials {{{2
+Plug 'plasticboy/vim-markdown'
 " tab completion
 Plug 'ervandew/supertab'
 " tab navigation
@@ -672,6 +673,18 @@ let g:amake_jobs = {
     \    'error_format': '%EFile "%f"\, line %l\, characters %c-%.%#,%Z%m,%-G%.%#'
     \  }
     \}
+" }}}
+" vim markdown {{{2
+let g:vim_markdown_frontmatter = 1
+let g:vim_markdown_new_list_item_indent = 0
+" let g:vim_markdown_auto_insert_bullets = 1
+" there is a separate plugin to handle markdown folds
+let g:vim_markdown_folding_disabled = 1
+" red & bold list characters -,+,*
+if g:colors_name == 'base16-ocean'
+    hi mkdListItem ctermfg=1 guifg=#bf616a gui=bold
+    hi mkdHeading ctermfg=4 guifg=#8fa1b3
+endif
 " }}}
 
 command! Todo lua require'antonk52.todo'.find_todo()
