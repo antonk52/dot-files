@@ -13,7 +13,7 @@ snippet img
 ![${1:alt}](${2:url})
 endsnippet
 
-snippet details
+snippet details "html details tags"
 <details><summary>${1:tldr}</summmary>
 ${2:body}
 </details>
@@ -23,4 +23,21 @@ snippet todo
 ## TODO
 
 - [ ] ${1:do this}
+endsnippet
+
+
+snippet tags "front matter w/ tags prop"
+---
+tags: [${1:tag_name}]
+---
+
+${2:content}
+endsnippet
+
+snippet fm "front matter"
+---
+${1:front_matter}
+---
+
+${2:content}
 endsnippet
