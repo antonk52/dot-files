@@ -1,3 +1,4 @@
+# vim:ft=config
 [alias]
     go = checkout
     s = status -s
