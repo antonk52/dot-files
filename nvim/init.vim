@@ -357,8 +357,8 @@ command! ToggleNumbers set number! relativenumber!
 
 command! Todo lua require'antonk52.todo'.find_todo()
 
-command! SourceRussianMacKeymap call antonk52#notes#source_rus_keymap()
-command! NotesMode call antonk52#notes#setup()
+command! SourceRussianMacKeymap lua require'antonk52.notes'.source_rus_keymap()
+command! NotesMode lua require'antonk52.notes'.setup()
 
 " for some reason :help colorcolumn suggest setting it via `set colorcolumn=123`
 " that has no effect, but setting it using `let &colorcolumn=123` works
