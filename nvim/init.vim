@@ -126,7 +126,7 @@ Plug 'JulesWang/css.vim' " TODO try out 'hail2u/vim-css3-syntax'
 Plug 'jxnblk/vim-mdx-js', { 'for': ['mdx'] }
 Plug 'maksimr/vim-yate' " TODO defeat, forget, get drunk
 if has('nvim-0.5')
-    Plug 'lukas-reineke/indent-blankline.nvim', {'branch': 'lua'}
+    Plug 'lukas-reineke/indent-blankline.nvim'
 endif
 " fold by heading
 Plug 'masukomi/vim-markdown-folding'
