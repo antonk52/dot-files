@@ -61,7 +61,9 @@ Plug 'plasticboy/vim-markdown'
 Plug 'ervandew/supertab'
 " tab navigation
 Plug 'antonk52/vim-tabber'
-if has('nvim-0.5')
+if has('nvim')
+    " types & linting
+    Plug 'neoclide/coc.nvim', {'branch': 'release', 'do': ':CocInstall'}
     Plug 'antonk52/amake.nvim'
     Plug 'antonk52/vim-bad-practices'
     " tests
@@ -72,15 +74,9 @@ if has('nvim-0.5')
     Plug 'nvim-lua/plenary.nvim'
     Plug 'nvim-telescope/telescope.nvim'
 endif
-" types & linting
-Plug 'neoclide/coc.nvim', {'branch': 'release', 'do': ':CocInstall'}
-" support for coc in regular vim
-if !has('nvim')
-  Plug 'neoclide/vim-node-rpc'
-endif
 " change surrounding chars
 Plug 'tpope/vim-surround'
-" change vim dit to project root dir automatically
+" change vim dir to project root dir automatically
 Plug 'airblade/vim-rooter'
 " git gems
 Plug 'tpope/vim-fugitive'
