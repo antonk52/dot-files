@@ -11,10 +11,12 @@
     "scss.validate": false,
     "wxss.validate": false,
 
+    "eslint.enable": false,
     "eslint.autoFixOnSave": false,
 
     "Lua.diagnostics.globals": [
         "vim",
+        "hs",
         "ERR",
         "OUT",
         "IN",
@@ -28,6 +30,15 @@
         "tracy",
         "LOCALE"
     ],
+
+    "languageserver": {
+        "purescript": {
+            "command": "purescript-language-server",
+            "args": ["--stdio"],
+            "filetypes": ["purescript"],
+            "rootPatterns": ["bower.json", "psc-package.json", "spago.dhall"]
+        }
+    },
 
     "javascript.suggestionActions.enabled": false,
 
