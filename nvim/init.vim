@@ -132,8 +132,7 @@ endif
 Plug 'masukomi/vim-markdown-folding'
 
 " Themes {{{2
-Plug 'chriskempson/base16-vim'
-Plug 'morhetz/gruvbox'
+Plug 'antonk52/lake.vim'
 Plug 'andreypopp/vim-colors-plain'
 Plug 'NLKNguyen/papercolor-theme'
 " 2}}}
@@ -161,7 +160,7 @@ set list listchars=tab:▸\ ,\trail:∙,
 " Access colors present in 256 colorspace
 let base16colorspace=256
 
-color base16-ocean
+color lake
 hi Comment gui=italic
 
 " no numbers by default
@@ -591,7 +590,7 @@ let g:vim_markdown_new_list_item_indent = 0
 " there is a separate plugin to handle markdown folds
 let g:vim_markdown_folding_disabled = 1
 " red & bold list characters -,+,*
-if g:colors_name == 'base16-ocean'
+if g:colors_name == 'lake'
     hi mkdListItem ctermfg=1 guifg=#bf616a gui=bold
     hi mkdHeading ctermfg=4 guifg=#8fa1b3
 endif
