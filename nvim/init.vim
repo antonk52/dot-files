@@ -357,8 +357,6 @@ command! ToggleNumbers set number! relativenumber!
 
 command! Todo lua require'antonk52.todo'.find_todo()
 
-command! MarkdownConcealIntensifies call antonk52#markdown#conceal_intensifies()
-
 command! SourceRussianMacKeymap call antonk52#notes#source_rus_keymap()
 command! NotesMode call antonk52#notes#setup()
 
@@ -392,7 +390,7 @@ autocmd FileType * call antonk52#jest#detect()
 autocmd FileType qf nnoremap <buffer> <cr> <cr>:cclose<cr>:echo ''<cr>
 autocmd FileType qf map <buffer> dd :lua require'antonk52.quickfix'.remove_item()<cr>
 
-autocmd FileType markdown call antonk52#markdown#setup()
+autocmd FileType markdown lua require'antonk52.markdown'.setup()
 
 " Plugins {{{1
 
