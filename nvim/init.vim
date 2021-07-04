@@ -584,14 +584,6 @@ if has('nvim-0.5')
     autocmd! CursorHold * ++once lua require'colorizer'.setup()
 endif
 
-" amake {{{2
-let g:amake_jobs = {
-    \ 'flow': {
-    \    'cmd': ['npx', 'flow', '--timeout', '5', '--retry-if-init', 'false', '--from', 'vim'],
-    \    'error_format': '%EFile "%f"\, line %l\, characters %c-%.%#,%Z%m,%-G%.%#'
-    \  }
-    \}
-" }}}
 " vim markdown {{{2
 let g:vim_markdown_frontmatter = 1
 let g:vim_markdown_new_list_item_indent = 0
