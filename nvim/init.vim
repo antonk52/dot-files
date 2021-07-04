@@ -602,7 +602,21 @@ if !has('nvim-0.5')
 endif
 lua << EOF
 require "nvim-treesitter.configs".setup {
-    ensure_installed = "maintained",
+    ensure_installed = {
+        "html",
+        "javascript",
+        "jsdoc",
+        "json",
+        "jsonc",
+        "lua",
+        "rust",
+        "scss",
+        "toml",
+        "tsx",
+        "typescript",
+        "yaml",
+    },
+    highlight = { enable = true },
     playground = {
         enable = true,
         disable = {},
