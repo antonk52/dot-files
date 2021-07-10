@@ -66,6 +66,7 @@ if has('nvim')
     Plug 'neoclide/coc.nvim', {'branch': 'release', 'do': ':CocInstall'}
     Plug 'antonk52/amake.nvim'
     Plug 'antonk52/vim-bad-practices'
+    Plug 'antonk52/gitignore-grabber.nvim'
     " tests
     Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}  " We recommend updating the parsers on update
     Plug 'nvim-treesitter/playground'
@@ -83,9 +84,6 @@ Plug 'tpope/vim-surround'
 Plug 'airblade/vim-rooter'
 " git gems
 Plug 'tpope/vim-fugitive'
-if has('nvim-0.5')
-    Plug 'antonk52/gitignore-grabber.nvim'
-endif
 " enables Gbrowse for github.com
 Plug 'tpope/vim-rhubarb'
 " toggle comments duh
@@ -117,20 +115,15 @@ Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app & yarn install', 'for': ['m
 Plug 'mattn/emmet-vim', { 'for': ['html', 'css', 'javascript', 'typescript'] }
 
 " Syntax {{{2
-" hex/rgb color highlight preview
 if has('nvim')
+    " hex/rgb color highlight preview
     Plug 'norcalli/nvim-colorizer.lua'
-endif
-Plug 'pangloss/vim-javascript'
-Plug 'leafgarland/typescript-vim'
-Plug 'purescript-contrib/purescript-vim'
-Plug 'MaxMEllon/vim-jsx-pretty'
-Plug 'JulesWang/css.vim' " TODO try out 'hail2u/vim-css3-syntax'
-Plug 'jxnblk/vim-mdx-js', { 'for': ['mdx'] }
-Plug 'maksimr/vim-yate' " TODO defeat, forget, get drunk
-if has('nvim-0.5')
+    " indent lines
     Plug 'lukas-reineke/indent-blankline.nvim'
 endif
+Plug 'purescript-contrib/purescript-vim'
+Plug 'jxnblk/vim-mdx-js', { 'for': ['mdx'] }
+Plug 'maksimr/vim-yate' " TODO defeat, forget, get drunk
 " fold by heading
 Plug 'masukomi/vim-markdown-folding'
 
@@ -375,16 +368,15 @@ command! Vs :vs
 
 " Autocommands {{{1
 
-" check spell in neovim exclusively
-" vim is mostly run remotely w/ no access to my dictionary
-if has('nvim') || has('patch-8.2.18.12')
+if has('nvim')
+    " check spell in neovim exclusively
     " delay loading spell&spelllang until something is on the screen
     autocmd! CursorHold * ++once set spell spelllang=ru_ru,en_us
-endif
 
-if has('nvim-0.5')
     " blink yanked text after yanking it
     autocmd TextYankPost * lua return (not vim.v.event.visual) and require('vim.highlight').on_yank({higroup = 'Substitute', timeout = 250})
+
+    autocmd FileType json lua if vim.fn.expand('%') == 'tsconfig.json' then vim.bo.ft = 'jsonc' end
 endif
 
 autocmd FileType * call antonk52#jest#detect()
@@ -524,9 +516,6 @@ nnoremap <leader>W :Windows<cr>
 nnoremap <leader>H :History<cr>
 " start in a popup
 let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.6 } }
-
-" vim-jsx-pretty {{{2
-let g:vim_jsx_pretty_highlight_close_tag = 1
 
 " supertab {{{2
 " navigate through auto completion options where:
