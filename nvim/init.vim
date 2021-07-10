@@ -488,45 +488,9 @@ let g:EditorConfig_disable_rules = ['tab_width']
 " avoid inserting extra space inside surrounding objects `{([`
 let g:AutoPairsMapSpace = 0
 
-" indent-blankline.nvim {{{2
-
-" avoid the first indent & increment dashes furer ones
-let g:indent_blankline_char_list = ['|', '¦']
-let g:indent_blankline_show_first_indent_level = v:false
-let g:indent_blankline_show_trailing_blankline_indent = v:false
-let g:indent_blankline_filetype_exclude = [
-\ "help",
-\ "startify",
-\ "dashboard",
-\ "packer",
-\ "neogitstatus",
-\ "NvimTree",
-\ "Trouble",
-\ ]
-
-" refresh blank lines after toggleing folds
-" to avoid intent lines overlaying the fold line characters
-nnoremap zr zr:IndentBlanklineRefresh<cr>
-nnoremap za za:IndentBlanklineRefresh<cr>
-nnoremap zm zm:IndentBlanklineRefresh<cr>
-nnoremap zo zo:IndentBlanklineRefresh<cr>
-
 " Diminactive {{{2
 " bg color for inactive splits
 highlight ColorColumn ctermbg=0 guibg=#424949
-
-" vim javascript {{{2
-" Enables syntax highlighting for Flow
-let g:javascript_plugin_flow = 1
-let g:javascript_plugin_jsdoc=1
-
-" coc {{{2
-set updatetime=300
-set shortmess+=c
-
-if has('nvim')
-    lua require('antonk52.coc').lazy_setup()
-endif
 
 " ultisnips {{{2
 
@@ -576,14 +540,6 @@ let g:markdown_fold_style = 'nested'
 " preserve my custom folding style
 let g:markdown_fold_override_foldtext = 0
 
-" colorizer {{{2
-" color highlight wont work on the first file opened,
-" but shaves off 10ms from the startup time
-if has('nvim-0.5')
-    " delay loading spell&spelllang until something is on the screen
-    autocmd! CursorHold * ++once lua require'colorizer'.setup()
-endif
-
 " vim markdown {{{2
 let g:vim_markdown_frontmatter = 1
 let g:vim_markdown_new_list_item_indent = 0
@@ -596,46 +552,83 @@ if g:colors_name == 'lake'
     hi mkdHeading ctermfg=4 guifg=#8fa1b3
 endif
 " }}}
-" nvim 0.5 {{{2
+" nvim 0.5 plugins {{{2
 if !has('nvim-0.5')
     finish
 endif
 lua << EOF
-require "nvim-treesitter.configs".setup {
-    ensure_installed = {
-        "html",
-        "javascript",
-        "jsdoc",
-        "json",
-        "jsonc",
-        "lua",
-        "rust",
-        "scss",
-        "toml",
-        "tsx",
-        "typescript",
-        "yaml",
-    },
-    highlight = { enable = true },
-    playground = {
-        enable = true,
-        disable = {},
-        -- Debounced time for highlighting nodes in the playground from source code
-        updatetime = 25,
-        -- Whether the query persists across vim sessions
-        persist_queries = false,
-        keybindings = {
-            toggle_query_editor = 'o',
-            toggle_hl_groups = 'i',
-            toggle_injected_languages = 't',
-            toggle_anonymous_nodes = 'a',
-            toggle_language_display = 'I',
-            focus_language = 'f',
-            unfocus_language = 'F',
-            update = 'R',
-            goto_node = '<cr>',
-            show_help = '?',
-        },
-    }
+
+-- indent-blankline.nvim {{{3
+-- avoid the first indent & increment dashes furer ones
+vim.g.indent_blankline_char_list = { '|', '¦' }
+vim.g.indent_blankline_show_first_indent_level = false
+vim.g.indent_blankline_show_trailing_blankline_indent = false
+vim.g.indent_blankline_filetype_exclude = {
+    "help",
+    "startify",
+    "dashboard",
+    "packer",
+    "neogitstatus",
+    "NvimTree",
+    "Trouble",
 }
+
+-- refresh blank lines after toggleing folds
+-- to avoid intent lines overlaying the fold line characters
+vim.api.nvim_set_keymap('n', 'zr', 'zr:IndentBlanklineRefresh<cr>', {noremap = true})
+vim.api.nvim_set_keymap('n', 'za', 'za:IndentBlanklineRefresh<cr>', {noremap = true})
+vim.api.nvim_set_keymap('n', 'zm', 'zm:IndentBlanklineRefresh<cr>', {noremap = true})
+vim.api.nvim_set_keymap('n', 'zo', 'zo:IndentBlanklineRefresh<cr>', {noremap = true})
+
+-- coc.nvim {{{3
+vim.opt.updatetime=300
+vim.opt.shortmess = vim.opt.shortmess + 'c'
+vim.defer_fn(function() require('antonk52.coc').lazy_setup() end, 300)
+
+-- colorizer {{{3
+-- color highlight wont work on the first opened buffer,
+-- but shaves off 10ms from the startup time
+-- delay loading spell&spelllang until something is on the screen
+vim.defer_fn(function() require'colorizer'.setup() end, 300)
+
+-- treesitter {{{3
+vim.defer_fn(function()
+    require "nvim-treesitter.configs".setup {
+        ensure_installed = {
+            "html",
+            "javascript",
+            "jsdoc",
+            "json",
+            "jsonc",
+            "lua",
+            "rust",
+            "scss",
+            "toml",
+            "tsx",
+            "typescript",
+            "yaml",
+        },
+        highlight = { enable = true },
+        playground = {
+            enable = true,
+            disable = {},
+            -- Debounced time for highlighting nodes in the playground from source code
+            updatetime = 25,
+            -- Whether the query persists across vim sessions
+            persist_queries = false,
+            keybindings = {
+                toggle_query_editor = 'o',
+                toggle_hl_groups = 'i',
+                toggle_injected_languages = 't',
+                toggle_anonymous_nodes = 'a',
+                toggle_language_display = 'I',
+                focus_language = 'f',
+                unfocus_language = 'F',
+                update = 'R',
+                goto_node = '<cr>',
+                show_help = '?',
+            },
+        }
+    }
+end, 100)
 EOF
