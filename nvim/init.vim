@@ -501,6 +501,10 @@ command! -bang -nargs=? -complete=dir Files
 command! -bang -nargs=? -complete=dir GFiles
     \ call fzf#vim#gitfiles(<q-args>, fzf#vim#with_preview(), <bang>0)
 
+" quick jump to dot files from anywhere
+command! -bang -nargs=0 Dots
+    \ call fzf#run({'source': 'cd ~/dot-files && git ls-files', 'sink': 'e', 'dir': '~/dot-files'})
+
 " use GFiles for projects with git, otherwise gracefully fall-back to all files search
 nnoremap <expr> <leader>f isdirectory(getcwd() . '/.git') ? ':GFiles<cr>' : ':Files<cr>'
 nnoremap <leader>F :Files<cr>
@@ -514,6 +518,7 @@ nnoremap <leader>s :Snippets<cr>
 nnoremap <leader>W :Windows<cr>
 " list opened file history
 nnoremap <leader>H :History<cr>
+nnoremap <leader>D :Dots<cr>
 " start in a popup
 let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.6 } }
 
