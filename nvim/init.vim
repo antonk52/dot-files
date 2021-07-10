@@ -69,10 +69,13 @@ if has('nvim')
     " tests
     Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}  " We recommend updating the parsers on update
     Plug 'nvim-treesitter/playground'
-    " telescope only
-    Plug 'nvim-lua/popup.nvim'
-    Plug 'nvim-lua/plenary.nvim'
-    Plug 'nvim-telescope/telescope.nvim'
+    " to load telescope `TELESCOPE=1 nvim .`
+    if $TELESCOPE == '1'
+        " telescope only
+        Plug 'nvim-lua/popup.nvim'
+        Plug 'nvim-lua/plenary.nvim'
+        Plug 'nvim-telescope/telescope.nvim'
+    endif
 endif
 " change surrounding chars
 Plug 'tpope/vim-surround'
