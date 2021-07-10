@@ -14,7 +14,8 @@ end
 function M.setup()
     M.source_rus_keymap()
 
-    vim.api.nvim_set_keymap(
+    vim.api.nvim_buf_set_keymap(
+        0,
         'n',
         '<localleader>s',
         ':Rg tags.*'..vim.fn.expand('<cword>')..'<cr>',

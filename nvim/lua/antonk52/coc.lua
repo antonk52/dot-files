@@ -65,6 +65,12 @@ local function setup()
         ':lua require("antonk52.coc").show_documentation()<cr>:echo<cr>',
         {noremap = true}
     )
+    vim.api.nvim_set_keymap(
+        'n',
+        'K',
+        ':lua require("antonk52.coc").show_documentation()<cr>:echo<cr>',
+        {noremap = true}
+    )
 
     local has_flow_config = setup_flow()
     local has_eslint_config = has_eslint()
@@ -86,7 +92,7 @@ local function setup()
     ]])
 
     local mappings = {
-        ['dg'] = 'definition',
+        ['gd'] = 'definition',
         ['gy'] = 'type-definition',
         ['gi'] = 'implementation',
         ['gr'] = 'references',

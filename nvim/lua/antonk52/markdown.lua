@@ -15,18 +15,18 @@ function M.toggle_checkbox()
 end
 
 function M.setup()
-    vim.api.nvim_set_keymap(
+    vim.api.nvim_buf_set_keymap(
+        0,
         'n',
         '<localleader>t',
         ':lua require("antonk52.markdown").toggle_checkbox()<cr>',
         {noremap = true, silent = true}
     )
-    -- TODO figureout how to set buffer specific mapping in lua
-    vim.cmd("nnoremap <buffer> j gj")
-    vim.cmd("nnoremap <buffer> k gk")
-    vim.o.spell = true
-    vim.o.spelllang = 'ru_ru,en_us'
-    vim.o.spellsuggest = 'best'
+    vim.api.nvim_buf_set_keymap(0, 'n', 'j', 'gj', {noremap = true})
+    vim.api.nvim_buf_set_keymap(0, 'n', 'k', 'gk', {noremap = true})
+    vim.opt.spell = true
+    vim.opt.spellsuggest = 'best'
+    vim.bo.spelllang = 'ru_ru,en_us'
 end
 
 return M
