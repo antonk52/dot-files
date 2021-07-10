@@ -77,6 +77,7 @@ if has('nvim')
         Plug 'nvim-lua/plenary.nvim'
         Plug 'nvim-telescope/telescope.nvim'
     endif
+    Plug 'hoob3rt/lualine.nvim'
 endif
 " change surrounding chars
 Plug 'tpope/vim-surround'
@@ -91,9 +92,6 @@ Plug 'scrooloose/nerdcommenter'
 " project file viewer
 Plug 'justinmk/vim-dirvish'
 Plug 'antonk52/dirvish-fs.vim'
-" status line
-Plug 'antonk52/vim-lightline-ocean'
-Plug 'itchyny/lightline.vim'
 " dims inactive splits
 Plug 'blueyed/vim-diminactive'
 " async project in-file/file search
@@ -394,57 +392,6 @@ autocmd FileType markdown lua require'antonk52.markdown'.setup()
 " do not overwrite init behavior of the cursor
 let g:TerminusCursorShape=0
 
-" lightline {{{2
-
-let g:lightline = {'colorscheme': 'ocean'}
-let g:lightline.separator = { 'left': '', 'right': '' }
-let g:lightline.enable = { 'tabline': 0 }
-let g:lightline.active = {
-    \ 'left': [ ['mode'], ['readonly', 'filename'] ],
-    \ 'right': [ [ 'lineinfo' ], [ 'filetype' ] ] }
-let g:lightline.inactive = { 'left': [ ['relativepath'] ], 'right': [] }
-let g:lightline.tabline = { 'left': [ [ 'tabs' ] ], 'right': [] }
-let g:lightline.component_function = {
-    \ 'mode': 'LightlineMode',
-    \ 'filename': 'LightlineFilename',
-    \ 'lineinfo': 'LightlineLineinfo',
-    \ 'filetype': 'LightlineFiletype' }
-
-" use virtcol() instead of col()
-function! LightlineLineinfo() abort
-    return line('.').':'.virtcol('.')
-endfunction
-
-function! LightlineFilename() abort
-    let expanded = substitute(expand('%:f'), getcwd().'/', '', '')
-    let filename = expanded !=# '' ? expanded : '[No Name]'
-    " substitute other status line sections
-    let win_size = winwidth(0) - 28
-    let too_short = win_size <= len(filename)
-    return too_short ? pathshorten(filename) : filename
-endfunction
-
-function! LightlineMode() abort
-    return &modified ? '*' : ' '
-endfunction
-
-let g:ft_map = {
-    \ 'typescript': 'ts',
-    \ 'typescript.jest': 'ts',
-    \ 'typescript.tsx': 'tsx',
-    \ 'typescript.tsx.jest': 'tsx',
-    \ 'javascript': 'js',
-    \ 'javascript.jest': 'js',
-    \ 'javascript.jsx': 'jsx',
-    \ 'javascript.jsx.jest': 'jsx',
-    \ 'yaml': 'yml',
-    \ 'markdown': 'md' }
-
-function! LightlineFiletype() abort
-    let ft = &filetype
-    return get(g:ft_map, ft, ft)
-endfunction
-
 " dirvish {{{2
 
 let g:dirvish_relative_paths = 1
@@ -551,6 +498,9 @@ if !has('nvim-0.5')
     finish
 endif
 lua << EOF
+
+-- lualine.nvim {{{3
+vim.defer_fn(function() require('antonk52.lualine') end, 100)
 
 -- indent-blankline.nvim {{{3
 -- avoid the first indent & increment dashes furer ones
