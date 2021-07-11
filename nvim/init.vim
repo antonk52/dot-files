@@ -387,11 +387,6 @@ autocmd FileType markdown lua require'antonk52.markdown'.setup()
 
 " Plugins {{{1
 
-" terminus {{{2
-
-" do not overwrite init behavior of the cursor
-let g:TerminusCursorShape=0
-
 " dirvish {{{2
 
 let g:dirvish_relative_paths = 1
