@@ -88,7 +88,7 @@ Plug 'tpope/vim-fugitive'
 " enables Gbrowse for github.com
 Plug 'tpope/vim-rhubarb'
 " toggle comments duh
-Plug 'scrooloose/nerdcommenter'
+Plug 'tpope/vim-commentary'
 " project file viewer
 Plug 'justinmk/vim-dirvish'
 Plug 'antonk52/dirvish-fs.vim'
@@ -392,27 +392,10 @@ autocmd FileType markdown lua require'antonk52.markdown'.setup()
 let g:dirvish_relative_paths = 1
 let g:dirvish_mode = ':sort ,^\v(.*[\/])|\ze,' " folders on top
 
-" Nerdcommenter {{{2
+" vim-commentary {{{2
 
-let g:NERDDefaultAlign = 'left'
-let g:NERDSpaceDelims = 1
-let g:NERDCreateDefaultMappings = 0
-
-" toggle comments with CTRL /
-map <C-_> <Plug>NERDCommenterToggle
-map <C-/> <Plug>NERDCommenterToggle
-
-" custom comment schema
-let g:jsComments = { 'left': '//', 'leftAlt': '{/*', 'rightAlt': '*/}' }
-let g:NERDCustomDelimiters = {
-    \ 'javascript': g:jsComments,
-    \ 'javascript.jsx': g:jsComments,
-    \ 'javascript.jsx.jest': g:jsComments,
-    \ 'typescript': g:jsComments,
-    \ 'typescript.tsx': g:jsComments,
-    \ 'typescript.tsx.jest': g:jsComments,
-    \ 'css': { 'left': '/* ', 'right': ' */' }
-\}
+" toggle comments with CTRL _
+map <C-_> <Plug>Commentary
 
 " editorconfig {{{2
 " let's keep this setting as 4 regardless
