@@ -30,7 +30,7 @@ LLN.theme = {
         z = {fg = colors.color00, bg = colors.color0B, gui = "bold"},
     },
     insert = {
-        a = {bg = colors.color0C},
+        a = {fg = colors.color00, bg = colors.color0D, gui = "bold"},
     },
     replace = {
         a = {bg = colors.color08},
