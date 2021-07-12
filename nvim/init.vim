@@ -383,8 +383,6 @@ autocmd FileType * call antonk52#jest#detect()
 autocmd FileType qf nnoremap <buffer> <cr> <cr>:cclose<cr>:echo ''<cr>
 autocmd FileType qf map <buffer> dd :lua require'antonk52.quickfix'.remove_item()<cr>
 
-autocmd FileType markdown lua require'antonk52.markdown'.setup()
-
 " Plugins {{{1
 
 " dirvish {{{2
