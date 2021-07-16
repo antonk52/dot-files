@@ -103,8 +103,6 @@ Plug 'jiangmiao/auto-pairs'
 Plug 'editorconfig/editorconfig-vim'
 " snippets
 Plug 'SirVer/ultisnips'
-" sensible defaults
-Plug 'wincent/terminus'
 " live preview markdown files in browser
 Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app & yarn install', 'for': ['markdown', 'mdx'] }
 
