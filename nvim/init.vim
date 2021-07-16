@@ -65,7 +65,7 @@ if has('nvim')
     " types & linting
     Plug 'neoclide/coc.nvim', {'branch': 'release', 'do': ':CocInstall'}
     Plug 'antonk52/amake.nvim'
-    Plug 'antonk52/vim-bad-practices'
+    Plug 'antonk52/bad-practices.nvim'
     Plug 'antonk52/gitignore-grabber.nvim'
     " tests
     Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}  " We recommend updating the parsers on update
@@ -551,4 +551,17 @@ vim.defer_fn(function()
         }
     }
 end, 100)
+
+-- bad-practices.nvim {{{2
+vim.cmd('command! BadPracticesSetup lua require("bad_practices").setup()')
+-- vim-markdown {{{2
+vim.g.vim_markdown_frontmatter = 1
+vim.g.vim_markdown_new_list_item_indent = 0
+-- there is a separate plugin to handle markdown folds
+vim.g.vim_markdown_folding_disabled = 1
+if vim.g.colors_name == 'lake' then
+    -- red & bold list characters -,+,*
+    vim.cmd('hi mkdListItem ctermfg=8 guifg='..vim.g.lake_palette['08'].gui..' gui=bold')
+    vim.cmd('hi mkdHeading ctermfg=4 guifg='..vim.g.lake_palette['0D'].gui)
+end
 EOF
