@@ -67,8 +67,20 @@ local function setup()
     )
     vim.api.nvim_set_keymap(
         'n',
+        'J',
+        'coc#float#has_float() == 1 ? coc#float#scroll(1) : "J"',
+        {noremap = true, expr = true}
+    )
+    vim.api.nvim_set_keymap(
+        'n',
         'K',
         ':lua require("antonk52.coc").show_documentation()<cr>:echo<cr>',
+        {noremap = true}
+    )
+    vim.api.nvim_set_keymap(
+        'n',
+        '<leader>R',
+        ':silent CocRestart<CR>',
         {noremap = true}
     )
 
@@ -115,6 +127,10 @@ local function lazy_setup()
 end
 
 local function show_documentation()
+    if vim.fn["coc#float#has_float"]() == 1 then
+        vim.fn["coc#float#scroll"](0)
+        return nil
+    end
     if vim.o.filetype == 'vim' or vim.o.filetype == 'help' then
         vim.cmd('h '..vim.fn.expand('<cword>'))
     else
