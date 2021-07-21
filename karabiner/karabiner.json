@@ -152,6 +152,27 @@
                         ]
                     },
                     {
+                        "description": "fn + enter - activates Alacritty",
+                        "manipulators": [
+                            {
+                                "from": {
+                                    "key_code": "return_or_enter",
+                                    "modifiers": {
+                                        "mandatory": [
+                                            "fn"
+                                        ]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "shell_command": "osascript -e 'tell application \"Alacritty\" to activate'"
+                                    }
+                                ],
+                                "type": "basic"
+                            }
+                        ]
+                    },
+                    {
                         "description": "fn + y - activates Yandex browser",
                         "manipulators": [
                             {
