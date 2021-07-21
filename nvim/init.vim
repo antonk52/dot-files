@@ -56,7 +56,6 @@ endif
 call plug#begin('~/.config/nvim/plugged')
 
 " Essentials {{{2
-Plug 'plasticboy/vim-markdown'
 " tab completion
 Plug 'ervandew/supertab'
 " tab navigation
@@ -116,12 +115,13 @@ if has('nvim')
     Plug 'norcalli/nvim-colorizer.lua'
     " indent lines
     Plug 'lukas-reineke/indent-blankline.nvim'
+    " fold by heading
+    Plug 'masukomi/vim-markdown-folding'
+    Plug 'plasticboy/vim-markdown'
 endif
 Plug 'purescript-contrib/purescript-vim'
 Plug 'jxnblk/vim-mdx-js', { 'for': ['mdx'] }
 Plug 'maksimr/vim-yate' " TODO defeat, forget, get drunk
-" fold by heading
-Plug 'masukomi/vim-markdown-folding'
 
 " Themes {{{2
 Plug 'antonk52/lake.vim'
@@ -449,34 +449,16 @@ let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.6 } }
 " - shift tab takes to previous one - one up
 let g:SuperTabDefaultCompletionType = '<c-n>'
 
-" markdown fold {{{2
-" fold underlying sections if any
-let g:markdown_fold_style = 'nested'
-" preserve my custom folding style
-let g:markdown_fold_override_foldtext = 0
-
-" vim markdown {{{2
-let g:vim_markdown_frontmatter = 1
-let g:vim_markdown_new_list_item_indent = 0
-" let g:vim_markdown_auto_insert_bullets = 1
-" there is a separate plugin to handle markdown folds
-let g:vim_markdown_folding_disabled = 1
-" red & bold list characters -,+,*
-if g:colors_name == 'lake'
-    hi mkdListItem ctermfg=1 guifg=#bf616a gui=bold
-    hi mkdHeading ctermfg=4 guifg=#8fa1b3
-endif
-" }}}
-" nvim 0.5 plugins {{{2
+" Neovim guard {{{2
 if !has('nvim-0.5')
     finish
 endif
 lua << EOF
 
--- lualine.nvim {{{3
+-- lualine.nvim {{{2
 vim.defer_fn(function() require('antonk52.lualine') end, 100)
 
--- indent-blankline.nvim {{{3
+-- indent-blankline.nvim {{{2
 -- avoid the first indent & increment dashes furer ones
 vim.g.indent_blankline_char_list = { '|', '¦' }
 vim.g.indent_blankline_show_first_indent_level = false
@@ -498,18 +480,18 @@ vim.api.nvim_set_keymap('n', 'za', 'za:IndentBlanklineRefresh<cr>', {noremap = t
 vim.api.nvim_set_keymap('n', 'zm', 'zm:IndentBlanklineRefresh<cr>', {noremap = true})
 vim.api.nvim_set_keymap('n', 'zo', 'zo:IndentBlanklineRefresh<cr>', {noremap = true})
 
--- coc.nvim {{{3
+-- coc.nvim {{{2
 vim.opt.updatetime=300
 vim.opt.shortmess = vim.opt.shortmess + 'c'
 vim.defer_fn(function() require('antonk52.coc').lazy_setup() end, 300)
 
--- colorizer {{{3
+-- colorizer {{{2
 -- color highlight wont work on the first opened buffer,
 -- but shaves off 10ms from the startup time
 -- delay loading spell&spelllang until something is on the screen
 vim.defer_fn(function() require'colorizer'.setup() end, 300)
 
--- treesitter {{{3
+-- treesitter {{{2
 vim.defer_fn(function()
     require "nvim-treesitter.configs".setup {
         ensure_installed = {
@@ -562,4 +544,9 @@ if vim.g.colors_name == 'lake' then
     vim.cmd('hi mkdListItem ctermfg=8 guifg='..vim.g.lake_palette['08'].gui..' gui=bold')
     vim.cmd('hi mkdHeading ctermfg=4 guifg='..vim.g.lake_palette['0D'].gui)
 end
+-- markdown fold {{{2
+-- fold underlying sections if any
+vim.g.markdown_fold_style = 'nested'
+-- preserve my custom folding style
+vim.g.markdown_fold_override_foldtext = 0
 EOF
