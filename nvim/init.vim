@@ -365,10 +365,6 @@ command! Vs :vs
 " Autocommands {{{1
 
 if has('nvim')
-    " check spell in neovim exclusively
-    " delay loading spell&spelllang until something is on the screen
-    autocmd! CursorHold * ++once set spell spelllang=ru_ru,en_us
-
     " blink yanked text after yanking it
     autocmd TextYankPost * lua return (not vim.v.event.visual) and require('vim.highlight').on_yank({higroup = 'Substitute', timeout = 250})
 
