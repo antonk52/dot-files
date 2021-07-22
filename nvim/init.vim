@@ -2,18 +2,31 @@
 set nocompatible
 filetype off
 
-" Preset {{{1
+" Avoid startup work {{{1
 let g:did_install_default_menus = 1 " Skip loading menu.vim, saves ~100ms
-let g:loaded_getscript = 1
-let g:loaded_getscriptPlugin = 1
-let g:loaded_vimball = 1
-let g:loaded_vimballPlugin = 1
-let g:loaded_rrhelper = 1
-let g:loaded_tutor = 1
-let g:loaded_zipPlugin = 1
-let g:loaded_tarPlugin = 1
-let g:loaded_2html_plugin = 1
-let g:loaded_tutor_mode_plugin = 1
+" avoid loading builtin plugins
+let disable_plugins = [
+    \ '2html_plugin',
+    \ 'getscript',
+    \ 'getscriptPlugin',
+    \ 'logipat',
+    \ 'netrw',
+    \ 'netrwFileHandlers',
+    \ 'netrwPlugin',
+    \ 'netrwSettings',
+    \ 'rrhelper',
+    \ 'tar',
+    \ 'tarPlugin',
+    \ 'tutor',
+    \ 'tutor_mode_plugin',
+    \ 'vimball',
+    \ 'vimballPlugin',
+    \ 'zip',
+    \ 'zipPlugin',
+    \]
+for p in disable_plugins
+    exec 'let g:loaded_' . p . '=1'
+endfor
 
 " Set them directly if they are installed, otherwise disable them. To avoid the
 " runtime check cost, which can be slow.
@@ -484,7 +497,6 @@ vim.defer_fn(function() require('antonk52.coc').lazy_setup() end, 300)
 -- colorizer {{{2
 -- color highlight wont work on the first opened buffer,
 -- but shaves off 10ms from the startup time
--- delay loading spell&spelllang until something is on the screen
 vim.defer_fn(function() require'colorizer'.setup() end, 300)
 
 -- treesitter {{{2
