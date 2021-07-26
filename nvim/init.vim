@@ -1,62 +1,5 @@
 " vim: foldmethod=marker foldlevelstart=0 foldlevel=0
-set nocompatible
 filetype off
-
-" Avoid startup work {{{1
-let g:did_install_default_menus = 1 " Skip loading menu.vim, saves ~100ms
-" avoid loading builtin plugins
-let disable_plugins = [
-    \ '2html_plugin',
-    \ 'getscript',
-    \ 'getscriptPlugin',
-    \ 'logipat',
-    \ 'netrw',
-    \ 'netrwFileHandlers',
-    \ 'netrwPlugin',
-    \ 'netrwSettings',
-    \ 'rrhelper',
-    \ 'tar',
-    \ 'tarPlugin',
-    \ 'tutor',
-    \ 'tutor_mode_plugin',
-    \ 'vimball',
-    \ 'vimballPlugin',
-    \ 'zip',
-    \ 'zipPlugin',
-    \]
-for p in disable_plugins
-    exec 'let g:loaded_' . p . '=1'
-endfor
-
-" Set them directly if they are installed, otherwise disable them. To avoid the
-" runtime check cost, which can be slow.
-if has('nvim')
-    " Python This must be here becasue it makes loading vim VERY SLOW otherwise
-    let g:python_host_skip_check = 1
-    " Disable python2 provider
-    let g:loaded_python_provider = 0
-
-    let g:python3_host_skip_check = 1
-    if executable('python3')
-        let g:python3_host_prog = exepath('python3')
-    else
-        let g:loaded_python3_provider = 0
-    endif
-
-    if executable('neovim-node-host')
-        let g:node_host_prog = exepath('neovim-node-host')
-    else
-        let g:loaded_node_provider = 0
-    endif
-
-    if executable('neovim-ruby-host')
-        let g:ruby_host_prog = exepath('neovim-ruby-host')
-    else
-        let g:loaded_ruby_provider = 0
-    endif
-
-    let g:loaded_perl_provider = 0
-endif
 
 " Plugins {{{1
 " load vim plug if it is not installed
@@ -145,219 +88,282 @@ Plug 'NLKNguyen/papercolor-theme'
 call plug#end()
 filetype plugin indent on
 
-" Defaults {{{1
-" theme
-syntax enable
-set background=dark
-if has('termguicolors')
-  set termguicolors
+
+" Neovim guard {{{1
+if !has('nvim-0.5')
+    finish
 endif
+lua << EOF
 
-" highlight current cursor line
-set cursorline
+-- Avoid startup work {{{1
+-- Skip loading menu.vim, saves ~100ms
+vim.g.did_install_default_menus = 1
+-- avoid loading builtin plugins
+local disable_plugins = {
+   '2html_plugin',
+   'getscript',
+   'getscriptPlugin',
+   'logipat',
+   'netrw',
+   'netrwFileHandlers',
+   'netrwPlugin',
+   'netrwSettings',
+   'rrhelper',
+   'tar',
+   'tarPlugin',
+   'tutor',
+   'tutor_mode_plugin',
+   'vimball',
+   'vimballPlugin',
+   'zip',
+   'zipPlugin',
+}
+for _,v in pairs(disable_plugins) do
+    vim.g['loaded_'..v] = 1
+end
 
-" insert mode caret is an underline
-set guicursor+=i-ci-ve:hor24
+-- Set them directly if they are installed, otherwise disable them. To avoid the
+-- runtime check cost, which can be slow.
+-- Python This must be here becasue it makes loading vim VERY SLOW otherwise
+vim.g.python_host_skip_check = 1
+-- Disable python2 provider
+vim.g.loaded_python_provider = 0
 
-" Show “invisible” characters
-set list listchars=tab:▸\ ,\trail:∙,
+vim.g.python3_host_skip_check = 1
+if vim.fn.executable('python3') then
+    vim.g.python3_host_prog = vim.fn.exepath('python3')
+else
+    vim.g.loaded_python3_provider = 0
+end
 
-" Access colors present in 256 colorspace
-let base16colorspace=256
+if vim.fn.executable('neovim-node-host') then
+    vim.g.node_host_prog = vim.fn.exepath('neovim-node-host')
+else
+    vim.g.loaded_node_provider = 0
+end
 
-color lake
-hi Comment gui=italic
+if vim.fn.executable('neovim-ruby-host') then
+    vim.g.ruby_host_prog = vim.fn.exepath('neovim-ruby-host')
+else
+    vim.g.loaded_ruby_provider = 0
+end
 
-" no numbers by default
-set nonumber norelativenumber
+vim.g.loaded_perl_provider = 0
 
-" search made easy
-set nohlsearch incsearch
-if has('nvim')
-  set inccommand=split
-endif
 
-" 1 tab == 4 spaces
-set tabstop=4 shiftwidth=4
+-- Defaults {{{1
+-- theme
+vim.cmd('syntax enable')
+vim.opt.background = 'dark'
+vim.opt.termguicolors = true
 
-" consider that not all emojis take up full width
-if has('emoji')
-    set noemoji
-endif
+-- highlight current cursor line
+vim.opt.cursorline = true
 
-" use spaces instead of tabs
-set expandtab
+-- insert mode caret is an underline
+vim.cmd('set guicursor+=i-ci-ve:hor24')
 
-" always indent by multiple of shiftwidth
-set shiftround
+-- Show “invisible” characters
+vim.opt.list = true
+vim.opt.listchars = {tab = '▸\\ ', trail = '∙'}
 
-" indend/deindent at the beginning of a line
-set smarttab
+vim.cmd('color lake')
+vim.cmd('hi Comment gui=italic')
 
-" ignore swapfile messages
-set shortmess+=A
-" no splash screen
-set shortmess+=I
+-- no numbers by default
+vim.opt.number = false
+vim.opt.relativenumber = false
 
-" draw less
-set lazyredraw
+-- search made easy
+vim.opt.hlsearch = false
+vim.opt.incsearch = true
+vim.opt.inccommand = 'split'
 
-" detect filechanges outside of the editor
-set autoread
+-- 1 tab == 4 spaces
+vim.opt.tabstop = 4
+vim.opt.shiftwidth = 4
 
-" never ring the bell for any reason
-if exists('&belloff')
-  set belloff=all
-endif
+-- consider that not all emojis take up full width
+vim.opt.emoji = false
 
-if has('linebreak')
-  " indent wrapped lines to match start
-  set breakindent
-  if exists('&breakindentopt')
-    " emphasize broken lines by indenting them
-    set breakindentopt=shift:2
-  endif
-endif
+-- use spaces instead of tabs
+vim.opt.expandtab = true
 
-if has('windows')
-  " open horizontal splits below current window
-  set splitbelow
-endif
+-- always indent by multiple of shiftwidth
+vim.opt.shiftround = true
 
-if has('vertsplit')
-  " open vertical splits to the right of the current window
-  set splitright
-endif
+-- indend/deindent at the beginning of a line
+vim.opt.smarttab = true
 
-" make current line number stand out a little
-if has('highlight')
-  set highlight+=N:DiffText
-endif
+-- ignore swapfile messages
+vim.cmd('set shortmess+=A')
+-- no splash screen
+vim.cmd('set shortmess+=I')
 
-" folding
-if has('folding')
-  set foldmethod=indent
-  set foldlevelstart=20
-  set foldlevel=20
-  if has('windows')
-    " use wider line for folding
-    set fillchars+=fold:⏤
-    set foldtext=antonk52#fold#it()
-  endif
-endif
+-- draw less
+vim.opt.lazyredraw = true
 
-" break long lines on breakable chars
-" instead of the last fitting character
-set linebreak
+-- detect filechanges outside of the editor
+vim.opt.autoread = true
 
-" always keep 3 lines around the cursor
-set scrolloff=3 sidescrolloff=3
+-- never ring the bell for any reason
+vim.opt.belloff = 'all'
 
-" always show status line
-set laststatus=2
+-- indent wrapped lines to match start
+vim.opt.breakindent = true
+-- emphasize broken lines by indenting them
+vim.cmd('set breakindentopt=shift:2')
 
-" enable mouse scroll and select
-set mouse=a
+-- open horizontal splits below current window
+vim.opt.splitbelow = true
 
-" persistent undo
-set undofile
+-- open vertical splits to the right of the current window
+vim.opt.splitright = true
 
-" store undo files away from the project
-set undodir="$HOME/.vim/undo_dir"
+-- make current line number stand out a little
+-- TODO
+-- vim.opt.highlight = vim.opt.highlight + 'N:DiffText'
 
-" Mappings {{{1
+-- folding
+vim.opt.foldmethod = 'indent'
+vim.opt.foldlevelstart = 20
+vim.opt.foldlevel = 20
+-- use wider line for folding
+vim.opt.fillchars = { fold = '⏤' }
+vim.opt.foldtext = 'antonk52#fold#it()'
 
-let mapleader="\<Space>"
-let maplocalleader="\\"
+-- break long lines on breakable chars
+-- instead of the last fitting character
+vim.opt.linebreak = true
 
-" closes a window
-nnoremap <leader>q :q<cr>
-" closes a buffer
-nnoremap <localleader>q :bd<cr>
+-- always keep 3 lines around the cursor
+vim.opt.scrolloff = 3
+vim.opt.sidescrolloff = 3
 
-" leader c - copy to OS clipboard
-vmap <leader>c "*y
-" leader v - paste from OS clipboard
-map <leader>v "*p
-" paste under current indentation level
-nnoremap p ]p
-" toggle folds
-nnoremap <Tab> za
+-- always show status line
+vim.opt.laststatus = 2
 
-" toggle highlight last search
-nnoremap <leader>n :set hlsearch!<cr>
+-- enable mouse scroll and select
+vim.opt.mouse = 'a'
 
-" Show the current file path.
-" Useful when you have many splits & the status line gets truncated
-nnoremap <leader>p :echo expand('%')<CR>
-" Puts an absolute file path in the system clipboard
-nnoremap <localleader>p :silent !echo '%:p' \| pbcopy<CR>
-" Puts a project file path in the system clipboard
-nnoremap <silent> <leader>P :silent !echo '%' \| pbcopy<CR>
+-- persistent undo
+vim.opt.undofile = true
 
-" manipulate numbers, convenient since my tmux prefix is <C-a>
-nnoremap <LocalLeader>a <C-a>
-nnoremap <LocalLeader>x <C-x>
-vnoremap <LocalLeader>a <C-a>
-vnoremap <LocalLeader>x <C-x>
-vnoremap <LocalLeader><LocalLeader>a g<C-a>
-vnoremap <LocalLeader><LocalLeader>x g<C-x>
+-- store undo files away from the project
+vim.opt.undodir = "$HOME/.vim/undo_dir"
 
-" Fixes (most) syntax highlighting problems in current buffer
-nnoremap <silent> <leader>§ :syntax sync fromstart<CR>
+-- Mappings {{{1
 
-" indentation shifts keep selection(`=` should still be preferred)
-vnoremap < <gv
-vnoremap > >gv
+vim.g.mapleader = " "
+vim.g.maplocalleader = "\\"
 
-" ctrl j/k/l/h shortcuts to navigate between multiple windows
-nnoremap <C-J> <C-W><C-J>
-nnoremap <C-K> <C-W><C-K>
-nnoremap <C-L> <C-W><C-L>
-nnoremap <C-H> <C-W><C-H>
+local function nnoremap(left, right)
+    vim.api.nvim_set_keymap('n', left, right, {noremap = true})
+end
+local function vnoremap(left, right)
+    vim.api.nvim_set_keymap('v', left, right, {noremap = true})
+end
 
-" leader j/k/l/h resize active split by 5
-nnoremap <leader>j <C-W>5-
-nnoremap <leader>k <C-W>5+
-nnoremap <leader>l <C-W>5>
-nnoremap <leader>h <C-W>5<
+-- closes a window
+nnoremap('<leader>q', ':q<cr>')
+-- closes a buffer
+nnoremap('<localleader>q', ':bd<cr>')
+-- opens quickfix list
+nnoremap('<localleader>c', ':copen<cr>')
 
-nnoremap <Leader>= :call antonk52#layout#zoom_split()<cr>
-nnoremap <Leader>- :call antonk52#layout#equalify_splits()<cr>
-nnoremap <Leader>+ :call antonk52#layout#restore_layout()<cr>
+-- leader c - copy to OS clipboard
+vim.api.nvim_set_keymap('v', '<leader>c', '"*y', {})
+-- leader v - paste from OS clipboard
+vim.api.nvim_set_keymap('', '<leader>v', '"*p', {})
+-- paste under current indentation level
+nnoremap('p', ']p')
+-- toggle folds
+nnoremap('<Tab>', 'za')
 
-" go to the beginning of the line (^ is too far)
-nnoremap <Leader>a ^
-vnoremap <Leader>a ^
-" go to the end of the line ($ is too far)
-nnoremap <Leader>e $
-vnoremap <Leader>e $h
+-- toggle highlight last search
+nnoremap('<leader>n', ':set hlsearch!<cr>')
 
-" open a new tab
-nnoremap <C-t> :tabedit<CR>
+-- Show the current file path.
+-- Useful when you have many splits & the status line gets truncated
+nnoremap('<leader>p :echo', 'expand("%")<CR>')
+-- Puts an absolute file path in the system clipboard
+nnoremap('<localleader>p', ':silent !echo "%:p" \\| pbcopy<CR>')
+-- Puts a project file path in the system clipboard
+vim.api.nvim_set_keymap(
+    'n',
+    '<leader>P',
+    ':silent !echo "%" \\| pbcopy<CR>',
+    {noremap = true, silent = true}
+)
 
-" to navigate between buffers
-nnoremap <Left> :prev<CR>
-nnoremap <Right> :next<CR>
+-- manipulate numbers, convenient since my tmux prefix is <C-a>
+nnoremap('<LocalLeader>a', '<C-a>')
+nnoremap('<LocalLeader>x', '<C-x>')
+vnoremap('<LocalLeader>a', '<C-a>')
+vnoremap('<LocalLeader>x', '<C-x>')
+vnoremap('<LocalLeader><LocalLeader>a', 'g<C-a>')
+vnoremap('<LocalLeader><LocalLeader>x', 'g<C-x>')
 
-" to navigate between errors
-" useful after populating quickfix window
-nnoremap <up> :cprev<CR>
-nnoremap <down> :cnext<CR>
+-- Fixes (most) syntax highlighting problems in current buffer
+vim.api.nvim_set_keymap(
+    'n',
+    '<silent> <leader>§ :syntax sync',
+    'fromstart<CR>',
+    {noremap = true, silent = true}
+)
 
-" neovim terminal
-if has('nvim')
-  " use Esc to go into normal mode in terminal
-  au TermOpen * tnoremap <Esc> <c-\><c-n>
-  " cancel the mapping above for fzf terminal
-  au FileType fzf tunmap <Esc>
-  autocmd TermOpen * startinsert
-  autocmd TermOpen * setlocal nonumber norelativenumber
-endif
+-- indentation shifts keep selection(`=` should still be preferred)
+vnoremap('<', '<gv')
+vnoremap('>', '>gv')
 
-" }}}
-" Commands {{{1
+-- ctrl j/k/l/h shortcuts to navigate between multiple windows
+nnoremap('<C-J>', '<C-W><C-J>')
+nnoremap('<C-K>', '<C-W><C-K>')
+nnoremap('<C-L>', '<C-W><C-L>')
+nnoremap('<C-H>', '<C-W><C-H>')
 
+-- leader j/k/l/h resize active split by 5
+nnoremap('<leader>j', '<C-W>5-')
+nnoremap('<leader>k', '<C-W>5+')
+nnoremap('<leader>l', '<C-W>5>')
+nnoremap('<leader>h', '<C-W>5<')
+
+nnoremap('<Leader>= :call', 'antonk52#layout#zoom_split()<cr>')
+nnoremap('<Leader>- :call', 'antonk52#layout#equalify_splits()<cr>')
+nnoremap('<Leader>+ :call', 'antonk52#layout#restore_layout()<cr>')
+
+-- go to the beginning of the line (^ is too far)
+nnoremap('<Leader>a', '^')
+vnoremap('<Leader>a', '^')
+-- go to the end of the line ($ is too far)
+nnoremap('<Leader>e', '$')
+vnoremap('<Leader>e', '$h')
+
+-- open a new tab
+nnoremap('<C-t>', ':tabedit<CR>')
+
+-- to navigate between buffers
+nnoremap('<Left>', ':prev<CR>')
+nnoremap('<Right>', ':next<CR>')
+
+-- to navigate between errors
+-- useful after populating quickfix window
+nnoremap('<up>', ':cprev<CR>')
+nnoremap('<down>', ':cnext<CR>')
+
+-- neovim terminal
+-- use Esc to go into normal mode in terminal
+vim.cmd('au TermOpen * tnoremap <Esc> <c-\\><c-n>')
+-- cancel the mapping above for fzf terminal
+vim.cmd([[
+au FileType fzf tunmap <Esc>
+autocmd TermOpen * startinsert
+autocmd TermOpen * setlocal nonumber norelativenumber
+]])
+
+-- Commands {{{1
+
+vim.cmd([[
 command! ToggleNumbers set number! relativenumber!
 
 command! Todo lua require'antonk52.todo'.find_todo()
@@ -374,95 +380,102 @@ command! Wq :wq
 command! Ter :ter
 command! Sp :sp
 command! Vs :vs
+]])
 
-" Autocommands {{{1
+-- Autocommands {{{1
 
-if has('nvim')
-    " blink yanked text after yanking it
-    autocmd TextYankPost * lua return (not vim.v.event.visual) and require('vim.highlight').on_yank({higroup = 'Substitute', timeout = 250})
+vim.cmd([[
+" blink yanked text after yanking it
+autocmd TextYankPost * lua return (not vim.v.event.visual) and require('vim.highlight').on_yank({higroup = 'Substitute', timeout = 250})
 
-    autocmd FileType json lua if vim.fn.expand('%') == 'tsconfig.json' then vim.bo.ft = 'jsonc' end
-endif
+autocmd FileType json lua if vim.fn.expand('%') == 'tsconfig.json' then vim.bo.ft = 'jsonc' end
 
-autocmd FileType * call antonk52#jest#detect()
+" coc-prettier does not work with compound filetypes
+" autocmd FileType * call antonk52#jest#detect()
 
 " close quickfix window after jumping to an error
 autocmd FileType qf nnoremap <buffer> <cr> <cr>:cclose<cr>:echo ''<cr>
 autocmd FileType qf map <buffer> dd :lua require'antonk52.quickfix'.remove_item()<cr>
+]])
 
-" Plugins {{{1
+-- Plugins {{{1
 
-" dirvish {{{2
+-- dirvish {{{2
 
-let g:dirvish_relative_paths = 1
-let g:dirvish_mode = ':sort ,^\v(.*[\/])|\ze,' " folders on top
+vim.g.dirvish_relative_paths = 1
+-- folders on top
+vim.g.dirvish_mode = ':sort ,^\\v(.*[\\/])|\\ze,'
 
-" vim-commentary {{{2
+-- vim-commentary {{{2
 
-" toggle comments with CTRL _
-map <C-_> <Plug>Commentary
+-- toggle comments with CTRL _
+vim.api.nvim_set_keymap('v', '<C-_>', '<plug>Commentary', {})
+vim.api.nvim_set_keymap('n', '<C-_>', '<plug>CommentaryLine', {})
 
-" editorconfig {{{2
-" let's keep this setting as 4 regardless
-let g:EditorConfig_disable_rules = ['tab_width']
+-- editorconfig {{{2
+-- let's keep this setting as 4 regardless
+vim.g.EditorConfig_disable_rules = { 'tab_width' }
 
-" auto-pairs {{{2
-" avoid inserting extra space inside surrounding objects `{([`
-let g:AutoPairsMapSpace = 0
+-- auto-pairs {{{2
+-- avoid inserting extra space inside surrounding objects `{([`
+vim.g.AutoPairsMapSpace = 0
 
-" Diminactive {{{2
-" bg color for inactive splits
-highlight ColorColumn ctermbg=0 guibg=#424949
+-- Diminactive {{{2
+-- bg color for inactive splits
+vim.cmd('highlight ColorColumn ctermbg=0 guibg=#424949')
 
-" ultisnips {{{2
+-- ultisnips {{{2
 
-" Trigger configuration.
-let g:UltiSnipsExpandTrigger="<tab>"
-let g:UltiSnipsJumpForwardTrigger="<c-b>"
-let g:UltiSnipsJumpBackwardTrigger="<c-z>"
+-- Trigger configuration.
+vim.g.UltiSnipsExpandTrigger="<tab>"
+vim.g.UltiSnipsJumpForwardTrigger="<c-b>"
+vim.g.UltiSnipsJumpBackwardTrigger="<c-z>"
 
-" If you want :UltiSnipsEdit to split your window.
-let g:UltiSnipsEditSplit="vertical"
+-- If you want :UltiSnipsEdit to split your window.
+vim.g.UltiSnipsEditSplit="vertical"
 
-" fzf {{{2
-" enable file preview for both Files & GFiles
+-- fzf {{{2
+-- enable file preview for both Files & GFiles
+vim.cmd([[
 command! -bang -nargs=? -complete=dir Files
     \ call fzf#vim#files(<q-args>, fzf#vim#with_preview(), <bang>1)
 command! -bang -nargs=? -complete=dir GFiles
     \ call fzf#vim#gitfiles(<q-args>, fzf#vim#with_preview(), <bang>0)
+]])
 
-" quick jump to dot files from anywhere
+-- quick jump to dot files from anywhere
+vim.cmd([[
 command! -bang -nargs=0 Dots
     \ call fzf#run({'source': 'cd ~/dot-files && git ls-files', 'sink': 'e', 'dir': '~/dot-files'})
+]])
 
-" use GFiles for projects with git, otherwise gracefully fall-back to all files search
-nnoremap <expr> <leader>f isdirectory(getcwd() . '/.git') ? ':GFiles<cr>' : ':Files<cr>'
-nnoremap <leader>F :Files<cr>
-" buffer list with fuzzy search
-nnoremap <leader>b :Buffers<cr>
-" In current buffer search with a preview
-nnoremap <leader>/ :BLines<cr>
-" list available snippets
-nnoremap <leader>s :Snippets<cr>
-" list opened windows
-nnoremap <leader>W :Windows<cr>
-" list opened file history
-nnoremap <leader>H :History<cr>
-nnoremap <leader>D :Dots<cr>
-" start in a popup
-let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.6 } }
+-- use GFiles for projects with git, otherwise gracefully fall-back to all files search
+vim.api.nvim_set_keymap(
+    'n',
+    '<leader>f',
+    "isdirectory(getcwd() . '/.git') ? ':GFiles<cr>' : ':Files<cr>'",
+    {noremap = true, expr = true}
+)
+vim.api.nvim_set_keymap('n', '<leader>F', ':Files<cr>', {noremap = true})
+-- buffer list with fuzzy search
+vim.api.nvim_set_keymap('n', '<leader>b', ':Buffers<cr>', {noremap = true})
+-- In current buffer search with a preview
+vim.api.nvim_set_keymap('n', '<leader>/', ':BLines<cr>', {noremap = true})
+-- list available snippets
+vim.api.nvim_set_keymap('n', '<leader>s', ':Snippets<cr>', {noremap = true})
+-- list opened windows
+vim.api.nvim_set_keymap('n', '<leader>W', ':Windows<cr>', {noremap = true})
+-- list opened file history
+vim.api.nvim_set_keymap('n', '<leader>H', ':History<cr>', {noremap = true})
+vim.api.nvim_set_keymap('n', '<leader>D', ':Dots<cr>', {noremap = true})
+-- start in a popup
+vim.g.fzf_layout = { window = { width = 0.9, height = 0.6 } }
 
-" supertab {{{2
-" navigate through auto completion options where:
-" - tab takes to the next one - one down
-" - shift tab takes to previous one - one up
-let g:SuperTabDefaultCompletionType = '<c-n>'
-
-" Neovim guard {{{2
-if !has('nvim-0.5')
-    finish
-endif
-lua << EOF
+-- supertab {{{2
+-- navigate through auto completion options where:
+-- - tab takes to the next one - one down
+-- - shift tab takes to previous one - one up
+vim.g.SuperTabDefaultCompletionType = '<c-n>'
 
 -- lualine.nvim {{{2
 vim.defer_fn(function() require('antonk52.lualine') end, 100)
