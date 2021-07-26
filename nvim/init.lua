@@ -1,11 +1,11 @@
-" vim: foldmethod=marker foldlevelstart=0 foldlevel=0
+-- vim: foldmethod=marker foldlevelstart=0 foldlevel=0
+vim.cmd([[
 filetype off
 
 " Plugins {{{1
 " load vim plug if it is not installed
 if empty(glob('~/.config/nvim/autoload/plug.vim'))
-  silent !curl -fLo ~/.config/nvim/autoload/plug.vim --create-dirs
-    \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+  silent !curl -fLo ~/.config/nvim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
   autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
 endif
 
@@ -87,14 +87,7 @@ Plug 'NLKNguyen/papercolor-theme'
 
 call plug#end()
 filetype plugin indent on
-
-
-" Neovim guard {{{1
-if !has('nvim-0.5')
-    finish
-endif
-lua << EOF
-
+]])
 -- Avoid startup work {{{1
 -- Skip loading menu.vim, saves ~100ms
 vim.g.did_install_default_menus = 1
@@ -161,7 +154,7 @@ vim.opt.termguicolors = true
 vim.opt.cursorline = true
 
 -- insert mode caret is an underline
-vim.cmd('set guicursor+=i-ci-ve:hor24')
+vim.opt.guicursor = 'i-ci-ve:hor24'
 
 -- Show “invisible” characters
 vim.opt.list = true
@@ -196,9 +189,9 @@ vim.opt.shiftround = true
 vim.opt.smarttab = true
 
 -- ignore swapfile messages
-vim.cmd('set shortmess+=A')
+vim.opt.shortmess = vim.opt.shortmess + 'A'
 -- no splash screen
-vim.cmd('set shortmess+=I')
+vim.opt.shortmess = vim.opt.shortmess + 'I'
 
 -- draw less
 vim.opt.lazyredraw = true
@@ -212,7 +205,7 @@ vim.opt.belloff = 'all'
 -- indent wrapped lines to match start
 vim.opt.breakindent = true
 -- emphasize broken lines by indenting them
-vim.cmd('set breakindentopt=shift:2')
+vim.opt.breakindentopt = 'shift:2'
 
 -- open horizontal splits below current window
 vim.opt.splitbelow = true
@@ -328,9 +321,9 @@ nnoremap('<leader>k', '<C-W>5+')
 nnoremap('<leader>l', '<C-W>5>')
 nnoremap('<leader>h', '<C-W>5<')
 
-nnoremap('<Leader>= :call', 'antonk52#layout#zoom_split()<cr>')
-nnoremap('<Leader>- :call', 'antonk52#layout#equalify_splits()<cr>')
-nnoremap('<Leader>+ :call', 'antonk52#layout#restore_layout()<cr>')
+nnoremap('<Leader>=', ':call antonk52#layout#zoom_split()<cr>')
+nnoremap('<Leader>-', ':call antonk52#layout#equalify_splits()<cr>')
+nnoremap('<Leader>+', ':call antonk52#layout#restore_layout()<cr>')
 
 -- go to the beginning of the line (^ is too far)
 nnoremap('<Leader>a', '^')
@@ -391,7 +384,7 @@ autocmd TextYankPost * lua return (not vim.v.event.visual) and require('vim.high
 autocmd FileType json lua if vim.fn.expand('%') == 'tsconfig.json' then vim.bo.ft = 'jsonc' end
 
 " coc-prettier does not work with compound filetypes
-" autocmd FileType * call antonk52#jest#detect()
+autocmd FileType * call antonk52#jest#detect()
 
 " close quickfix window after jumping to an error
 autocmd FileType qf nnoremap <buffer> <cr> <cr>:cclose<cr>:echo ''<cr>
@@ -437,16 +430,13 @@ vim.g.UltiSnipsEditSplit="vertical"
 -- fzf {{{2
 -- enable file preview for both Files & GFiles
 vim.cmd([[
-command! -bang -nargs=? -complete=dir Files
-    \ call fzf#vim#files(<q-args>, fzf#vim#with_preview(), <bang>1)
-command! -bang -nargs=? -complete=dir GFiles
-    \ call fzf#vim#gitfiles(<q-args>, fzf#vim#with_preview(), <bang>0)
+command! -bang -nargs=? -complete=dir Files call fzf#vim#files(<q-args>, fzf#vim#with_preview(), <bang>1)
+command! -bang -nargs=? -complete=dir GFiles call fzf#vim#gitfiles(<q-args>, fzf#vim#with_preview(), <bang>0)
 ]])
 
 -- quick jump to dot files from anywhere
 vim.cmd([[
-command! -bang -nargs=0 Dots
-    \ call fzf#run({'source': 'cd ~/dot-files && git ls-files', 'sink': 'e', 'dir': '~/dot-files'})
+command! -bang -nargs=0 Dots call fzf#run({'source': 'cd ~/dot-files && git ls-files', 'sink': 'e', 'dir': '~/dot-files'})
 ]])
 
 -- use GFiles for projects with git, otherwise gracefully fall-back to all files search
@@ -570,4 +560,3 @@ end
 vim.g.markdown_fold_style = 'nested'
 -- preserve my custom folding style
 vim.g.markdown_fold_override_foldtext = 0
-EOF
