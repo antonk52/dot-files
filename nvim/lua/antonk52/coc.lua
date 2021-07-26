@@ -32,8 +32,9 @@ local function setup_flow()
     return true
 end
 
+local M = {}
 
-local function setup()
+function M.setup()
     vim.g.coc_global_extensions = {
         'coc-css',
         'coc-cssmodules',
@@ -122,11 +123,11 @@ local function setup()
     end
 end
 
-local function lazy_setup()
-    vim.defer_fn(setup, 2000)
+function M.lazy_setup()
+    vim.defer_fn(M.setup, 2000)
 end
 
-local function show_documentation()
+function M.show_documentation()
     if vim.fn["coc#float#has_float"]() == 1 then
         vim.fn["coc#float#scroll"](0)
         return nil
@@ -138,8 +139,4 @@ local function show_documentation()
     end
 end
 
-return {
-    setup = setup,
-    lazy_setup = lazy_setup,
-    show_documentation = show_documentation,
-}
+return M
