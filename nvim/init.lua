@@ -242,9 +242,6 @@ vim.opt.mouse = 'a'
 -- persistent undo
 vim.opt.undofile = true
 
--- store undo files away from the project
-vim.opt.undodir = "$HOME/.vim/undo_dir"
-
 -- Mappings {{{1
 
 vim.g.mapleader = " "
