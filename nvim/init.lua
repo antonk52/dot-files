@@ -412,6 +412,7 @@ vim.g.EditorConfig_disable_rules = { 'tab_width' }
 -- auto-pairs {{{2
 -- avoid inserting extra space inside surrounding objects `{([`
 vim.g.AutoPairsMapSpace = 0
+vim.g.AutoPairsShortcutToggle = ''
 
 -- Diminactive {{{2
 -- bg color for inactive splits
