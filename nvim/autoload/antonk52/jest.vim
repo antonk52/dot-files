@@ -1,16 +1,20 @@
 function! antonk52#jest#detect() abort
-    if match(&filetype, '\v<javascript|javascriptreact|typescript|typescriptreact>') == -1
+    let ft = &filetype
+    if match(ft, '\v<javascript|javascriptreact|typescript|typescriptreact>') == -1
         return
     endif
 
-    if match(&filetype, '\v<jest>') != -1
+    if match(ft, '\v<jest>') != -1
         return
     endif
 
-    let l:file=expand('<afile>')
+    let file = expand('<afile>')
+    let test_file = match(file, '\v(_spec|spec|Spec|-test|\.test)\.(js|jsx|ts|tsx)$') != -1
+    let indirect_test_file = match(file, '\v/__tests__|tests?/.+\.(js|jsx|ts|tsx)$') != -1
 
-    if match(l:file, '\v(_spec|spec|Spec|-test|\.test)\.(js|jsx|ts|tsx)$') != -1 ||
-                \ match(l:file, '\v/__tests__|tests?/.+\.(js|jsx|ts|tsx)$') != -1
-        noautocmd set filetype+=.jest
+    if test_file || indirect_test_file
+        " instead of setting compound file type manually extends current
+        " file type snippets to include jest snippets
+        execute('UltiSnipsAddFiletypes '.ft.'.jest')
     endif
 endfunction
