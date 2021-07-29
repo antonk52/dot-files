@@ -131,35 +131,15 @@
                         ]
                     },
                     {
-                        "description": "fn + a - activates Alacritty",
-                        "manipulators": [
-                            {
-                                "from": {
-                                    "key_code": "a",
-                                    "modifiers": {
-                                        "mandatory": [
-                                            "fn"
-                                        ]
-                                    }
-                                },
-                                "to": [
-                                    {
-                                        "shell_command": "osascript -e 'tell application \"Alacritty\" to activate'"
-                                    }
-                                ],
-                                "type": "basic"
-                            }
-                        ]
-                    },
-                    {
-                        "description": "fn + enter - activates Alacritty",
+                        "description": "capslock + enter - activates Alacritty",
                         "manipulators": [
                             {
                                 "from": {
                                     "key_code": "return_or_enter",
                                     "modifiers": {
                                         "mandatory": [
-                                            "fn"
+                                            "left_shift",
+                                            "left_option"
                                         ]
                                     }
                                 },
