@@ -27,9 +27,10 @@
 ## Macos system preferences (TODO: move to `prepare-mac.sh`)
 
 - dock(open Settings/Dock, it should be similar to below)
-    - Size: ~50%
+    - Size: ~40%
     - [ ] Magnification
     - Position on screen: left
+    - [ ] Minimize windows into application icon
     - [ ] Animate opening applications
     - [x] Automatically hide and show the Dock
     - [x] Show indicators for open applications
@@ -42,6 +43,10 @@
 - [x] tap to click
 - [x] use keyboard to navigate
 - [ ] adjust keyboard brightness automatically
+
+- keyboard/shortcuts
+    - "input sourtces" - enable select next to ctrl + space
+    - "spotlight" - disable all
 
 ## Manual permissions
 
@@ -58,9 +63,12 @@ Mostly require permissions or manual setup:
     - launch
     - give accessibility permissions
     - from menubar turn on "start on login"
+    - shortcuts
+    	- relaunch shift + cmd + backspace
 - Karabiner elements
     - launch
     - give security permissions
+    - big sur might have issues with loading driver, launch karabiner elements and it will prompt to docs on how to grant permissions
 - MonitorControl
     - launch
     - give accessibility permissions
