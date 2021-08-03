@@ -382,10 +382,6 @@ autocmd FileType json lua if vim.fn.expand('%') == 'tsconfig.json' then vim.bo.f
 
 " coc-prettier does not work with compound filetypes
 autocmd FileType * call antonk52#jest#detect()
-
-" close quickfix window after jumping to an error
-autocmd FileType qf nnoremap <buffer> <cr> <cr>:cclose<cr>:echo ''<cr>
-autocmd FileType qf map <buffer> dd :lua require'antonk52.quickfix'.remove_item()<cr>
 ]])
 
 -- Plugins {{{1
