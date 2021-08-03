@@ -41,7 +41,7 @@ Plug 'airblade/vim-rooter'
 " git gems
 Plug 'tpope/vim-fugitive'
 " enables Gbrowse for github.com
-Plug 'tpope/vim-rhubarb'
+Plug 'tpope/vim-rhubarb', {'on': 'GBrowse'}
 " toggle comments duh
 Plug 'tpope/vim-commentary'
 " project file viewer
@@ -397,6 +397,9 @@ vim.g.dirvish_mode = ':sort ,^\\v(.*[\\/])|\\ze,'
 -- toggle comments with CTRL _
 vim.api.nvim_set_keymap('v', '<C-_>', '<plug>Commentary', {})
 vim.api.nvim_set_keymap('n', '<C-_>', '<plug>CommentaryLine', {})
+
+-- vim-fugitive {{{2
+vim.g.fugitive_no_maps = 1
 
 -- editorconfig {{{2
 -- let's keep this setting as 4 regardless
