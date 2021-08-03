@@ -381,7 +381,7 @@ autocmd TextYankPost * lua return (not vim.v.event.visual) and require('vim.high
 autocmd FileType json lua if vim.fn.expand('%') == 'tsconfig.json' then vim.bo.ft = 'jsonc' end
 
 " coc-prettier does not work with compound filetypes
-autocmd FileType * call antonk52#jest#detect()
+autocmd FileType javascript,javascriptreact,typescript,typescriptreact call antonk52#jest#detect()
 ]])
 
 -- Plugins {{{1

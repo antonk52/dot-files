@@ -1,12 +1,5 @@
 function! antonk52#jest#detect() abort
     let ft = &filetype
-    if match(ft, '\v<javascript|javascriptreact|typescript|typescriptreact>') == -1
-        return
-    endif
-
-    if match(ft, '\v<jest>') != -1
-        return
-    endif
 
     let file = expand('<afile>')
     let test_file = match(file, '\v(_spec|spec|Spec|-test|\.test)\.(js|jsx|ts|tsx)$') != -1
