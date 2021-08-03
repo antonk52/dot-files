@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# TODO
+# - consider applying different settings based on [os version](https://www.cyberciti.biz/faq/mac-osx-find-tell-operating-system-version-from-bash-prompt/)
+
 # Close any open System Preferences panes, to prevent them from overriding
 # settings we’re about to change
 osascript -e 'tell application "System Preferences" to quit'
