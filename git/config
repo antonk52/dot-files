@@ -46,3 +46,5 @@
     diff = less --tabs 4 # display tabs as 4 spces
 [init]
     defaultBranch = main
+[merge]
+    conflictStyle = diff3
