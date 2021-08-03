@@ -1,8 +1,6 @@
 -- vim: foldmethod=marker foldlevelstart=0 foldlevel=0
+-- Plugins {{{1
 vim.cmd([[
-filetype off
-
-" Plugins {{{1
 " load vim plug if it is not installed
 if empty(glob('~/.config/nvim/autoload/plug.vim'))
   silent !curl -fLo ~/.config/nvim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
@@ -86,7 +84,6 @@ Plug 'NLKNguyen/papercolor-theme'
 " 2}}}
 
 call plug#end()
-filetype plugin indent on
 ]])
 -- Avoid startup work {{{1
 -- Skip loading menu.vim, saves ~100ms
