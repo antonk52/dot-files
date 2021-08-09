@@ -1,14 +1,14 @@
 -- vim: foldmethod=marker foldlevelstart=0 foldlevel=0
 -- Plugins {{{1
+
+-- load vim plug if it is not installed
+if vim.fn.empty(vim.fn.glob('~/.config/nvim/autoload/plug.vim')) == 1 then
+    vim.cmd('silent !curl -fLo ~/.config/nvim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim')
+    vim.cmd('autocmd VimEnter * PlugInstall --sync | source $MYVIMRC')
+end
+
+vim.fn['plug#begin']('~/.config/nvim/plugged')
 vim.cmd([[
-" load vim plug if it is not installed
-if empty(glob('~/.config/nvim/autoload/plug.vim'))
-  silent !curl -fLo ~/.config/nvim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
-endif
-
-call plug#begin('~/.config/nvim/plugged')
-
 " Essentials {{{2
 " tab completion
 Plug 'ervandew/supertab'
@@ -82,9 +82,8 @@ Plug 'antonk52/lake.vim'
 Plug 'andreypopp/vim-colors-plain'
 Plug 'NLKNguyen/papercolor-theme'
 " 2}}}
-
-call plug#end()
 ]])
+vim.fn['plug#end']()
 -- Avoid startup work {{{1
 -- Skip loading menu.vim, saves ~100ms
 vim.g.did_install_default_menus = 1
