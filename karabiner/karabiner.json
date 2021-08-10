@@ -41,6 +41,32 @@
                         ]
                     },
                     {
+                        "description": "TAB to shift+option+control (Amethyst mod2) or TAB (If Alone)",
+                        "manipulators": [
+                            {
+                                "from": {
+                                    "key_code": "tab",
+                                    "modifiers": {}
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "left_shift",
+                                        "modifiers": [
+                                            "left_option",
+                                            "left_control"
+                                        ]
+                                    }
+                                ],
+                                "to_if_alone": [
+                                    {
+                                        "key_code": "tab"
+                                    }
+                                ],
+                                "type": "basic"
+                            }
+                        ]
+                    },
+                    {
                         "description": "fn to shift+option+ctrl (Amethyst mod2) or fn (If Alone)",
                         "manipulators": [
                             {
