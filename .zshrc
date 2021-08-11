@@ -32,10 +32,10 @@ export PATH="$HOME"/Library/Python/3.9/bin:$PATH
 
 # --- zsh plugins start
 
-npm_complitions="$DOT_FILES/scripts/npm-complitions.zsh"
+npm_completions="$DOT_FILES/scripts/npm-completions.zsh"
 
-[ ! -f "$npm_complitions" ] && npm complitions >> "$npm_complitions";
-source "$npm_complitions"
+[ ! -f "$npm_completions" ] && npm completion >> "$npm_completions";
+source "$npm_completions"
 
 source "$DOT_FILES/zsh-autosuggestions/zsh-autosuggestions.zsh"
 
