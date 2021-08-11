@@ -8,6 +8,6 @@ nvim/spell/*
 karabiner/*
 !karabiner/karabiner.json
 
-scripts/npm-complitions.zsh
+scripts/npm-completions.zsh
 
 **/.DS_Store
