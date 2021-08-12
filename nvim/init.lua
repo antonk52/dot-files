@@ -547,7 +547,8 @@ vim.g.vim_markdown_folding_disabled = 1
 if vim.g.colors_name == 'lake' then
     -- red & bold list characters -,+,*
     vim.cmd('hi mkdListItem ctermfg=8 guifg='..vim.g.lake_palette['08'].gui..' gui=bold')
-    vim.cmd('hi mkdHeading ctermfg=4 guifg='..vim.g.lake_palette['0D'].gui)
+    vim.cmd('hi mkdHeading ctermfg=04 guifg='..vim.g.lake_palette['0D'].gui)
+    vim.cmd('hi mkdLink gui=none ctermfg=08 guifg='..vim.g.lake_palette['08'].gui)
 end
 -- markdown fold {{{2
 -- fold underlying sections if any
