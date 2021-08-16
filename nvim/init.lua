@@ -291,8 +291,8 @@ vnoremap('<LocalLeader><LocalLeader>x', 'g<C-x>')
 -- Fixes (most) syntax highlighting problems in current buffer
 vim.api.nvim_set_keymap(
     'n',
-    '<silent> <leader>§ :syntax sync',
-    'fromstart<CR>',
+    '<leader>§',
+    ':syntax sync fromstart<CR>',
     {noremap = true, silent = true}
 )
 
