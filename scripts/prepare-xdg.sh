@@ -9,6 +9,7 @@ DOTS="$HOME"/dot-files
 [ ! -L "$XDG_CONFIG_HOME"/git ] && ln -s "$DOTS"/git "$XDG_CONFIG_HOME"/git
 [ ! -L "$XDG_CONFIG_HOME"/nvim ] && ln -s "$DOTS"/nvim "$XDG_CONFIG_HOME"/nvim
 [ ! -L "$XDG_CONFIG_HOME"/tmux ] && ln -s "$DOTS"/tmux "$XDG_CONFIG_HOME"/tmux
+[ ! -L "$XDG_CONFIG_HOME"/wezterm ] && ln -s "$DOTS"/wezterm "$XDG_CONFIG_HOME"/wezterm
 [ ! -L "$XDG_CONFIG_HOME"/karabiner ] && ln -s "$DOTS"/karabiner "$XDG_CONFIG_HOME"/karabiner
 [ ! -L "$XDG_CONFIG_HOME"/alacritty.yml ] && ln -s "$DOTS"/alacritty.yml "${XDG_CONFIG_HOME}"/alacritty.yml
 
