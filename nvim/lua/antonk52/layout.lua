@@ -33,6 +33,8 @@ function M.navigate(direction)
 		vim.cmd('silent ! tmux select-pane -' .. navigation_map[direction].tmux)
 	end
 
+    -- empty status line
+    vim.cmd('echo')
 end
 
 return M
