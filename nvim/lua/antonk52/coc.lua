@@ -56,7 +56,7 @@ function M.setup()
     -- let coc use a newer nodejs version
     -- since I have to continuously switch between older ones
     local local_latest_node = '/usr/local/n/versions/node/16.3.0/bin/node'
-    if vim.fn.filereadable(local_latest_node) then
+    if vim.fn.filereadable(local_latest_node) == 1 then
         vim.g.coc_node_path = local_latest_node
     end
 
