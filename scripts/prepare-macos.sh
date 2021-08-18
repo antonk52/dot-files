@@ -82,7 +82,7 @@ function setup_noop_fn_key() {
 
 # enable keyboard navigation in os applications with tab/shift+tab
 function setup_keyboard_navigation() {
-    default write -g AppleKeyboardUIMode -int 2 \
+    defaults write -g AppleKeyboardUIMode -int 2 \
         && echo '✅ OS wide keyboard navigation is enabled' \
         || echo '❗️ Could not set up keyboard navigation';
 }
