@@ -63,7 +63,7 @@ brew install firefox
 brew install gimp
 brew install karabiner-elements # advanced key mapping
 brew install keycastr # useful for demos
-brew install lookpback # virtual devises to pass audio to obs
+brew install loopback # virtual devises to pass audio to obs
 brew install monitorcontrol # control external monitors brightness from keyboard
 brew install obs # streaming & screen recording
 brew install telegram # advanced key mapping
