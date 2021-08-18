@@ -27,30 +27,23 @@ brew install gh # github cli
 brew install git-lfs # github large file storage
 brew install git # updated version
 brew install htop # top but better
-brew install hub # yet another github cli
 brew install jpeg # image manipulation lib
 brew install jq # cli for working with json
 brew install neovim # vim but better
 brew install nginx
 brew install node # nodejs & npm
 brew install openssl
-brew install openssl@1.1
 brew install procs # ps in rust
 brew install python
 brew install python3
 brew install rbenv # ruby version manager
 brew install ripgrep
-brew install ruby
-brew install ruby-build
 brew install tmux # terminal multiplexer
 brew install tree # cli to display directories as trees
 brew install vim # get the recent vim version
 brew install webp # lossless and lossy img compression
-brew install imagemagick --with-webp # image manipulation lib
 brew install wget # cli to download stuff
-brew install xz # compression lib
 brew install yarn # npm alternative
-brew install youtube-dl # download youtube videos
 brew install zsh # bash but better
 
 # cask apps
