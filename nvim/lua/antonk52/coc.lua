@@ -40,6 +40,7 @@ function M.setup()
         'coc-cssmodules',
         'coc-eslint',
         'coc-json',
+        'coc-lua',
         'coc-prettier',
         'coc-rust-analyzer',
         'coc-stylelintplus',
