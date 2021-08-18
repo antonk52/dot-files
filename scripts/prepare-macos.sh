@@ -17,10 +17,16 @@ xcode-select --install || echo 'xcode tools are already installed';
     && echo '✅ Screenshots will be saved to ~/Screenshots' \
     || echo '❗️ Could not save screenshots to ~/Screenshots';
 
+# tap to click
+defaults write com.apple.AppleMultitouchTrackpad Clicking = 1 \
+    && defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad Clicking = 1 \
+    && echo '✅ Tap to click enabled' \
+    || echo '❗️ Could not set up tap to click';
+
 # needed to enable three finger drag
+# enable dragging using tree fingers on touchpad
 defaults write com.apple.AppleMultitouchTrackpad Dragging = 1 \
     && defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad Dragging = 1 \
-    # enable dragging using tree fingers on touchpad
     && defaults write com.apple.AppleMultitouchTrackpad TrackpadThreeFingerDrag = 1 \
     && defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad TrackpadThreeFingerDrag = 1 \
     && echo '✅ Three finger window dragging enabled' \
@@ -28,11 +34,28 @@ defaults write com.apple.AppleMultitouchTrackpad Dragging = 1 \
 
 # dock settings
 defaults write com.apple.dock autohide = 1 \
+    && defaults write com.apple.dock magnification = 0 \
+    && defaults write com.apple.dock launchanim = 0 \
     && defaults write com.apple.dock orientation = 'left' \
     && defaults write com.apple.dock tilesize = 52 \
     && defaults write com.apple.dock show-recents = 0 \
     && echo '✅ Dock is set up' \
     || echo '❗️ Could not set up dock';
+
+# menu
+defaults write com.apple.menuextra.clock DateFormat = "HH:mm" \
+    && defaults write com.apple.menuextra.clock FlashDateSeparators = 0 \
+    && defaults write com.apple.menuextra.clock Show24Hour = 1 \
+    && defaults write com.apple.menuextra.clock ShowDayOfMonth = 0 \
+    && defaults write com.apple.menuextra.clock ShowDayOfWeek = 0 \
+    && defaults write com.apple.menuextra.clock ShowSeconds = 0 \
+    && echo '✅ Menu clock is set up' \
+    || echo '❗️ Could not set up menu clock';
+
+# disable FN key to avoid acidental language switch
+defaults write com.apple.HIToolbox AppleFnUsageType = 0 \
+    && echo '✅ FN key tap does not switch languages' \
+    || echo '❗️ Could not disable FN key tap';
 
 # enable keyboard navigation in os applications with tab/shift+tab
 default write -g AppleKeyboardUIMode -int 2 \
