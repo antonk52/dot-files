@@ -9,6 +9,7 @@
 1. Create symlinks before installing applications
     <br>`./scripts/prepare-xdg.sh`
 1. Clone git submodules
+    <br>`git submodule update --init --recursive`
 1. Install `brew` from the [website](https://brew.sh/#install)
 1. Run brew file to install cli apps, gui apps and fonts
     <br>`./scripts/brew.sh`
