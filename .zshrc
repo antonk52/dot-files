@@ -58,6 +58,9 @@ export KEYTIMEOUT=1
 
 # PURE PROMPT
 # requires `npm i -g pure-prompt`
+
+fpath+=/opt/homebrew/lib/node_modules/pure-prompt/functions
+
 autoload -U promptinit; promptinit
 
 export PURE_PROMPT_SYMBOL="▲" # triangle
@@ -95,10 +98,10 @@ bindkey "^v" edit-command-line
 
 # Load local settings
 LOCAL_SHELLRC="$XDG_CONFIG_HOME"/local_shellrc
-[ -f "$LOCAL_SHELLRC" ] && source "$LOCAL_SHELLRC"
+[ -f "$LOCAL_SHELLRC" ] && source "$LOCAL_SHELLRC" || :
 
 # if you need ruby, do use this
 # eval "$(rbenv init -)"
 
 # needed for `j` (autojump) to work
-[ -f /usr/local/etc/profile.d/autojump.sh ] && . /usr/local/etc/profile.d/autojump.sh
+[ -f "$HOMEBREW_PREFIX"/etc/profile.d/autojump.sh ] && . "$HOMEBREW_PREFIX"/etc/profile.d/autojump.sh || :
