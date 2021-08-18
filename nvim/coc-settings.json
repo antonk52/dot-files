@@ -31,7 +31,7 @@
         "LOCALE"
     ],
     "Lua.workspace.library": [
-        "/usr/local/Cellar/neovim/0.5.0/share/nvim/runtime/lua"
+        "/opt/homebrew/Cellar/neovim/0.5.0/share/nvim/runtime/lua"
     ],
 
     "languageserver": {

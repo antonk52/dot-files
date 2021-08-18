@@ -11,10 +11,10 @@ NVIM_DIR="$XDG_CONFIG_HOME"/nvim
 
 # neovim dependency
 has_punvim() {
-    python3 -m pip list | grep pynvim
+    python3.9 -m pip list | grep pynvim
 }
 if ! has_punvim; then
-    python3 -m pip install --user --upgrade pynvim
+    python3.9 -m pip install --user --upgrade pynvim
 fi
 
 ask_for() {
