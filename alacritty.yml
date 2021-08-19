@@ -5,8 +5,10 @@ env:
 window:
     opacity: 1
     padding:
-            x: 0
-            y: 0
+        x: 0
+        y: 0
+    # even spacing instead of bottom/right
+    dynamic_padding: true
     # hide title bar & close icons
     decorations: 'none'
 
