@@ -269,7 +269,7 @@ nnoremap('<leader>n', ':set hlsearch!<cr>')
 
 -- Show the current file path.
 -- Useful when you have many splits & the status line gets truncated
-nnoremap('<leader>p :echo', 'expand("%")<CR>')
+nnoremap('<leader>p', ':echo expand("%")<CR>')
 -- Puts an absolute file path in the system clipboard
 nnoremap('<localleader>p', ':silent !echo "%:p" \\| pbcopy<CR>')
 -- Puts a project file path in the system clipboard
