@@ -7,82 +7,78 @@ if vim.fn.empty(vim.fn.glob('~/.config/nvim/autoload/plug.vim')) == 1 then
     vim.cmd('autocmd VimEnter * PlugInstall --sync | source $MYVIMRC')
 end
 
+local Plug = vim.fn['plug#']
+
 vim.fn['plug#begin']('~/.config/nvim/plugged')
-vim.cmd([[
-" Essentials {{{2
-" tab completion
-Plug 'ervandew/supertab'
-" tab navigation
-Plug 'antonk52/vim-tabber'
-if has('nvim')
-    " types & linting
-    Plug 'neoclide/coc.nvim', {'branch': 'release', 'do': ':CocInstall'}
-    Plug 'antonk52/amake.nvim'
-    Plug 'antonk52/bad-practices.nvim'
-    Plug 'antonk52/gitignore-grabber.nvim'
-    " tests
-    Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}  " We recommend updating the parsers on update
-    Plug 'nvim-treesitter/playground'
-    " to load telescope `TELESCOPE=1 nvim .`
-    if $TELESCOPE == '1'
-        " telescope only
-        Plug 'nvim-lua/popup.nvim'
-        Plug 'nvim-lua/plenary.nvim'
-        Plug 'nvim-telescope/telescope.nvim'
-    endif
-    Plug 'hoob3rt/lualine.nvim'
-endif
-" change surrounding chars
-Plug 'tpope/vim-surround'
-" change vim dir to project root dir automatically
-Plug 'airblade/vim-rooter'
-" git gems
-Plug 'tpope/vim-fugitive'
-" enables Gbrowse for github.com
-Plug 'tpope/vim-rhubarb', {'on': 'GBrowse'}
-" toggle comments duh
-Plug 'tpope/vim-commentary'
-" project file viewer
-Plug 'justinmk/vim-dirvish'
-Plug 'antonk52/dirvish-fs.vim'
-" dims inactive splits
-Plug 'blueyed/vim-diminactive'
-" async project in-file/file search
-Plug 'junegunn/fzf', { 'do': './install --bin' }
-Plug 'junegunn/fzf.vim'
-" auto closes quotes and braces
-Plug 'jiangmiao/auto-pairs'
-" consistent coding style
-Plug 'editorconfig/editorconfig-vim'
-" snippets
-Plug 'SirVer/ultisnips'
-" live preview markdown files in browser
-Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app & yarn install', 'for': ['markdown', 'mdx'] }
+-- Essentials {{{2
+-- tab completion
+Plug('ervandew/supertab')
+-- tab navigation
+Plug('antonk52/vim-tabber')
+-- types & linting
+Plug('neoclide/coc.nvim', {branch = 'release', ['do'] = ':CocInstall'})
+Plug('antonk52/amake.nvim')
+Plug('antonk52/bad-practices.nvim')
+Plug('antonk52/gitignore-grabber.nvim')
+-- tests
+Plug('nvim-treesitter/nvim-treesitter', {['do'] = ':TSUpdate'}) -- We recommend updating the parsers on update
+Plug('nvim-treesitter/playground')
+-- to load telescope `TELESCOPE=1 nvim .`
+if vim.env.TELESCOPE == '1' then
+    -- telescope only
+    Plug('nvim-lua/popup.nvim')
+    Plug('nvim-lua/plenary.nvim')
+    Plug('nvim-telescope/telescope.nvim')
+end
+Plug('hoob3rt/lualine.nvim')
+-- change surrounding chars
+Plug('tpope/vim-surround')
+-- change vim dir to project root dir automatically
+Plug('airblade/vim-rooter')
+-- git gems
+Plug('tpope/vim-fugitive')
+-- enables Gbrowse for github.com
+Plug('tpope/vim-rhubarb', {['on'] = 'GBrowse'})
+-- toggle comments duh
+Plug('tpope/vim-commentary')
+-- project file viewer
+Plug('justinmk/vim-dirvish')
+Plug('antonk52/dirvish-fs.vim')
+-- dims inactive splits
+Plug('blueyed/vim-diminactive')
+-- async project in-file/file search
+Plug('junegunn/fzf', { ['do'] = './install --bin' })
+Plug('junegunn/fzf.vim')
+-- auto closes quotes and braces
+Plug('jiangmiao/auto-pairs')
+-- consistent coding style
+Plug('editorconfig/editorconfig-vim')
+-- snippets
+Plug('SirVer/ultisnips')
+-- live preview markdown files in browser
+Plug('iamcco/markdown-preview.nvim', { ['do'] = 'cd app & yarn install', ['for'] = {'markdown', 'mdx'} })
 
-" Front end {{{2
-" quick html
-Plug 'mattn/emmet-vim', { 'for': ['html', 'css', 'javascript', 'typescript'] }
+-- Front end {{{2
+-- quick html
+Plug('mattn/emmet-vim', { ['for'] = {'html', 'css', 'javascript', 'typescript'}})
 
-" Syntax {{{2
-if has('nvim')
-    " hex/rgb color highlight preview
-    Plug 'norcalli/nvim-colorizer.lua'
-    " indent lines
-    Plug 'lukas-reineke/indent-blankline.nvim'
-    " fold by heading
-    Plug 'masukomi/vim-markdown-folding'
-    Plug 'plasticboy/vim-markdown'
-endif
-Plug 'purescript-contrib/purescript-vim'
-Plug 'jxnblk/vim-mdx-js', { 'for': ['mdx'] }
-Plug 'maksimr/vim-yate' " TODO defeat, forget, get drunk
+-- Syntax {{{2
+-- hex/rgb color highlight preview
+Plug('norcalli/nvim-colorizer.lua')
+-- indent lines
+Plug('lukas-reineke/indent-blankline.nvim')
+-- fold by heading
+Plug('masukomi/vim-markdown-folding')
+Plug('plasticboy/vim-markdown')
+Plug('purescript-contrib/purescript-vim')
+Plug('jxnblk/vim-mdx-js', { ['for'] = { 'mdx' } })
+Plug('maksimr/vim-yate') -- TODO defeat, forget, get drunk
 
-" Themes {{{2
-Plug 'antonk52/lake.vim'
-Plug 'andreypopp/vim-colors-plain'
-Plug 'NLKNguyen/papercolor-theme'
-" 2}}}
-]])
+-- Themes {{{2
+Plug('antonk52/lake.vim')
+Plug('andreypopp/vim-colors-plain')
+Plug('NLKNguyen/papercolor-theme')
+-- 2}}}
 vim.fn['plug#end']()
 -- Avoid startup work {{{1
 -- Skip loading menu.vim, saves ~100ms
