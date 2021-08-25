@@ -21,7 +21,14 @@
                             {
                                 "from": {
                                     "key_code": "caps_lock",
-                                    "modifiers": {}
+                                    "modifiers": {
+                                        "optional": [
+                                            "left_shift",
+                                            "left_control",
+                                            "left_option",
+                                            "left_command"
+                                        ]
+                                    }
                                 },
                                 "to": [
                                     {
