@@ -49,7 +49,6 @@ brew install zsh # bash but better
 # cask apps
 brew install alacritty # terminal
 brew install alfred # spotlight but useful
-brew install chromium # chrome but pure
 brew install cyberduck # when ftp is still relevant
 brew install docker # docker desktop app
 brew install firefox
@@ -59,7 +58,7 @@ brew install keycastr # useful for demos
 brew install loopback # virtual devises to pass audio to obs
 brew install monitorcontrol # control external monitors brightness from keyboard
 brew install obs # streaming & screen recording
-brew install telegram # advanced key mapping
+brew install telegram # chats
 brew install vlc # media player
 
 # fonts
