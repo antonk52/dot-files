@@ -85,3 +85,5 @@ Mostly require permissions or manual setup:
     - menubar / lookpback / license
 - Github
     - generate access token [docs](https://medium.com/@ginnyfahs/github-error-authentication-failed-from-command-line-3a545bfd0ca8)
+- Docker
+    - Download and install [docker for mac](https://docs.docker.com/desktop/mac/install/)
