@@ -7,8 +7,8 @@ window:
     padding:
         x: 0
         y: 0
-    # even spacing instead of bottom/right
-    dynamic_padding: true
+    # prefer offset on the bottom to evenly spaced
+    dynamic_padding: false
     # hide title bar & close icons
     decorations: 'none'
 
