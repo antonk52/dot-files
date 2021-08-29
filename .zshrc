@@ -1,4 +1,5 @@
 #!/bin/sh
+# vars {{{1
 # XDG directories
 export XDG_CONFIG_HOME=$HOME/.config
 export XDG_DATA_HOME=$HOME/.local/share
@@ -30,7 +31,7 @@ export PATH="$HOME"/.cargo/bin:$PATH
 # pip packages
 export PATH="$HOME"/Library/Python/3.9/bin:$PATH
 
-# --- zsh plugins start
+# completions {{{1
 
 npm_completions="$DOT_FILES/scripts/npm-completions.zsh"
 
@@ -39,7 +40,20 @@ source "$npm_completions"
 
 source "$DOT_FILES/zsh-autosuggestions/zsh-autosuggestions.zsh"
 
-# --- zsh plugins end
+if command -v docker; then
+    zsh_site_functions_path="$XDG_DATA_HOME/zsh/site-functions"
+
+    if [ ! -f "$zsh_site_functions_path/_docker" ]; then
+        mkdir -p "$zsh_site_functions_path"
+        docker_etc="/Applications/Docker.app/Contents/Resources/etc/"
+        ln -s "$docker_etc/docker.zsh-completion" "$zsh_site_functions_path/_docker"
+        ln -s "$docker_etc/docker-machine.zsh-completion" "$zsh_site_functions_path/_docker-machine"
+        ln -s "$docker_etc/docker-compose.zsh-completion" "$zsh_site_functions_path/_docker-compose"
+    fi
+    autoload -Uz compinit; compinit
+fi
+
+# misc 1{{{
 
 # You may need to manually set your language environment
 export LANG=en_US.UTF-8
@@ -56,7 +70,7 @@ bindkey -v
 # reduce the timeout between switching modes
 export KEYTIMEOUT=1
 
-# PURE PROMPT
+# PURE PROMPT {{{1
 # requires `npm i -g pure-prompt`
 
 fpath+=/opt/homebrew/lib/node_modules/pure-prompt/functions
@@ -79,6 +93,8 @@ zstyle ':vcs_info:*:*' formats "$FX[bold]%r$FX[no-bold]/%S" "%s/%b" "%%u%c"
 zstyle ':vcs_info:*:*' actionformats "$FX[bold]%r$FX[no-bold]/%S" "%s/%b" "%u%c (%a)"
 
 prompt pure
+
+# misc 2 {{{1
 
 # load edit-command-line widget
 autoload -U edit-command-line
