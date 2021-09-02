@@ -40,7 +40,7 @@ source "$npm_completions"
 
 source "$DOT_FILES/zsh-autosuggestions/zsh-autosuggestions.zsh"
 
-if command -v docker; then
+if command -v docker &> /dev/null; then
     zsh_site_functions_path="$XDG_DATA_HOME/zsh/site-functions"
 
     if [ ! -f "$zsh_site_functions_path/_docker" ]; then

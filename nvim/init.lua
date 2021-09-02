@@ -38,7 +38,7 @@ Plug('airblade/vim-rooter')
 -- git gems
 Plug('tpope/vim-fugitive')
 -- enables Gbrowse for github.com
-Plug('tpope/vim-rhubarb', {['on'] = 'GBrowse'})
+Plug('tpope/vim-rhubarb')
 -- toggle comments duh
 Plug('tpope/vim-commentary')
 -- project file viewer
