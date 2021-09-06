@@ -60,6 +60,9 @@ alias listnodes='ps -e|grep node'
 alias agi='sudo apt-get install'
 alias update='sudo apt-get update && sudo apt-get upgrade && sudo apt-get dist-upgrade'
 
+# homebrew
+alias ibrew='arch -x86_64 brew'
+
 # other aliases
 alias e='exit'
 alias o='open .'
