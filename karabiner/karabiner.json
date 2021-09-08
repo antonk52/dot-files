@@ -74,32 +74,6 @@
                         ]
                     },
                     {
-                        "description": "fn to shift+option+ctrl (Amethyst mod2) or fn (If Alone)",
-                        "manipulators": [
-                            {
-                                "from": {
-                                    "apple_vendor_top_case_key_code": "keyboard_fn",
-                                    "modifiers": {}
-                                },
-                                "to": [
-                                    {
-                                        "key_code": "left_shift",
-                                        "modifiers": [
-                                            "left_option",
-                                            "left_control"
-                                        ]
-                                    }
-                                ],
-                                "to_if_alone": [
-                                    {
-                                        "apple_vendor_top_case_key_code": "keyboard_fn"
-                                    }
-                                ],
-                                "type": "basic"
-                            }
-                        ]
-                    },
-                    {
                         "description": "CAPS_LOCK + [] to navigate workspaces",
                         "manipulators": [
                             {
