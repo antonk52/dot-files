@@ -32,9 +32,6 @@ function M.navigate(direction)
 	if vim.fn.winnr() == win_num_before then
 		vim.cmd('silent ! tmux select-pane -' .. navigation_map[direction].tmux)
 	end
-
-    -- empty status line
-    vim.cmd('echo')
 end
 
 return M

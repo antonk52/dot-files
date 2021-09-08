@@ -297,10 +297,10 @@ vnoremap('<', '<gv')
 vnoremap('>', '>gv')
 
 -- ctrl j/k/l/h shortcuts to navigate between splits
-nnoremap('<C-J>', ':lua require("antonk52.layout").navigate("down")<cr>')
-nnoremap('<C-K>', ':lua require("antonk52.layout").navigate("up")<cr>')
-nnoremap('<C-L>', ':lua require("antonk52.layout").navigate("right")<cr>')
-nnoremap('<C-H>', ':lua require("antonk52.layout").navigate("left")<cr>')
+nnoremap('<C-J>', '<cmd>lua require("antonk52.layout").navigate("down")<cr>')
+nnoremap('<C-K>', '<cmd>lua require("antonk52.layout").navigate("up")<cr>')
+nnoremap('<C-L>', '<cmd>lua require("antonk52.layout").navigate("right")<cr>')
+nnoremap('<C-H>', '<cmd>lua require("antonk52.layout").navigate("left")<cr>')
 
 -- leader j/k/l/h resize active split by 5
 nnoremap('<leader>j', '<C-W>5-')
