@@ -34,4 +34,32 @@ function M.navigate(direction)
 	end
 end
 
+local layout_cmd = ''
+
+-- restores the split layout
+function M.restore_layout()
+    -- do nothing if there are no splits
+    if vim.fn.winnr('$') == 1 then
+        return nil
+    end
+    local restore_layout_cmd = vim.fn.winrestcmd()
+    if layout_cmd ~= '' then
+        vim.cmd(layout_cmd)
+        layout_cmd = ''
+    else
+        layout_cmd = restore_layout_cmd
+    end
+end
+
+function M.equalify_splits()
+    layout_cmd = vim.fn.winrestcmd()
+    -- only double quotes would work here
+    vim.cmd('execute "normal! \\<c-w>\\<c-=>"')
+end
+
+function M.zoom_split()
+    layout_cmd = vim.fn.winrestcmd()
+    vim.cmd('execute "normal! \\<c-w>\\<c-_>"')
+end
+
 return M
