@@ -211,7 +211,7 @@
                         ]
                     },
                     {
-                        "description": "capslock + enter - activates Alacritty",
+                        "description": "capslock + enter - toggles between terminal and browser",
                         "manipulators": [
                             {
                                 "from": {
@@ -225,7 +225,7 @@
                                 },
                                 "to": [
                                     {
-                                        "shell_command": "osascript -e 'tell application \"Alacritty\" to activate'"
+                                        "shell_command": "/Users/$(whoami)/dot-files/scripts/toggle-term-browser.sh"
                                     }
                                 ],
                                 "type": "basic"
