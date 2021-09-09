@@ -26,7 +26,7 @@ function M.navigate(direction)
     end
 
     local win_num_before = vim.fn.winnr()
-	vim.cmd('execute "wincmd ' .. navigation_map[direction].vim..'"')
+	vim.cmd('wincmd ' .. navigation_map[direction].vim)
     -- if current window id and before the navigation are the same,
     -- than we are at the edge of vim panes and should try tmux navigation
 	if vim.fn.winnr() == win_num_before then
@@ -53,13 +53,12 @@ end
 
 function M.equalify_splits()
     layout_cmd = vim.fn.winrestcmd()
-    -- only double quotes would work here
-    vim.cmd('execute "normal! \\<c-w>\\<c-=>"')
+    vim.cmd('wincmd =')
 end
 
 function M.zoom_split()
     layout_cmd = vim.fn.winrestcmd()
-    vim.cmd('execute "normal! \\<c-w>\\<c-_>"')
+    vim.cmd('wincmd _')
 end
 
 return M
