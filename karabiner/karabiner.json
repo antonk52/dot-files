@@ -11,12 +11,12 @@
                     "basic.simultaneous_threshold_milliseconds": 50,
                     "basic.to_delayed_action_delay_milliseconds": 500,
                     "basic.to_if_alone_timeout_milliseconds": 200,
-                    "basic.to_if_held_down_threshold_milliseconds": 200,
+                    "basic.to_if_held_down_threshold_milliseconds": 500,
                     "mouse_motion_to_scroll.speed": 100
                 },
                 "rules": [
                     {
-                        "description": "CAPS_LOCK to shift+option (Amethyst mod1) (if used as a modifier) or ESCAPE (If Alone) or opens Alfred (if held down for 200ms)",
+                        "description": "CAPS_LOCK to shift+option (Amethyst mod1) or ESCAPE (If Alone)",
                         "manipulators": [
                             {
                                 "from": {
@@ -41,11 +41,6 @@
                                 "to_if_alone": [
                                     {
                                         "key_code": "escape"
-                                    }
-                                ],
-                                "to_if_held_down": [
-                                    {
-                                        "shell_command": "open -a 'Alfred 4.app'"
                                     }
                                 ],
                                 "type": "basic"
