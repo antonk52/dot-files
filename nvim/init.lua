@@ -148,7 +148,7 @@ vim.opt.guicursor = 'i-ci-ve:hor24'
 
 -- Show “invisible” characters
 vim.opt.list = true
-vim.opt.listchars = {tab = '▸\\ ', trail = '∙'}
+vim.opt.listchars = {tab = '▸ ', trail = '∙'}
 
 vim.cmd('color lake')
 vim.cmd('hi Comment gui=italic')
