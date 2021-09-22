@@ -320,16 +320,16 @@ nnoremap('<Leader>e', '$')
 vnoremap('<Leader>e', '$h')
 
 -- open a new tab
-nnoremap('<C-t>', ':tabedit<CR>')
+nnoremap('<C-t>', '<cmd>tabedit<CR>')
 
 -- to navigate between buffers
-nnoremap('<Left>', ':prev<CR>')
-nnoremap('<Right>', ':next<CR>')
+nnoremap('<Left>', '<cmd>prev<CR>')
+nnoremap('<Right>', '<cmd>next<CR>')
 
 -- to navigate between errors
 -- useful after populating quickfix window
-nnoremap('<up>', ':cprev<CR>')
-nnoremap('<down>', ':cnext<CR>')
+nnoremap('<up>', '<cmd>cprev<CR>')
+nnoremap('<down>', '<cmd>cnext<CR>')
 
 -- neovim terminal
 -- use Esc to go into normal mode in terminal
