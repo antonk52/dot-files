@@ -13,7 +13,7 @@
 1. Install `brew` from the [website](https://brew.sh/#install)
 1. Run brew file to install cli apps, gui apps and fonts
     <br>`./scripts/brew.sh`
-1. Change shell to zsh if it's not zsh already
+1. Change shell to zsh if it's not zsh already([how to get correct version on M1](https://stackoverflow.com/questions/31034870/making-zsh-default-shell-in-macosx#answer-44549662))
     <br>`chsh -s $(which zsh)`
 1. Open new terminal
 1. Set shell theme as tomorrow night by running `base16_tomorrow-night`
