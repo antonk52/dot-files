@@ -45,6 +45,7 @@
 
     "javascript.suggestionActions.enabled": false,
 
+    "cssmodules.camelCase": "dashes",
     "coc.preferences.formatOnSaveFiletypes": ["css"],
 
     "prettier.requireConfig": true,
