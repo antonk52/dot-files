@@ -14,12 +14,11 @@ end
 function M.setup()
     M.source_rus_keymap()
 
-    vim.api.nvim_buf_set_keymap(
-        0,
+    vim.api.nvim_set_keymap(
         'n',
         '<localleader>s',
-        ':Rg tags.*'..vim.fn.expand('<cword>')..'<cr>',
-        {expr = true}
+        '<cmd>Rg tags.*'..vim.fn.expand('<cword>')..'<cr>',
+        {noremap = true}
     )
 end
 
