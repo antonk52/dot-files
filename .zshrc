@@ -27,7 +27,7 @@ BASE16_SHELL="$DOT_FILES"/base16-shell
 # global node modules
 export PATH="$HOME"/.npm-global/bin:$PATH
 # cargo crates
-export PATH="$HOME"/.cargo/bin:$PATH
+export PATH="$HOME"/.cargo/bin:"$HOME"/.local/share/cargo/bin:$PATH
 # pip packages
 export PATH="$HOME"/Library/Python/3.9/bin:$PATH
 
