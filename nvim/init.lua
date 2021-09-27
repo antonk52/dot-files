@@ -492,6 +492,8 @@ vim.defer_fn(function() require'colorizer'.setup() end, 300)
 
 -- treesitter {{{2
 vim.defer_fn(function()
+    -- if you get "wrong architecture error
+    -- open nvim in macos native terminal app and run `:TSInstall`
     require "nvim-treesitter.configs".setup {
         ensure_installed = {
             "html",
