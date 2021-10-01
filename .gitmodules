@@ -4,3 +4,6 @@
 [submodule "zsh-autosuggestions"]
 	path = zsh-autosuggestions
 	url = https://github.com/zsh-users/zsh-autosuggestions
+[submodule "dependencies/pure"]
+	path = dependencies/pure
+	url = https://github.com/sindresorhus/pure

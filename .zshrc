@@ -71,28 +71,34 @@ bindkey -v
 export KEYTIMEOUT=1
 
 # PURE PROMPT {{{1
-# requires `npm i -g pure-prompt`
 
-fpath+=/opt/homebrew/lib/node_modules/pure-prompt/functions
+fpath+="$DOT_FILES/dependencies/pure"
 
 autoload -U promptinit; promptinit
 
-export PURE_PROMPT_SYMBOL="▲" # triangle
-export PURE_PROMPT_VICMD_SYMBOL="✔︎" # tick
-export PURE_GIT_DOWN_ARROW="↓"
-export PURE_GIT_UP_ARROW="↑"
+if prompt -l | grep pure &> /dev/null; then
+    export PURE_PROMPT_SYMBOL="▲" # triangle
+    export PURE_PROMPT_VICMD_SYMBOL="✔︎" # tick
+    export PURE_GIT_DOWN_ARROW="↓"
+    export PURE_GIT_UP_ARROW="↑"
 
-zstyle :prompt:pure:path color blue
-zstyle :prompt:pure:git:branch color green
-zstyle :prompt:pure:git:arrow color white
-zstyle :prompt:pure:prompt:success color '#ffffff'
-zstyle :prompt:pure:prompt:error color red
-zstyle ':vcs_info:*:*' unstagedstr '!'
-zstyle ':vcs_info:*:*' stagedstr '+'
-zstyle ':vcs_info:*:*' formats "$FX[bold]%r$FX[no-bold]/%S" "%s/%b" "%%u%c"
-zstyle ':vcs_info:*:*' actionformats "$FX[bold]%r$FX[no-bold]/%S" "%s/%b" "%u%c (%a)"
+    zstyle :prompt:pure:path color blue
+    zstyle :prompt:pure:git:branch color green
+    zstyle :prompt:pure:git:arrow color white
+    zstyle :prompt:pure:prompt:success color '#ffffff'
+    zstyle :prompt:pure:prompt:error color red
+    zstyle ':vcs_info:*:*' unstagedstr '!'
+    zstyle ':vcs_info:*:*' stagedstr '+'
+    zstyle ':vcs_info:*:*' formats "$FX[bold]%r$FX[no-bold]/%S" "%s/%b" "%%u%c"
+    zstyle ':vcs_info:*:*' actionformats "$FX[bold]%r$FX[no-bold]/%S" "%s/%b" "%u%c (%a)"
 
-prompt pure
+    prompt pure
+else
+    # when pure is not installed but a basic fallback is needed
+    if prompt -l | grep oliver &> /dev/null; then
+        prompt oliver
+    fi
+fi
 
 # misc 2 {{{1
 
