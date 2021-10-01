@@ -32,8 +32,8 @@ function setup_screenshots() {
 
 # tap to click
 function setup_tap_to_click() {
-    defaults write com.apple.AppleMultitouchTrackpad Clicking = 1 \
-        && defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad Clicking = 1 \
+    defaults write com.apple.AppleMultitouchTrackpad Clicking -int 1 \
+        && defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad Clicking -int 1 \
         && echo '✅ Tap to click enabled' \
         || echo '❗️ Could not set up tap to click';
 }
@@ -41,22 +41,22 @@ function setup_tap_to_click() {
 # needed to enable three finger drag
 # enable dragging using tree fingers on touchpad
 function setup_three_finger_drag() {
-    defaults write com.apple.AppleMultitouchTrackpad Dragging = 1 \
-        && defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad Dragging = 1 \
-        && defaults write com.apple.AppleMultitouchTrackpad TrackpadThreeFingerDrag = 1 \
-        && defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad TrackpadThreeFingerDrag = 1 \
+    defaults write com.apple.AppleMultitouchTrackpad Dragging -int 1 \
+        && defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad Dragging -int 1 \
+        && defaults write com.apple.AppleMultitouchTrackpad TrackpadThreeFingerDrag -int 1 \
+        && defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad TrackpadThreeFingerDrag -int 1 \
         && echo '✅ Three finger window dragging enabled' \
         || echo '❗️ Could not set up three finger window dragging';
 }
 
 # dock settings
 function setup_dock() {
-    defaults write com.apple.dock autohide = 1 \
-        && defaults write com.apple.dock magnification = 0 \
-        && defaults write com.apple.dock launchanim = 0 \
+    defaults write com.apple.dock autohide -int 1 \
+        && defaults write com.apple.dock magnification -int 0 \
+        && defaults write com.apple.dock launchanim -int 0 \
         && defaults write com.apple.dock orientation = 'left' \
-        && defaults write com.apple.dock tilesize = 52 \
-        && defaults write com.apple.dock show-recents = 0 \
+        && defaults write com.apple.dock tilesize -int 52 \
+        && defaults write com.apple.dock show-recents -int 0 \
         && echo '✅ Dock is set up' \
         || echo '❗️ Could not set up dock';
 }
@@ -64,18 +64,18 @@ function setup_dock() {
 # menu
 function setup_menu_clock() {
     defaults write com.apple.menuextra.clock DateFormat = "HH:mm" \
-        && defaults write com.apple.menuextra.clock FlashDateSeparators = 0 \
-        && defaults write com.apple.menuextra.clock Show24Hour = 1 \
-        && defaults write com.apple.menuextra.clock ShowDayOfMonth = 0 \
-        && defaults write com.apple.menuextra.clock ShowDayOfWeek = 0 \
-        && defaults write com.apple.menuextra.clock ShowSeconds = 0 \
+        && defaults write com.apple.menuextra.clock FlashDateSeparators -int 0 \
+        && defaults write com.apple.menuextra.clock Show24Hour -int 1 \
+        && defaults write com.apple.menuextra.clock ShowDayOfMonth -int 0 \
+        && defaults write com.apple.menuextra.clock ShowDayOfWeek -int 0 \
+        && defaults write com.apple.menuextra.clock ShowSeconds -int 0 \
         && echo '✅ Menu clock is set up' \
         || echo '❗️ Could not set up menu clock';
 }
 
 # disable FN key to avoid acidental language switch
 function setup_noop_fn_key() {
-    defaults write com.apple.HIToolbox AppleFnUsageType = 0 \
+    defaults write com.apple.HIToolbox AppleFnUsageType -int 0 \
         && echo '✅ FN key tap does not switch languages' \
         || echo '❗️ Could not disable FN key tap';
 }
