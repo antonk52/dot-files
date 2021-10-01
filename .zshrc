@@ -125,5 +125,7 @@ LOCAL_SHELLRC="$XDG_CONFIG_HOME"/local_shellrc
 # if you need ruby, do use this
 # eval "$(rbenv init -)"
 
+# $HOMEBREW_PREFIX is not set on intel machines
+autojump_file="${HOMEBREW_PREFIX:-/usr/local}"/etc/profile.d/autojump.sh
 # needed for `j` (autojump) to work
-[ -f "$HOMEBREW_PREFIX"/etc/profile.d/autojump.sh ] && . "$HOMEBREW_PREFIX"/etc/profile.d/autojump.sh || :
+[ -f "$autojump_file" ] && . "$autojump_file" || :;
