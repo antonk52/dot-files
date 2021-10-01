@@ -84,8 +84,8 @@ if prompt -l | grep pure &> /dev/null; then
 
     zstyle :prompt:pure:path color blue
     zstyle :prompt:pure:git:branch color green
-    zstyle :prompt:pure:git:arrow color white
-    zstyle :prompt:pure:prompt:success color '#ffffff'
+    zstyle :prompt:pure:git:arrow color default
+    zstyle :prompt:pure:prompt:success color default
     zstyle :prompt:pure:prompt:error color red
     zstyle ':vcs_info:*:*' unstagedstr '!'
     zstyle ':vcs_info:*:*' stagedstr '+'
