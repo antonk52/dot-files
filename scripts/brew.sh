@@ -17,7 +17,6 @@ brew tap clementtsang/bottom
 brew install autojump # smart cd
 brew install bat # modern cat
 brew install clementtsang/bottom/bottom # top/htop alternative
-brew install deno # nodejs but hip
 brew install dust # like du but more intuitive.
 brew install exa # modern ls
 brew install fd # modern find
@@ -30,7 +29,6 @@ brew install htop # top but better
 brew install jpeg # image manipulation lib
 brew install jq # cli for working with json
 brew install neovim # vim but better
-brew install nginx
 brew install node # nodejs & npm
 brew install openssl
 brew install procs # ps in rust
@@ -41,7 +39,6 @@ brew install ripgrep
 brew install tmux # terminal multiplexer
 brew install tree # cli to display directories as trees
 brew install vim # get the recent vim version
-brew install webp # lossless and lossy img compression
 brew install wget # cli to download stuff
 brew install yarn # npm alternative
 brew install zsh # bash but better
@@ -49,7 +46,6 @@ brew install zsh # bash but better
 # cask apps
 brew install alacritty # terminal
 brew install alfred # spotlight but useful
-brew install cyberduck # when ftp is still relevant
 brew install docker # docker desktop app
 brew install firefox
 brew install gimp
