@@ -53,6 +53,25 @@ function M.setup_flow()
     return true
 end
 
+function M.setup_hack()
+    local hack_bin = vim.fn.exepath('hh_client')
+
+    if hack_bin == '' then
+        return nil
+    end
+
+    local hack_config = {
+        ['command'] = hack_bin,
+        ['args'] = { 'lsp' },
+        ['filetypes'] = { 'php' },
+        ['initializationOptions'] = {},
+        ['requireRootPattern'] = 0,
+        ['settings'] = {},
+        ['rootPatterns'] = { '.hhconfig' }
+    }
+    vim.fn['coc#config']('languageserver.hack', hack_config)
+end
+
 function M.setup_mappings()
     vim.api.nvim_set_keymap(
         'n',
@@ -132,6 +151,7 @@ function M.setup()
     M.setup_mappings()
     M.setup_commands()
     M.setup_flow()
+    M.setup_hack()
     M.setup_eslint()
     -- lazy coc settings require restarting coc to pickup newer configuration
     vim.fn['coc#client#restart_all']()
