@@ -483,7 +483,9 @@ vim.api.nvim_set_keymap('n', 'zo', 'zo:IndentBlanklineRefresh<cr>', {noremap = t
 -- coc.nvim {{{2
 vim.opt.updatetime=300
 vim.opt.shortmess = vim.opt.shortmess + 'c'
-vim.defer_fn(function() require('antonk52.coc').setup() end, 2000)
+if vim.env.DEFAULT_LSP ~= '0' then
+    vim.defer_fn(function() require('antonk52.coc').setup() end, 2000)
+end
 
 -- colorizer {{{2
 -- color highlight wont work on the first opened buffer,
