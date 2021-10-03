@@ -21,9 +21,6 @@ alias ...='cd ../..'
 alias ....='cd ../../..'
 alias .4='cd ../../../../'
 alias .5='cd ../../../../..'
-alias desk='cd ~/Desktop'
-alias docs='cd ~/Documents'
-alias dev='cd ~/Documents/dev'
 alias compare='diff -rq'
 
 # git
@@ -33,7 +30,6 @@ alias ga='git add'
 alias gap='git add -p'
 alias gs='git status -s'
 alias gc='git commit -m'
-alias gl='git --no-pager log --oneline --decorate --graph --all'
 
 # tmux aliases
 alias tst='tmux start-server'
