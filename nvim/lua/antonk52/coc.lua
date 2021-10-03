@@ -6,19 +6,29 @@ local function has_eslint()
     end
 end
 
+local get_flow_bin = function()
+    local local_flow = 'node_modules/.bin/flow'
+    if vim.fn.filereadable(local_flow) == 1 then
+        return vim.fn.getcwd() .. '/' .. local_flow
+        else if vim.fn.executable('flow') then
+            return vim.fn.exepath('flow')
+        end
+    end
+
+    return nil
+end
 -- lookup local flow executable
 -- and turn on flow for coc is executable exists
 local function setup_flow()
-    local has_flowconfig = vim.fn.filereadable('.flowconfig')
-    if has_flowconfig == 0 then
+    local has_flowconfig = vim.fn.filereadable('.flowconfig') == 1
+    if not has_flowconfig then
         return false
     end
-    local flow_path = 'node_modules/.bin/flow'
-    local has_flow = vim.fn.filereadable(flow_path)
-    if has_flow == 0 then
+
+    local flow_bin = get_flow_bin()
+    if flow_bin == nil then
         return false
     end
-    local flow_bin = vim.fn.getcwd() .. '/' .. flow_path
     local flow_config = {
         ['command'] = flow_bin,
         ['args'] = { 'lsp' },
