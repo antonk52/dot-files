@@ -554,7 +554,8 @@ vim.g.markdown_fold_style = 'nested'
 -- preserve my custom folding style
 vim.g.markdown_fold_override_foldtext = 0
 
+-- load local init.lua {{{1
 local local_init_lua = vim.fn.expand('~/.config/local_init.lua');
-if vim.fn.filereadable(local_init_lua) then
+if vim.fn.filereadable(local_init_lua) == 1 then
     vim.cmd('luafile ' .. local_init_lua)
 end
