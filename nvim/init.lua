@@ -54,7 +54,6 @@ Plug('jiangmiao/auto-pairs')
 -- consistent coding style
 Plug('editorconfig/editorconfig-vim')
 -- snippets
-Plug('SirVer/ultisnips')
 -- live preview markdown files in browser
 Plug('iamcco/markdown-preview.nvim', { ['do'] = 'cd app & yarn install', ['for'] = {'markdown', 'mdx'} })
 
@@ -405,15 +404,6 @@ vim.g.AutoPairsShortcutToggle = ''
 -- bg color for inactive splits
 vim.cmd('highlight ColorColumn ctermbg=0 guibg=#424949')
 
--- ultisnips {{{2
-
--- Trigger configuration.
-vim.g.UltiSnipsExpandTrigger="<tab>"
-vim.g.UltiSnipsJumpForwardTrigger="<c-b>"
-vim.g.UltiSnipsJumpBackwardTrigger="<c-z>"
-
--- If you want :UltiSnipsEdit to split your window.
-vim.g.UltiSnipsEditSplit="vertical"
 
 -- fzf {{{2
 -- enable file preview for both Files & GFiles

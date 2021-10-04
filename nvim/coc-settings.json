@@ -48,6 +48,9 @@
     "cssmodules.camelCase": "dashes",
     "coc.preferences.formatOnSaveFiletypes": ["css"],
 
+    "snippets.shortcut": "snip",
+    "snippets.loadFromExtensions": false,
+
     "prettier.requireConfig": true,
     "prettier.onlyUseLocalVersion": false,
 

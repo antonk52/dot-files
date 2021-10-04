@@ -115,6 +115,19 @@ function M.setup_mappings()
             {silent = true}
         )
     end
+
+    vim.api.nvim_set_keymap(
+        'i',
+        '<C-j>',
+        '<Plug>(coc-snippets-expand-jump)',
+        {}
+    )
+    vim.api.nvim_set_keymap(
+        'i',
+        '<C-l>',
+        '<Plug>(coc-snippets-expand)',
+        {}
+    )
 end
 
 function M.setup_commands()
@@ -137,6 +150,7 @@ function M.setup()
         'coc-lua',
         'coc-prettier',
         'coc-rust-analyzer',
+        'coc-snippets',
         'coc-stylelintplus',
         'coc-tsserver',
     }
