@@ -49,6 +49,7 @@
     "coc.preferences.formatOnSaveFiletypes": ["css"],
 
     "snippets.shortcut": "snip",
+    "snippets.ultisnips.enable": false,
     "snippets.loadFromExtensions": false,
 
     "prettier.requireConfig": true,
