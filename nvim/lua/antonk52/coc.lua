@@ -72,6 +72,17 @@ function M.setup_hack()
     vim.fn['coc#config']('languageserver.hack', hack_config)
 end
 
+function M.setup_lua()
+    local vim_runtime_dir = vim.trim(vim.env.VIMRUNTIME)
+
+    local opts = {
+        vim_runtime_dir .. '/lua',
+        vim_runtime_dir .. '/lua/vim/lsp',
+    }
+
+    vim.fn['coc#config']('Lua.workspace.library', opts)
+end
+
 function M.setup_mappings()
     vim.api.nvim_set_keymap(
         'n',
@@ -167,6 +178,7 @@ function M.setup()
     M.setup_flow()
     M.setup_hack()
     M.setup_eslint()
+    M.setup_lua()
     -- lazy coc settings require restarting coc to pickup newer configuration
     vim.fn['coc#client#restart_all']()
 end

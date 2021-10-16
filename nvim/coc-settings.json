@@ -30,9 +30,6 @@
         "tracy",
         "LOCALE"
     ],
-    "Lua.workspace.library": [
-        "/opt/homebrew/Cellar/neovim/0.5.0/share/nvim/runtime/lua"
-    ],
 
     "languageserver": {
         "purescript": {
