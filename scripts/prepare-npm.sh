@@ -1,5 +1,13 @@
 #!/bin/bash
 
+# install global dependencies into `~/.npm-global`
+# https://docs.npmjs.com/resolving-eacces-permissions-errors-when-installing-packages-globally#manually-change-npms-default-directory
+npm config set prefix '~/.npm-global'
+
+if [ ! -d ~/.npm-global ]; then
+    mkdir ~/.npm-global
+fi
+
 # install global node dependencies
 
 npm i -g lerna    # monorepo management
