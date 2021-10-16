@@ -487,20 +487,7 @@ vim.defer_fn(function()
     -- if you get "wrong architecture error
     -- open nvim in macos native terminal app and run `:TSInstall`
     require "nvim-treesitter.configs".setup {
-        ensure_installed = {
-            "html",
-            "javascript",
-            "jsdoc",
-            "json",
-            "jsonc",
-            "lua",
-            "rust",
-            "scss",
-            "toml",
-            "tsx",
-            "typescript",
-            "yaml",
-        },
+        ensure_installed = {},
         highlight = { enable = true },
         playground = {
             enable = true,
