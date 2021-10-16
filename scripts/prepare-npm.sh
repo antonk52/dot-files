@@ -17,5 +17,6 @@ npm i -g npmrc    # switch between different npmrc
 npm i -g pkg      # bundle node cli into an executable
 npm i -g serve    # local web server for static files
 npm i -g synd     # rsync wrapper
+npm i -g typescript-language-server
 npm i -g veendor  # install deps as an archive
 npm i -g yarn
