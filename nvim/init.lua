@@ -15,6 +15,7 @@ vim.fn['plug#begin']('~/.config/nvim/plugged')
 Plug('ervandew/supertab')
 -- tab navigation
 Plug('antonk52/vim-tabber')
+Plug('antonk52/vim-plugin-templater')
 -- types & linting
 Plug('neoclide/coc.nvim', {branch = 'release', ['do'] = ':CocInstall'})
 Plug('antonk52/amake.nvim')
@@ -30,6 +31,7 @@ if vim.env.TELESCOPE == '1' then
     Plug('nvim-lua/plenary.nvim')
     Plug('nvim-telescope/telescope.nvim')
 end
+Plug('rcarriga/nvim-notify')
 Plug('hoob3rt/lualine.nvim')
 -- change surrounding chars
 Plug('tpope/vim-surround')
@@ -77,6 +79,9 @@ Plug('maksimr/vim-yate') -- TODO defeat, forget, get drunk
 Plug('antonk52/lake.vim')
 Plug('andreypopp/vim-colors-plain')
 Plug('NLKNguyen/papercolor-theme')
+
+Plug('antonk52/vimconf-2021')
+
 -- 2}}}
 vim.fn['plug#end']()
 -- Avoid startup work {{{1
