@@ -250,6 +250,7 @@ end
 
 -- closes a window
 nnoremap('<leader>q', ':q<cr>')
+nnoremap('<leader>w', ':w<cr>')
 -- closes a buffer
 nnoremap('<localleader>q', ':bd<cr>')
 -- opens quickfix list
