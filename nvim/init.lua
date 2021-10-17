@@ -53,7 +53,7 @@ Plug('junegunn/fzf.vim')
 Plug('jiangmiao/auto-pairs')
 -- consistent coding style
 Plug('editorconfig/editorconfig-vim')
--- snippets
+Plug('norcalli/snippets.nvim')
 -- live preview markdown files in browser
 Plug('iamcco/markdown-preview.nvim', { ['do'] = 'cd app & yarn install', ['for'] = {'markdown', 'mdx'} })
 
@@ -369,9 +369,6 @@ autocmd TextYankPost * lua return (not vim.v.event.visual) and require('vim.high
 
 autocmd FileType json lua if vim.fn.expand('%') == 'tsconfig.json' then vim.bo.ft = 'jsonc' end
 autocmd FileType query lua if vim.fn.expand('%:e') == 'scm' then vim.bo.filetype = 'scheme' end
-
-" coc-prettier does not work with compound filetypes
-autocmd FileType javascript,javascriptreact,typescript,typescriptreact call antonk52#jest#detect()
 ]])
 
 -- Plugins {{{1
@@ -404,6 +401,11 @@ vim.g.AutoPairsShortcutToggle = ''
 -- bg color for inactive splits
 vim.cmd('highlight ColorColumn ctermbg=0 guibg=#424949')
 
+-- snippets.nvim {{{2
+
+-- TODO:
+-- - [ ] autocompletion with `coc`/`cmp`
+require('antonk52.snippets').setup()
 
 -- fzf {{{2
 -- enable file preview for both Files & GFiles
