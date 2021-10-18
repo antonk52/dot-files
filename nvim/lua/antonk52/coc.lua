@@ -1,17 +1,20 @@
 local M = {}
-local function has_eslint()
+
+local function has_eslint_config()
     for _,name in pairs({'.eslintrc.js', '.eslintrc.json', '.eslintrc'}) do
         if vim.fn.globpath('.', name) ~= '' then
             return true
         end
     end
+
+    return false
 end
 
 function M.setup_eslint()
-    local has_eslint_config = has_eslint()
+    local eslint_config_exists = has_eslint_config()
     -- turn off eslint when cannot find eslintrc
-    vim.fn['coc#config']('eslint.enable', has_eslint_config)
-    vim.fn['coc#config']('eslint.autoFixOnSave', has_eslint_config)
+    vim.fn['coc#config']('eslint.enable', eslint_config_exists)
+    vim.fn['coc#config']('eslint.autoFixOnSave', eslint_config_exists)
 end
 
 -- get absolute flow bin
