@@ -12,12 +12,15 @@ local Plug = vim.fn['plug#']
 vim.fn['plug#begin']('~/.config/nvim/plugged')
 -- Essentials {{{2
 -- tab completion
-Plug('ervandew/supertab')
 -- tab navigation
 Plug('antonk52/vim-tabber')
 Plug('antonk52/vim-plugin-templater')
 -- types & linting
 Plug('neoclide/coc.nvim', {branch = 'release', ['do'] = ':CocInstall'})
+Plug('neovim/nvim-lspconfig')
+Plug('hrsh7th/cmp-buffer')
+Plug('hrsh7th/cmp-nvim-lsp')
+Plug('hrsh7th/nvim-cmp')
 Plug('antonk52/amake.nvim')
 Plug('antonk52/bad-practices.nvim')
 Plug('antonk52/gitignore-grabber.nvim')
@@ -115,10 +118,12 @@ end
 vim.g.python_host_skip_check = 1
 -- Disable python2 provider
 vim.g.loaded_python_provider = 0
+-- Disable python3 provider
+-- vim.g.loaded_python3_provider = 0
 
 vim.g.python3_host_skip_check = 1
 if vim.fn.executable('python3') then
-    vim.g.python3_host_prog = vim.fn.exepath('python3.9')
+    vim.g.python3_host_prog = vim.fn.exepath('python3')
 else
     vim.g.loaded_python3_provider = 0
 end
@@ -360,6 +365,8 @@ command! NotesMode lua require'antonk52.notes'.setup()
 " that has no effect, but setting it using `let &colorcolumn=123` works
 command! -nargs=1 SetColorColumn let &colorcolumn=<args>
 
+command! CloseAllFloats lua require'antonk52.lsp'.close_all_floats()
+
 " fat fingers {{{2
 command! Wq :wq
 command! Ter :ter
@@ -481,9 +488,23 @@ vim.api.nvim_set_keymap('n', 'zo', 'zo:IndentBlanklineRefresh<cr>', {noremap = t
 -- coc.nvim {{{2
 vim.opt.updatetime=300
 vim.opt.shortmess = vim.opt.shortmess + 'c'
-if vim.env.DEFAULT_LSP ~= '0' then
-    vim.defer_fn(function() require('antonk52.coc').setup() end, 2000)
+
+local use_native_lsp = vim.env.LSP == 'native'
+
+if use_native_lsp then
+    vim.g.coc_start_at_startup = 0
 end
+
+vim.defer_fn(
+    function()
+        if use_native_lsp then
+            require('antonk52.lsp').setup()
+        else
+            require('antonk52.coc').setup()
+        end
+    end,
+    2000
+)
 
 -- colorizer {{{2
 -- color highlight wont work on the first opened buffer,
