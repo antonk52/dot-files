@@ -16,9 +16,10 @@ local function merge(a, b)
 end
 
 local javascript_snippets = {
-    fun = snippets.u.match_indentation([[function ${1}(${2}) {
+    fun = snippets.u.match_indentation([[
+function ${1}(${2}) {
     $3
-    }]]);
+}]]);
     us = [["use strict";]];
     ["switch"] = snippets.u.match_indentation([[
 switch (${1:condition}) {
@@ -98,30 +99,30 @@ local default_snippets = {
         lfun = [[local function ${1}(${2}) ${3} end]];
         ["loc"] = [[local ${1} = ${2}]];
         ["if"] = snippets.u.match_indentation [[
-        if ${1} then
-            $2
-        end]];
+if ${1} then
+    $2
+end]];
         ["ifel"] = snippets.u.match_indentation [[
-        if ${1} then
-            ${2}
-        else
-            ${3}
-        end]];
+if ${1} then
+    ${2}
+else
+    ${3}
+end]];
         ["for"] = snippets.u.match_indentation [[
-        for ${1:k}, ${2:v} in ipairs(${3}) do
-            $4
-        end]];
+for ${1:k}, ${2:v} in ipairs(${3}) do
+    $4
+end]];
         ["fori"] = snippets.u.match_indentation [[
-        for ${1:i}, ${2:v} in ipairs(${3}) do
-            $4
-        end]];
+for ${1:i}, ${2:v} in ipairs(${3}) do
+    $4
+end]];
     };
     markdown = {
         ["table"] = snippets.u.match_indentation([[
-        | First Header  | Second Header |
-        | ------------- | ------------- |
-        | Content Cell  | Content Cell  |
-        | Content Cell  | Content Cell  |
+| First Header  | Second Header |
+| ------------- | ------------- |
+| Content Cell  | Content Cell  |
+| Content Cell  | Content Cell  |
         ]]);
 
         ["link"] = [[[${1:text}](${2:url})]];
@@ -129,32 +130,32 @@ local default_snippets = {
         ["img"] = [[![${1:alt}](${2:url})]];
 
         ["details"] = snippets.u.match_indentation([[
-        <details><summary>${1:tldr}</summmary>
-        ${2:body}
-        </details>
+<details><summary>${1:tldr}</summmary>
+${2:body}
+</details>
         ]]);
 
         ["todo"] = snippets.u.match_indentation([[
-        ## TODO
+## TODO
 
-        - [ ] ${1:do this}
+- [ ] ${1:do this}
         ]]);
 
 
         ["tags"] = snippets.u.match_indentation([[
-        ---
-        tags: [${1:tag_name}]
-        ---
+---
+tags: [${1:tag_name}]
+---
 
-        ${2:content}
+${2:content}
         ]]);
 
         ["fm"] = snippets.u.match_indentation([[
-        ---
-        ${1:front_matter}
-        ---
+---
+${1:front_matter}
+---
 
-        ${2:content}
+${2:content}
         ]]);
 
         ["b"] = [[**${1:bold}**]];
