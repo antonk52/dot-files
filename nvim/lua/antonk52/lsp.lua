@@ -217,6 +217,8 @@ function M.setup_completion()
         sources = {
             { name = 'nvim_lsp' },
 
+            { name = 'path' },
+
             -- no working, yet
             { name = 'snippets' },
 

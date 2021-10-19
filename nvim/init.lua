@@ -11,7 +11,6 @@ local Plug = vim.fn['plug#']
 
 vim.fn['plug#begin']('~/.config/nvim/plugged')
 -- Essentials {{{2
--- tab completion
 -- tab navigation
 Plug('antonk52/vim-tabber')
 Plug('antonk52/vim-plugin-templater')
@@ -19,6 +18,7 @@ Plug('antonk52/vim-plugin-templater')
 Plug('neoclide/coc.nvim', {branch = 'release', ['do'] = ':CocInstall'})
 Plug('neovim/nvim-lspconfig')
 Plug('hrsh7th/cmp-buffer')
+Plug('hrsh7th/cmp-path')
 Plug('hrsh7th/cmp-nvim-lsp')
 Plug('hrsh7th/nvim-cmp')
 Plug('antonk52/amake.nvim')
