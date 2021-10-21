@@ -81,10 +81,12 @@ LLN.filetype_map = {
     ['typescript.jest'] = 'ts',
     ['typescript.tsx'] = 'tsx',
     ['typescript.tsx.jest'] = 'tsx',
+    ['typescriptreact'] = 'tsx',
     ['javascript'] = 'js',
     ['javascript.jest'] = 'js',
     ['javascript.jsx'] = 'jsx',
     ['javascript.jsx.jest'] = 'jsx',
+    ['javascriptreact'] = 'jsx',
     ['yaml'] = 'yml',
     ['markdown'] = 'md'
 }
