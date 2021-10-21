@@ -188,17 +188,17 @@ function M.lsp_options(options)
 end
 
 function M.setup_completion()
+    require('antonk52.completion')
     local cmp = require('cmp')
     local snippets = require('snippets')
     cmp.setup({
-        snippet = {},
+        snippet = {
+            expand = function() snippets.expand_or_advance() end
+        },
         mapping ={
             ['<Tab>'] = function(fallback)
                 if cmp.visible() then
                     cmp.select_next_item()
-                elseif snippets.expand_or_advance() then
-                    -- if the snippet expands, function returns `true`
-                    return nil
                 else
                     fallback()
                 end
@@ -206,23 +206,41 @@ function M.setup_completion()
             ['<S-Tab>'] = function(fallback)
                 if cmp.visible() then
                     cmp.select_prev_item()
-                elseif snippets.advance_snippet(-1) then
-                    -- if in active snippet jumps and returns `true`
-                    return nil
                 else
                     fallback()
                 end
             end,
+            -- for whatever reason is a wanted item is selected and then `(` is pressed
+            -- to continue with writing code, the completion gets erased. This helps to
+            -- kill the completion and continue with the code
+            ['('] = function(fallback)
+              cmp.mapping.confirm()
+              fallback()
+            end,
+            -- If I am navigating wihtin a snippet and completion list is open, close it
+            ['<C-u>'] = function(fallback)
+              cmp.mapping.confirm()
+              fallback()
+            end,
+            ['<C-o>'] = function(fallback)
+              cmp.mapping.confirm()
+              fallback()
+            end,
+            ['<C-y>'] = cmp.mapping.confirm()
         },
         sources = {
             { name = 'nvim_lsp' },
 
+            { name = 'snippets_nvim', keyword_length = 2 },
+
             { name = 'path' },
 
-            -- no working, yet
-            { name = 'snippets' },
-
-            { name = 'buffer' },
+            { name = 'buffer', keyword_length = 3 },
+        },
+        experimental = {
+          -- use native menu as it does not have issues with hanging floating
+          -- windows for non basic screen movement ie <C-e>, mouse scroll etc
+          native_menu = true
         }
     })
 end
