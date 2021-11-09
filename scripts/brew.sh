@@ -23,8 +23,9 @@ brew install fd # modern find
 brew install freetype # library to render fonts
 brew install fzf # cli fuzzy finder written in Go
 brew install gh # github cli
-brew install git-lfs # github large file storage
 brew install git # updated version
+brew install git-delta # improved diff highlight
+brew install git-lfs # github large file storage
 brew install htop # top but better
 brew install jpeg # image manipulation lib
 brew install jq # cli for working with json
