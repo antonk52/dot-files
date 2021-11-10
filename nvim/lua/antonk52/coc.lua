@@ -183,7 +183,8 @@ function M.setup()
     M.setup_eslint()
     M.setup_lua()
     -- lazy coc settings require restarting coc to pickup newer configuration
-    vim.fn['coc#client#restart_all']()
+    vim.fn['coc#rpc#start_server']()
+    print('coc server started')
 end
 
 function M.show_documentation()

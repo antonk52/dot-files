@@ -489,21 +489,24 @@ vim.api.nvim_set_keymap('n', 'zo', 'zo:IndentBlanklineRefresh<cr>', {noremap = t
 vim.opt.updatetime=300
 vim.opt.shortmess = vim.opt.shortmess + 'c'
 
-local use_native_lsp = vim.env.LSP == 'native'
-
-if use_native_lsp then
-    vim.g.coc_start_at_startup = 0
-end
+-- do not start coc by default
+vim.g.coc_start_at_startup = 0
 
 vim.defer_fn(
     function()
-        if use_native_lsp then
+        local lsp_to_use = 'native'
+
+        if vim.env.LSP ~= nil then
+          lsp_to_use = vim.env.LSP
+        end
+
+        if lsp_to_use == 'native' then
             require('antonk52.lsp').setup()
-        else
+        elseif lsp_to_use == 'coc' then
             require('antonk52.coc').setup()
         end
     end,
-    2000
+    1000
 )
 
 -- colorizer {{{2
