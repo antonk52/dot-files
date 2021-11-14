@@ -85,6 +85,60 @@ M.servers = {
     },
 }
 
+function M.setup_lua()
+  local system_name
+  if vim.fn.has("mac") == 1 then
+      system_name = "macOS"
+  elseif vim.fn.has("unix") == 1 then
+      system_name = "Linux"
+  elseif vim.fn.has('win32') == 1 then
+      system_name = "Windows"
+  else
+      return print("Unsupported system for sumneko")
+  end
+  local base = vim.fn.expand('~/.local/share/nvim/lsp_servers/sumneko_lua/extension/server/bin/'..system_name)
+  local LUA_LSP_BIN = base..'/lua-language-server'
+  local LUA_LSP_MAIN = base..'/main.lua'
+
+  if not vim.fn.filereadable(LUA_LSP_BIN) == 1 then
+      print('lua-language-server is not installed or cannot be found')
+      return nil
+  end
+
+  local runtime_path = vim.split(package.path, ';')
+  table.insert(runtime_path, "lua/?.lua")
+  table.insert(runtime_path, "lua/?/init.lua")
+
+  lspconfig.sumneko_lua.setup {
+      cmd = {LUA_LSP_BIN, "-E", LUA_LSP_MAIN};
+      on_attach = M.on_attach;
+      settings = {
+          Lua = {
+              runtime = {
+                  -- Tell the language server which version of Lua you're using (most likely LuaJIT in the case of Neovim)
+                  version = 'LuaJIT',
+                  -- Setup your lua path
+                  path = runtime_path,
+              },
+              diagnostics = {
+                  -- Get the language server to recognize the `vim` global
+                  globals = {'vim'},
+              },
+              workspace = {
+                  -- Make the server aware of Neovim runtime files
+                  library = {
+                      vim.env.VIMRUNTIME .. '/lua',
+                  },
+              },
+              -- Do not send telemetry data containing a randomized but unique identifier
+              telemetry = {
+                  enable = false,
+              },
+          },
+      },
+  }
+end
+
 function M.setup_eslint_d()
     -- requires
     -- - [x] brew install efm-langserver
@@ -251,6 +305,7 @@ function M.setup()
     vim.cmd('command! FormatLsp lua vim.lsp.buf.formatting()')
 
     M.setup_eslint_d()
+    M.setup_lua()
     M.setup_column_signs()
 
     for lsp, opts in pairs(M.servers) do

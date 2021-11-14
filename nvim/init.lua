@@ -17,6 +17,7 @@ Plug('antonk52/vim-plugin-templater')
 -- types & linting
 Plug('neoclide/coc.nvim', {branch = 'release', ['do'] = ':CocInstall'})
 Plug('neovim/nvim-lspconfig')
+Plug('williamboman/nvim-lsp-installer')
 Plug('hrsh7th/cmp-buffer')
 Plug('hrsh7th/cmp-path')
 Plug('hrsh7th/cmp-nvim-lsp')
