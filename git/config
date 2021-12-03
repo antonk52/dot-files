@@ -43,7 +43,7 @@
 [branch]
     sort = -committerdate
 [pager]
-    diff = delta --color-only --diff-highlight --tabs 4 # display tabs as 4 spces
+    diff = delta --diff-highlight --tabs 4 # display tabs as 4 spces
 [init]
     defaultBranch = main
 [merge]
