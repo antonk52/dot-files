@@ -39,8 +39,6 @@ Plug('rcarriga/nvim-notify')
 Plug('hoob3rt/lualine.nvim')
 -- change surrounding chars
 Plug('tpope/vim-surround')
--- change vim dir to project root dir automatically
-Plug('airblade/vim-rooter')
 -- git gems
 Plug('tpope/vim-fugitive')
 -- enables Gbrowse for github.com
@@ -358,6 +356,8 @@ vim.cmd([[
 command! ToggleNumbers set number! relativenumber!
 
 command! Todo lua require'antonk52.todo'.find_todo()
+
+command! Reroot lua require'antonk52.root'.reroot()
 
 command! SourceRussianMacKeymap lua require'antonk52.notes'.source_rus_keymap()
 command! NotesMode lua require'antonk52.notes'.setup()
