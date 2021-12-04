@@ -247,7 +247,9 @@ function M.setup_completion()
     local snippets = require('snippets')
     cmp.setup({
         snippet = {
-            expand = function() snippets.expand_or_advance() end
+            expand = function(arg)
+                snippets.expand_at_cursor(arg.body)
+            end
         },
         mapping ={
             ['<Tab>'] = function(fallback)
@@ -263,13 +265,6 @@ function M.setup_completion()
                 else
                     fallback()
                 end
-            end,
-            -- for whatever reason is a wanted item is selected and then `(` is pressed
-            -- to continue with writing code, the completion gets erased. This helps to
-            -- kill the completion and continue with the code
-            ['('] = function(fallback)
-              cmp.mapping.confirm()
-              fallback()
             end,
             -- If I am navigating wihtin a snippet and completion list is open, close it
             ['<C-u>'] = function(fallback)
