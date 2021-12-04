@@ -277,10 +277,25 @@ function M.setup_completion()
             end,
             ['<C-y>'] = cmp.mapping.confirm()
         },
-        sources = {
-            { name = 'nvim_lsp' },
+        formatting = {
+            format = function(entry, vim_item)
+                local name_map = {
+                    nvim_lsp = 'lsp',
+                    snippets_nvim = 'snip',
+                    buffer = 'buf',
+                }
+                if entry.source then
+                    local name = name_map[entry.source.name] and name_map[entry.source.name] or entry.source.name
+                    vim_item.menu = '['..name..']'
+                end
+                return vim_item
+            end
 
-            { name = 'snippets_nvim', keyword_length = 2 },
+        },
+        sources = {
+            { name = 'snippets_nvim', keyword_length = 1 },
+
+            { name = 'nvim_lsp' },
 
             { name = 'path' },
 
