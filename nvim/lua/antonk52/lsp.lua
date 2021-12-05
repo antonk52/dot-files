@@ -247,7 +247,9 @@ function M.setup_completion()
     local snippets = require('snippets')
     cmp.setup({
         snippet = {
-            expand = function() snippets.expand_or_advance() end
+            expand = function(arg)
+                snippets.expand_at_cursor(arg.body)
+            end
         },
         mapping ={
             ['<Tab>'] = function(fallback)
@@ -264,13 +266,6 @@ function M.setup_completion()
                     fallback()
                 end
             end,
-            -- for whatever reason is a wanted item is selected and then `(` is pressed
-            -- to continue with writing code, the completion gets erased. This helps to
-            -- kill the completion and continue with the code
-            ['('] = function(fallback)
-              cmp.mapping.confirm()
-              fallback()
-            end,
             -- If I am navigating wihtin a snippet and completion list is open, close it
             ['<C-u>'] = function(fallback)
               cmp.mapping.confirm()
@@ -282,10 +277,25 @@ function M.setup_completion()
             end,
             ['<C-y>'] = cmp.mapping.confirm()
         },
-        sources = {
-            { name = 'nvim_lsp' },
+        formatting = {
+            format = function(entry, vim_item)
+                local name_map = {
+                    nvim_lsp = 'lsp',
+                    snippets_nvim = 'snip',
+                    buffer = 'buf',
+                }
+                if entry.source then
+                    local name = name_map[entry.source.name] and name_map[entry.source.name] or entry.source.name
+                    vim_item.menu = '['..name..']'
+                end
+                return vim_item
+            end
 
-            { name = 'snippets_nvim', keyword_length = 2 },
+        },
+        sources = {
+            { name = 'snippets_nvim', keyword_length = 1 },
+
+            { name = 'nvim_lsp' },
 
             { name = 'path' },
 
