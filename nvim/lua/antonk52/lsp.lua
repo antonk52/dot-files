@@ -275,6 +275,7 @@ end
 function M.setup_completion()
     require('antonk52.completion')
     local cmp = require('cmp')
+    local cmp_buffer = require('cmp_buffer')
     local snippets = require('snippets')
     cmp.setup({
         snippet = {
@@ -331,6 +332,11 @@ function M.setup_completion()
             { name = 'path' },
 
             { name = 'buffer', keyword_length = 3 },
+        },
+        sorting = {
+            comparators = {
+                function(...) return cmp_buffer:compare_locality(...) end,
+            }
         },
         experimental = {
           -- use native menu as it does not have issues with hanging floating
