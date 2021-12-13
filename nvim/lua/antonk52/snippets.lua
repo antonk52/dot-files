@@ -202,8 +202,6 @@ function M.set_snippets_for_filetype()
     local indirect_test_file = vim.fn.match(file, '\v/__tests__|tests?/.+\\.(js|jsx|ts|tsx)$') ~= -1
 
     if test_file or indirect_test_file then
-        print('is test')
-        print(vim.inspect(jest_snippets))
         -- instead of setting compound file type manually extends current
         -- file type snippets to include jest snippets
         snippets.snippets = merge(

@@ -247,7 +247,9 @@ vim.g.maplocalleader = "\\"
 
 -- nvim 0.6 maps Y to yank till the end of the line,
 -- preserving a legacy behaviour
-vim.api.nvim_del_keymap('', 'Y')
+if vim.fn.has('nvim-0.6') == 1 then
+    vim.api.nvim_del_keymap('', 'Y')
+end
 
 local function nnoremap(left, right)
     vim.api.nvim_set_keymap('n', left, right, {noremap = true})
