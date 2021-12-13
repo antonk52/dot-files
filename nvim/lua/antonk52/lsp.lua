@@ -141,6 +141,10 @@ end
 
 function M.setup_cssmodules()
     local configs = require'lspconfig.configs'
+    if vim.fn.executable('cssmodules-language-server') == 0 then
+        print('Executable for "cssmodules-language-server" is not found')
+        return nil
+    end
     if not configs.cssmodules then
         configs.cssmodules = {
             default_config = {
