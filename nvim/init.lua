@@ -519,7 +519,17 @@ vim.defer_fn(
 -- colorizer {{{2
 -- color highlight wont work on the first opened buffer,
 -- but shaves off 10ms from the startup time
-vim.defer_fn(function() require'colorizer'.setup() end, 300)
+vim.defer_fn(function()
+    local opts = {
+        css = true,
+        RRGGBBAA = true,
+    }
+    require'colorizer'.setup({
+        css = opts,
+        scss = opts,
+        sass = opts,
+    })
+    end, 300)
 
 -- treesitter {{{2
 if vim.env.TREESITTER ~= '0' then
