@@ -70,8 +70,19 @@ M.servers = {
     end,
     tsserver = {
         on_attach = function(client)
-            -- force disable typescript for formatting
+            -- force disable typescript formatting
             client.resolved_capabilities.document_formatting = false
+        end,
+    },
+
+    -- https://github.com/hrsh7th/vscode-langservers-extracted
+    html = {},
+    jsonls = {},
+    cssls = {},
+    eslint = {
+        on_attach = function(client)
+            -- force enable formatting
+            client.resolved_capabilities.document_formatting = true
         end,
     },
 }
