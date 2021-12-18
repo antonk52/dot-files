@@ -16,6 +16,8 @@ local function merge(a, b)
 end
 
 local javascript_snippets = {
+    shebang = '#!/usr/bin/env node',
+
     fun = snippets.u.match_indentation([[
 function ${1}(${2}) {
     $0
@@ -73,6 +75,8 @@ local default_snippets = {
         uname = function() return vim.loop.os_uname().sysname end;
 
         date = os.date();
+
+        shebang = '#!/bin sh',
 
         -- Evaluate at the time of the snippet expansion and insert it. You
         --  can put arbitrary lua functions inside of the =... block as a
