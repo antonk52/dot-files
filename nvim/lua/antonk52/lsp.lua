@@ -59,9 +59,15 @@ function M.on_attach(_, bufnr)
 end
 
 M.servers = {
-    flow = {
-        cmd = {'flow', 'lsp'},
-    },
+    flow = function()
+        -- disable flow for projects without flowconfig
+        if vim.fn.glob('.flowconfig') ~= '' then
+            return {
+                cmd = {'flow', 'lsp'},
+                single_file_support = false, -- do not start flow server if .flowconfig is not found
+            }
+        end
+    end,
     tsserver = {
         on_attach = function(client)
             -- force disable typescript for formatting
@@ -336,15 +342,21 @@ function M.setup()
 
     vim.cmd('command! FormatLsp lua vim.lsp.buf.formatting()')
 
-    M.setup_eslint_d()
+    -- M.setup_eslint_d()
     M.setup_lua()
     M.setup_cssmodules()
     M.setup_column_signs()
 
     for lsp, opts in pairs(M.servers) do
-        lspconfig[lsp].setup(
-            M.lsp_options(opts)
-        )
+        if type(opts) == 'function' then
+            opts = opts()
+        end
+
+        if opts ~= nil then
+            lspconfig[lsp].setup(
+                M.lsp_options(opts)
+            )
+        end
     end
 end
 
