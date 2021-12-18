@@ -2,46 +2,31 @@ local lspconfig = require'lspconfig'
 
 local M = {}
 
--- This is a personal take on `vim.lsp.diagnostic.show_line_diagnostics`
+-- This is a personal take on `vim.lsp.diagnostic.show_line_diagnostics` from 0.5
 -- key point is to include the source into the message
---
--- Otherwise use `vim.lsp.diagnostic.show_line_diagnostics({focusable = false, show_header = false})`
 function M.show_current_line_dignostics()
-    local opts = {focusable = false}
-
-    local bufnr = 0
-    local line_nr = vim.api.nvim_win_get_cursor(0)[1] - 1
-
+    local current_line_number = vim.api.nvim_win_get_cursor(0)[1] - 1
+    local current_buffer_diagnostic = vim.diagnostic.get(0, {lnum = current_line_number})
     local lines = {}
-    local highlights = {}
-
-    local line_diagnostics = vim.lsp.diagnostic.get_line_diagnostics(bufnr, line_nr, opts, nil)
-    if vim.tbl_isempty(line_diagnostics) then return end
-
-    for i, diagnostic in ipairs(line_diagnostics) do
-        local prefix = string.format("%d. ", i)
-        local diagnostic_source = diagnostic.source and '['..diagnostic.source..'] ' or ''
-        local hiname = vim.lsp.diagnostic._get_floating_severity_highlight_name(diagnostic.severity)
-        assert(hiname, 'unknown severity: ' .. tostring(diagnostic.severity))
-
-        local message_lines = vim.split(diagnostic.message, '\n', true)
-        table.insert(lines, prefix..diagnostic_source..message_lines[1])
-        table.insert(highlights, {#prefix, hiname})
-        for j = 2, #message_lines do
-            table.insert(lines, message_lines[j])
-            table.insert(highlights, {0, hiname})
-        end
+    for _, v in ipairs(current_buffer_diagnostic) do
+        local src = '['..(v.source or 'Unknown')..'] '
+        local msg_lines = vim.split(v.message, '\n')
+        -- open_floating_preview throws if line contains line breaks
+        local line = #msg_lines > 1 and msg_lines[1]..'…' or msg_lines[1]
+        table.insert(lines, src..line)
     end
-
-    opts.focus_id = "line_diagnostics"
-    local popup_bufnr, winnr = vim.lsp.util.open_floating_preview(lines, 'plaintext', opts)
-    for i, hi in ipairs(highlights) do
-        local prefixlen, hiname = unpack(hi)
-        -- Start highlight after the prefix
-        vim.api.nvim_buf_add_highlight(popup_bufnr, -1, hiname, i-1, prefixlen, -1)
+    if #lines > 0 then
+        vim.lsp.util.open_floating_preview(
+            lines,
+            'txt',
+            {
+                height = #lines,
+                focusable = false,
+            }
+        )
+    else
+        print('No known issues on current line')
     end
-
-    return popup_bufnr, winnr
 end
 
 function M.on_attach(_, bufnr)
