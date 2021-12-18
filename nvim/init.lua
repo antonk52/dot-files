@@ -492,7 +492,7 @@ vim.api.nvim_set_keymap('n', 'za', 'za:IndentBlanklineRefresh<cr>', {noremap = t
 vim.api.nvim_set_keymap('n', 'zm', 'zm:IndentBlanklineRefresh<cr>', {noremap = true})
 vim.api.nvim_set_keymap('n', 'zo', 'zo:IndentBlanklineRefresh<cr>', {noremap = true})
 
--- coc.nvim {{{2
+-- coc.nvim / lsp {{{2
 vim.opt.updatetime=300
 vim.opt.shortmess = vim.opt.shortmess + 'c'
 
@@ -513,7 +513,7 @@ vim.defer_fn(
             require('antonk52.coc').setup()
         end
     end,
-    1000
+    300
 )
 
 -- colorizer {{{2
