@@ -235,10 +235,10 @@ end
 
 function M.setup_column_signs()
     local column_signs = {
-        LspDiagnosticsSignError = "●",
-        LspDiagnosticsSignWarning = "●",
-        LspDiagnosticsSignHint = "!",
-        LspDiagnosticsSignInformation = "!",
+        DiagnosticSignError = "●",
+        DiagnosticSignWarn = "●",
+        DiagnosticSignHint = "◉",
+        DiagnosticSignInformation = "◉",
     }
     for name, char in pairs(column_signs) do
         vim.fn.sign_define(
