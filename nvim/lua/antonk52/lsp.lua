@@ -129,8 +129,11 @@ function M.setup_lua()
               workspace = {
                   -- Make the server aware of Neovim runtime files
                   library = {
-                      vim.env.VIMRUNTIME .. '/lua',
+                      [vim.fn.expand('$VIMRUNTIME/lua')] = true,
+                      [vim.fn.expand('$VIMRUNTIME/lua/vim/lsp')] = true,
+                      [vim.fn.stdpath('config')] = true,
                   },
+                  maxPreload = 10000,
               },
               -- Do not send telemetry data containing a randomized but unique identifier
               telemetry = {
