@@ -79,6 +79,15 @@ M.servers = {
     html = {},
     jsonls = {},
     cssls = {},
+    cssmodules_ls = {
+        on_attach = function (client)
+            -- disabled go-to-definition to avoid confusion with tsserver
+            client.resolved_capabilities.goto_definition = false
+        end,
+        init_options = {
+            camelCase = 'dashes',
+        },
+    },
     eslint = {
         on_attach = function(client)
             -- force enable formatting
@@ -142,37 +151,6 @@ function M.setup_lua()
           },
       },
   }
-end
-
-function M.setup_cssmodules()
-    local configs = require'lspconfig.configs'
-    if vim.fn.executable('cssmodules-language-server') == 0 then
-        print('Executable for "cssmodules-language-server" is not found')
-        return nil
-    end
-    if not configs.cssmodules then
-        configs.cssmodules = {
-            default_config = {
-                cmd = {'cssmodules-language-server'},
-                filetypes = {'javascript', 'javascriptreact', 'typescript', 'typescriptreact'},
-                init_options = {
-                    camelCase = 'dashes',
-                },
-                settings = {},
-                root_dir = require('lspconfig.util').root_pattern('package.json')
-            },
-            docs = {
-                description = 'TODO description',
-                default_config = {
-                    root_dir = '[[root_pattern("package.json")]]'
-                }
-            }
-        }
-    end
-
-    lspconfig.cssmodules.setup {
-        on_attach = M.on_attach;
-    }
 end
 
 function M.setup_eslint_d()
@@ -358,7 +336,6 @@ function M.setup()
 
     -- M.setup_eslint_d()
     M.setup_lua()
-    M.setup_cssmodules()
     M.setup_column_signs()
 
     for lsp, opts in pairs(M.servers) do
