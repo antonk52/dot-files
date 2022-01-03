@@ -2,18 +2,7 @@ local M = {}
 
 local snippets = require 'snippets'
 
-local function merge(a, b)
-    local result = {}
-
-    for k, v in pairs(a) do
-        result[k] = v
-    end
-    for k, v in pairs(b) do
-        result[k] = v
-    end
-
-    return result
-end
+local utils = require 'antonk52.utils'
 
 local javascript_snippets = {
     shebang = '#!/usr/bin/env node',
@@ -178,7 +167,7 @@ endif
     ["typescriptreact"] = javascript_snippets;
 }
 
-local jest_snippets = merge(javascript_snippets, {
+local jest_snippets = utils.shallow_merge(javascript_snippets, {
     ["desc"] = snippets.u.match_indentation([[
 describe('${1:what are we testing}', () => {
     $0
@@ -208,7 +197,7 @@ function M.set_snippets_for_filetype()
     if test_file or indirect_test_file then
         -- instead of setting compound file type manually extends current
         -- file type snippets to include jest snippets
-        snippets.snippets = merge(
+        snippets.snippets = utils.shallow_merge(
             default_snippets,
             {
                 ["javascript"] = jest_snippets;
