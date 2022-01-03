@@ -20,6 +20,75 @@ function M.setup()
         '<cmd>Rg tags.*' .. vim.fn.expand('<cword>') .. '<cr>',
         { noremap = true }
     )
+
+    vim.cmd('command! NotesNext :lua require("antonk52.notes").next_note()')
+    vim.cmd('command! NotesPrev :lua require("antonk52.notes").prev_note()')
+end
+
+function M.list_notes()
+    local cmd = 'silent ! fd -t f'
+    local lines = vim.split(
+        vim.trim(
+            vim.fn.split(
+                vim.fn.execute(cmd),
+                '\n\n'
+            )[2]
+        ),
+        '\n'
+    )
+    table.sort(lines)
+
+    return lines
+end
+
+function M.indexOf( value, tab )
+    for index, val in ipairs(tab) do
+        if value == val then
+        return index
+        end
+    end
+
+    return -1
+end
+
+function M.prev_index( val, tab )
+    local prev_i = nil
+
+    for i, v in ipairs(tab) do
+        if v ~= val then
+            prev_i = i
+        else
+            return prev_i
+        end
+    end
+
+    return -1
+end
+
+function M.prev_note()
+    local lines = M.list_notes()
+    local path = vim.fn.expand('%')
+    local index = M.indexOf(vim.startswith(path, './') and path or './'..path, lines)
+
+    local prev_note = lines[index - 1]
+    if prev_note == nil then
+        print('prev note does not exist')
+    else
+        vim.cmd('edit '.. prev_note)
+    end
+end
+
+function M.next_note()
+    local lines = M.list_notes()
+    local path = vim.fn.expand('%')
+    local index = M.indexOf(vim.startswith(path, './') and path or './'..path, lines)
+
+    local next_note = lines[index + 1]
+    if next_note == nil then
+        print('next note does not exist')
+    else
+        vim.cmd('edit '.. next_note)
+    end
 end
 
 return M

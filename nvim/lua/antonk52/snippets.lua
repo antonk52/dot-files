@@ -84,6 +84,10 @@ local default_snippets = {
         req = [[local ${2:${1|S.v:match"([^.()]+)[()]*$"}} = require '$1']],
         fun = [[function (${1}) $0 end]],
         lfun = [[local function ${1}(${2}) $0 end]],
+        ['while'] = [[while(${1:condition})
+do
+   $0
+end]],
         ['loc'] = [[local ${1} = ${2}]],
         ['if'] = snippets.u.match_indentation([[
 if ${1} then
