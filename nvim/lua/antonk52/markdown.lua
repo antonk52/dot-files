@@ -16,7 +16,7 @@ end
 
 function M.lookup_word_under_cursor()
     local word = vim.fn.expand('<cword>')
-    vim.cmd('silent !open dict://'..word)
+    vim.cmd('silent !open dict://' .. word)
 end
 
 function M.setup()
@@ -25,10 +25,10 @@ function M.setup()
         'n',
         '<localleader>t',
         '<cmd>lua require("antonk52.markdown").toggle_checkbox()<cr>',
-        {noremap = true, silent = true}
+        { noremap = true, silent = true }
     )
-    vim.api.nvim_buf_set_keymap(0, 'n', 'j', 'gj', {noremap = true})
-    vim.api.nvim_buf_set_keymap(0, 'n', 'k', 'gk', {noremap = true})
+    vim.api.nvim_buf_set_keymap(0, 'n', 'j', 'gj', { noremap = true })
+    vim.api.nvim_buf_set_keymap(0, 'n', 'k', 'gk', { noremap = true })
     vim.opt.spell = true
     vim.opt.spellsuggest = 'best'
     vim.bo.spelllang = 'ru_ru,en_us'
@@ -38,7 +38,7 @@ function M.setup()
             'n',
             'K',
             '<cmd>lua require("antonk52.markdown").lookup_word_under_cursor()<cr>',
-            {noremap = true, silent = true}
+            { noremap = true, silent = true }
         )
     end
 end

@@ -1,7 +1,7 @@
 local M = {}
 
 local function has_eslint_config()
-    for _,name in pairs({'.eslintrc.js', '.eslintrc.json', '.eslintrc'}) do
+    for _, name in pairs({ '.eslintrc.js', '.eslintrc.json', '.eslintrc' }) do
         if vim.fn.globpath('.', name) ~= '' then
             return true
         end
@@ -22,7 +22,8 @@ local get_flow_bin = function()
     local local_flow = 'node_modules/.bin/flow'
     if vim.fn.filereadable(local_flow) == 1 then
         return vim.fn.getcwd() .. '/' .. local_flow
-    else if vim.fn.executable('flow') then
+    else
+        if vim.fn.executable('flow') then
             return vim.fn.exepath('flow')
         end
     end
@@ -48,7 +49,7 @@ function M.setup_flow()
         ['initializationOptions'] = {},
         ['requireRootPattern'] = 1,
         ['settings'] = {},
-        ['rootPatterns'] = { '.flowconfig' }
+        ['rootPatterns'] = { '.flowconfig' },
     }
     vim.fn['coc#config']('languageserver.flow', flow_config)
     -- essentially avoid turning on typescript in a flow project
@@ -70,7 +71,7 @@ function M.setup_hack()
         ['initializationOptions'] = {},
         ['requireRootPattern'] = 0,
         ['settings'] = {},
-        ['rootPatterns'] = { '.hhconfig' }
+        ['rootPatterns'] = { '.hhconfig' },
     }
     vim.fn['coc#config']('languageserver.hack', hack_config)
 end
@@ -91,26 +92,21 @@ function M.setup_mappings()
         'n',
         '<leader>t',
         ':lua require("antonk52.coc").show_documentation()<cr>:echo<cr>',
-        {noremap = true}
+        { noremap = true }
     )
     vim.api.nvim_set_keymap(
         'n',
         'J',
         'coc#float#has_float() == 1 ? coc#float#scroll(1) : "J"',
-        {noremap = true, expr = true}
+        { noremap = true, expr = true }
     )
     vim.api.nvim_set_keymap(
         'n',
         'K',
         ':lua require("antonk52.coc").show_documentation()<cr>:echo<cr>',
-        {noremap = true}
+        { noremap = true }
     )
-    vim.api.nvim_set_keymap(
-        'n',
-        '<leader>R',
-        ':silent CocRestart<CR>',
-        {noremap = true}
-    )
+    vim.api.nvim_set_keymap('n', '<leader>R', ':silent CocRestart<CR>', { noremap = true })
 
     local mappings = {
         ['gd'] = 'definition',
@@ -119,29 +115,14 @@ function M.setup_mappings()
         ['gr'] = 'references',
         ['<leader>['] = 'diagnostic-prev',
         ['<leader>]'] = 'diagnostic-next',
-        ['<leader>r'] = 'rename'
+        ['<leader>r'] = 'rename',
     }
-    for mapping,action in pairs(mappings) do
-        vim.api.nvim_set_keymap(
-            'n',
-            mapping,
-            '<Plug>(coc-'..action..')',
-            {silent = true}
-        )
+    for mapping, action in pairs(mappings) do
+        vim.api.nvim_set_keymap('n', mapping, '<Plug>(coc-' .. action .. ')', { silent = true })
     end
 
-    vim.api.nvim_set_keymap(
-        'i',
-        '<C-j>',
-        '<Plug>(coc-snippets-expand-jump)',
-        {}
-    )
-    vim.api.nvim_set_keymap(
-        'i',
-        '<C-l>',
-        '<Plug>(coc-snippets-expand)',
-        {}
-    )
+    vim.api.nvim_set_keymap('i', '<C-j>', '<Plug>(coc-snippets-expand-jump)', {})
+    vim.api.nvim_set_keymap('i', '<C-l>', '<Plug>(coc-snippets-expand)', {})
 end
 
 function M.setup_commands()
@@ -188,12 +169,12 @@ function M.setup()
 end
 
 function M.show_documentation()
-    if vim.fn["coc#float#has_float"]() == 1 then
-        vim.fn["coc#float#scroll"](0)
+    if vim.fn['coc#float#has_float']() == 1 then
+        vim.fn['coc#float#scroll'](0)
         return nil
     end
     if vim.o.filetype == 'vim' or vim.o.filetype == 'help' then
-        vim.cmd('h '..vim.fn.expand('<cword>'))
+        vim.cmd('h ' .. vim.fn.expand('<cword>'))
     else
         vim.cmd('call CocAction("doHover")')
     end

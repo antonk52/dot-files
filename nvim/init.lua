@@ -3,7 +3,9 @@
 
 -- load vim plug if it is not installed
 if vim.fn.empty(vim.fn.glob('~/.config/nvim/autoload/plug.vim')) == 1 then
-    vim.cmd('silent !curl -fLo ~/.config/nvim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim')
+    vim.cmd(
+        'silent !curl -fLo ~/.config/nvim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+    )
     vim.cmd('autocmd VimEnter * PlugInstall --sync | source $MYVIMRC')
 end
 
@@ -15,7 +17,7 @@ vim.fn['plug#begin']('~/.config/nvim/plugged')
 Plug('antonk52/vim-tabber')
 Plug('antonk52/vim-plugin-templater')
 -- types & linting
-Plug('neoclide/coc.nvim', {branch = 'release', ['do'] = ':CocInstall'})
+Plug('neoclide/coc.nvim', { branch = 'release', ['do'] = ':CocInstall' })
 Plug('neovim/nvim-lspconfig')
 Plug('williamboman/nvim-lsp-installer')
 Plug('hrsh7th/cmp-buffer')
@@ -26,7 +28,7 @@ Plug('antonk52/amake.nvim')
 Plug('antonk52/bad-practices.nvim')
 Plug('antonk52/gitignore-grabber.nvim')
 -- tests
-Plug('nvim-treesitter/nvim-treesitter', {['do'] = ':TSUpdate'}) -- We recommend updating the parsers on update
+Plug('nvim-treesitter/nvim-treesitter', { ['do'] = ':TSUpdate' }) -- We recommend updating the parsers on update
 Plug('nvim-treesitter/playground')
 -- to load telescope `TELESCOPE=1 nvim .`
 if vim.env.TELESCOPE == '1' then
@@ -59,11 +61,11 @@ Plug('jiangmiao/auto-pairs')
 Plug('editorconfig/editorconfig-vim')
 Plug('norcalli/snippets.nvim')
 -- live preview markdown files in browser
-Plug('iamcco/markdown-preview.nvim', { ['do'] = 'cd app & yarn install', ['for'] = {'markdown', 'mdx'} })
+Plug('iamcco/markdown-preview.nvim', { ['do'] = 'cd app & yarn install', ['for'] = { 'markdown', 'mdx' } })
 
 -- Front end {{{2
 -- quick html
-Plug('mattn/emmet-vim', { ['for'] = {'html', 'css', 'javascript', 'typescript'}})
+Plug('mattn/emmet-vim', { ['for'] = { 'html', 'css', 'javascript', 'typescript' } })
 
 -- Syntax {{{2
 -- hex/rgb color highlight preview
@@ -91,24 +93,24 @@ vim.fn['plug#end']()
 vim.g.did_install_default_menus = 1
 -- avoid loading builtin plugins
 local disable_plugins = {
-   '2html_plugin',
-   'getscript',
-   'getscriptPlugin',
-   'logipat',
-   'netrwFileHandlers',
-   'netrwSettings',
-   'rrhelper',
-   'tar',
-   'tarPlugin',
-   'tutor',
-   'tutor_mode_plugin',
-   'vimball',
-   'vimballPlugin',
-   'zip',
-   'zipPlugin',
+    '2html_plugin',
+    'getscript',
+    'getscriptPlugin',
+    'logipat',
+    'netrwFileHandlers',
+    'netrwSettings',
+    'rrhelper',
+    'tar',
+    'tarPlugin',
+    'tutor',
+    'tutor_mode_plugin',
+    'vimball',
+    'vimballPlugin',
+    'zip',
+    'zipPlugin',
 }
-for _,v in pairs(disable_plugins) do
-    vim.g['loaded_'..v] = 1
+for _, v in pairs(disable_plugins) do
+    vim.g['loaded_' .. v] = 1
 end
 
 -- Set them directly if they are installed, otherwise disable them. To avoid the
@@ -141,7 +143,6 @@ end
 
 vim.g.loaded_perl_provider = 0
 
-
 -- Defaults {{{1
 -- theme
 vim.cmd('syntax enable')
@@ -156,7 +157,7 @@ vim.opt.guicursor = 'i-ci-ve:hor24'
 
 -- Show “invisible” characters
 vim.opt.list = true
-vim.opt.listchars = {tab = '▸ ', trail = '∙'}
+vim.opt.listchars = { tab = '▸ ', trail = '∙' }
 
 vim.cmd('color lake')
 vim.cmd('hi Comment gui=italic')
@@ -242,8 +243,8 @@ vim.opt.undofile = true
 
 -- Mappings {{{1
 
-vim.g.mapleader = " "
-vim.g.maplocalleader = "\\"
+vim.g.mapleader = ' '
+vim.g.maplocalleader = '\\'
 
 -- nvim 0.6 maps Y to yank till the end of the line,
 -- preserving a legacy behaviour
@@ -252,10 +253,10 @@ if vim.fn.has('nvim-0.6') == 1 then
 end
 
 local function nnoremap(left, right)
-    vim.api.nvim_set_keymap('n', left, right, {noremap = true})
+    vim.api.nvim_set_keymap('n', left, right, { noremap = true })
 end
 local function vnoremap(left, right)
-    vim.api.nvim_set_keymap('v', left, right, {noremap = true})
+    vim.api.nvim_set_keymap('v', left, right, { noremap = true })
 end
 
 -- closes a window
@@ -284,12 +285,7 @@ nnoremap('<leader>p', ':echo expand("%")<CR>')
 -- Puts an absolute file path in the system clipboard
 nnoremap('<localleader>p', ':silent !echo "%:p" \\| pbcopy<CR>')
 -- Puts a project file path in the system clipboard
-vim.api.nvim_set_keymap(
-    'n',
-    '<leader>P',
-    ':silent !echo "%" \\| pbcopy<CR>',
-    {noremap = true, silent = true}
-)
+vim.api.nvim_set_keymap('n', '<leader>P', ':silent !echo "%" \\| pbcopy<CR>', { noremap = true, silent = true })
 
 -- manipulate numbers, convenient since my tmux prefix is <C-a>
 nnoremap('<LocalLeader>a', '<C-a>')
@@ -300,12 +296,7 @@ vnoremap('<LocalLeader><LocalLeader>a', 'g<C-a>')
 vnoremap('<LocalLeader><LocalLeader>x', 'g<C-x>')
 
 -- Fixes (most) syntax highlighting problems in current buffer
-vim.api.nvim_set_keymap(
-    'n',
-    '<leader>§',
-    ':syntax sync fromstart<CR>',
-    {noremap = true, silent = true}
-)
+vim.api.nvim_set_keymap('n', '<leader>§', ':syntax sync fromstart<CR>', { noremap = true, silent = true })
 
 -- indentation shifts keep selection(`=` should still be preferred)
 vnoremap('<', '<gv')
@@ -444,20 +435,20 @@ vim.api.nvim_set_keymap(
     'n',
     '<leader>f',
     "isdirectory(getcwd() . '/.git') ? ':GFiles<cr>' : ':Files<cr>'",
-    {noremap = true, expr = true}
+    { noremap = true, expr = true }
 )
-vim.api.nvim_set_keymap('n', '<leader>F', ':Files<cr>', {noremap = true})
+vim.api.nvim_set_keymap('n', '<leader>F', ':Files<cr>', { noremap = true })
 -- buffer list with fuzzy search
-vim.api.nvim_set_keymap('n', '<leader>b', ':Buffers<cr>', {noremap = true})
+vim.api.nvim_set_keymap('n', '<leader>b', ':Buffers<cr>', { noremap = true })
 -- In current buffer search with a preview
-vim.api.nvim_set_keymap('n', '<leader>/', ':BLines<cr>', {noremap = true})
+vim.api.nvim_set_keymap('n', '<leader>/', ':BLines<cr>', { noremap = true })
 -- list available snippets
-vim.api.nvim_set_keymap('n', '<leader>s', ':Snippets<cr>', {noremap = true})
+vim.api.nvim_set_keymap('n', '<leader>s', ':Snippets<cr>', { noremap = true })
 -- list opened windows
-vim.api.nvim_set_keymap('n', '<leader>W', ':Windows<cr>', {noremap = true})
+vim.api.nvim_set_keymap('n', '<leader>W', ':Windows<cr>', { noremap = true })
 -- list opened file history
-vim.api.nvim_set_keymap('n', '<leader>H', ':History<cr>', {noremap = true})
-vim.api.nvim_set_keymap('n', '<leader>D', ':Dots<cr>', {noremap = true})
+vim.api.nvim_set_keymap('n', '<leader>H', ':History<cr>', { noremap = true })
+vim.api.nvim_set_keymap('n', '<leader>D', ':Dots<cr>', { noremap = true })
 -- start in a popup
 vim.g.fzf_layout = { window = { width = 0.9, height = 0.6 } }
 
@@ -468,7 +459,9 @@ vim.g.fzf_layout = { window = { width = 0.9, height = 0.6 } }
 vim.g.SuperTabDefaultCompletionType = '<c-n>'
 
 -- lualine.nvim {{{2
-vim.defer_fn(function() require('antonk52.lualine') end, 100)
+vim.defer_fn(function()
+    require('antonk52.lualine')
+end, 100)
 
 -- indent-blankline.nvim {{{2
 -- avoid the first indent & increment dashes furer ones
@@ -476,45 +469,42 @@ vim.g.indent_blankline_char_list = { '|', '¦' }
 vim.g.indent_blankline_show_first_indent_level = false
 vim.g.indent_blankline_show_trailing_blankline_indent = false
 vim.g.indent_blankline_filetype_exclude = {
-    "help",
-    "startify",
-    "dashboard",
-    "packer",
-    "neogitstatus",
-    "NvimTree",
-    "Trouble",
+    'help',
+    'startify',
+    'dashboard',
+    'packer',
+    'neogitstatus',
+    'NvimTree',
+    'Trouble',
 }
 
 -- refresh blank lines after toggleing folds
 -- to avoid intent lines overlaying the fold line characters
-vim.api.nvim_set_keymap('n', 'zr', 'zr:IndentBlanklineRefresh<cr>', {noremap = true})
-vim.api.nvim_set_keymap('n', 'za', 'za:IndentBlanklineRefresh<cr>', {noremap = true})
-vim.api.nvim_set_keymap('n', 'zm', 'zm:IndentBlanklineRefresh<cr>', {noremap = true})
-vim.api.nvim_set_keymap('n', 'zo', 'zo:IndentBlanklineRefresh<cr>', {noremap = true})
+vim.api.nvim_set_keymap('n', 'zr', 'zr:IndentBlanklineRefresh<cr>', { noremap = true })
+vim.api.nvim_set_keymap('n', 'za', 'za:IndentBlanklineRefresh<cr>', { noremap = true })
+vim.api.nvim_set_keymap('n', 'zm', 'zm:IndentBlanklineRefresh<cr>', { noremap = true })
+vim.api.nvim_set_keymap('n', 'zo', 'zo:IndentBlanklineRefresh<cr>', { noremap = true })
 
 -- coc.nvim / lsp {{{2
-vim.opt.updatetime=300
+vim.opt.updatetime = 300
 vim.opt.shortmess = vim.opt.shortmess + 'c'
 
 -- do not start coc by default
 vim.g.coc_start_at_startup = 0
 
-vim.defer_fn(
-    function()
-        local lsp_to_use = 'native'
+vim.defer_fn(function()
+    local lsp_to_use = 'native'
 
-        if vim.env.LSP ~= nil then
-          lsp_to_use = vim.env.LSP
-        end
+    if vim.env.LSP ~= nil then
+        lsp_to_use = vim.env.LSP
+    end
 
-        if lsp_to_use == 'native' then
-            require('antonk52.lsp').setup()
-        elseif lsp_to_use == 'coc' then
-            require('antonk52.coc').setup()
-        end
-    end,
-    300
-)
+    if lsp_to_use == 'native' then
+        require('antonk52.lsp').setup()
+    elseif lsp_to_use == 'coc' then
+        require('antonk52.coc').setup()
+    end
+end, 300)
 
 -- colorizer {{{2
 -- color highlight wont work on the first opened buffer,
@@ -524,19 +514,19 @@ vim.defer_fn(function()
         css = true,
         RRGGBBAA = true,
     }
-    require'colorizer'.setup({
+    require('colorizer').setup({
         css = opts,
         scss = opts,
         sass = opts,
     })
-    end, 300)
+end, 300)
 
 -- treesitter {{{2
 if vim.env.TREESITTER ~= '0' then
     vim.defer_fn(function()
         -- if you get "wrong architecture error
         -- open nvim in macos native terminal app and run `:TSInstall`
-        require "nvim-treesitter.configs".setup {
+        require('nvim-treesitter.configs').setup({
             ensure_installed = {},
             highlight = { enable = true },
             playground = {
@@ -558,8 +548,8 @@ if vim.env.TREESITTER ~= '0' then
                     goto_node = '<cr>',
                     show_help = '?',
                 },
-            }
-        }
+            },
+        })
     end, 100)
 end
 
@@ -572,9 +562,9 @@ vim.g.vim_markdown_new_list_item_indent = 0
 vim.g.vim_markdown_folding_disabled = 1
 if vim.g.colors_name == 'lake' then
     -- red & bold list characters -,+,*
-    vim.cmd('hi mkdListItem ctermfg=8 guifg='..vim.g.lake_palette['08'].gui..' gui=bold')
-    vim.cmd('hi mkdHeading ctermfg=04 guifg='..vim.g.lake_palette['0D'].gui)
-    vim.cmd('hi mkdLink gui=none ctermfg=08 guifg='..vim.g.lake_palette['08'].gui)
+    vim.cmd('hi mkdListItem ctermfg=8 guifg=' .. vim.g.lake_palette['08'].gui .. ' gui=bold')
+    vim.cmd('hi mkdHeading ctermfg=04 guifg=' .. vim.g.lake_palette['0D'].gui)
+    vim.cmd('hi mkdLink gui=none ctermfg=08 guifg=' .. vim.g.lake_palette['08'].gui)
 end
 -- markdown fold {{{2
 -- fold underlying sections if any
@@ -583,7 +573,7 @@ vim.g.markdown_fold_style = 'nested'
 vim.g.markdown_fold_override_foldtext = 0
 
 -- load local init.lua {{{1
-local local_init_lua = vim.fn.expand('~/.config/local_init.lua');
+local local_init_lua = vim.fn.expand('~/.config/local_init.lua')
 if vim.fn.filereadable(local_init_lua) == 1 then
     vim.cmd('luafile ' .. local_init_lua)
 end

@@ -1,52 +1,52 @@
 local LLN = {}
 local colors = {
-    color00 = "#2b303b",
-    color01 = "#343d46",
-    color02 = "#4f5b66",
-    color03 = "#65737e",
-    color04 = "#a7adba",
-    color05 = "#c0c5ce",
-    color06 = "#dfe1e8",
-    color07 = "#eff1f5",
-    color08 = "#bf616a",
-    color09 = "#d08770",
-    color0A = "#ebcb8b",
-    color0B = "#a3be8c",
-    color0C = "#96b5b4",
-    color0D = "#8fa1b3",
-    color0E = "#b48ead",
-    color0F = "#ab7967",
+    color00 = '#2b303b',
+    color01 = '#343d46',
+    color02 = '#4f5b66',
+    color03 = '#65737e',
+    color04 = '#a7adba',
+    color05 = '#c0c5ce',
+    color06 = '#dfe1e8',
+    color07 = '#eff1f5',
+    color08 = '#bf616a',
+    color09 = '#d08770',
+    color0A = '#ebcb8b',
+    color0B = '#a3be8c',
+    color0C = '#96b5b4',
+    color0D = '#8fa1b3',
+    color0E = '#b48ead',
+    color0F = '#ab7967',
 }
 LLN.theme = {
     inactive = {
-        a = {fg = colors.color04, bg = colors.color01},
-        b = {fg = colors.color04, bg = colors.color01},
-        c = {fg = colors.color04, bg = colors.color01},
+        a = { fg = colors.color04, bg = colors.color01 },
+        b = { fg = colors.color04, bg = colors.color01 },
+        c = { fg = colors.color04, bg = colors.color01 },
     },
     normal = {
-        a = {fg = colors.color00, bg = colors.color0B, gui = "bold"},
-        b = {fg = colors.color04, bg = colors.color01},
-        c = {fg = colors.color09, bg = colors.color00},
-        z = {fg = colors.color00, bg = colors.color0B, gui = "bold"},
+        a = { fg = colors.color00, bg = colors.color0B, gui = 'bold' },
+        b = { fg = colors.color04, bg = colors.color01 },
+        c = { fg = colors.color09, bg = colors.color00 },
+        z = { fg = colors.color00, bg = colors.color0B, gui = 'bold' },
     },
     insert = {
-        a = {fg = colors.color00, bg = colors.color0D, gui = "bold"},
+        a = { fg = colors.color00, bg = colors.color0D, gui = 'bold' },
     },
     replace = {
-        a = {fg = colors.color00, bg = colors.color08},
+        a = { fg = colors.color00, bg = colors.color08 },
     },
     visual = {
-        a = {fg = colors.color00, bg = colors.color0E},
+        a = { fg = colors.color00, bg = colors.color0E },
     },
 }
 
 function LLN.lineinfo()
-    return vim.fn.line('.')..':'..vim.fn.virtcol('.')
+    return vim.fn.line('.') .. ':' .. vim.fn.virtcol('.')
 end
 
 function LLN.filename()
-    local expanded = vim.fn.substitute(vim.fn.expand('%:f'), vim.fn.getcwd()..'/', '', '')
-    local filename = nil
+    local expanded = vim.fn.substitute(vim.fn.expand('%:f'), vim.fn.getcwd() .. '/', '', '')
+    local filename
     if expanded == '' then
         filename = '[No Name]'
     else
@@ -88,7 +88,7 @@ LLN.filetype_map = {
     ['javascript.jsx.jest'] = 'jsx',
     ['javascriptreact'] = 'jsx',
     ['yaml'] = 'yml',
-    ['markdown'] = 'md'
+    ['markdown'] = 'md',
 }
 
 function LLN.filetype()
@@ -98,14 +98,14 @@ end
 
 require('lualine').setup({
     options = {
-        theme = LLN.theme
+        theme = LLN.theme,
     },
     sections = {
-        lualine_a = {LLN.modified},
-        lualine_b = {LLN.filename},
-        lualine_c = {LLN.empty},
-        lualine_x = {LLN.one},
-        lualine_y = {LLN.filetype},
-        lualine_z = {LLN.lineinfo},
-    }
+        lualine_a = { LLN.modified },
+        lualine_b = { LLN.filename },
+        lualine_c = { LLN.empty },
+        lualine_x = { LLN.one },
+        lualine_y = { LLN.filetype },
+        lualine_z = { LLN.lineinfo },
+    },
 })

@@ -1,9 +1,12 @@
 local grep_todos = function()
     local entries = {}
-    for _,cmd in pairs({ 'git grep -niIw -e TODO -e FIXME 2> /dev/null', 'grep -rniIw --exclude-dir node_modules -e TODO -e FIXME . 2> /dev/null' }) do
+    for _, cmd in pairs({
+        'git grep -niIw -e TODO -e FIXME 2> /dev/null',
+        'grep -rniIw --exclude-dir node_modules -e TODO -e FIXME . 2> /dev/null',
+    }) do
         local lines = vim.fn.split(vim.fn.system(cmd), '\n')
         if vim.v.shell_error == 0 and vim.fn.len(lines) > 0 then
-            for _,line in pairs(lines) do
+            for _, line in pairs(lines) do
                 local match = vim.fn.matchlist(line, '^\\([^:]*\\):\\([^:]*\\):\\(.*\\)')
                 table.insert(entries, {
                     filename = match[2],
@@ -31,5 +34,5 @@ local find_todo = function()
 end
 
 return {
-    find_todo = find_todo
+    find_todo = find_todo,
 }

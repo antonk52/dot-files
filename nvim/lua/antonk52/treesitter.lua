@@ -1,19 +1,19 @@
 local M = {}
 
 M.used_parsers = {
-    "html",
-    "javascript",
-    "jsdoc",
-    "json",
-    "jsonc",
-    "lua",
-    "php",
-    "rust",
-    "scss",
-    "toml",
-    "tsx",
-    "typescript",
-    "yaml",
+    'html',
+    'javascript',
+    'jsdoc',
+    'json',
+    'jsonc',
+    'lua',
+    'php',
+    'rust',
+    'scss',
+    'toml',
+    'tsx',
+    'typescript',
+    'yaml',
 }
 
 -- pass parsers table to turn off certain parsers
@@ -28,9 +28,9 @@ function M.force_reinstall_parsers(opts)
     --
     -- @param lang string Language to reinstall
     -- @return nil
-    local force_install_lang = TSI.commands.TSInstall["run!"]
+    local force_install_lang = TSI.commands.TSInstall['run!']
 
-    for _,v in pairs(M.used_parsers) do
+    for _, v in pairs(M.used_parsers) do
         if opts[v] ~= false then
             force_install_lang(v)
         end

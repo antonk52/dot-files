@@ -1,1 +1,1 @@
-require'antonk52.markdown'.setup()
+require('antonk52.markdown').setup()

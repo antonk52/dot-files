@@ -9,7 +9,7 @@ function M.remove_item()
     -- avoid executing cfirst with no errors left
     -- close quickfix on last item remove
     if total_items > 1 then
-        vim.cmd('execute '..curqfidx..' . "cfirst"')
+        vim.cmd('execute ' .. curqfidx .. ' . "cfirst"')
         vim.cmd('copen')
     else
         vim.cmd('cclose')
