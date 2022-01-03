@@ -11,10 +11,6 @@ function M.reroot()
     local root_to_current_buffer_path = vim.fn.expand('%')
     local current_session_root_path = abs_path_to_current_buffer
 
-    print ('pre cond')
-    print ('abs_path_to_current_buffer: ' .. abs_path_to_current_buffer)
-    print ('root_to_current_buffer_path: '.. root_to_current_buffer_path)
-
     if vim.endswith(abs_path_to_current_buffer, root_to_current_buffer_path) and #root_to_current_buffer_path < #abs_path_to_current_buffer then
         current_session_root_path = string.sub(#root_to_current_buffer_path, 1, #root_to_current_buffer_path - #abs_path_to_current_buffer)
     end
