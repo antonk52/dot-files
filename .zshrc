@@ -33,7 +33,7 @@ export PATH="$HOME"/Library/Python/3.9/bin:$PATH
 
 # avoid using find if `fd` is installed
 if command -v fd &> /dev/null; then
-    export FZF_DEFAULT_COMMAND='fd'
+    export FZF_DEFAULT_COMMAND='fd -t f'
 fi
 # completions {{{1
 
