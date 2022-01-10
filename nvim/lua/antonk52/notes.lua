@@ -21,8 +21,9 @@ function M.setup()
         { noremap = true }
     )
 
-    vim.cmd('command! NotesNext :lua require("antonk52.notes").next_note()')
-    vim.cmd('command! NotesPrev :lua require("antonk52.notes").prev_note()')
+    vim.cmd('command! NoteNext :lua require("antonk52.notes").note_next()')
+    vim.cmd('command! NotePrev :lua require("antonk52.notes").note_prev()')
+    vim.cmd('command! NoteNew :lua require("antonk52.notes").note_new()')
 end
 
 function M.list_notes()
@@ -65,7 +66,7 @@ function M.prev_index( val, tab )
     return -1
 end
 
-function M.prev_note()
+function M.note_prev()
     local lines = M.list_notes()
     local path = vim.fn.expand('%')
     local index = M.indexOf(vim.startswith(path, './') and path or './'..path, lines)
@@ -78,7 +79,7 @@ function M.prev_note()
     end
 end
 
-function M.next_note()
+function M.note_next()
     local lines = M.list_notes()
     local path = vim.fn.expand('%')
     local index = M.indexOf(vim.startswith(path, './') and path or './'..path, lines)
@@ -89,6 +90,12 @@ function M.next_note()
     else
         vim.cmd('edit '.. next_note)
     end
+end
+
+function M.note_new()
+    -- 'YYYY/MM/DD'
+    local date = vim.fn.strftime('%Y/%m/%d')
+    vim.cmd('edit '..date..'.md')
 end
 
 return M
