@@ -18,9 +18,33 @@ M.used_parsers = {
 
 -- pass parsers table to turn off certain parsers
 -- @example { jsonc = false }
-function M.force_reinstall_parsers(opts)
-    opts = opts or {}
+function M.force_reinstall_parsers(parsers, exit)
+    parsers = parsers or {}
     local TSI = require('nvim-treesitter.install')
+
+    if exit then
+        local parsers_off = 0
+        for _, v in pairs(parsers) do
+            if v == false then
+                parsers_off = parsers_off + 1
+            end
+        end
+
+        local parsers_on = #M.used_parsers - parsers_off
+        print('[parsers_on]: '..parsers_on)
+
+        local og_print = _G.print
+        local needle = '[nvim-treesitter] ['..parsers_on..'/'..parsers_on..']'
+
+        _G.print = function(a)
+            if vim.startswith(a, needle) then
+                vim.cmd('exit')
+            else
+                og_print(a)
+            end
+        end
+    end
+
 
     -- `install` function is not exported from nvim-treesitter
     -- This is a naughty way to get its reference
@@ -31,7 +55,7 @@ function M.force_reinstall_parsers(opts)
     local force_install_lang = TSI.commands.TSInstall['run!']
 
     for _, v in pairs(M.used_parsers) do
-        if opts[v] ~= false then
+        if parsers[v] ~= false then
             force_install_lang(v)
         end
     end
