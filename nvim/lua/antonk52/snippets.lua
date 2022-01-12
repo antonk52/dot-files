@@ -100,7 +100,7 @@ else
     $0
 end]]),
         ['for'] = snippets.u.match_indentation([[
-for ${1:k}, ${2:v} in ipairs(${3}) do
+for ${1:k}, ${2:v} in pairs(${3}) do
     $0
 end]]),
         ['fori'] = snippets.u.match_indentation([[
