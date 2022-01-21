@@ -21,7 +21,9 @@ font:
 
 colors:
     cursor:
-        cursor: '#cdcecf'
+        cursor: '#cdcecf' # plain grey
+    vi_mode_cursor:
+        cursor: '#fc03e8' # bright pink
 
 mouse:
     hide_when_typing: true
@@ -59,6 +61,16 @@ key_bindings:
     - { key: Key7, mods: Alt, chars: "\x1b7" }
     - { key: Key8, mods: Alt, chars: "\x1b8" }
     - { key: Key9, mods: Alt, chars: "\x1b9" }
+
+      # vi mode goodness
+    - key: Return
+      mods: Shift|Control
+      mode: ~Search
+      action: ToggleViMode
+    - key: Escape
+      # leave in vi mode, but don't exit vi mode when searching
+      mode: Vi|~Search
+      action: ToggleViMode
 
 # Solved
 # - hide window bar
