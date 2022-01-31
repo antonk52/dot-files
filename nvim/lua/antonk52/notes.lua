@@ -21,6 +21,9 @@ function M.setup()
         { noremap = true }
     )
 
+    vim.api.nvim_set_keymap('n', 'g[', '<cmd>lua require("antonk52.notes").note_prev()<cr>', {noremap = true})
+    vim.api.nvim_set_keymap('n', 'g]', '<cmd>lua require("antonk52.notes").note_next()<cr>', {noremap = true})
+
     vim.cmd('command! NoteNext :lua require("antonk52.notes").note_next()')
     vim.cmd('command! NotePrev :lua require("antonk52.notes").note_prev()')
     vim.cmd('command! NoteNew :lua require("antonk52.notes").note_new()')
