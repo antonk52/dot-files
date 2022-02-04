@@ -19,6 +19,7 @@ alias cl='clear'
 alias ..='cd ..'
 alias ...='cd ../..'
 alias ....='cd ../../..'
+alias .....='cd ../../../..'
 alias .4='cd ../../../../'
 alias .5='cd ../../../../..'
 alias compare='diff -rq'
@@ -135,3 +136,10 @@ function repo_url()
         | sed 's/\.git$//' \
         | sed 's/^https\//https:/'
 }
+
+# open macos dictionary for a word
+function define() {
+    open "dict://$1"
+}
+
+alias dict="define"
