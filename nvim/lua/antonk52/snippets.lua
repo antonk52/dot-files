@@ -37,7 +37,7 @@ switch (${1:condition}) {
 
     ['ee'] = snippets.u.force_comment([[\$ExpectError<'${1:why is it expected?}'>]]),
 
-    ['import'] = snippets.u.match_indentation([[import ${2:thing} from '${1:package}';]]),
+    ['import'] = snippets.u.match_indentation([[import ${0:thing} from '${1:package}';]]),
 
     -- see `guard` exaple in the docs
     -- https://github.com/norcalli/snippets.nvim#usage
@@ -198,7 +198,7 @@ function M.set_snippets_for_filetype()
         return nil
     end
     local test_file = vim.fn.match(file, '\\(_spec\\|spec\\|Spec\\|-test\\)\\.\\(js\\|jsx\\|ts\\|tsx\\)$') ~= -1
-    local indirect_test_file = vim.fn.match(file, '\v/__tests__|tests?/.+\\.(js|jsx|ts|tsx)$') ~= -1
+    local indirect_test_file = vim.fn.match(file, '\\v/__tests__/.+\\.(js|jsx|ts|tsx)$') ~= -1
 
     if test_file or indirect_test_file then
         -- instead of setting compound file type manually extends current
