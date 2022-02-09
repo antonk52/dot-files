@@ -59,7 +59,7 @@ Plug('junegunn/fzf.vim')
 Plug('jiangmiao/auto-pairs')
 -- consistent coding style
 Plug('editorconfig/editorconfig-vim')
-Plug('norcalli/snippets.nvim')
+Plug('L3MON4D3/LuaSnip')
 -- live preview markdown files in browser
 Plug('iamcco/markdown-preview.nvim', { ['do'] = 'cd app & yarn install', ['for'] = { 'markdown', 'mdx' } })
 
@@ -414,8 +414,6 @@ vim.cmd('highlight ColorColumn ctermbg=0 guibg=#424949')
 
 -- snippets.nvim {{{2
 
--- TODO:
--- - [ ] autocompletion with `coc`/`cmp`
 require('antonk52.snippets').setup()
 
 -- fzf {{{2

@@ -255,11 +255,10 @@ function M.setup_completion()
     require('antonk52.completion')
     local cmp = require('cmp')
     local cmp_buffer = require('cmp_buffer')
-    local snippets = require('snippets')
     cmp.setup({
         snippet = {
             expand = function(arg)
-                snippets.expand_at_cursor(arg.body)
+                require('luasnip').lsp_expand(arg.body)
             end,
         },
         mapping = {
@@ -292,7 +291,7 @@ function M.setup_completion()
             format = function(entry, vim_item)
                 local name_map = {
                     nvim_lsp = 'lsp',
-                    snippets_nvim = 'snip',
+                    snippets_nvim = 'snp',
                     buffer = 'buf',
                 }
                 if entry.source then
