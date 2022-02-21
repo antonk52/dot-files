@@ -317,10 +317,10 @@ function M.setup_completion()
                 end,
             },
         },
-        experimental = {
+        view = {
             -- use native menu as it does not have issues with hanging floating
             -- windows for non basic screen movement ie <C-e>, mouse scroll etc
-            native_menu = true,
+            entries = 'native',
         },
     })
 end
