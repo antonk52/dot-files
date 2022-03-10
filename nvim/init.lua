@@ -267,6 +267,9 @@ nnoremap('<localleader>q', ':bd<cr>')
 -- opens quickfix list
 nnoremap('<localleader>c', ':copen<cr>')
 
+-- toggle between two last buffers
+nnoremap('<leader>o', '<cmd>edit #<cr>')
+
 -- leader c - copy to OS clipboard
 vim.api.nvim_set_keymap('v', '<leader>c', '"*y', {})
 -- leader v - paste from OS clipboard
