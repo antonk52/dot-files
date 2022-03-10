@@ -523,6 +523,8 @@ vim.defer_fn(function()
         javascriptreact = opts,
         typescript = opts,
         typescriptreact = opts,
+        yml = opts,
+        yaml = opts,
     })
 end, 300)
 
