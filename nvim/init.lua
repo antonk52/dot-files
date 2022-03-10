@@ -565,6 +565,7 @@ vim.cmd('command! BadPracticesSetup lua require("bad_practices").setup()')
 -- vim-markdown {{{2
 vim.g.vim_markdown_frontmatter = 1
 vim.g.vim_markdown_new_list_item_indent = 0
+vim.g.vim_markdown_no_default_key_mappings = 1
 -- there is a separate plugin to handle markdown folds
 vim.g.vim_markdown_folding_disabled = 1
 if vim.g.colors_name == 'lake' then
