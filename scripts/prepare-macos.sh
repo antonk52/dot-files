@@ -18,15 +18,15 @@ osascript -e 'tell application "System Preferences" to quit'
 # install xcode tools
 xcode-select --install || echo 'xcode tools are already installed';
 
-# Save screenshots to ~/Screenshots
+# Save screenshots to ~/Pictures/Screenshots
 function setup_screenshots() {
-    if [ ! -d "$HOME"/Screenshots ]; then
-        mkdir "$HOME"/Screenshots
-        defaults write com.apple.screencapture location "$HOME"/Screenshots \
-        && echo '✅ Screenshots will be saved to ~/Screenshots' \
-        || echo '❗️ Could not save screenshots to ~/Screenshots';
+    if [ ! -d "$HOME"/Pictures/Screenshots ]; then
+        mkdir "$HOME"/Pictures/Screenshots
+        defaults write com.apple.screencapture location "$HOME"/Pictures/Screenshots \
+        && echo '✅ Screenshots will be saved to ~/Pictures/Screenshots' \
+        || echo '❗️ Could not save screenshots to ~/Pictures/Screenshots';
     else
-        echo "~/Screenshots already exists"
+        echo "~/Pictures/Screenshots already exists"
     fi
 }
 
@@ -111,6 +111,7 @@ function setup_safari() {
 if [[ "$SKIP_ALL" == "1" ]]; then
     echo "skipped all"
 
+    [[ "$RUN_setup_screenshots" == "1" ]] && setup_screenshots;
     [[ "$RUN_setup_tap_to_click" == "1" ]] && setup_tap_to_click;
     [[ "$RUN_setup_three_finger_drag" == "1" ]] && setup_three_finger_drag;
     [[ "$RUN_setup_dock" == "1" ]] && setup_dock;
@@ -122,6 +123,7 @@ if [[ "$SKIP_ALL" == "1" ]]; then
 else
     echo "running all scripts"
 
+    setup_screenshots;
     setup_tap_to_click;
     setup_three_finger_drag;
     setup_dock;
