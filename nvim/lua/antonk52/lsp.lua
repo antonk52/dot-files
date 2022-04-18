@@ -51,9 +51,9 @@ function M.on_attach(_, bufnr)
     buf_set_keymap('<leader>ca', '<cmd>lua vim.lsp.buf.code_action()<cr>', opts)
     buf_set_keymap('gr', '<cmd>lua vim.lsp.buf.references()<cr>', opts)
     buf_set_keymap('<leader>L', '<cmd>lua require("antonk52.lsp").show_current_line_dignostics()<cr>', opts)
-    buf_set_keymap('<leader>[', '<cmd>lua vim.lsp.diagnostic.goto_prev()<cr>', opts)
-    buf_set_keymap('<leader>]', '<cmd>lua vim.lsp.diagnostic.goto_next()<cr>', opts)
-    buf_set_keymap('<localleader>l', '<cmd>lua vim.lsp.diagnostic.set_loclist()<cr>', opts)
+    buf_set_keymap('<leader>[', '<cmd>lua vim.diagnostic.goto_prev()<cr>', opts)
+    buf_set_keymap('<leader>]', '<cmd>lua vim.diagnostic.goto_next()<cr>', opts)
+    buf_set_keymap('<localleader>l', '<cmd>lua vim.diagnostic.set_loclist()<cr>', opts)
     buf_set_keymap('<localleader>f', '<cmd>lua vim.lsp.buf.formatting()<cr>', opts)
 end
 
