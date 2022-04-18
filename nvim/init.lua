@@ -30,13 +30,11 @@ Plug('antonk52/gitignore-grabber.nvim')
 -- tests
 Plug('nvim-treesitter/nvim-treesitter', { ['do'] = ':TSUpdate' }) -- We recommend updating the parsers on update
 Plug('nvim-treesitter/playground')
--- to load telescope `TELESCOPE=1 nvim .`
-if vim.env.TELESCOPE == '1' then
-    -- telescope only
-    Plug('nvim-lua/popup.nvim')
-    Plug('nvim-lua/plenary.nvim')
-    Plug('nvim-telescope/telescope.nvim')
-end
+-- telescope
+Plug('nvim-lua/plenary.nvim')
+Plug('nvim-telescope/telescope.nvim')
+Plug('nvim-telescope/telescope-ui-select.nvim')
+-- fancy UI
 Plug('rcarriga/nvim-notify')
 Plug('hoob3rt/lualine.nvim')
 -- change surrounding chars
@@ -453,6 +451,19 @@ vim.api.nvim_set_keymap('n', '<leader>D', ':Dots<cr>', { noremap = true })
 -- start in a popup
 vim.g.fzf_layout = { window = { width = 0.9, height = 0.6 } }
 
+-- telescope {{{2
+vim.defer_fn(function()
+    require("telescope").setup {
+        extensions = {
+            ["ui-select"] = {
+                require("telescope.themes").get_dropdown {
+                    -- even more opts
+                }
+            }
+        }
+    }
+    require("telescope").load_extension("ui-select")
+end, 100)
 -- supertab {{{2
 -- navigate through auto completion options where:
 -- - tab takes to the next one - one down
@@ -505,7 +516,7 @@ vim.defer_fn(function()
     elseif lsp_to_use == 'coc' then
         require('antonk52.coc').setup()
     end
-end, 300)
+end, 100)
 
 -- colorizer {{{2
 -- color highlight wont work on the first opened buffer,
@@ -526,7 +537,7 @@ vim.defer_fn(function()
         yml = opts,
         yaml = opts,
     })
-end, 300)
+end, 100)
 
 -- treesitter {{{2
 if vim.env.TREESITTER ~= '0' then
