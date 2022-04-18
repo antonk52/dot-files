@@ -27,12 +27,12 @@ end
 
 function M.on_attach(_, bufnr)
     -- Enable completion triggered by <c-x><c-o>
-    vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
+    vim.api.nvim_buf_set_option(bufnr or 0, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
 
     -- Mappings.
     local opts = { noremap = true, silent = true }
     local function buf_set_keymap(...)
-        vim.api.nvim_buf_set_keymap(bufnr, 'n', ...)
+        vim.api.nvim_buf_set_keymap(bufnr or 0, 'n', ...)
     end
 
     -- See `:help vim.lsp.*` for documentation on any of the below functions
