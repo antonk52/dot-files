@@ -255,96 +255,89 @@ vim.g.maplocalleader = '\\'
 -- nvim 0.6 maps Y to yank till the end of the line,
 -- preserving a legacy behaviour
 if vim.fn.has('nvim-0.6') == 1 then
-    vim.api.nvim_del_keymap('', 'Y')
-end
-
-local function nnoremap(left, right)
-    vim.api.nvim_set_keymap('n', left, right, { noremap = true })
-end
-local function vnoremap(left, right)
-    vim.api.nvim_set_keymap('v', left, right, { noremap = true })
+    vim.keymap.del('', 'Y')
 end
 
 -- closes a window
-nnoremap('<leader>q', ':q<cr>')
-nnoremap('<leader>w', ':w<cr>')
+vim.keymap.set('n', '<leader>q', ':q<cr>')
+vim.keymap.set('n', '<leader>w', ':w<cr>')
 -- closes a buffer
-nnoremap('<localleader>q', ':bd<cr>')
+vim.keymap.set('n', '<localleader>q', ':bd<cr>')
 -- opens quickfix list
-nnoremap('<localleader>c', ':copen<cr>')
+vim.keymap.set('n', '<localleader>c', ':copen<cr>')
 
 -- toggle between two last buffers
-nnoremap('<leader>o', '<cmd>edit #<cr>')
+vim.keymap.set('n', '<leader>o', '<cmd>edit #<cr>')
 
 -- leader c - copy to OS clipboard
-vim.api.nvim_set_keymap('v', '<leader>c', '"*y', {})
+vim.keymap.set('v', '<leader>c', '"*y', {noremap = false})
 -- leader v - paste from OS clipboard
-vim.api.nvim_set_keymap('', '<leader>v', '"*p', {})
+vim.keymap.set('', '<leader>v', '"*p', {noremap = false})
 -- paste under current indentation level
-nnoremap('p', ']p')
+vim.keymap.set('n', 'p', ']p')
 -- toggle folds
-nnoremap('<Tab>', 'za')
+vim.keymap.set('n', '<Tab>', 'za')
 
 -- toggle highlight last search
-nnoremap('<leader>n', ':set hlsearch!<cr>')
+vim.keymap.set('n', '<leader>n', ':set hlsearch!<cr>')
 
 -- Show the current file path.
 -- Useful when you have many splits & the status line gets truncated
-nnoremap('<leader>p', ':echo expand("%")<CR>')
+vim.keymap.set('n', '<leader>p', ':echo expand("%")<CR>')
 -- Puts an absolute file path in the system clipboard
-nnoremap('<localleader>p', ':silent !echo "%:p" \\| pbcopy<CR>')
+vim.keymap.set('n', '<localleader>p', ':silent !echo "%:p" \\| pbcopy<CR>')
 -- Puts a project file path in the system clipboard
-vim.api.nvim_set_keymap('n', '<leader>P', ':silent !echo "%" \\| pbcopy<CR>', { noremap = true, silent = true })
+vim.keymap.set('n', '<leader>P', ':silent !echo "%" \\| pbcopy<CR>', { silent = true })
 
 -- manipulate numbers, convenient since my tmux prefix is <C-a>
-nnoremap('<LocalLeader>a', '<C-a>')
-nnoremap('<LocalLeader>x', '<C-x>')
-vnoremap('<LocalLeader>a', '<C-a>')
-vnoremap('<LocalLeader>x', '<C-x>')
-vnoremap('<LocalLeader><LocalLeader>a', 'g<C-a>')
-vnoremap('<LocalLeader><LocalLeader>x', 'g<C-x>')
+vim.keymap.set('n', '<LocalLeader>a', '<C-a>')
+vim.keymap.set('n', '<LocalLeader>x', '<C-x>')
+vim.keymap.set('v', '<LocalLeader>a', '<C-a>')
+vim.keymap.set('v', '<LocalLeader>x', '<C-x>')
+vim.keymap.set('v', '<LocalLeader><LocalLeader>a', 'g<C-a>')
+vim.keymap.set('v', '<LocalLeader><LocalLeader>x', 'g<C-x>')
 
 -- Fixes (most) syntax highlighting problems in current buffer
-vim.api.nvim_set_keymap('n', '<leader>§', ':syntax sync fromstart<CR>', { noremap = true, silent = true })
+vim.keymap.set('n', '<leader>§', ':syntax sync fromstart<CR>', { silent = true })
 
 -- indentation shifts keep selection(`=` should still be preferred)
-vnoremap('<', '<gv')
-vnoremap('>', '>gv')
+vim.keymap.set('v', '<', '<gv')
+vim.keymap.set('v', '>', '>gv')
 
 -- ctrl j/k/l/h shortcuts to navigate between splits
-nnoremap('<C-J>', '<cmd>lua require("antonk52.layout").navigate("down")<cr>')
-nnoremap('<C-K>', '<cmd>lua require("antonk52.layout").navigate("up")<cr>')
-nnoremap('<C-L>', '<cmd>lua require("antonk52.layout").navigate("right")<cr>')
-nnoremap('<C-H>', '<cmd>lua require("antonk52.layout").navigate("left")<cr>')
+vim.keymap.set('n', '<C-J>', '<cmd>lua require("antonk52.layout").navigate("down")<cr>')
+vim.keymap.set('n', '<C-K>', '<cmd>lua require("antonk52.layout").navigate("up")<cr>')
+vim.keymap.set('n', '<C-L>', '<cmd>lua require("antonk52.layout").navigate("right")<cr>')
+vim.keymap.set('n', '<C-H>', '<cmd>lua require("antonk52.layout").navigate("left")<cr>')
 
 -- leader j/k/l/h resize active split by 5
-nnoremap('<leader>j', '<C-W>5-')
-nnoremap('<leader>k', '<C-W>5+')
-nnoremap('<leader>l', '<C-W>5>')
-nnoremap('<leader>h', '<C-W>5<')
+vim.keymap.set('n', '<leader>j', '<C-W>5-')
+vim.keymap.set('n', '<leader>k', '<C-W>5+')
+vim.keymap.set('n', '<leader>l', '<C-W>5>')
+vim.keymap.set('n', '<leader>h', '<C-W>5<')
 
-nnoremap('<Leader>=', '<cmd>lua require("antonk52.layout").zoom_split()<cr>')
-nnoremap('<Leader>-', '<cmd>lua require("antonk52.layout").equalify_splits()<cr>')
-nnoremap('<Leader>+', '<cmd>lua require("antonk52.layout").restore_layout()<cr>')
+vim.keymap.set('n', '<Leader>=', '<cmd>lua require("antonk52.layout").zoom_split()<cr>')
+vim.keymap.set('n', '<Leader>-', '<cmd>lua require("antonk52.layout").equalify_splits()<cr>')
+vim.keymap.set('n', '<Leader>+', '<cmd>lua require("antonk52.layout").restore_layout()<cr>')
 
 -- go to the beginning of the line (^ is too far)
-nnoremap('<Leader>a', '^')
-vnoremap('<Leader>a', '^')
+vim.keymap.set('n', '<Leader>a', '^')
+vim.keymap.set('v', '<Leader>a', '^')
 -- go to the end of the line ($ is too far)
-nnoremap('<Leader>e', '$')
-vnoremap('<Leader>e', '$h')
+vim.keymap.set('n', '<Leader>e', '$')
+vim.keymap.set('v', '<Leader>e', '$h')
 
 -- open a new tab
-nnoremap('<C-t>', '<cmd>tabedit<CR>')
+vim.keymap.set('n', '<C-t>', '<cmd>tabedit<CR>')
 
 -- to navigate between buffers
-nnoremap('<Left>', '<cmd>prev<CR>')
-nnoremap('<Right>', '<cmd>next<CR>')
+vim.keymap.set('n', '<Left>', '<cmd>prev<CR>')
+vim.keymap.set('n', '<Right>', '<cmd>next<CR>')
 
 -- to navigate between errors
 -- useful after populating quickfix window
-nnoremap('<up>', '<cmd>cprev<CR>')
-nnoremap('<down>', '<cmd>cnext<CR>')
+vim.keymap.set('n', '<up>', '<cmd>cprev<CR>')
+vim.keymap.set('n', '<down>', '<cmd>cnext<CR>')
 
 -- Commands {{{1
 local commands = {
@@ -388,7 +381,7 @@ vim.api.nvim_create_autocmd(
             -- do not map esc for `fzf` terminals
             if vim.bo.filetype ~= 'fzf' then
                 -- use Esc to go into normal mode in terminal
-                vim.api.nvim_set_keymap('t', '<Esc>', '<c-\\><c-n>', {noremap = true})
+                vim.keymap.set('t', '<Esc>', '<c-\\><c-n>')
             end
             -- immediate enter terminal
             vim.cmd('startinsert')
@@ -435,8 +428,8 @@ vim.g.dirvish_mode = ':sort ,^\\v(.*[\\/])|\\ze,'
 -- vim-commentary {{{2
 
 -- toggle comments with CTRL _
-vim.api.nvim_set_keymap('v', '<C-_>', '<plug>Commentary', {})
-vim.api.nvim_set_keymap('n', '<C-_>', '<plug>CommentaryLine', {})
+vim.keymap.set('v', '<C-_>', '<plug>Commentary')
+vim.keymap.set('n', '<C-_>', '<plug>CommentaryLine')
 
 -- vim-fugitive {{{2
 vim.g.fugitive_no_maps = 1
@@ -483,24 +476,24 @@ vim.api.nvim_create_user_command(
 )
 
 -- use GFiles for projects with git, otherwise gracefully fall-back to all files search
-vim.api.nvim_set_keymap(
+vim.keymap.set(
     'n',
     '<leader>f',
     "isdirectory(getcwd() . '/.git') ? ':GFiles<cr>' : ':Files<cr>'",
     { noremap = true, expr = true }
 )
-vim.api.nvim_set_keymap('n', '<leader>F', ':Files<cr>', { noremap = true })
+vim.keymap.set('n', '<leader>F', ':Files<cr>')
 -- buffer list with fuzzy search
-vim.api.nvim_set_keymap('n', '<leader>b', ':Buffers<cr>', { noremap = true })
+vim.keymap.set('n', '<leader>b', ':Buffers<cr>')
 -- In current buffer search with a preview
-vim.api.nvim_set_keymap('n', '<leader>/', ':BLines<cr>', { noremap = true })
+vim.keymap.set('n', '<leader>/', ':BLines<cr>')
 -- list available snippets
-vim.api.nvim_set_keymap('n', '<leader>s', ':Snippets<cr>', { noremap = true })
+vim.keymap.set('n', '<leader>s', ':Snippets<cr>')
 -- list opened windows
-vim.api.nvim_set_keymap('n', '<leader>W', ':Windows<cr>', { noremap = true })
+vim.keymap.set('n', '<leader>W', ':Windows<cr>')
 -- list opened file history
-vim.api.nvim_set_keymap('n', '<leader>H', ':History<cr>', { noremap = true })
-vim.api.nvim_set_keymap('n', '<leader>D', ':Dots<cr>', { noremap = true })
+vim.keymap.set('n', '<leader>H', ':History<cr>')
+vim.keymap.set('n', '<leader>D', ':Dots<cr>')
 -- start in a popup
 vim.g.fzf_layout = { window = { width = 0.9, height = 0.6 } }
 
@@ -545,10 +538,10 @@ vim.g.indent_blankline_filetype_exclude = {
 
 -- refresh blank lines after toggleing folds
 -- to avoid intent lines overlaying the fold line characters
-vim.api.nvim_set_keymap('n', 'zr', 'zr:IndentBlanklineRefresh<cr>', { noremap = true })
-vim.api.nvim_set_keymap('n', 'za', 'za:IndentBlanklineRefresh<cr>', { noremap = true })
-vim.api.nvim_set_keymap('n', 'zm', 'zm:IndentBlanklineRefresh<cr>', { noremap = true })
-vim.api.nvim_set_keymap('n', 'zo', 'zo:IndentBlanklineRefresh<cr>', { noremap = true })
+vim.keymap.set('n', 'zr', 'zr:IndentBlanklineRefresh<cr>')
+vim.keymap.set('n', 'za', 'za:IndentBlanklineRefresh<cr>')
+vim.keymap.set('n', 'zm', 'zm:IndentBlanklineRefresh<cr>')
+vim.keymap.set('n', 'zo', 'zo:IndentBlanklineRefresh<cr>')
 
 -- coc.nvim / lsp {{{2
 vim.opt.updatetime = 300

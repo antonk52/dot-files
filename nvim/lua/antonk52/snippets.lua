@@ -232,19 +232,19 @@ function M.set_snippets_for_filetype()
     luasnip.snippets = default_snippets
 end
 
-function _G.ak_luasnip_expand_or_jump()
+function M.expand_or_jump()
     if luasnip.expand_or_jumpable() then
         luasnip.expand_or_jump()
     end
 end
 
-function _G.ak_luasnip_jump_back()
+function M.jump_back()
     if luasnip.jumpable(-1) then
         luasnip.jump(-1)
     end
 end
 
-function _G.ak_luasnip_toggle_choice()
+function M.toggle_choice()
     if luasnip.choice_active() then
         luasnip.change_choice(1)
     end
@@ -252,14 +252,11 @@ end
 
 function M.setup()
     -- `u` - Undo
-    vim.api.nvim_set_keymap('i', '<C-u>', '<cmd>lua ak_luasnip_jump_back()<cr>', { noremap = true })
-    vim.api.nvim_set_keymap('s', '<C-u>', '<cmd>lua ak_luasnip_jump_back()<cr>', { noremap = true })
+    vim.keymap.set({'i', 's'}, '<C-u>', M.jump_back)
     -- `o` - Open
-    vim.api.nvim_set_keymap('i', '<C-o>', '<cmd>lua ak_luasnip_expand_or_jump()<cr>', { noremap = true })
-    vim.api.nvim_set_keymap('s', '<C-o>', '<cmd>lua ak_luasnip_expand_or_jump()<cr>', { noremap = true })
+    vim.keymap.set({'i', 's'}, '<C-o>', M.expand_or_jump)
     -- toggle choices
-    vim.api.nvim_set_keymap('i', '<C-p>', '<cmd>lua ak_luasnip_toggle_choice()<cr>', { noremap = true })
-    vim.api.nvim_set_keymap('s', '<C-p>', '<cmd>lua ak_luasnip_toggle_choice()<cr>', { noremap = true })
+    vim.keymap.set({'i', 's'}, '<C-p>', M.toggle_choice)
 
     vim.api.nvim_create_user_command('SnippetsSource', 'source ~/.config/nvim/lua/antonk52/snippets.lua | lua require("antonk52.snippets").setup()', {bang = true})
 

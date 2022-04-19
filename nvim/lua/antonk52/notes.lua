@@ -14,15 +14,14 @@ end
 function M.setup()
     M.source_rus_keymap()
 
-    vim.api.nvim_set_keymap(
+    vim.keymap.set(
         'n',
         '<localleader>s',
-        '<cmd>Rg tags.*' .. vim.fn.expand('<cword>') .. '<cr>',
-        { noremap = true }
+        '<cmd>Rg tags.*' .. vim.fn.expand('<cword>') .. '<cr>'
     )
 
-    vim.api.nvim_set_keymap('n', 'g[', '<cmd>lua require("antonk52.notes").note_prev()<cr>', {noremap = true})
-    vim.api.nvim_set_keymap('n', 'g]', '<cmd>lua require("antonk52.notes").note_next()<cr>', {noremap = true})
+    vim.keymap.set('n', 'g[', M.note_prev)
+    vim.keymap.set('n', 'g]', M.note_next)
 
     vim.api.nvim_create_user_command('NoteNext', M.note_next, {})
     vim.api.nvim_create_user_command('NotePrev', M.note_prev, {})

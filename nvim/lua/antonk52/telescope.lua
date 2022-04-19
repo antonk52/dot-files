@@ -25,32 +25,38 @@ local options = {
     -- preview_title = false
 }
 
-local get_fuzzy_cmd = function()
-    if vim.fn.isdirectory(vim.fn.getcwd() .. '/.git') == 1 then
-        return 'git'
-    end
-
-    return 'find'
-end
-vim.api.nvim_set_keymap(
+vim.keymap.set(
     'n',
     '<leader>f',
-    ':lua require"telescope.builtin".' .. get_fuzzy_cmd() .. '_files(require"antonk52/telescope".options)<cr>',
-    { noremap = true }
+    function()
+        local method_name = vim.fn.isdirectory(vim.fn.getcwd() .. '/.git') == 1
+            and 'git_files'
+            or 'find_files'
+
+        require"telescope.builtin"[method_name](options)
+    end
 )
-vim.api.nvim_set_keymap(
+vim.keymap.set(
     'n',
     '<leader>F',
-    ':lua require"telescope.builtin".find_files(require"antonk52/telescope".options)<cr>',
-    { noremap = true }
+    function()
+        require"telescope.builtin".find_files(options)
+    end
 )
-vim.api.nvim_set_keymap(
+vim.keymap.set(
     'n',
     '<leader>/',
-    ':lua require"telescope.builtin".current_buffer_fuzzy_find(require"antonk52/telescope".options)<cr>',
-    { noremap = true }
+    function()
+        require"telescope.builtin".current_buffer_fuzzy_find(options)
+    end
 )
-vim.api.nvim_set_keymap('n', '<leader>b', ':lua require"telescope.builtin".buffers()<cr>', { noremap = true })
+vim.keymap.set(
+    'n',
+    '<leader>b',
+    function()
+        require"telescope.builtin".buffers()
+    end
+)
 
 return {
     options = options,
