@@ -74,10 +74,15 @@ M.servers = {
         end,
     },
 
+    hhvm = {},
+
     -- https://github.com/hrsh7th/vscode-langservers-extracted
     html = {},
     jsonls = {},
     cssls = {},
+
+    rust_analyzer = {},
+
     cssmodules_ls = {
         on_attach = function(client)
             -- disabled go-to-definition to avoid confusion with tsserver
