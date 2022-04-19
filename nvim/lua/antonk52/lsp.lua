@@ -78,7 +78,16 @@ M.servers = {
 
     -- https://github.com/hrsh7th/vscode-langservers-extracted
     html = {},
-    jsonls = {},
+    -- lazy require schemastore
+    jsonls = function()
+        return {
+            settings = {
+                json = {
+                    schemas = require('schemastore').json.schemas()
+                },
+            },
+        }
+    end,
     cssls = {},
 
     rust_analyzer = {},
