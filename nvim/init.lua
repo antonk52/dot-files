@@ -346,16 +346,6 @@ nnoremap('<Right>', '<cmd>next<CR>')
 nnoremap('<up>', '<cmd>cprev<CR>')
 nnoremap('<down>', '<cmd>cnext<CR>')
 
--- neovim terminal
--- use Esc to go into normal mode in terminal
-vim.cmd('au TermOpen * tnoremap <Esc> <c-\\><c-n>')
--- cancel the mapping above for fzf terminal
-vim.cmd([[
-au FileType fzf tunmap <Esc>
-autocmd TermOpen * startinsert
-autocmd TermOpen * setlocal nonumber norelativenumber
-]])
-
 -- Commands {{{1
 local commands = {
     ToggleNumbers = 'set number! relativenumber!',
@@ -389,13 +379,50 @@ end
 
 -- Autocommands {{{1
 
-vim.cmd([[
-" blink yanked text after yanking it
-autocmd TextYankPost * lua return (not vim.v.event.visual) and require('vim.highlight').on_yank({higroup = 'Substitute', timeout = 250})
+-- neovim terminal
+vim.api.nvim_create_autocmd(
+    'TermOpen',
+    {
+        pattern = '*',
+        callback = function()
+            -- do not map esc for `fzf` terminals
+            if vim.bo.filetype ~= 'fzf' then
+                -- use Esc to go into normal mode in terminal
+                vim.api.nvim_set_keymap('t', '<Esc>', '<c-\\><c-n>', {noremap = true})
+            end
+            -- immediate enter terminal
+            vim.cmd('startinsert')
+        end
+    }
+)
 
-autocmd FileType json lua if vim.fn.expand('%') == 'tsconfig.json' then vim.bo.ft = 'jsonc' end
-autocmd FileType query lua if vim.fn.expand('%:e') == 'scm' then vim.bo.filetype = 'scheme' end
-]])
+-- blink yanked text after yanking it
+vim.api.nvim_create_autocmd(
+    'TextYankPost',
+    {
+        callback = function()
+            if not vim.v.event.visual then
+                vim.highlight.on_yank({higroup = 'Substitute', timeout = 250})
+            end
+        end
+    }
+)
+
+vim.api.nvim_create_autocmd(
+    'FileType',
+    {
+        pattern = {'json', 'query'},
+        callback = function()
+            if vim.fn.expand('%:t') == 'tsconfig.json' then
+                -- allow comments in tsconfig files
+                vim.bo.ft = 'jsonc'
+            elseif vim.fn.expand('%:e') == 'scm' then
+                -- enable syntax in treesitter syntax files
+                vim.bo.filetype = 'scheme'
+            end
+        end
+    }
+)
 
 -- Plugins {{{1
 

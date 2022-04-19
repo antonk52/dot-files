@@ -265,7 +265,13 @@ function M.setup()
 
     luasnip.snippets = default_snippets
 
-    vim.cmd([[autocmd BufEnter * lua require'antonk52.snippets'.set_snippets_for_filetype()]])
+    vim.api.nvim_create_autocmd(
+        'BufEnter',
+        {
+            pattern = '*',
+            callback = M.set_snippets_for_filetype,
+        }
+    )
 
     vim.api.nvim_create_user_command('EditSnippets', 'edit ~/.config/nvim/lua/antonk52/snippets.lua', {bang = true})
 end
