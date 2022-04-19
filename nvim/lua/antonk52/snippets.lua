@@ -261,13 +261,13 @@ function M.setup()
     vim.api.nvim_set_keymap('i', '<C-p>', '<cmd>lua ak_luasnip_toggle_choice()<cr>', { noremap = true })
     vim.api.nvim_set_keymap('s', '<C-p>', '<cmd>lua ak_luasnip_toggle_choice()<cr>', { noremap = true })
 
-    vim.cmd([[command! SnippetsSource source ~/.config/nvim/lua/antonk52/snippets.lua | lua require('antonk52.snippets').setup()]])
+    vim.api.nvim_create_user_command('SnippetsSource', 'source ~/.config/nvim/lua/antonk52/snippets.lua | lua require("antonk52.snippets").setup()', {bang = true})
 
     luasnip.snippets = default_snippets
 
     vim.cmd([[autocmd BufEnter * lua require'antonk52.snippets'.set_snippets_for_filetype()]])
 
-    vim.cmd([[command! EditSnippets edit ~/.config/nvim/lua/antonk52/snippets.lua]])
+    vim.api.nvim_create_user_command('EditSnippets', 'edit ~/.config/nvim/lua/antonk52/snippets.lua', {bang = true})
 end
 
 return M

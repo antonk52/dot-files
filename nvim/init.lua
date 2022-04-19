@@ -357,29 +357,35 @@ autocmd TermOpen * setlocal nonumber norelativenumber
 ]])
 
 -- Commands {{{1
+local commands = {
+    ToggleNumbers = 'set number! relativenumber!',
+    Todo = function() require"antonk52.todo".find_todo() end,
+    Reroot = function() require"antonk52.root".reroot() end,
 
-vim.cmd([[
-command! ToggleNumbers set number! relativenumber!
+    SourceRussianMacKeymap = function() require'antonk52.notes'.source_rus_keymap() end,
+    NotesMode = function() require'antonk52.notes'.setup() end,
 
-command! Todo lua require'antonk52.todo'.find_todo()
+    -- for some reason :help colorcolumn suggest setting it via `set colorcolumn=123`
+    -- that has no effect, but setting it using `let &colorcolumn=123` works
+    -- SetColorColumn = 'let &colorcolumn=<args> {nargs=1}',
+    SetColorColumn = {function(arg) vim.opt.colorcolumn = arg.args end, {nargs = 1}},
 
-command! Reroot lua require'antonk52.root'.reroot()
+    CloseAllFloats = function() require'antonk52.lsp'.close_all_floats() end,
 
-command! SourceRussianMacKeymap lua require'antonk52.notes'.source_rus_keymap()
-command! NotesMode lua require'antonk52.notes'.setup()
+    -- fat fingers
+    Wq = ':wq',
+    Ter = ':ter',
+    Sp = ':sp',
+    Vs = ':vs',
+}
 
-" for some reason :help colorcolumn suggest setting it via `set colorcolumn=123`
-" that has no effect, but setting it using `let &colorcolumn=123` works
-command! -nargs=1 SetColorColumn let &colorcolumn=<args>
-
-command! CloseAllFloats lua require'antonk52.lsp'.close_all_floats()
-
-" fat fingers {{{2
-command! Wq :wq
-command! Ter :ter
-command! Sp :sp
-command! Vs :vs
-]])
+for k, v in pairs(commands) do
+    if type(v) == 'table' then
+        vim.api.nvim_create_user_command(k, v[1], v[2])
+    else
+        vim.api.nvim_create_user_command(k, v, {})
+    end
+end
 
 -- Autocommands {{{1
 
@@ -427,15 +433,27 @@ require('antonk52.snippets').setup()
 
 -- fzf {{{2
 -- enable file preview for both Files & GFiles
-vim.cmd([[
-command! -bang -nargs=? -complete=dir Files call fzf#vim#files(<q-args>, fzf#vim#with_preview(), <bang>1)
-command! -bang -nargs=? -complete=dir GFiles call fzf#vim#gitfiles(<q-args>, fzf#vim#with_preview(), <bang>0)
-]])
+vim.api.nvim_create_user_command(
+    'Files',
+    'call fzf#vim#files(<q-args>, fzf#vim#with_preview(), <bang>1)',
+    {bang = true, complete='dir', nargs='?'}
+)
+vim.api.nvim_create_user_command(
+    'GFiles',
+    'call fzf#vim#gitfiles(<q-args>, fzf#vim#with_preview(), <bang>1)',
+    {bang = true, complete='dir', nargs='?'}
+)
 
 -- quick jump to dot files from anywhere
-vim.cmd([[
-command! -bang -nargs=0 Dots call fzf#run({'source': 'cd ~/dot-files && git ls-files', 'sink': 'e', 'dir': '~/dot-files'})
-]])
+vim.api.nvim_create_user_command(
+    'Dots',
+    function() vim.fn["fzf#run"]({
+        source = 'cd ~/dot-files && git ls-files',
+        sink = 'e',
+        dir = '~/dot-files',
+    }) end,
+    {bang = true, nargs=0}
+)
 
 -- use GFiles for projects with git, otherwise gracefully fall-back to all files search
 vim.api.nvim_set_keymap(
@@ -580,7 +598,7 @@ if vim.env.TREESITTER ~= '0' then
 end
 
 -- bad-practices.nvim {{{2
-vim.cmd('command! BadPracticesSetup lua require("bad_practices").setup()')
+vim.api.nvim_create_user_command('BadPracticesSetup', function() require("bad_practices").setup() end, {})
 -- vim-markdown {{{2
 vim.g.vim_markdown_frontmatter = 1
 vim.g.vim_markdown_new_list_item_indent = 0

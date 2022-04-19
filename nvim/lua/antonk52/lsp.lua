@@ -343,7 +343,7 @@ end
 function M.setup()
     M.setup_completion()
 
-    vim.cmd('command! FormatLsp lua vim.lsp.buf.formatting()')
+    vim.api.nvim_create_user_command('FormatLsp', function() vim.lsp.buf.formatting() end, {})
 
     -- M.setup_eslint_d()
     M.setup_lua()
