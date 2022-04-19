@@ -25,6 +25,7 @@ Plug('hrsh7th/cmp-path')
 Plug('hrsh7th/cmp-nvim-lsp')
 Plug('hrsh7th/nvim-cmp')
 Plug('antonk52/amake.nvim')
+Plug('antonk52/npm_scripts.nvim')
 Plug('antonk52/bad-practices.nvim')
 Plug('antonk52/gitignore-grabber.nvim')
 -- tests
