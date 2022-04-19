@@ -259,36 +259,21 @@ if vim.fn.has('nvim-0.6') == 1 then
     vim.keymap.del('', 'Y')
 end
 
--- closes a window
-vim.keymap.set('n', '<leader>q', ':q<cr>')
-vim.keymap.set('n', '<leader>w', ':w<cr>')
--- closes a buffer
-vim.keymap.set('n', '<localleader>q', ':bd<cr>')
--- opens quickfix list
-vim.keymap.set('n', '<localleader>c', ':copen<cr>')
+vim.keymap.set('n', '<leader>o', '<cmd>edit #<cr>', {desc = 'toggle between two last buffers'})
+vim.keymap.set('v', '<leader>c', '"*y', {noremap = false, desc = 'copy to OS clipboard'})
+vim.keymap.set('', '<leader>v', '"*p', {noremap = false, desc = 'paste from OS clipboard'})
+vim.keymap.set('n', 'p', ']p', {desc = 'paste under current indentation level'})
+vim.keymap.set('n', '<Tab>', 'za', {desc = 'toggle folds'})
+vim.keymap.set('n', '<leader>n', ':set hlsearch!<cr>', {desc = 'toggle highlight for last search'})
 
--- toggle between two last buffers
-vim.keymap.set('n', '<leader>o', '<cmd>edit #<cr>')
-
--- leader c - copy to OS clipboard
-vim.keymap.set('v', '<leader>c', '"*y', {noremap = false})
--- leader v - paste from OS clipboard
-vim.keymap.set('', '<leader>v', '"*p', {noremap = false})
--- paste under current indentation level
-vim.keymap.set('n', 'p', ']p')
--- toggle folds
-vim.keymap.set('n', '<Tab>', 'za')
-
--- toggle highlight last search
-vim.keymap.set('n', '<leader>n', ':set hlsearch!<cr>')
-
--- Show the current file path.
 -- Useful when you have many splits & the status line gets truncated
-vim.keymap.set('n', '<leader>p', ':echo expand("%")<CR>')
--- Puts an absolute file path in the system clipboard
-vim.keymap.set('n', '<localleader>p', ':silent !echo "%:p" \\| pbcopy<CR>')
--- Puts a project file path in the system clipboard
-vim.keymap.set('n', '<leader>P', ':silent !echo "%" \\| pbcopy<CR>', { silent = true })
+vim.keymap.set('n', '<leader>p', ':echo expand("%")<CR>', {
+    desc = 'print current buffer file path'})
+vim.keymap.set('n', '<localleader>p', ':silent !echo "%:p" \\| pbcopy<CR>', {
+    desc = 'copy current buffer file path'})
+vim.keymap.set('n', '<leader>P', ':silent !echo "%" \\| pbcopy<CR>', {
+    silent = true,
+    desc = 'copy absolute path to current buffer'})
 
 -- manipulate numbers, convenient since my tmux prefix is <C-a>
 vim.keymap.set('n', '<LocalLeader>a', '<C-a>')
@@ -298,8 +283,9 @@ vim.keymap.set('v', '<LocalLeader>x', '<C-x>')
 vim.keymap.set('v', '<LocalLeader><LocalLeader>a', 'g<C-a>')
 vim.keymap.set('v', '<LocalLeader><LocalLeader>x', 'g<C-x>')
 
--- Fixes (most) syntax highlighting problems in current buffer
-vim.keymap.set('n', '<leader>§', ':syntax sync fromstart<CR>', { silent = true })
+vim.keymap.set('n', '<leader>§', ':syntax sync fromstart<CR>', {
+    silent = true,
+    desc = 'Fixes (most) syntax highlighting problems in current buffer'})
 
 -- indentation shifts keep selection(`=` should still be preferred)
 vim.keymap.set('v', '<', '<gv')
@@ -321,24 +307,17 @@ vim.keymap.set('n', '<Leader>=', '<cmd>lua require("antonk52.layout").zoom_split
 vim.keymap.set('n', '<Leader>-', '<cmd>lua require("antonk52.layout").equalify_splits()<cr>')
 vim.keymap.set('n', '<Leader>+', '<cmd>lua require("antonk52.layout").restore_layout()<cr>')
 
--- go to the beginning of the line (^ is too far)
-vim.keymap.set('n', '<Leader>a', '^')
-vim.keymap.set('v', '<Leader>a', '^')
+vim.keymap.set({'n', 'v'}, '<Leader>a', '^', {
+    desc = 'go to the beginning of the line (^ is too far)'})
 -- go to the end of the line ($ is too far)
 vim.keymap.set('n', '<Leader>e', '$')
 vim.keymap.set('v', '<Leader>e', '$h')
 
--- open a new tab
-vim.keymap.set('n', '<C-t>', '<cmd>tabedit<CR>')
+vim.keymap.set('n', '<C-t>', '<cmd>tabedit<CR>', {desc = 'open a new tab'})
 
 -- to navigate between buffers
 vim.keymap.set('n', '<Left>', '<cmd>prev<CR>')
 vim.keymap.set('n', '<Right>', '<cmd>next<CR>')
-
--- to navigate between errors
--- useful after populating quickfix window
-vim.keymap.set('n', '<up>', '<cmd>cprev<CR>')
-vim.keymap.set('n', '<down>', '<cmd>cnext<CR>')
 
 -- Commands {{{1
 local commands = {
@@ -351,7 +330,6 @@ local commands = {
 
     -- for some reason :help colorcolumn suggest setting it via `set colorcolumn=123`
     -- that has no effect, but setting it using `let &colorcolumn=123` works
-    -- SetColorColumn = 'let &colorcolumn=<args> {nargs=1}',
     SetColorColumn = {function(arg) vim.opt.colorcolumn = arg.args end, {nargs = 1}},
 
     CloseAllFloats = function() require'antonk52.lsp'.close_all_floats() end,
