@@ -113,6 +113,12 @@ for _, v in pairs(disable_plugins) do
     vim.g['loaded_' .. v] = 1
 end
 
+-- use snappier filetype detection
+if vim.fn.has('nvim-0.7') == 1 then
+    vim.g.do_filetype_lua = 1
+    vim.g.did_load_filetypes = 0
+end
+
 -- Set them directly if they are installed, otherwise disable them. To avoid the
 -- runtime check cost, which can be slow.
 -- Python This must be here becasue it makes loading vim VERY SLOW otherwise
