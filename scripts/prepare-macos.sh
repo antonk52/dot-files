@@ -57,6 +57,9 @@ function setup_dock() {
         && defaults write com.apple.dock orientation = 'left' \
         && defaults write com.apple.dock tilesize -int 52 \
         && defaults write com.apple.dock show-recents -int 0 \
+        # disable note bottom-right hot corner
+        && defaults write com.apple.dock wvous-br-corner -int 1 \
+        && defaults write com.apple.dock wvous-br-modifier -int 1048576 \
         && echo '✅ Dock is set up' \
         || echo '❗️ Could not set up dock';
 }
