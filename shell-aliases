@@ -112,12 +112,16 @@ function colors()
     [ "$theme_name" ] && eval "base16_$theme_name" || echo ''
 }
 
+function cdf()
+{
+    cd "$(fd --type d --exclude node_modules | fzf)"
+}
+
 function gob()
 {
     branch_name="$(git branch | fzf-tmux | sed 's/^\(\s\)*\*//g' | sed 's/^ *//g')"
 
     git go $branch_name
-
 }
 
 function repo_url()
