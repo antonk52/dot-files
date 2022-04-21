@@ -117,7 +117,8 @@ end
 -- use snappier filetype detection
 if vim.fn.has('nvim-0.7') == 1 then
     vim.g.do_filetype_lua = 1
-    vim.g.did_load_filetypes = 0
+    -- do not turn these off for plugins such as markdown-vim that use older syntax within markdown
+    -- vim.g.did_load_filetypes = 0
 end
 
 -- Set them directly if they are installed, otherwise disable them. To avoid the
