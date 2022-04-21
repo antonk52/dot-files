@@ -479,16 +479,7 @@ vim.g.fzf_layout = { window = { width = 0.9, height = 0.6 } }
 
 -- telescope {{{2
 vim.defer_fn(function()
-    require("telescope").setup {
-        extensions = {
-            ["ui-select"] = {
-                require("telescope.themes").get_dropdown {
-                    -- even more opts
-                }
-            }
-        }
-    }
-    require("telescope").load_extension("ui-select")
+    require('antonk52.telescope').setup()
 end, 100)
 -- supertab {{{2
 -- navigate through auto completion options where:
