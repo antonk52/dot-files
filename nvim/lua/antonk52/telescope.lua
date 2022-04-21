@@ -14,6 +14,14 @@ M.options = {
     -- preview_title = false
 }
 
+function M.meta_telescope()
+    local builtin = require'telescope.builtin'
+    vim.ui.select(vim.fn.keys(builtin),{prompt = 'select telescope method'}, function(pick)
+        -- TODO provide more options for some methods
+        builtin[pick](M.options)
+    end)
+end
+
 function M.setup()
     local actions = require('telescope.actions')
     require('telescope').setup({
@@ -64,6 +72,11 @@ function M.setup()
         function()
             require"telescope.builtin".buffers()
         end
+    )
+    vim.keymap.set(
+        'n',
+        '<leader>T',
+        M.meta_telescope
     )
 end
 
