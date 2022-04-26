@@ -397,6 +397,17 @@ vim.api.nvim_create_autocmd(
     }
 )
 
+vim.api.nvim_create_autocmd(
+    'FileType',
+    {
+        pattern = {'lua', 'javascript', 'typescript', 'javascriptreact', 'typescriptreact', 'json'},
+        callback = function()
+            vim.keymap.set('n', '<LocalLeader>t', function() require('antonk52.ts_utils').toggle_listy() end, {buffer = true})
+        end,
+        desc = 'toggle different style listy things in files that support it'
+    }
+)
+
 -- Plugins {{{1
 
 -- dirvish {{{2
