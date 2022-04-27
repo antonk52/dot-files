@@ -98,11 +98,20 @@ M.servers = {
             camelCase = 'dashes',
         },
     },
+
     eslint = {
         on_attach = function(client)
             -- force enable formatting
             client.resolved_capabilities.document_formatting = true
         end,
+        root_dir = require('lspconfig.util').root_pattern(
+          '.eslintrc',
+          '.eslintrc.js',
+          '.eslintrc.cjs',
+          '.eslintrc.yaml',
+          '.eslintrc.yml',
+          '.eslintrc.json'
+        ),
     },
 }
 
