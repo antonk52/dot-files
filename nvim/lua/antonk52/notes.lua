@@ -26,6 +26,7 @@ function M.setup()
     vim.api.nvim_create_user_command('NoteNext', M.note_next, {})
     vim.api.nvim_create_user_command('NotePrev', M.note_prev, {})
     vim.api.nvim_create_user_command('NoteNew', M.note_new, {})
+    vim.api.nvim_create_user_command('NoteWeek', M.note_week_new, {})
 end
 
 function M.list_notes()
@@ -98,6 +99,11 @@ function M.note_new()
     -- 'YYYY/MM/DD'
     local date = vim.fn.strftime('%Y/%m/%d')
     vim.cmd('edit '..date..'.md')
+end
+
+function M.note_week_now()
+    local week_num = os.date("%Y/%m/week_%V")
+    vim.cmd('edit '..week_num..'.md')
 end
 
 return M
