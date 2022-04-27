@@ -619,6 +619,21 @@ vim.g.markdown_fold_style = 'nested'
 -- preserve my custom folding style
 vim.g.markdown_fold_override_foldtext = 0
 
+-- npm_scripts {{{2
+vim.keymap.set('n', '<leader>N', function()
+  local npm_scripts = require('npm_scripts')
+  local methods = {}
+  for k, v in pairs(npm_scripts) do
+    if type(v) == 'function' and k ~= 'setup' then
+      table.insert(methods, k)
+    end
+
+    vim.ui.select(methods, {}, function(pick)
+      npm_scripts[pick]()
+    end)
+  end
+end)
+
 -- load local init.lua {{{1
 local local_init_lua = vim.fn.expand('~/.config/local_init.lua')
 if vim.fn.filereadable(local_init_lua) == 1 then
