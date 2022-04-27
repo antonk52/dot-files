@@ -110,13 +110,6 @@ local function toggle_listy_style(kind)
                 return node_indent..indent_string..line..(#args_strings == i and '' or ',')
             end
         )
-        P({
-            -- parent_indent_level = parent_indent_level,
-            -- parent_indent = parent_indent,
-            indent_string = indent_string,
-            new_lines = new_lines,
-            args_strings = args_strings
-        })
         table.insert(new_lines, 1, start_bit)
         table.insert(new_lines, node_indent..end_bit)
         vim.api.nvim_buf_set_lines(
