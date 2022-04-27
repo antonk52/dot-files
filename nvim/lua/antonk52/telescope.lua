@@ -8,6 +8,7 @@ M.options = {
         prompt = { '─', '│', '─', '│', '├', '┤', '┘', '└' },
         preview = borders,
     },
+    -- file_ignore_patterns = { "/node_modules/" },
     width = 0.99,
     -- prompt_title = false,
     -- results_title = false,
@@ -56,8 +57,28 @@ function M.setup()
         'n',
         '<leader>F',
         function()
-            require"telescope.builtin".find_files(M.options)
-        end
+            local opts = {
+                find_command = {
+                    'fd',
+                    '--type',
+                    'file',
+                    '-E',
+                    'node_modules',
+                    '-E',
+                    'build',
+                    '-E',
+                    'dist',
+                    '--ignore-file',
+                    '.gitignore'
+                }
+            }
+            for k, v in pairs(M.options) do
+              opts[k] = v
+            end
+
+            require"telescope.builtin".find_files(opts)
+        end,
+        {desc = 'force show files, explicitly ignoring certain directories'}
     )
     vim.keymap.set(
         'n',
