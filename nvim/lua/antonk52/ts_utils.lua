@@ -1,3 +1,5 @@
+local ts_utils = require 'nvim-treesitter.ts_utils'
+
 local M = {}
 
 local function table_map(tbl, fn)
@@ -8,6 +10,15 @@ local function table_map(tbl, fn)
 
     return result
 end
+
+---@type table<string, string>
+local treesitter_to_human_type_names = {
+    table_constructor = 'table',
+    array = 'array',
+    object = 'object',
+    arguments = 'arguments',
+    parameters = 'parameters',
+}
 
 --- toggle lists/arguments horizontal to vertical
 --
@@ -21,21 +32,14 @@ end
 --   c
 -- )
 local function toggle_listy_style(kind)
-    local target_node_type = nil
-    if kind == 'list' or kind == 'array' or kind == 'table' or kind == 'object' then
-        target_node_type = {table_constructor=1}
-    else
-        target_node_type = {arguments=1, parameters=1}
-    end
-    local ts_utils = require 'nvim-treesitter.ts_utils'
     local node = ts_utils.get_node_at_cursor()
 
-    while (node and target_node_type[node:type()] ~= 1) do
+    while (node and treesitter_to_human_type_names[node:type()] ~= kind) do
         node = node:parent()
     end
 
     if node == nil then
-        return print('No arguemnts found at cursor')
+        return print('No node found at cursor')
     end
 
 
@@ -149,12 +153,43 @@ local function toggle_listy_style(kind)
     end
 end
 
+---@return table<number, string>
+local function collect_node_types_under_cursor()
+    ---@type table<string, string>
+    local return_dict = {}
+
+    local node = ts_utils.get_node_at_cursor()
+
+    while node do
+        local type = node:type()
+        if treesitter_to_human_type_names[type] then
+            return_dict[type] = 1
+        end
+        node = node:parent()
+    end
+
+    local result = {}
+    for k, _ in pairs(return_dict) do
+        table.insert(result, k)
+    end
+
+    return result
+end
+
 function M.toggle_listy()
-    vim.ui.select(
-        {'arguments', 'parameters', 'list', 'array', 'table', 'object'},
-        {prompt = 'Pick listy style toggler'},
-        toggle_listy_style
-    )
+    local togglable_nodes = collect_node_types_under_cursor()
+
+    if #togglable_nodes > 1 then
+        vim.ui.select(
+            togglable_nodes,
+            {prompt = 'Pick listy style toggler'},
+            toggle_listy_style
+        )
+    elseif #togglable_nodes == 1 then
+        toggle_listy_style(togglable_nodes[1])
+    else
+        print('No togglable nodes found under cursor')
+    end
 end
 
 return M
