@@ -26,7 +26,26 @@ function M.setup()
     vim.api.nvim_create_user_command('NoteNext', M.note_next, {})
     vim.api.nvim_create_user_command('NotePrev', M.note_prev, {})
     vim.api.nvim_create_user_command('NoteNew', M.note_new, {})
-    vim.api.nvim_create_user_command('NoteWeek', M.note_week_new, {})
+    vim.api.nvim_create_user_command('NoteWeek', M.note_week_now, {})
+
+    vim.api.nvim_create_autocmd(
+        'BufWritePre',
+        {
+            desc = "Create missing directories when writing a buffer",
+            pattern = '*',
+            callback = function()
+                local filepath = vim.fn.expand('%')
+                local path_parts = vim.split(filepath, '/')
+                table.remove(path_parts, #path_parts)
+                local dirname = table.concat(path_parts, '/')
+                if vim.fn.isdirectory(dirname) == 1 then
+                    return
+                else
+                    vim.fn.mkdir(dirname, 'p')
+                end
+            end
+        }
+    )
 end
 
 function M.list_notes()
