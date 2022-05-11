@@ -635,6 +635,19 @@ vim.keymap.set('n', '<leader>N', function()
   end
 end)
 
+-- has to be deffered to allow telescope setup first to overwrite vim.ui.select
+vim.defer_fn(
+    function()
+        require('npm_scripts').setup({
+            run_script = function(opts)
+                vim.cmd("tabnew | term cd " .. opts.path .. " && " .. opts.package_manager .. " run " .. opts.name)
+            end,
+        })
+    end,
+    110
+)
+
+
 -- load local init.lua {{{1
 local local_init_lua = vim.fn.expand('~/.config/local_init.lua')
 if vim.fn.filereadable(local_init_lua) == 1 then
