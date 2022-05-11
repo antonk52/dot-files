@@ -558,6 +558,7 @@ vim.defer_fn(function()
         css = opts,
         scss = opts,
         sass = opts,
+        lua = opts,
         javascript = opts,
         javascriptreact = opts,
         typescript = opts,
