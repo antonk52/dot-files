@@ -561,6 +561,8 @@ vim.defer_fn(function()
         lua = opts,
         javascript = opts,
         javascriptreact = opts,
+        json = opts,
+        jsonc = opts,
         typescript = opts,
         typescriptreact = opts,
         yml = opts,
