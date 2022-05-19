@@ -33,6 +33,7 @@ Plug('antonk52/gitignore-grabber.nvim')
 -- tests
 Plug('nvim-treesitter/nvim-treesitter', { ['do'] = ':TSUpdate' }) -- We recommend updating the parsers on update
 Plug('nvim-treesitter/playground')
+Plug('folke/todo-comments.nvim')
 -- telescope
 Plug('nvim-lua/plenary.nvim')
 Plug('nvim-telescope/telescope.nvim')
@@ -599,6 +600,29 @@ if vim.env.TREESITTER ~= '0' then
                 },
             },
         })
+
+        -- todo-comments {{{3
+        require("todo-comments").setup {
+            -- do not use signs in signcolumn
+            signs = false,
+            keywords = {
+                -- map TODO to `todo` color highlight group
+                TODO = { icon = '', color = 'todo' }
+            },
+            highlight = {
+                -- use treesitter
+                comment_only = true,
+                before = '',
+                keyword = 'fg',
+                -- do not highlight following text
+                after = '',
+                pattern = {[[.*<(KEYWORDS):]], [[.*<(KEYWORDS)\s]]},
+            },
+            colors = {
+                todo = { 'Todo', "yellow"}
+            },
+            pattern = '\b(KEYWORDS)[: ]',
+        }
     end, 100)
 end
 
