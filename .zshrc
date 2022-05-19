@@ -44,6 +44,8 @@ source "$npm_completions"
 
 source "$DOT_FILES/zsh-autosuggestions/zsh-autosuggestions.zsh"
 
+source "$DOT_FILES/dependencies/zsh-yarn-completions/zsh-yarn-completions.plugin.zsh"
+
 if command -v docker &> /dev/null; then
     zsh_site_functions_path="$XDG_DATA_HOME/zsh/site-functions"
 
