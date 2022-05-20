@@ -168,7 +168,29 @@ vim.opt.guicursor = 'i-ci-ve:hor24'
 vim.opt.list = true
 vim.opt.listchars = { tab = '▸ ', trail = '∙' }
 
-vim.cmd('color lake')
+
+local function get_background()
+    if vim.fn.filereadable('/Users/antonk52/.base16_theme') == 1 then
+        local target = vim.fn.resolve('/Users/antonk52/.base16_theme')
+        local path_items = vim.split(target, '/')
+        local file_name = path_items[#path_items]
+        if file_name == 'base16-github.sh' then
+            return 'light'
+        end
+    end
+
+    return 'dark'
+end
+
+if get_background() == 'light' then
+    print('background light')
+    vim.cmd('color plain')
+    vim.opt.background = 'light'
+else
+    print('background dark')
+    vim.cmd('color lake')
+    vim.opt.background = 'dark'
+end
 vim.cmd('hi Comment gui=italic')
 
 -- no numbers by default
