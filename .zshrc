@@ -44,8 +44,6 @@ source "$npm_completions"
 
 source "$DOT_FILES/zsh-autosuggestions/zsh-autosuggestions.zsh"
 
-source "$DOT_FILES/dependencies/zsh-yarn-completions/zsh-yarn-completions.plugin.zsh"
-
 if command -v docker &> /dev/null; then
     zsh_site_functions_path="$XDG_DATA_HOME/zsh/site-functions"
 
@@ -57,6 +55,12 @@ if command -v docker &> /dev/null; then
         ln -s "$docker_etc/docker-compose.zsh-completion" "$zsh_site_functions_path/_docker-compose"
     fi
     autoload -Uz compinit; compinit
+fi
+
+if command -v compdef &> /dev/null; then
+    source "$DOT_FILES/dependencies/zsh-yarn-completions/zsh-yarn-completions.plugin.zsh"
+else
+    echo "No yarn completion initiated, compdef is not available"
 fi
 
 # misc 1{{{
