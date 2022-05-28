@@ -87,8 +87,6 @@ M.servers = {
     end,
     cssls = {},
 
-    rust_analyzer = {},
-
     cssmodules_ls = {
         on_attach = function(client)
             -- disabled go-to-definition to avoid confusion with tsserver
@@ -354,6 +352,11 @@ function M.setup()
     -- M.setup_eslint_d()
     M.setup_lua()
     M.setup_column_signs()
+    require('rust-tools').setup({
+        server = {
+            on_attach = M.on_attach
+        }
+    })
 
     for lsp, opts in pairs(M.servers) do
         if type(opts) == 'function' then
