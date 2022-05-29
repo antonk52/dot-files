@@ -440,6 +440,31 @@
                         ]
                     },
                     {
+                        "description": "right_command + TAB = <kbd>`~</kbd>",
+                        "manipulators": [
+                            {
+                                "from": {
+                                    "key_code": "tab",
+                                    "modifiers": {
+                                        "mandatory": [
+                                            "right_command"
+                                        ],
+                                        "optional": [
+                                            "right_shift"
+                                        ]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "grave_accent_and_tilde",
+                                        "modifiers": []
+                                    }
+                                ],
+                                "type": "basic"
+                            }
+                        ]
+                    },
+                    {
                         "description": "CAPS_LOCK to shift+option (Amethyst mod1) or ESCAPE (If Alone)",
                         "manipulators": [
                             {
