@@ -440,7 +440,7 @@
                         ]
                     },
                     {
-                        "description": "right_command + TAB = <kbd>`~</kbd>",
+                        "description": "right_command + [tab/caps] = `/~ (stop confusion when switching eu/us keyboards)",
                         "manipulators": [
                             {
                                 "from": {
@@ -458,6 +458,24 @@
                                     {
                                         "key_code": "grave_accent_and_tilde",
                                         "modifiers": []
+                                    }
+                                ],
+                                "type": "basic"
+                            },
+                            {
+                                "from": {
+                                    "key_code": "caps_lock",
+                                    "modifiers": {
+                                        "mandatory": [
+                                            "right_command"
+                                        ],
+                                        "optional": []
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "grave_accent_and_tilde",
+                                        "modifiers": ["right_shift"]
                                     }
                                 ],
                                 "type": "basic"
