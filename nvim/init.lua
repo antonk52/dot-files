@@ -183,12 +183,11 @@ local function get_background()
     return 'dark'
 end
 
+-- TODO: support light background option in lake
 if get_background() == 'light' then
-    print('background light')
     vim.cmd('color plain')
     vim.opt.background = 'light'
 else
-    print('background dark')
     vim.cmd('color lake')
     vim.opt.background = 'dark'
 end
