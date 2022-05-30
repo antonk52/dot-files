@@ -465,6 +465,28 @@
                         ]
                     },
                     {
+                        "description": "right_command + space = space (ignore right_command to avoid roll over effect)",
+                        "manipulators": [
+                            {
+                                "from": {
+                                    "key_code": "spacebar",
+                                    "modifiers": {
+                                        "mandatory": [
+                                            "right_command"
+                                        ]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "spacebar",
+                                        "modifiers": []
+                                    }
+                                ],
+                                "type": "basic"
+                            }
+                        ]
+                    },
+                    {
                         "description": "CAPS_LOCK to shift+option (Amethyst mod1) or ESCAPE (If Alone)",
                         "manipulators": [
                             {
