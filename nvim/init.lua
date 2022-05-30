@@ -459,7 +459,11 @@ vim.g.AutoPairsShortcutToggle = ''
 
 -- Diminactive {{{2
 -- bg color for inactive splits
-vim.cmd('highlight ColorColumn ctermbg=0 guibg=#424949')
+local inactive_background_color = vim.o.background == 'light'
+  and '#dedede'
+  or '#424949'
+
+vim.cmd('highlight ColorColumn ctermbg=0 guibg='..inactive_background_color)
 
 -- snippets.nvim {{{2
 
