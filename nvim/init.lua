@@ -642,12 +642,12 @@ if vim.env.TREESITTER ~= '0' then
                 keyword = 'fg',
                 -- do not highlight following text
                 after = '',
-                pattern = {[[.*<(KEYWORDS):]], [[.*<(KEYWORDS)\s]]},
+                pattern = {[[.*<(KEYWORDS):]], [[.*<(KEYWORDS)\s]], [[.*<(KEYWORDS)]]},
             },
             colors = {
-                todo = { 'Todo', "yellow"}
+                todo = { 'Todo', "grey"}
             },
-            pattern = '\b(KEYWORDS)[: ]',
+            pattern = '\b(KEYWORDS)[: ]?',
         }
     end, 100)
 end
