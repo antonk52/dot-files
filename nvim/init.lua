@@ -603,6 +603,8 @@ if vim.env.TREESITTER ~= '0' then
         -- if you get "wrong architecture error
         -- open nvim in macos native terminal app and run `:TSInstall`
         require('nvim-treesitter.configs').setup({
+            -- keep this list empty to avoid downloading languages on startup
+            -- to install use `antonk52.treesitter.force_reinstall_parsers`
             ensure_installed = {},
             highlight = { enable = true },
             playground = {

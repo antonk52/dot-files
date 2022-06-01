@@ -1,13 +1,18 @@
 local M = {}
 
 M.used_parsers = {
+    'bash',
+    'css',
+    'graphql',
     'html',
     'javascript',
     'jsdoc',
     'json',
     'jsonc',
     'lua',
+    'markdown',
     'php',
+    'python',
     'rust',
     'scss',
     'toml',
