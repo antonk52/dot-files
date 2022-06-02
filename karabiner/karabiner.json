@@ -769,8 +769,27 @@
                         ]
                     },
                     {
-                        "description": "left option as tmux prefix (ctrl + A)",
+                        "description": "left option or left command as tmux prefix (ctrl + A) when alone",
                         "manipulators": [
+                            {
+                                "type": "basic",
+                                "from": {
+                                    "key_code": "left_command"
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "left_command"
+                                    }
+                                ],
+                                "to_if_alone": [
+                                    {
+                                        "key_code": "a",
+                                        "modifiers": [
+                                            "left_control"
+                                        ]
+                                    }
+                                ]
+                            },
                             {
                                 "type": "basic",
                                 "from": {
