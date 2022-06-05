@@ -93,11 +93,3 @@ key_bindings:
 # - no support for ligatures
 # - no support for emoji shortcut on mac `ctrl + cmd + space`
 #     - probably wont be one [issue](https://github.com/alacritty/alacritty/issues/5179)
-#
-# Issues(needs research)
-# - focus on alacritty window by clicking it with a mouse
-#   atm when clicking with a mouse focus goes to Finder instead of Alacritty,
-#   not sure if Amethyst is to blame
-#   though was able to reproduce with amethyst off
-#
-# https://example.com
