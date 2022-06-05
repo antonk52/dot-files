@@ -595,6 +595,12 @@ vim.defer_fn(function()
         yml = opts,
         yaml = opts,
     })
+    -- These are never used, cannot be skipped via an option
+    -- and commonly in the way when completing for `Colors`
+    vim.api.nvim_del_user_command('ColorizerAttachToBuffer')
+    vim.api.nvim_del_user_command('ColorizerDetachFromBuffer')
+    vim.api.nvim_del_user_command('ColorizerReloadAllBuffers')
+    vim.api.nvim_del_user_command('ColorizerToggle')
 end, 100)
 
 -- treesitter {{{2
