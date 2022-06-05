@@ -16,6 +16,22 @@
                 },
                 "rules": [
                     {
+                        "description": "right_option is left_control",
+                        "manipulators": [
+                            {
+                                "from": {
+                                    "key_code": "right_option"
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "left_control"
+                                    }
+                                ],
+                                "type": "basic"
+                            }
+                        ]
+                    },
+                    {
                         "description": "right_command + home row = numbers row, right_command + qwerty row = shift + number row",
                         "manipulators": [
                             {
