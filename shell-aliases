@@ -97,9 +97,9 @@ function notes()
 {
   YEAR="$(date '+%Y')"
   MONTH="$(date '+%m')"
-  DATE="$(date '+%d')"
+  WEEK="$(date '+%W')"
   DIR_PATH="$NOTES_PATH"/"$YEAR"/"$MONTH"
-  FILE_PATH="$DIR_PATH"/"$DATE".md
+  FILE_PATH="$DIR_PATH"/week_"$WEEK".md
 
   if [ ! -d "$DIR_PATH" ]; then
       mkdir -p "$DIR_PATH"
