@@ -17,6 +17,9 @@
                 "rules": [
                     {
                         "description": "right_option is left_control",
+                        "parameters": {
+                            "basic.to_if_alone_timeout_milliseconds": 150
+                        },
                         "manipulators": [
                             {
                                 "from": {
@@ -25,6 +28,11 @@
                                 "to": [
                                     {
                                         "key_code": "left_control"
+                                    }
+                                ],
+                                "to_if_alone": [
+                                    {
+                                        "key_code": "return_or_enter"
                                     }
                                 ],
                                 "type": "basic"
