@@ -1,0 +1,31 @@
+# Macos window manager
+# @see https://github.com/ianyh/Amethyst
+#
+# Configuration documentation
+# https://github.com/ianyh/Amethyst/blob/development/docs/configuration-files.md
+
+layouts:
+  - tall
+  - wide
+  - column
+  - fullscreen
+  - bsp # binary space partition
+
+mod1:
+  - option
+  - shift
+  - command
+mod2:
+  - option
+  - shift
+  - control
+  - command
+
+mouse-follows-focus: false
+focus-follows-mouse: false
+
+window-margins: true
+window-margin-size: 12
+smart-window-margins: true
+
+use-canary-build: true
