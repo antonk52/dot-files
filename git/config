@@ -20,6 +20,7 @@
     l = log -n 100
     s = status -s
     p = add -p
+    d = diff
     patch = add -p
     # get origin
     # - git@github.foobar.com:user/repo.git
