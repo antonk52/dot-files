@@ -5,7 +5,7 @@ local parse_snippet = luasnip.parser.parse_snippet
 local fmt = require('luasnip.extras.fmt').fmt
 local rep = require('luasnip.extras').rep
 local l = require("luasnip.extras").lambda
-local function lines(tbl)
+function M.lines(tbl)
     return table.concat(tbl, '\n')
 end
 
@@ -18,12 +18,12 @@ local utils = require('antonk52.utils')
 
 local javascript_snippets = {
     parse_snippet('shebang', '#!/usr/bin/env node'),
-    parse_snippet('fun', lines({
+    parse_snippet('fun', M.lines({
         'function ${1:function_name}(${2:arg}) {',
         '    $0',
         '}',
     })),
-    parse_snippet('switch', lines({
+    parse_snippet('switch', M.lines({
         'switch (${1:condition}) {',
         '    case ${2:when}:',
         '        ${3:expr}',
@@ -67,20 +67,20 @@ local javascript_snippets = {
         luasnip.text_node(');')
     }),
 
-    parse_snippet('useEffect', lines({
+    parse_snippet('useEffect', M.lines({
         'useEffect(() => {',
         '    ${1:logic}',
         '}, [${2:leave_empty_for_componentDidMount}]);',
     })),
 
-    parse_snippet('useCallback', lines({
+    parse_snippet('useCallback', M.lines({
         'useCallback(() => {',
         '    ${1:logic}',
         '}, [${2:dependencies}]);',
     })),
 }
 
-local default_snippets = {
+M.default_snippets = {
     all = {
         parse_snippet('todo', 'TODO(antonk52): '),
         luasnip.snippet('date', luasnip.function_node(function() return os.date() end)),
@@ -96,37 +96,37 @@ local default_snippets = {
         ),
         parse_snippet('fun', 'function($1) $0 end'),
         parse_snippet('lfun', 'local function $1($2) $0 end'),
-        parse_snippet('while', lines({
+        parse_snippet('while', M.lines({
             'while(${1:condition}) do',
             '    $0',
             'end'
         })),
         parse_snippet('loc', 'local $1 = $0'),
-        parse_snippet('if', lines({
+        parse_snippet('if', M.lines({
             'if ${1:condition} then',
             '    $0',
             'end'
         })),
-        parse_snippet('ifel', lines({
+        parse_snippet('ifel', M.lines({
             'if ${1:condition} then',
             '    $2',
             'else',
             '    $0',
             'end'
         })),
-        parse_snippet('for', lines({
+        parse_snippet('for', M.lines({
             'for ${1:k}, ${2:v} in pairs(${3:table}) do',
             '    $0',
             'end'
         })),
-        parse_snippet('fori', lines({
+        parse_snippet('fori', M.lines({
             'for ${1:i}, ${2:v} in ipairs(${3:table}) do',
             '    $0',
             'end'
         })),
     },
     markdown = {
-        parse_snippet('table', lines({
+        parse_snippet('table', M.lines({
             '| First Header  | Second Header |',
             '| ------------- | ------------- |',
             '| Content Cell  | Content Cell  |',
@@ -137,19 +137,19 @@ local default_snippets = {
 
         parse_snippet('img', [[![${1:alt}]($0)]]),
 
-        parse_snippet('details', lines({
+        parse_snippet('details', M.lines({
             '<details><summary>${1:tldr}</summmary>',
             '$0',
             '</details>',
         })),
 
-        parse_snippet('todo', lines({
+        parse_snippet('todo', M.lines({
             '## TODO',
             '',
             '- [ ] $0',
         })),
 
-        parse_snippet('wtodo', lines({
+        parse_snippet('wtodo', M.lines({
             '## Monday TODO',
             '',
             '- [ ] $0',
@@ -172,7 +172,7 @@ local default_snippets = {
             '',
         })),
 
-        parse_snippet('tags', lines({
+        parse_snippet('tags', M.lines({
             '---',
             'tags: [${1:tag_name}]',
             '---',
@@ -180,7 +180,7 @@ local default_snippets = {
             '$0',
         })),
 
-        parse_snippet('fm', lines({
+        parse_snippet('fm', M.lines({
             '---',
             '${1:front_matter}',
             '---',
@@ -208,12 +208,12 @@ local default_snippets = {
 }
 
 local jest_snippets = utils.shallow_merge(javascript_snippets, {
-    parse_snippet('desc', lines({
+    parse_snippet('desc', M.lines({
         'describe(\'${1:what are we testing}\', () => {',
         '    $0',
         '});',
     })),
-    parse_snippet('it', lines({
+    parse_snippet('it', M.lines({
         'it(\'${1:what to test}\', () => {',
         '    const result = ${2:funcName}(${3:args});',
         '    const expected = ${4:\'what do we expect?\'};',
@@ -221,7 +221,7 @@ local jest_snippets = utils.shallow_merge(javascript_snippets, {
         '    expect(result).toEqual(expected);',
         '});',
     })),
-    parse_snippet('mock', lines({
+    parse_snippet('mock', M.lines({
         'jest.mock(\'${1:file/path/to/mock}\', () => ({',
         '    ${2:exportedFunc}: jest.fn($0),',
         '}));',
@@ -231,7 +231,7 @@ local jest_snippets = utils.shallow_merge(javascript_snippets, {
 function M.set_snippets_for_filetype()
     local file = vim.fn.expand('%')
     if file == '' then
-        luasnip.snippets = default_snippets
+        luasnip.snippets = M.default_snippets
         return nil
     end
     local test_file = vim.fn.match(file, '\\(_spec\\|spec\\|Spec\\|-test\\)\\.\\(js\\|jsx\\|ts\\|tsx\\)$') ~= -1
@@ -240,7 +240,7 @@ function M.set_snippets_for_filetype()
     if test_file or indirect_test_file then
         -- instead of setting compound file type manually extends current
         -- file type snippets to include jest snippets
-        luasnip.snippets = utils.shallow_merge(default_snippets, {
+        luasnip.snippets = utils.shallow_merge(M.default_snippets, {
             ['javascript'] = jest_snippets,
             ['javascript.jsx'] = jest_snippets,
             ['javascriptreact'] = jest_snippets,
@@ -252,7 +252,7 @@ function M.set_snippets_for_filetype()
         return nil
     end
 
-    luasnip.snippets = default_snippets
+    luasnip.snippets = M.default_snippets
 end
 
 function M.expand_or_jump()
@@ -283,7 +283,7 @@ function M.setup()
 
     vim.api.nvim_create_user_command('SnippetsSource', 'source ~/.config/nvim/lua/antonk52/snippets.lua | lua require("antonk52.snippets").setup()', {bang = true})
 
-    luasnip.snippets = default_snippets
+    luasnip.snippets = M.default_snippets
 
     vim.api.nvim_create_autocmd(
         'BufEnter',
