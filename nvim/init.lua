@@ -289,6 +289,7 @@ vim.keymap.set('', '<leader>v', '"*p', {noremap = false, desc = 'paste from OS c
 vim.keymap.set('n', 'p', ']p', {desc = 'paste under current indentation level'})
 vim.keymap.set('n', '<Tab>', 'za', {desc = 'toggle folds'})
 vim.keymap.set('n', '<leader>n', ':set hlsearch!<cr>', {desc = 'toggle highlight for last search'})
+vim.keymap.set('n', '<leader>z', 'zz', {desc = 'it is more comfortable to center current line to roll over keys than to double press a key'})
 
 -- Useful when you have many splits & the status line gets truncated
 vim.keymap.set('n', '<leader>p', ':echo expand("%")<CR>', {
