@@ -12,6 +12,7 @@ M.used_parsers = {
     'jsonc',
     'lua',
     'markdown',
+    'markdown_inline',
     'php',
     'python',
     'rust',
