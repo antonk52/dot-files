@@ -681,19 +681,27 @@ vim.g.markdown_fold_style = 'nested'
 vim.g.markdown_fold_override_foldtext = 0
 
 -- npm_scripts {{{2
-vim.keymap.set('n', '<leader>N', function()
-  local npm_scripts = require('npm_scripts')
-  local methods = {}
-  for k, v in pairs(npm_scripts) do
-    if type(v) == 'function' and k ~= 'setup' then
-      table.insert(methods, k)
-    end
+local function run_npm_script(same_buffer)
+    return function()
+        local npm_scripts = require('npm_scripts')
+        local methods = {}
+        for k, v in pairs(npm_scripts) do
+            if type(v) == 'function' and k ~= 'setup' then
+                table.insert(methods, k)
+            end
 
-    vim.ui.select(methods, {}, function(pick)
-      npm_scripts[pick]()
-    end)
-  end
-end)
+            vim.ui.select(methods, {}, function(pick)
+                npm_scripts[pick]({
+                    run_script = same_buffer and function(opts)
+                        return vim.cmd("term cd " .. opts.path .. " && " .. opts.package_manager .. " run " .. opts.name)
+                    end or nil
+                })
+            end)
+        end
+    end
+end
+vim.keymap.set('n', '<leader>N', run_npm_script(false))
+vim.keymap.set('n', '<localleader>N', run_npm_script(true))
 
 -- has to be deffered to allow telescope setup first to overwrite vim.ui.select
 vim.defer_fn(
