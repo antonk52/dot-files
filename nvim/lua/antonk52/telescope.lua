@@ -99,6 +99,20 @@ function M.setup()
         '<leader>T',
         M.meta_telescope
     )
+    vim.keymap.set(
+        'n',
+        '<leader>S',
+        function()
+            require"telescope.builtin".current_buffer_fuzzy_find()
+        end
+    )
+    vim.keymap.set(
+        'n',
+        '<localleader>s',
+        function()
+            require"telescope.builtin".lsp_document_symbols()
+        end
+    )
 end
 
 return M
