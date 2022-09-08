@@ -90,6 +90,10 @@ M.default_snippets = {
         luasnip.snippet('epoch', luasnip.function_node(function() return os.time()..'' end)),
     },
     lua = {
+        parse_snippet(
+            'l',
+            'local ${1:name} = ${2:value}'
+        ),
         luasnip.snippet(
             'req',
             fmt('local {} = require(\'{}\')', {luasnip.insert_node(1, 'package'), rep(1)})
