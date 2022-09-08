@@ -26,7 +26,6 @@ Plug('hrsh7th/cmp-buffer')
 Plug('hrsh7th/cmp-path')
 Plug('hrsh7th/cmp-nvim-lsp')
 Plug('hrsh7th/nvim-cmp')
-Plug('antonk52/npm_scripts.nvim')
 Plug('antonk52/amake.nvim')
 Plug('antonk52/npm_scripts.nvim')
 Plug('antonk52/bad-practices.nvim')
@@ -275,7 +274,7 @@ vim.opt.undofile = true
 -- Mappings {{{1
 
 vim.g.mapleader = ' '
-vim.g.maplocalleader = '\\'
+vim.g.maplocalleader = ','
 
 -- nvim 0.6 maps Y to yank till the end of the line,
 -- preserving a legacy behaviour
