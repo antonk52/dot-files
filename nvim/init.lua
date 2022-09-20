@@ -343,6 +343,10 @@ vim.keymap.set('n', '<C-t>', '<cmd>tabedit<CR>', {desc = 'open a new tab'})
 vim.keymap.set('n', '<Left>', '<cmd>prev<CR>')
 vim.keymap.set('n', '<Right>', '<cmd>next<CR>')
 
+-- easy escape for insert mode
+vim.keymap.set('i', 'kj', '<esc>')
+vim.keymap.set('i', 'jk', '<cmd>')
+
 -- Commands {{{1
 local commands = {
     ToggleNumbers = 'set number! relativenumber!',
