@@ -18,6 +18,9 @@ export GEM_HOME="$XDG_DATA_HOME"/gem
 export GEM_SPEC_CACHE="$XDG_CACHE_HOME"/gem
 export CARGO_HOME="$XDG_DATA_HOME"/cargo
 
+# disable autoupdates when running other brew commands
+export HOMEBREW_NO_AUTO_UPDATE="1"
+
 DOT_FILES="$HOME"/dot-files
 
 # use base16 colors
