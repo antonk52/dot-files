@@ -1,3 +1,7 @@
+-- =============================
+-- This file is not longer used
+-- Left for easy reference
+-- =============================
 local M = {}
 
 local function has_eslint_config()

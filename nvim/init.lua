@@ -17,11 +17,9 @@ vim.fn['plug#begin']('~/.config/nvim/plugged')
 Plug('antonk52/vim-tabber')
 Plug('antonk52/vim-plugin-templater')
 -- types & linting
-Plug('neoclide/coc.nvim', { branch = 'release', ['do'] = ':CocInstall' })
 Plug('neovim/nvim-lspconfig')
 Plug('simrat39/rust-tools.nvim')
-Plug('williamboman/nvim-lsp-installer')
-Plug('b0o/schemastore.nvim')
+Plug('b0o/schemastore.nvim') -- json schemas for json lsp
 Plug('hrsh7th/cmp-buffer')
 Plug('hrsh7th/cmp-path')
 Plug('hrsh7th/cmp-nvim-lsp')
@@ -556,12 +554,9 @@ vim.keymap.set('n', 'za', 'za:IndentBlanklineRefresh<cr>')
 vim.keymap.set('n', 'zm', 'zm:IndentBlanklineRefresh<cr>')
 vim.keymap.set('n', 'zo', 'zo:IndentBlanklineRefresh<cr>')
 
--- coc.nvim / lsp {{{2
+-- lsp {{{2
 vim.opt.updatetime = 300
 vim.opt.shortmess = vim.opt.shortmess + 'c'
-
--- do not start coc by default
-vim.g.coc_start_at_startup = 0
 
 vim.defer_fn(function()
     local lsp_to_use = 'native'
@@ -572,8 +567,6 @@ vim.defer_fn(function()
 
     if lsp_to_use == 'native' then
         require('antonk52.lsp').setup()
-    elseif lsp_to_use == 'coc' then
-        require('antonk52.coc').setup()
     end
 end, 100)
 
