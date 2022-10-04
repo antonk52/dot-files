@@ -61,7 +61,7 @@ Plug('jiangmiao/auto-pairs')
 Plug('editorconfig/editorconfig-vim')
 Plug('L3MON4D3/LuaSnip', {branch = 'ls_snippets_preserve'})
 -- live preview markdown files in browser
-Plug('iamcco/markdown-preview.nvim', { ['do'] = 'cd app & yarn install', ['for'] = { 'markdown', 'mdx' } })
+-- Plug('iamcco/markdown-preview.nvim', { ['do'] = 'cd app & yarn install', ['for'] = { 'markdown', 'mdx' } })
 
 -- Front end {{{2
 -- quick html
@@ -75,16 +75,12 @@ Plug('lukas-reineke/indent-blankline.nvim')
 -- fold by heading
 Plug('masukomi/vim-markdown-folding')
 Plug('plasticboy/vim-markdown')
-Plug('purescript-contrib/purescript-vim')
 Plug('jxnblk/vim-mdx-js', { ['for'] = { 'mdx' } })
-Plug('maksimr/vim-yate') -- TODO defeat, forget, get drunk
 
 -- Themes {{{2
 Plug('antonk52/lake.vim')
 Plug('andreypopp/vim-colors-plain')
 Plug('NLKNguyen/papercolor-theme')
-
-Plug('antonk52/vimconf-2021')
 
 -- 2}}}
 vim.fn['plug#end']()
