@@ -67,7 +67,7 @@ M.servers = {
     tsserver = {
         on_attach = function(client)
             -- force disable typescript formatting
-            client.resolved_capabilities.document_formatting = false
+            client.server_capabilities.document_formatting = false
         end,
     },
 
@@ -90,7 +90,7 @@ M.servers = {
     cssmodules_ls = {
         on_attach = function(client)
             -- disabled go-to-definition to avoid confusion with tsserver
-            client.resolved_capabilities.goto_definition = false
+            client.server_capabilities.goto_definition = false
         end,
         init_options = {
             camelCase = 'dashes',
@@ -100,7 +100,7 @@ M.servers = {
     eslint = {
         on_attach = function(client)
             -- force enable formatting
-            client.resolved_capabilities.document_formatting = true
+            client.server_capabilities.document_formatting = true
         end,
         root_dir = require('lspconfig.util').root_pattern(
           '.eslintrc',
@@ -201,8 +201,8 @@ function M.setup_eslint_d()
         end
         lspconfig.efm.setup({
             on_attach = function(client)
-                client.resolved_capabilities.document_formatting = true
-                client.resolved_capabilities.goto_definition = false
+                client.server_capabilities.document_formatting = true
+                client.server_capabilities.goto_definition = false
             end,
             root_dir = function()
                 if not eslint_config_exists() then
