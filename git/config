@@ -8,6 +8,7 @@
     excludesfile = ~/.gitignore
 [push]
     default = current
+    autoSetupRemote = true
 [pull]
     default = current
 [filter "lfs"]
