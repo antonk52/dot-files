@@ -69,7 +69,7 @@ Plug('mattn/emmet-vim', { ['for'] = { 'html', 'css', 'javascript', 'typescript' 
 
 -- Syntax {{{2
 -- hex/rgb color highlight preview
-Plug('norcalli/nvim-colorizer.lua')
+Plug('NvChad/nvim-colorizer.lua')
 -- indent lines
 Plug('lukas-reineke/indent-blankline.nvim')
 -- fold by heading
@@ -570,23 +570,27 @@ end, 100)
 -- color highlight wont work on the first opened buffer,
 -- but shaves off 10ms from the startup time
 vim.defer_fn(function()
-    local opts = {
-        css = true,
-        RRGGBBAA = true,
-    }
     require('colorizer').setup({
-        css = opts,
-        scss = opts,
-        sass = opts,
-        lua = opts,
-        javascript = opts,
-        javascriptreact = opts,
-        json = opts,
-        jsonc = opts,
-        typescript = opts,
-        typescriptreact = opts,
-        yml = opts,
-        yaml = opts,
+        filetypes = {
+            'css',
+            'scss',
+            'sass',
+            'lua',
+            'javascript',
+            'javascriptreact',
+            'json',
+            'jsonc',
+            'typescript',
+            'typescriptreact',
+            'yml',
+            'yaml',
+        },
+        user_default_options = {
+            css = true,
+            RRGGBBAA = true,
+            AARRGGBB = true,
+            mode = 'background'
+        },
     })
     -- These are never used, cannot be skipped via an option
     -- and commonly in the way when completing for `Colors`
