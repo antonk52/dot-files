@@ -29,3 +29,7 @@ window-margin-size: 12
 smart-window-margins: true
 
 use-canary-build: true
+
+bsp:
+  mod: mod1
+  key: g
