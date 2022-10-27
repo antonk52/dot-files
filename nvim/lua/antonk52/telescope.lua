@@ -96,6 +96,13 @@ function M.setup()
     )
     vim.keymap.set(
         'n',
+        '<leader>:',
+        function()
+            require"telescope.builtin".commands()
+        end
+    )
+    vim.keymap.set(
+        'n',
         '<leader>T',
         M.meta_telescope
     )
