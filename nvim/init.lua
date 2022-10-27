@@ -15,7 +15,6 @@ vim.fn['plug#begin']('~/.config/nvim/plugged')
 -- Essentials {{{2
 -- tab navigation
 Plug('antonk52/vim-tabber')
-Plug('antonk52/vim-plugin-templater')
 -- types & linting
 Plug('neovim/nvim-lspconfig')
 Plug('simrat39/rust-tools.nvim')
@@ -26,7 +25,6 @@ Plug('hrsh7th/cmp-nvim-lsp')
 Plug('hrsh7th/nvim-cmp')
 Plug('antonk52/amake.nvim')
 Plug('antonk52/npm_scripts.nvim')
-Plug('antonk52/bad-practices.nvim')
 Plug('antonk52/gitignore-grabber.nvim')
 -- tests
 Plug('nvim-treesitter/nvim-treesitter', { ['do'] = ':TSUpdate' }) -- We recommend updating the parsers on update
@@ -662,8 +660,6 @@ if vim.env.TREESITTER ~= '0' then
     end, 100)
 end
 
--- bad-practices.nvim {{{2
-vim.api.nvim_create_user_command('BadPracticesSetup', function() require("bad_practices").setup() end, {})
 -- vim-markdown {{{2
 vim.g.vim_markdown_frontmatter = 1
 vim.g.vim_markdown_new_list_item_indent = 0
