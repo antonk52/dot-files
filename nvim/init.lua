@@ -76,7 +76,7 @@ Plug('plasticboy/vim-markdown')
 Plug('jxnblk/vim-mdx-js', { ['for'] = { 'mdx' } })
 
 -- Themes {{{2
-Plug('antonk52/lake.vim')
+Plug('antonk52/lake.vim', {branch = 'lua'})
 Plug('andreypopp/vim-colors-plain')
 Plug('NLKNguyen/papercolor-theme')
 
