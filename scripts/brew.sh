@@ -20,22 +20,17 @@ brew install clementtsang/bottom/bottom # top/htop alternative
 brew install dust # like du but more intuitive.
 brew install exa # modern ls
 brew install fd # modern find
-brew install freetype # library to render fonts
 brew install fzf # cli fuzzy finder written in Go
 brew install gh # github cli
 brew install git # updated version
 brew install git-delta # improved diff highlight
 brew install git-lfs # github large file storage
 brew install htop # top but better
-brew install jpeg # image manipulation lib
 brew install jq # cli for working with json
 brew install neovim # vim but better
 brew install node # nodejs & npm
 brew install openssl
 brew install procs # ps in rust
-brew install python
-brew install python3
-brew install rbenv # ruby version manager
 brew install ripgrep
 brew install tmux # terminal multiplexer
 brew install tree # cli to display directories as trees
@@ -44,19 +39,31 @@ brew install wget # cli to download stuff
 brew install yarn # npm alternative
 brew install zsh # bash but better
 
+if [[ -z "${PERSONAL}" ]]; then
+    brew install freetype # library to render fonts
+    brew install jpeg # image manipulation lib
+    brew install python
+    brew install python3
+    brew install rbenv # ruby version manager
+fi
+
 # cask apps
 brew install alacritty # terminal
-brew install alfred # spotlight but useful
-brew install docker # docker desktop app
-brew install firefox
-brew install gimp
+brew install amethyst # tiling window manager
 brew install karabiner-elements # advanced key mapping
 brew install keycastr # useful for demos
-brew install loopback # virtual devises to pass audio to obs
 brew install monitorcontrol # control external monitors brightness from keyboard
-brew install obs # streaming & screen recording
-brew install telegram # chats
+brew install raycast # spotlight but useful
 brew install vlc # media player
+
+if [[ -z "${PERSONAL}" ]]; then
+    brew install docker # docker desktop app
+    brew install firefox
+    brew install gimp
+    brew install loopback # virtual devises to pass audio to obs
+    brew install obs # streaming & screen recording
+    brew install telegram # chats
+fi
 
 # fonts
 brew tap homebrew/cask-fonts
