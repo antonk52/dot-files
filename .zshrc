@@ -33,6 +33,7 @@ export PATH="$HOME"/.npm-global/bin:$PATH
 export PATH="$HOME"/.cargo/bin:"$HOME"/.local/share/cargo/bin:$PATH
 # pip packages
 export PATH="$HOME"/Library/Python/3.9/bin:$PATH
+export PATH="$HOME"/homebrew/bin:"$HOME"/homebrew/sbin:"$HOME"/homebrew/opt/node@16/bin:$PATH
 
 # avoid using find if `fd` is installed
 if command -v fd &> /dev/null; then
@@ -139,6 +140,14 @@ LOCAL_SHELLRC="$XDG_CONFIG_HOME"/local_shellrc
 # eval "$(rbenv init -)"
 
 # $HOMEBREW_PREFIX is not set on intel machines
-autojump_file="${HOMEBREW_PREFIX:-/usr/local}"/etc/profile.d/autojump.sh
+homebrew_default_autojump_file="${HOMEBREW_PREFIX:-/usr/local}"/etc/profile.d/autojump.sh
+# when using local homebrew instead of globally installed one
+homebrew_local_autojump_file="$HOME"/homebrew/var/homebrew/linked/autojump/etc/profile.d/autojump.sh
 # needed for `j` (autojump) to work
-[ -f "$autojump_file" ] && . "$autojump_file" || :;
+if [ -f "$homebrew_default_autojump_file" ]
+then
+    . "$homebrew_default_autojump_file"
+elif [ -f "$homebrew_local_autojump_file" ]
+then
+    . "$homebrew_local_autojump_file"
+fi
