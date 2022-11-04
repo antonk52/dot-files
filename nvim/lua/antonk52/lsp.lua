@@ -347,11 +347,14 @@ function M.setup_completion()
                 end,
             },
         },
-        view = {
-            -- use native menu as it does not have issues with hanging floating
-            -- windows for non basic screen movement ie <C-e>, mouse scroll etc
-            entries = 'native',
-        },
+    })
+
+    -- Use buffer source for `/` and `?` (if you enabled `native_menu`, this won't work anymore).
+    cmp.setup.cmdline({ '/', '?' }, {
+        mapping = cmp.mapping.preset.cmdline(),
+        sources = {
+            { name = 'buffer' }
+        }
     })
 end
 
