@@ -295,16 +295,21 @@ function M.setup_completion()
                     fallback()
                 end
             end,
-            -- If I am navigating wihtin a snippet and completion list is open, close it
-            ['<C-u>'] = function(fallback)
-                cmp.mapping.confirm()
-                fallback()
-            end,
-            ['<C-o>'] = function(fallback)
-                cmp.mapping.confirm()
-                fallback()
-            end,
             ['<C-y>'] = cmp.mapping.confirm(),
+            ['<C-j>'] = cmp.mapping(function(fallback)
+                if cmp.visible() then
+                    cmp.scroll_docs(4)
+                else
+                    fallback()
+                end
+            end),
+            ['<C-k>'] = cmp.mapping(function(fallback)
+                if cmp.visible() then
+                    cmp.scroll_docs(-4)
+                else
+                    fallback()
+                end
+            end),
         },
         formatting = {
             format = function(entry, vim_item)
