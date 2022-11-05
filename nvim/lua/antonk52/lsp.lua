@@ -285,6 +285,8 @@ function M.setup_completion()
             end,
         },
 
+        { name = 'nvim_lua' },
+
         { name = 'path' },
 
         { name = 'buffer', keyword_length = 3 },
