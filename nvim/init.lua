@@ -71,8 +71,6 @@ Plug('mattn/emmet-vim', { ['for'] = { 'html', 'css', 'javascript', 'typescript' 
 Plug('NvChad/nvim-colorizer.lua')
 -- indent lines
 Plug('lukas-reineke/indent-blankline.nvim')
--- fold by heading
-Plug('masukomi/vim-markdown-folding')
 Plug('plasticboy/vim-markdown')
 Plug('jxnblk/vim-mdx-js', { ['for'] = { 'mdx' } })
 
@@ -433,6 +431,23 @@ vim.api.nvim_create_autocmd(
     }
 )
 
+vim.api.nvim_create_autocmd(
+    'FileType',
+    {
+        pattern = {'*'},
+        callback = function()
+            if vim.bo.filetype == 'markdown' then
+                vim.wo.foldmethod = 'expr'
+                -- use treesitter for folding
+                vim.wo.foldexpr = 'nvim_treesitter#foldexpr()'
+            else
+                vim.wo.foldmethod = 'indent'
+            end
+        end,
+        desc = 'Use treesitter for folding in markdown files'
+    }
+)
+
 -- Plugins {{{1
 
 -- dirvish {{{2
@@ -673,11 +688,6 @@ if vim.g.colors_name == 'lake' then
     vim.cmd('hi mkdHeading ctermfg=04 guifg=' .. vim.g.lake_palette['0D'].gui)
     vim.cmd('hi mkdLink gui=none ctermfg=08 guifg=' .. vim.g.lake_palette['08'].gui)
 end
--- markdown fold {{{2
--- fold underlying sections if any
-vim.g.markdown_fold_style = 'nested'
--- preserve my custom folding style
-vim.g.markdown_fold_override_foldtext = 0
 
 -- npm_scripts {{{2
 local function run_npm_script(same_buffer)
