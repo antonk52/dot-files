@@ -81,8 +81,7 @@ Plug('NLKNguyen/papercolor-theme')
 
 --- Misc {{{2
 if vim.env.WORK ~= nil then
-    Plug(vim.env.WORK)
-    -- Plug(vim.env.WORK, {["as"] = vim.env.WORK_AS})
+    Plug('this-part-doesnt-matter/'..vim.env.WORK)
 end
 -- 2}}}
 vim.fn['plug#end']()
