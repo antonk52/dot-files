@@ -529,6 +529,7 @@ vim.keymap.set('n', '<leader>W', ':Windows<cr>')
 -- list opened file history
 vim.keymap.set('n', '<leader>H', ':History<cr>')
 vim.keymap.set('n', '<leader>D', ':Dots<cr>')
+vim.keymap.set('n', '<leader>:', ':Commands<cr>')
 -- start in a popup
 vim.g.fzf_layout = { window = { width = 0.9, height = 0.6 } }
 
