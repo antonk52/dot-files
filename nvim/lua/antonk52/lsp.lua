@@ -273,7 +273,30 @@ end
 function M.setup_completion()
     require('antonk52.completion')
     local cmp = require('cmp')
-    local cmp_buffer = require('cmp_buffer')
+
+    local sources = {
+        { name = 'snippets_nvim', keyword_length = 1 },
+
+        {
+            name = 'nvim_lsp',
+            entry_filter = function(entry)
+                -- from cmp docs :h cmp-config.sources[n].entry_filter
+                return require('cmp.types').lsp.CompletionItemKind[entry:get_kind()] ~= 'Text'
+            end,
+        },
+
+        { name = 'path' },
+
+        { name = 'buffer', keyword_length = 3 },
+    }
+
+    if vim.env.WORK == nil then
+        table.insert(sources, {
+            name = 'rg',
+            keyword_length = 3,
+        })
+    end
+
     cmp.setup({
         snippet = {
             expand = function(arg)
@@ -325,21 +348,7 @@ function M.setup_completion()
                 return vim_item
             end,
         },
-        sources = {
-            { name = 'snippets_nvim', keyword_length = 1 },
-
-            {
-                name = 'nvim_lsp',
-                entry_filter = function(entry)
-                    -- from cmp docs :h cmp-config.sources[n].entry_filter
-                    return require('cmp.types').lsp.CompletionItemKind[entry:get_kind()] ~= 'Text'
-                end,
-            },
-
-            { name = 'path' },
-
-            { name = 'buffer', keyword_length = 3 },
-        },
+        sources = sources,
         sorting = {
             comparators = {
                 function(...)
