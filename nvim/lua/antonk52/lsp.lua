@@ -349,12 +349,22 @@ function M.setup_completion()
         },
     })
 
-    -- Use buffer source for `/` and `?` (if you enabled `native_menu`, this won't work anymore).
+    -- complitions for in buffer search
     cmp.setup.cmdline({ '/', '?' }, {
         mapping = cmp.mapping.preset.cmdline(),
         sources = {
             { name = 'buffer' }
         }
+    })
+
+    -- completion for commands
+    cmp.setup.cmdline(':', {
+        mapping = cmp.mapping.preset.cmdline(),
+        sources = cmp.config.sources({
+            { name = 'path' }
+        }, {
+            { name = 'cmdline' }
+        })
     })
 end
 

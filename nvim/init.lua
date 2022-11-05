@@ -21,6 +21,7 @@ Plug('simrat39/rust-tools.nvim')
 Plug('b0o/schemastore.nvim') -- json schemas for json lsp
 Plug('hrsh7th/cmp-buffer')
 Plug('hrsh7th/cmp-path')
+Plug('hrsh7th/cmp-cmdline')
 Plug('hrsh7th/cmp-nvim-lsp')
 Plug('hrsh7th/nvim-cmp')
 Plug('antonk52/amake.nvim')
