@@ -26,6 +26,7 @@ Plug('hrsh7th/cmp-nvim-lsp')
 Plug('hrsh7th/cmp-nvim-lua')
 Plug('hrsh7th/nvim-cmp')
 Plug('lukas-reineke/cmp-rg')
+Plug('natecraddock/workspaces.nvim')
 Plug('antonk52/amake.nvim')
 Plug('antonk52/npm_scripts.nvim')
 Plug('antonk52/gitignore-grabber.nvim')
@@ -727,6 +728,43 @@ vim.defer_fn(
     110
 )
 
+-- {{{2 workspaces
+local workspaces = require('workspaces')
+workspaces.setup({
+    hooks = {
+        open = {
+            -- open directory view after switching
+            function() vim.cmd('e .') end
+        }
+    }
+})
+
+-- remove builtin command
+vim.api.nvim_del_user_command('WorkspacesOpen')
+-- Includes **both** a name and a file path
+vim.api.nvim_create_user_command(
+    'Workspaces',
+    function()
+        local spaces_dict = {}
+        for _, v in ipairs(workspaces.get()) do
+            spaces_dict[v.name] = v
+        end
+        local home = vim.fn.expand('~')..'/'
+        vim.ui.select(
+            vim.tbl_keys(spaces_dict),
+            {
+                prompt = 'Select workspace:',
+                format_item = function(x)
+                    -- string:gsub(home, spaces_dict[x].path)
+                    local path = spaces_dict[x].path
+                    return x .. '\t\t' .. path:gsub(home, '')
+                end
+            },
+            workspaces.open
+        )
+    end,
+    {bang = true, nargs=0}
+)
 
 -- load local init.lua {{{1
 local local_init_lua = vim.fn.expand('~/.config/local_init.lua')

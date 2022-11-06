@@ -42,6 +42,7 @@ function M.setup()
         }
     })
     require("telescope").load_extension("ui-select")
+    require("telescope").load_extension("workspaces")
     vim.keymap.set(
         'n',
         '<leader>f',
