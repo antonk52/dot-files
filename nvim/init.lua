@@ -746,7 +746,12 @@ vim.api.nvim_create_user_command(
     'Workspaces',
     function()
         local spaces_dict = {}
+        local max_name_len = 0
         for _, v in ipairs(workspaces.get()) do
+            local name_len = #v.name
+            if name_len > max_name_len and name_len < 24 then
+                max_name_len = name_len
+            end
             spaces_dict[v.name] = v
         end
         local home = vim.fn.expand('~')..'/'
@@ -755,9 +760,11 @@ vim.api.nvim_create_user_command(
             {
                 prompt = 'Select workspace:',
                 format_item = function(x)
-                    -- string:gsub(home, spaces_dict[x].path)
                     local path = spaces_dict[x].path
-                    return x .. '\t\t' .. path:gsub(home, '')
+                    local offset = #x <= max_name_len
+                        and string.rep(' ', (max_name_len + 2) - #x)
+                        or '  '
+                    return x .. offset .. path:gsub(home, '')
                 end
             },
             workspaces.open
