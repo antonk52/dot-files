@@ -12,7 +12,7 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           # CLI arguments
-          args: --color always --check .
+          args: --check ./nvim
 
   luacheck:
     name: luacheck
