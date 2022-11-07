@@ -38,10 +38,10 @@ function M.force_reinstall_parsers(parsers, exit)
         end
 
         local parsers_on = #M.used_parsers - parsers_off
-        print('[parsers_on]: '..parsers_on)
+        print('[parsers_on]: ' .. parsers_on)
 
         local og_print = _G.print
-        local needle = '[nvim-treesitter] ['..parsers_on..'/'..parsers_on..']'
+        local needle = '[nvim-treesitter] [' .. parsers_on .. '/' .. parsers_on .. ']'
 
         _G.print = function(a)
             if vim.startswith(a, needle) then
@@ -51,7 +51,6 @@ function M.force_reinstall_parsers(parsers, exit)
             end
         end
     end
-
 
     -- `install` function is not exported from nvim-treesitter
     -- This is a naughty way to get its reference

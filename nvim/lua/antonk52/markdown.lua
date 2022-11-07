@@ -20,24 +20,14 @@ function M.lookup_word_under_cursor()
 end
 
 function M.setup()
-    vim.keymap.set(
-        'n',
-        '<localleader>t',
-        M.toggle_checkbox,
-        { buffer = 0, silent = true }
-    )
+    vim.keymap.set('n', '<localleader>t', M.toggle_checkbox, { buffer = 0, silent = true })
     vim.keymap.set('n', 'j', 'gj', { buffer = 0 })
     vim.keymap.set('n', 'k', 'gk', { buffer = 0 })
     vim.opt.spell = true
     vim.opt.spellsuggest = 'best'
     vim.bo.spelllang = 'ru_ru,en_us'
     if vim.fn.has('mac') == 1 then
-        vim.keymap.set(
-            'n',
-            'K',
-            M.lookup_word_under_cursor,
-            { buffer = 0, silent = true }
-        )
+        vim.keymap.set('n', 'K', M.lookup_word_under_cursor, { buffer = 0, silent = true })
     end
 end
 

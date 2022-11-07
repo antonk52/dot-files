@@ -31,7 +31,7 @@ function M.on_attach(_, bufnr)
 
     -- Mappings.
     local function keymap(from, to, desc)
-        vim.keymap.set('n', from, to, {buffer = bufnr or 0, silent = true, desc = desc})
+        vim.keymap.set('n', from, to, { buffer = bufnr or 0, silent = true, desc = desc })
     end
 
     keymap('gD', vim.lsp.buf.declaration, 'lsp declaration')
@@ -42,11 +42,9 @@ function M.on_attach(_, bufnr)
     keymap('gk', vim.lsp.buf.signature_help, 'lsp signature_help')
     keymap('<leader>wa', vim.lsp.buf.add_workspace_folder, 'lsp add_workspace_folder')
     keymap('<leader>wr', vim.lsp.buf.remove_workspace_folder, 'lsp remove_workspace_folder')
-    keymap(
-        '<leader>wl',
-        function() print(vim.inspect(vim.lsp.buf.list_workspace_folders())) end,
-        'print workspace folders'
-    )
+    keymap('<leader>wl', function()
+        print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
+    end, 'print workspace folders')
     keymap('<leader>ws', vim.lsp.buf.workspace_symbol, 'lsp workspace_symbol')
     keymap('gK', vim.lsp.buf.type_definition, 'lsp type_definition')
     keymap('<leader>R', vim.lsp.buf.rename, 'lsp rename')
@@ -84,7 +82,7 @@ M.servers = {
         return {
             settings = {
                 json = {
-                    schemas = require('schemastore').json.schemas()
+                    schemas = require('schemastore').json.schemas(),
                 },
             },
         }
@@ -107,12 +105,12 @@ M.servers = {
             client.server_capabilities.document_formatting = true
         end,
         root_dir = require('lspconfig.util').root_pattern(
-          '.eslintrc',
-          '.eslintrc.js',
-          '.eslintrc.cjs',
-          '.eslintrc.yaml',
-          '.eslintrc.yml',
-          '.eslintrc.json'
+            '.eslintrc',
+            '.eslintrc.js',
+            '.eslintrc.cjs',
+            '.eslintrc.yaml',
+            '.eslintrc.yml',
+            '.eslintrc.json'
         ),
     },
 }
@@ -368,33 +366,35 @@ function M.setup_completion()
     cmp.setup.cmdline({ '/', '?' }, {
         mapping = cmp.mapping.preset.cmdline(),
         sources = {
-            { name = 'buffer' }
-        }
+            { name = 'buffer' },
+        },
     })
 
     -- completion for commands
     cmp.setup.cmdline(':', {
         mapping = cmp.mapping.preset.cmdline(),
         sources = cmp.config.sources({
-            { name = 'path' }
+            { name = 'path' },
         }, {
-            { name = 'cmdline' }
-        })
+            { name = 'cmdline' },
+        }),
     })
 end
 
 function M.setup()
     M.setup_completion()
 
-    vim.api.nvim_create_user_command('FormatLsp', function() vim.lsp.buf.formatting() end, {})
+    vim.api.nvim_create_user_command('FormatLsp', function()
+        vim.lsp.buf.formatting()
+    end, {})
 
     -- M.setup_eslint_d()
     M.setup_lua()
     M.setup_column_signs()
     require('rust-tools').setup({
         server = {
-            on_attach = M.on_attach
-        }
+            on_attach = M.on_attach,
+        },
     })
 
     for lsp, opts in pairs(M.servers) do

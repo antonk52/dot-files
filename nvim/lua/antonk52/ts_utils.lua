@@ -1,4 +1,4 @@
-local ts_utils = require 'nvim-treesitter.ts_utils'
+local ts_utils = require('nvim-treesitter.ts_utils')
 
 local M = {}
 
@@ -34,7 +34,7 @@ local treesitter_to_human_type_names = {
 local function toggle_listy_style(kind)
     local node = ts_utils.get_node_at_cursor()
 
-    while (node and treesitter_to_human_type_names[node:type()] ~= kind) do
+    while node and treesitter_to_human_type_names[node:type()] ~= kind do
         node = node:parent()
     end
 
@@ -42,11 +42,10 @@ local function toggle_listy_style(kind)
         return print('No node found at cursor')
     end
 
-
     local args_node = node
 
     --- {number, number, number, number}
-    local current_range = {args_node:range()}
+    local current_range = { args_node:range() }
     local all_lines = vim.api.nvim_buf_get_lines(0, 0, -1, true)
     local buffer_content = table.concat(all_lines, '\n')
 
@@ -76,9 +75,9 @@ local function toggle_listy_style(kind)
     local last_child_start_line = nil
     -- TODO handle comments
     local args_strings = {}
-    for i=0, node:named_child_count() - 1 do
+    for i = 0, node:named_child_count() - 1 do
         local child = node:named_child(i)
-        local child_range = {child:range()}
+        local child_range = { child:range() }
         table.insert(args_strings, vim.treesitter.get_node_text(child, buffer_content))
         if last_child_start_line == nil then
             last_child_start_line = child_range[1]
@@ -91,54 +90,32 @@ local function toggle_listy_style(kind)
     local indent_string = string.rep(' ', vim.bo.shiftwidth)
 
     if same_line then
-        local start_line = vim.api.nvim_buf_get_lines(
-            0,
-            current_range[1],
-            current_range[1]+1,
-            false
-        )[1]
-        local start_bit = start_line:sub(1, current_range[2]+1)
+        local start_line = vim.api.nvim_buf_get_lines(0, current_range[1], current_range[1] + 1, false)[1]
+        local start_bit = start_line:sub(1, current_range[2] + 1)
 
         local end_bit = start_line:sub(current_range[4])
 
-        local node_first_line = vim.api.nvim_buf_get_lines(
-            0,
-            current_range[1],
-            current_range[1]+1,
-            false
-        )[1]
+        local node_first_line = vim.api.nvim_buf_get_lines(0, current_range[1], current_range[1] + 1, false)[1]
         local node_indent = string.match(node_first_line, '^%s+') or ''
-        local new_lines = table_map(
-            args_strings,
-            function(line, i)
-                return node_indent..indent_string..line..(#args_strings == i and '' or ',')
-            end
-        )
+        local new_lines = table_map(args_strings, function(line, i)
+            return node_indent .. indent_string .. line .. (#args_strings == i and '' or ',')
+        end)
         table.insert(new_lines, 1, start_bit)
-        table.insert(new_lines, node_indent..end_bit)
-        vim.api.nvim_buf_set_lines(
-            0,
-            current_range[1],
-            current_range[1]+1,
-            false,
-            new_lines
-        )
+        table.insert(new_lines, node_indent .. end_bit)
+        vim.api.nvim_buf_set_lines(0, current_range[1], current_range[1] + 1, false, new_lines)
     else
-        local start_line = vim.api.nvim_buf_get_lines(0, current_range[1], current_range[1]+1, false)[1]
-        local end_line = vim.api.nvim_buf_get_lines(0, current_range[3], current_range[3]+1, false)[1]
+        local start_line = vim.api.nvim_buf_get_lines(0, current_range[1], current_range[1] + 1, false)[1]
+        local end_line = vim.api.nvim_buf_get_lines(0, current_range[3], current_range[3] + 1, false)[1]
 
         -- grabbing the extra char for `(` in function calls
-        local start_bit = start_line:sub(1, current_range[2]+1)
+        local start_bit = start_line:sub(1, current_range[2] + 1)
         local end_bit = end_line:sub(current_range[4])
 
-        local new_lines = vim.split(
-            start_bit..table.concat(args_strings, ', ')..end_bit,
-            '\n'
-        )
+        local new_lines = vim.split(start_bit .. table.concat(args_strings, ', ') .. end_bit, '\n')
 
         for i, v in ipairs(new_lines) do
             if i ~= 1 then
-                new_lines[i] = string.gsub(v, '^'..indent_string, '')
+                new_lines[i] = string.gsub(v, '^' .. indent_string, '')
             end
         end
 
@@ -146,7 +123,7 @@ local function toggle_listy_style(kind)
             0,
             current_range[1],
             -- extra line for cases where `)` in on the separate line
-            current_range[3]+1,
+            current_range[3] + 1,
             false,
             new_lines
         )
@@ -180,11 +157,7 @@ function M.toggle_listy()
     local togglable_nodes = collect_node_types_under_cursor()
 
     if #togglable_nodes > 1 then
-        vim.ui.select(
-            togglable_nodes,
-            {prompt = 'Pick listy style toggler'},
-            toggle_listy_style
-        )
+        vim.ui.select(togglable_nodes, { prompt = 'Pick listy style toggler' }, toggle_listy_style)
     elseif #togglable_nodes == 1 then
         toggle_listy_style(togglable_nodes[1])
     else

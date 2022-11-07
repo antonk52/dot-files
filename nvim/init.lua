@@ -61,7 +61,7 @@ Plug('junegunn/fzf.vim')
 Plug('jiangmiao/auto-pairs')
 -- consistent coding style
 Plug('editorconfig/editorconfig-vim')
-Plug('L3MON4D3/LuaSnip', {branch = 'ls_snippets_preserve'})
+Plug('L3MON4D3/LuaSnip', { branch = 'ls_snippets_preserve' })
 -- live preview markdown files in browser
 -- Plug('iamcco/markdown-preview.nvim', { ['do'] = 'cd app & yarn install', ['for'] = { 'markdown', 'mdx' } })
 
@@ -78,13 +78,13 @@ Plug('plasticboy/vim-markdown')
 Plug('jxnblk/vim-mdx-js', { ['for'] = { 'mdx' } })
 
 -- Themes {{{2
-Plug('antonk52/lake.vim', {branch = 'lua'})
+Plug('antonk52/lake.vim', { branch = 'lua' })
 Plug('andreypopp/vim-colors-plain')
 Plug('NLKNguyen/papercolor-theme')
 
 --- Misc {{{2
 if vim.env.WORK ~= nil then
-    Plug('this-part-doesnt-matter/'..vim.env.WORK)
+    Plug('this-part-doesnt-matter/' .. vim.env.WORK)
 end
 -- 2}}}
 vim.fn['plug#end']()
@@ -165,7 +165,6 @@ vim.opt.guicursor = 'i-ci-ve:hor24'
 -- Show “invisible” characters
 vim.opt.list = true
 vim.opt.listchars = { tab = '▸ ', trail = '∙' }
-
 
 local function get_background()
     if vim.fn.filereadable('/Users/antonk52/.base16_theme') == 1 then
@@ -280,23 +279,31 @@ if vim.fn.has('nvim-0.6') == 1 then
     vim.keymap.del('', 'Y')
 end
 
-vim.keymap.set('n', '<leader>o', '<cmd>edit #<cr>', {desc = 'toggle between two last buffers'})
-vim.keymap.set('v', '<leader>c', '"*y', {noremap = false, desc = 'copy to OS clipboard'})
-vim.keymap.set('', '<leader>v', '"*p', {noremap = false, desc = 'paste from OS clipboard'})
-vim.keymap.set('n', 'p', ']p', {desc = 'paste under current indentation level'})
-vim.keymap.set('n', '<Tab>', 'za', {desc = 'toggle folds'})
-vim.keymap.set('n', '<leader>n', ':set hlsearch!<cr>', {desc = 'toggle highlight for last search'})
-vim.keymap.set('n', '<leader>z', 'zz', {desc = 'it is more comfortable to center current line to roll over keys than to double press a key'})
+vim.keymap.set('n', '<leader>o', '<cmd>edit #<cr>', { desc = 'toggle between two last buffers' })
+vim.keymap.set('v', '<leader>c', '"*y', { noremap = false, desc = 'copy to OS clipboard' })
+vim.keymap.set('', '<leader>v', '"*p', { noremap = false, desc = 'paste from OS clipboard' })
+vim.keymap.set('n', 'p', ']p', { desc = 'paste under current indentation level' })
+vim.keymap.set('n', '<Tab>', 'za', { desc = 'toggle folds' })
+vim.keymap.set('n', '<leader>n', ':set hlsearch!<cr>', { desc = 'toggle highlight for last search' })
+vim.keymap.set(
+    'n',
+    '<leader>z',
+    'zz',
+    { desc = 'it is more comfortable to center current line to roll over keys than to double press a key' }
+)
 vim.keymap.set('n', '<localleader>h', ':TSHighlightCapturesUnderCursor<cr>', {})
 
 -- Useful when you have many splits & the status line gets truncated
 vim.keymap.set('n', '<leader>p', ':echo expand("%")<CR>', {
-    desc = 'print current buffer file path'})
+    desc = 'print current buffer file path',
+})
 vim.keymap.set('n', '<localleader>p', ':silent !echo "%:p" \\| pbcopy<CR>', {
-    desc = 'copy current buffer file path'})
+    desc = 'copy current buffer file path',
+})
 vim.keymap.set('n', '<leader>P', ':silent !echo "%" \\| pbcopy<CR>', {
     silent = true,
-    desc = 'copy absolute path to current buffer'})
+    desc = 'copy absolute path to current buffer',
+})
 
 -- manipulate numbers, convenient since my tmux prefix is <C-a>
 vim.keymap.set('n', '<LocalLeader>a', '<C-a>')
@@ -308,7 +315,8 @@ vim.keymap.set('v', '<LocalLeader><LocalLeader>x', 'g<C-x>')
 
 vim.keymap.set('n', '<leader>§', ':syntax sync fromstart<CR>', {
     silent = true,
-    desc = 'Fixes (most) syntax highlighting problems in current buffer'})
+    desc = 'Fixes (most) syntax highlighting problems in current buffer',
+})
 
 -- indentation shifts keep selection(`=` should still be preferred)
 vim.keymap.set('v', '<', '<gv')
@@ -330,13 +338,14 @@ vim.keymap.set('n', '<Leader>=', '<cmd>lua require("antonk52.layout").zoom_split
 vim.keymap.set('n', '<Leader>-', '<cmd>lua require("antonk52.layout").equalify_splits()<cr>')
 vim.keymap.set('n', '<Leader>+', '<cmd>lua require("antonk52.layout").restore_layout()<cr>')
 
-vim.keymap.set({'n', 'v'}, '<Leader>a', '^', {
-    desc = 'go to the beginning of the line (^ is too far)'})
+vim.keymap.set({ 'n', 'v' }, '<Leader>a', '^', {
+    desc = 'go to the beginning of the line (^ is too far)',
+})
 -- go to the end of the line ($ is too far)
 vim.keymap.set('n', '<Leader>e', '$')
 vim.keymap.set('v', '<Leader>e', '$h')
 
-vim.keymap.set('n', '<C-t>', '<cmd>tabedit<CR>', {desc = 'open a new tab'})
+vim.keymap.set('n', '<C-t>', '<cmd>tabedit<CR>', { desc = 'open a new tab' })
 
 -- to navigate between buffers
 vim.keymap.set('n', '<Left>', '<cmd>prev<CR>')
@@ -349,17 +358,32 @@ vim.keymap.set('i', 'jk', '<cmd>')
 -- Commands {{{1
 local commands = {
     ToggleNumbers = 'set number! relativenumber!',
-    Todo = function() require"antonk52.todo".find_todo() end,
-    Reroot = function() require"antonk52.root".reroot() end,
+    Todo = function()
+        require('antonk52.todo').find_todo()
+    end,
+    Reroot = function()
+        require('antonk52.root').reroot()
+    end,
 
-    SourceRussianMacKeymap = function() require'antonk52.notes'.source_rus_keymap() end,
-    NotesMode = function() require'antonk52.notes'.setup() end,
+    SourceRussianMacKeymap = function()
+        require('antonk52.notes').source_rus_keymap()
+    end,
+    NotesMode = function()
+        require('antonk52.notes').setup()
+    end,
 
     -- for some reason :help colorcolumn suggest setting it via `set colorcolumn=123`
     -- that has no effect, but setting it using `let &colorcolumn=123` works
-    SetColorColumn = {function(arg) vim.opt.colorcolumn = arg.args end, {nargs = 1}},
+    SetColorColumn = {
+        function(arg)
+            vim.opt.colorcolumn = arg.args
+        end,
+        { nargs = 1 },
+    },
 
-    CloseAllFloats = function() require'antonk52.lsp'.close_all_floats() end,
+    CloseAllFloats = function()
+        require('antonk52.lsp').close_all_floats()
+    end,
 
     -- fat fingers
     Wq = ':wq',
@@ -379,77 +403,64 @@ end
 -- Autocommands {{{1
 
 -- neovim terminal
-vim.api.nvim_create_autocmd(
-    'TermOpen',
-    {
-        pattern = '*',
-        callback = function()
-            -- do not map esc for `fzf` terminals
-            if vim.bo.filetype ~= 'fzf' then
-                -- use Esc to go into normal mode in terminal
-                vim.keymap.set('t', '<Esc>', '<c-\\><c-n>')
-            end
-            -- immediate enter terminal
-            vim.cmd('startinsert')
+vim.api.nvim_create_autocmd('TermOpen', {
+    pattern = '*',
+    callback = function()
+        -- do not map esc for `fzf` terminals
+        if vim.bo.filetype ~= 'fzf' then
+            -- use Esc to go into normal mode in terminal
+            vim.keymap.set('t', '<Esc>', '<c-\\><c-n>')
         end
-    }
-)
+        -- immediate enter terminal
+        vim.cmd('startinsert')
+    end,
+})
 
 -- blink yanked text after yanking it
-vim.api.nvim_create_autocmd(
-    'TextYankPost',
-    {
-        callback = function()
-            if not vim.v.event.visual then
-                vim.highlight.on_yank({higroup = 'Substitute', timeout = 250})
-            end
+vim.api.nvim_create_autocmd('TextYankPost', {
+    callback = function()
+        if not vim.v.event.visual then
+            vim.highlight.on_yank({ higroup = 'Substitute', timeout = 250 })
         end
-    }
-)
+    end,
+})
 
-vim.api.nvim_create_autocmd(
-    'FileType',
-    {
-        pattern = {'json', 'query'},
-        callback = function()
-            if vim.fn.expand('%:t') == 'tsconfig.json' then
-                -- allow comments in tsconfig files
-                vim.bo.ft = 'jsonc'
-            elseif vim.fn.expand('%:e') == 'scm' then
-                -- enable syntax in treesitter syntax files
-                vim.bo.filetype = 'scheme'
-            end
+vim.api.nvim_create_autocmd('FileType', {
+    pattern = { 'json', 'query' },
+    callback = function()
+        if vim.fn.expand('%:t') == 'tsconfig.json' then
+            -- allow comments in tsconfig files
+            vim.bo.ft = 'jsonc'
+        elseif vim.fn.expand('%:e') == 'scm' then
+            -- enable syntax in treesitter syntax files
+            vim.bo.filetype = 'scheme'
         end
-    }
-)
+    end,
+})
 
-vim.api.nvim_create_autocmd(
-    'FileType',
-    {
-        pattern = {'lua', 'javascript', 'typescript', 'javascriptreact', 'typescriptreact', 'json'},
-        callback = function()
-            vim.keymap.set('n', '<LocalLeader>t', function() require('antonk52.ts_utils').toggle_listy() end, {buffer = true})
-        end,
-        desc = 'toggle different style listy things in files that support it'
-    }
-)
+vim.api.nvim_create_autocmd('FileType', {
+    pattern = { 'lua', 'javascript', 'typescript', 'javascriptreact', 'typescriptreact', 'json' },
+    callback = function()
+        vim.keymap.set('n', '<LocalLeader>t', function()
+            require('antonk52.ts_utils').toggle_listy()
+        end, { buffer = true })
+    end,
+    desc = 'toggle different style listy things in files that support it',
+})
 
-vim.api.nvim_create_autocmd(
-    'FileType',
-    {
-        pattern = {'*'},
-        callback = function()
-            if vim.bo.filetype == 'markdown' then
-                vim.wo.foldmethod = 'expr'
-                -- use treesitter for folding
-                vim.wo.foldexpr = 'nvim_treesitter#foldexpr()'
-            else
-                vim.wo.foldmethod = 'indent'
-            end
-        end,
-        desc = 'Use treesitter for folding in markdown files'
-    }
-)
+vim.api.nvim_create_autocmd('FileType', {
+    pattern = { '*' },
+    callback = function()
+        if vim.bo.filetype == 'markdown' then
+            vim.wo.foldmethod = 'expr'
+            -- use treesitter for folding
+            vim.wo.foldexpr = 'nvim_treesitter#foldexpr()'
+        else
+            vim.wo.foldmethod = 'indent'
+        end
+    end,
+    desc = 'Use treesitter for folding in markdown files',
+})
 
 -- Plugins {{{1
 
@@ -479,11 +490,9 @@ vim.g.AutoPairsShortcutToggle = ''
 
 -- Diminactive {{{2
 -- bg color for inactive splits
-local inactive_background_color = vim.o.background == 'light'
-  and '#dedede'
-  or '#424949'
+local inactive_background_color = vim.o.background == 'light' and '#dedede' or '#424949'
 
-vim.cmd('highlight ColorColumn ctermbg=0 guibg='..inactive_background_color)
+vim.cmd('highlight ColorColumn ctermbg=0 guibg=' .. inactive_background_color)
 
 -- snippets.nvim {{{2
 
@@ -494,24 +503,22 @@ require('antonk52.snippets').setup()
 vim.api.nvim_create_user_command(
     'Files',
     'call fzf#vim#files(<q-args>, fzf#vim#with_preview(), <bang>1)',
-    {bang = true, complete='dir', nargs='?'}
+    { bang = true, complete = 'dir', nargs = '?' }
 )
 vim.api.nvim_create_user_command(
     'GFiles',
     'call fzf#vim#gitfiles(<q-args>, fzf#vim#with_preview(), <bang>1)',
-    {bang = true, complete='dir', nargs='?'}
+    { bang = true, complete = 'dir', nargs = '?' }
 )
 
 -- quick jump to dot files from anywhere
-vim.api.nvim_create_user_command(
-    'Dots',
-    function() vim.fn["fzf#run"]({
+vim.api.nvim_create_user_command('Dots', function()
+    vim.fn['fzf#run']({
         source = 'cd ~/dot-files && git ls-files',
         sink = 'e',
         dir = '~/dot-files',
-    }) end,
-    {bang = true, nargs=0}
-)
+    })
+end, { bang = true, nargs = 0 })
 
 -- use GFiles for projects with git, otherwise gracefully fall-back to all files search
 vim.keymap.set(
@@ -612,7 +619,7 @@ vim.defer_fn(function()
             css = true,
             RRGGBBAA = true,
             AARRGGBB = true,
-            mode = 'background'
+            mode = 'background',
         },
     })
     -- These are never used, cannot be skipped via an option
@@ -633,6 +640,7 @@ if vim.env.TREESITTER ~= '0' then
             -- to install use `antonk52.treesitter.force_reinstall_parsers`
             ensure_installed = {},
             highlight = { enable = true },
+            indent = { enable = true },
             playground = {
                 enable = true,
                 disable = {},
@@ -656,12 +664,12 @@ if vim.env.TREESITTER ~= '0' then
         })
 
         -- todo-comments {{{3
-        require("todo-comments").setup {
+        require('todo-comments').setup({
             -- do not use signs in signcolumn
             signs = false,
             keywords = {
                 -- map TODO to `todo` color highlight group
-                TODO = { icon = '', color = 'todo' }
+                TODO = { icon = '', color = 'todo' },
             },
             highlight = {
                 -- use treesitter
@@ -670,13 +678,13 @@ if vim.env.TREESITTER ~= '0' then
                 keyword = 'fg',
                 -- do not highlight following text
                 after = '',
-                pattern = {[[.*<(KEYWORDS):]], [[.*<(KEYWORDS)\s]], [[.*<(KEYWORDS)]]},
+                pattern = { [[.*<(KEYWORDS):]], [[.*<(KEYWORDS)\s]], [[.*<(KEYWORDS)]] },
             },
             colors = {
-                todo = { 'Todo', "grey"}
+                todo = { 'Todo', 'grey' },
             },
             pattern = '\b(KEYWORDS)[: ]?',
-        }
+        })
     end, 100)
 end
 
@@ -706,8 +714,10 @@ local function run_npm_script(same_buffer)
             vim.ui.select(methods, {}, function(pick)
                 npm_scripts[pick]({
                     run_script = same_buffer and function(opts)
-                        return vim.cmd("term cd " .. opts.path .. " && " .. opts.package_manager .. " run " .. opts.name)
-                    end or nil
+                        return vim.cmd(
+                            'term cd ' .. opts.path .. ' && ' .. opts.package_manager .. ' run ' .. opts.name
+                        )
+                    end or nil,
                 })
             end)
         end
@@ -717,16 +727,13 @@ vim.keymap.set('n', '<leader>N', run_npm_script(false))
 vim.keymap.set('n', '<localleader>N', run_npm_script(true))
 
 -- has to be deffered to allow telescope setup first to overwrite vim.ui.select
-vim.defer_fn(
-    function()
-        require('npm_scripts').setup({
-            run_script = function(opts)
-                vim.cmd("tabnew | term cd " .. opts.path .. " && " .. opts.package_manager .. " run " .. opts.name)
-            end,
-        })
-    end,
-    110
-)
+vim.defer_fn(function()
+    require('npm_scripts').setup({
+        run_script = function(opts)
+            vim.cmd('tabnew | term cd ' .. opts.path .. ' && ' .. opts.package_manager .. ' run ' .. opts.name)
+        end,
+    })
+end, 110)
 
 -- {{{2 workspaces
 local workspaces = require('workspaces')
@@ -734,44 +741,36 @@ workspaces.setup({
     hooks = {
         open = {
             -- open directory view after switching
-            function() vim.cmd('e .') end
-        }
-    }
+            function()
+                vim.cmd('e .')
+            end,
+        },
+    },
 })
 
 -- remove builtin command
 vim.api.nvim_del_user_command('WorkspacesOpen')
 -- Includes **both** a name and a file path
-vim.api.nvim_create_user_command(
-    'Workspaces',
-    function()
-        local spaces_dict = {}
-        local max_name_len = 0
-        for _, v in ipairs(workspaces.get()) do
-            local name_len = #v.name
-            if name_len > max_name_len and name_len < 24 then
-                max_name_len = name_len
-            end
-            spaces_dict[v.name] = v
+vim.api.nvim_create_user_command('Workspaces', function()
+    local spaces_dict = {}
+    local max_name_len = 0
+    for _, v in ipairs(workspaces.get()) do
+        local name_len = #v.name
+        if name_len > max_name_len and name_len < 24 then
+            max_name_len = name_len
         end
-        local home = vim.fn.expand('~')..'/'
-        vim.ui.select(
-            vim.tbl_keys(spaces_dict),
-            {
-                prompt = 'Select workspace:',
-                format_item = function(x)
-                    local path = spaces_dict[x].path
-                    local offset = #x <= max_name_len
-                        and string.rep(' ', (max_name_len + 2) - #x)
-                        or '  '
-                    return x .. offset .. path:gsub(home, '')
-                end
-            },
-            workspaces.open
-        )
-    end,
-    {bang = true, nargs=0}
-)
+        spaces_dict[v.name] = v
+    end
+    local home = vim.fn.expand('~') .. '/'
+    vim.ui.select(vim.tbl_keys(spaces_dict), {
+        prompt = 'Select workspace:',
+        format_item = function(x)
+            local path = spaces_dict[x].path
+            local offset = #x <= max_name_len and string.rep(' ', (max_name_len + 2) - #x) or '  '
+            return x .. offset .. path:gsub(home, '')
+        end,
+    }, workspaces.open)
+end, { bang = true, nargs = 0 })
 
 -- load local init.lua {{{1
 local local_init_lua = vim.fn.expand('~/.config/local_init.lua')

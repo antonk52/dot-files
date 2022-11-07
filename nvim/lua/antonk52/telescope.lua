@@ -16,8 +16,8 @@ M.options = {
 }
 
 function M.meta_telescope()
-    local builtin = require'telescope.builtin'
-    vim.ui.select(vim.fn.keys(builtin),{prompt = 'select telescope method'}, function(pick)
+    local builtin = require('telescope.builtin')
+    vim.ui.select(vim.fn.keys(builtin), { prompt = 'select telescope method' }, function(pick)
         -- TODO provide more options for some methods
         builtin[pick](M.options)
     end)
@@ -36,84 +36,53 @@ function M.setup()
             },
         },
         extensions = {
-            ["ui-select"] = {
-                require("telescope.themes").get_dropdown({})
-            }
-        }
+            ['ui-select'] = {
+                require('telescope.themes').get_dropdown({}),
+            },
+        },
     })
-    require("telescope").load_extension("ui-select")
-    require("telescope").load_extension("workspaces")
-    vim.keymap.set(
-        'n',
-        '<leader>f',
-        function()
-            local method_name = vim.fn.isdirectory(vim.fn.getcwd() .. '/.git') == 1
-                and 'git_files'
-                or 'find_files'
+    require('telescope').load_extension('ui-select')
+    require('telescope').load_extension('workspaces')
+    vim.keymap.set('n', '<leader>f', function()
+        local method_name = vim.fn.isdirectory(vim.fn.getcwd() .. '/.git') == 1 and 'git_files' or 'find_files'
 
-            require"telescope.builtin"[method_name](M.options)
+        require('telescope.builtin')[method_name](M.options)
+    end)
+    vim.keymap.set('n', '<leader>F', function()
+        local opts = {
+            find_command = {
+                'fd',
+                '--type',
+                'file',
+                '-E',
+                'node_modules',
+                '-E',
+                'build',
+                '-E',
+                'dist',
+                '--ignore-file',
+                '.gitignore',
+            },
+        }
+        for k, v in pairs(M.options) do
+            opts[k] = v
         end
-    )
-    vim.keymap.set(
-        'n',
-        '<leader>F',
-        function()
-            local opts = {
-                find_command = {
-                    'fd',
-                    '--type',
-                    'file',
-                    '-E',
-                    'node_modules',
-                    '-E',
-                    'build',
-                    '-E',
-                    'dist',
-                    '--ignore-file',
-                    '.gitignore'
-                }
-            }
-            for k, v in pairs(M.options) do
-              opts[k] = v
-            end
 
-            require"telescope.builtin".find_files(opts)
-        end,
-        {desc = 'force show files, explicitly ignoring certain directories'}
-    )
-    vim.keymap.set(
-        'n',
-        '<leader>/',
-        function()
-            require"telescope.builtin".current_buffer_fuzzy_find(M.options)
-        end
-    )
-    vim.keymap.set(
-        'n',
-        '<leader>b',
-        function()
-            require"telescope.builtin".buffers()
-        end
-    )
-    vim.keymap.set(
-        'n',
-        '<leader>T',
-        M.meta_telescope
-    )
-    vim.keymap.set(
-        'n',
-        '<leader>S',
-        function()
-            require"telescope.builtin".current_buffer_fuzzy_find()
-        end
-    )
-    vim.keymap.set(
-        'n',
-        '<localleader>s',
-        function()
-            require"telescope.builtin".lsp_document_symbols()
-        end
-    )
+        require('telescope.builtin').find_files(opts)
+    end, { desc = 'force show files, explicitly ignoring certain directories' })
+    vim.keymap.set('n', '<leader>/', function()
+        require('telescope.builtin').current_buffer_fuzzy_find(M.options)
+    end)
+    vim.keymap.set('n', '<leader>b', function()
+        require('telescope.builtin').buffers()
+    end)
+    vim.keymap.set('n', '<leader>T', M.meta_telescope)
+    vim.keymap.set('n', '<leader>S', function()
+        require('telescope.builtin').current_buffer_fuzzy_find()
+    end)
+    vim.keymap.set('n', '<localleader>s', function()
+        require('telescope.builtin').lsp_document_symbols()
+    end)
 end
 
 return M

@@ -14,11 +14,7 @@ end
 function M.setup()
     M.source_rus_keymap()
 
-    vim.keymap.set(
-        'n',
-        '<localleader>s',
-        '<cmd>Rg tags.*' .. vim.fn.expand('<cword>') .. '<cr>'
-    )
+    vim.keymap.set('n', '<localleader>s', '<cmd>Rg tags.*' .. vim.fn.expand('<cword>') .. '<cr>')
 
     vim.keymap.set('n', 'g[', M.note_prev)
     vim.keymap.set('n', 'g]', M.note_next)
@@ -29,53 +25,42 @@ function M.setup()
     vim.api.nvim_create_user_command('NoteWeek', M.note_week_now, {})
     vim.api.nvim_create_user_command('NoteWeekNext', M.note_week_next, {})
 
-    vim.api.nvim_create_autocmd(
-        'BufWritePre',
-        {
-            desc = "Create missing directories when writing a buffer",
-            pattern = '*',
-            callback = function()
-                local filepath = vim.fn.expand('%')
-                local path_parts = vim.split(filepath, '/')
-                table.remove(path_parts, #path_parts)
-                local dirname = table.concat(path_parts, '/')
-                if vim.fn.isdirectory(dirname) == 1 then
-                    return
-                else
-                    vim.fn.mkdir(dirname, 'p')
-                end
+    vim.api.nvim_create_autocmd('BufWritePre', {
+        desc = 'Create missing directories when writing a buffer',
+        pattern = '*',
+        callback = function()
+            local filepath = vim.fn.expand('%')
+            local path_parts = vim.split(filepath, '/')
+            table.remove(path_parts, #path_parts)
+            local dirname = table.concat(path_parts, '/')
+            if vim.fn.isdirectory(dirname) == 1 then
+                return
+            else
+                vim.fn.mkdir(dirname, 'p')
             end
-        }
-    )
+        end,
+    })
 end
 
 function M.list_notes()
     local cmd = 'silent ! fd -t f'
-    local lines = vim.split(
-        vim.trim(
-            vim.fn.split(
-                vim.fn.execute(cmd),
-                '\n\n'
-            )[2]
-        ),
-        '\n'
-    )
+    local lines = vim.split(vim.trim(vim.fn.split(vim.fn.execute(cmd), '\n\n')[2]), '\n')
     table.sort(lines)
 
     return lines
 end
 
-function M.indexOf( value, tab )
+function M.indexOf(value, tab)
     for index, val in ipairs(tab) do
         if value == val then
-        return index
+            return index
         end
     end
 
     return -1
 end
 
-function M.prev_index( val, tab )
+function M.prev_index(val, tab)
     local prev_i = nil
 
     for i, v in ipairs(tab) do
@@ -92,58 +77,58 @@ end
 function M.note_prev()
     local lines = M.list_notes()
     local path = vim.fn.expand('%')
-    local index = M.indexOf(vim.startswith(path, './') and path or './'..path, lines)
+    local index = M.indexOf(vim.startswith(path, './') and path or './' .. path, lines)
 
     local prev_note = lines[index - 1]
     if prev_note == nil then
         print('prev note does not exist')
     else
-        vim.cmd('edit '.. prev_note)
+        vim.cmd('edit ' .. prev_note)
     end
 end
 
 function M.note_next()
     local lines = M.list_notes()
     local path = vim.fn.expand('%')
-    local index = M.indexOf(vim.startswith(path, './') and path or './'..path, lines)
+    local index = M.indexOf(vim.startswith(path, './') and path or './' .. path, lines)
 
     local next_note = lines[index + 1]
     if next_note == nil then
         print('next note does not exist')
     else
-        vim.cmd('edit '.. next_note)
+        vim.cmd('edit ' .. next_note)
     end
 end
 
 function M.note_new()
     -- 'YYYY/MM/DD'
     local date = vim.fn.strftime('%Y/%m/%d')
-    vim.cmd('edit '..date..'.md')
+    vim.cmd('edit ' .. date .. '.md')
 end
 
 function M.note_week_now()
-    local week_num = os.date("%Y/%m/week_%V")
-    vim.cmd('edit '..week_num..'.md')
+    local week_num = os.date('%Y/%m/week_%V')
+    vim.cmd('edit ' .. week_num .. '.md')
 end
 
 function M.note_week_next()
-    local nums = vim.split(os.date("%Y-%m-%V"), '-')
+    local nums = vim.split(os.date('%Y-%m-%V'), '-')
     local year = nums[1]
     local month = nums[2]
     local week = tonumber(nums[3]) + 1
-    vim.cmd('edit '..year..'/'..month..'/week_'..week..'.md')
+    vim.cmd('edit ' .. year .. '/' .. month .. '/week_' .. week .. '.md')
 end
 
 function M.week_next()
     local lines = M.list_notes()
     local path = vim.fn.expand('%')
-    local index = M.indexOf(vim.startswith(path, './') and path or './'..path, lines)
+    local index = M.indexOf(vim.startswith(path, './') and path or './' .. path, lines)
 
     local next_note = lines[index + 1]
     if next_note == nil then
         print('next note does not exist')
     else
-        vim.cmd('edit '.. next_note)
+        vim.cmd('edit ' .. next_note)
     end
 end
 
