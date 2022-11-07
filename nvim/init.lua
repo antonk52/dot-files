@@ -33,7 +33,7 @@ Plug('antonk52/gitignore-grabber.nvim')
 -- tests
 Plug('nvim-treesitter/nvim-treesitter', { ['do'] = ':TSUpdate' }) -- We recommend updating the parsers on update
 Plug('nvim-treesitter/playground')
-Plug('folke/todo-comments.nvim')
+Plug('folke/todo-comments.nvim', { commit = 'b4dec37' })
 -- telescope
 Plug('nvim-lua/plenary.nvim')
 Plug('nvim-telescope/telescope.nvim', { ['tag'] = '0.1.0' })
