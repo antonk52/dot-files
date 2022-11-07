@@ -285,7 +285,11 @@ function M.setup()
     -- toggle choices
     vim.keymap.set({'i', 's'}, '<C-p>', M.toggle_choice)
 
-    vim.api.nvim_create_user_command('SnippetsSource', 'source ~/.config/nvim/lua/antonk52/snippets.lua | lua require("antonk52.snippets").setup()', {bang = true})
+    vim.api.nvim_create_user_command(
+        'SnippetsSource',
+        'source ~/.config/nvim/lua/antonk52/snippets.lua | lua require("antonk52.snippets").setup()',
+        {bang = true}
+    )
 
     luasnip.snippets = M.default_snippets
 

@@ -42,7 +42,11 @@ function M.on_attach(_, bufnr)
     keymap('gk', vim.lsp.buf.signature_help, 'lsp signature_help')
     keymap('<leader>wa', vim.lsp.buf.add_workspace_folder, 'lsp add_workspace_folder')
     keymap('<leader>wr', vim.lsp.buf.remove_workspace_folder, 'lsp remove_workspace_folder')
-    keymap('<leader>wl', function() print(vim.inspect(vim.lsp.buf.list_workspace_folders())) end, 'print workspace folders')
+    keymap(
+        '<leader>wl',
+        function() print(vim.inspect(vim.lsp.buf.list_workspace_folders())) end,
+        'print workspace folders'
+    )
     keymap('<leader>ws', vim.lsp.buf.workspace_symbol, 'lsp workspace_symbol')
     keymap('gK', vim.lsp.buf.type_definition, 'lsp type_definition')
     keymap('<leader>R', vim.lsp.buf.rename, 'lsp rename')
@@ -128,7 +132,7 @@ function M.setup_lua()
     local LUA_LSP_BIN = base .. '/lua-language-server'
     local LUA_LSP_MAIN = base .. '/main.lua'
 
-    if not vim.fn.filereadable(LUA_LSP_BIN) == 1 then
+    if vim.fn.filereadable(LUA_LSP_BIN) ~= 1 then
         print('lua-language-server is not installed or cannot be found')
         return nil
     end
