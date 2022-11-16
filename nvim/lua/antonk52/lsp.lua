@@ -4,24 +4,37 @@ local M = {}
 
 -- This is a personal take on `vim.lsp.diagnostic.show_line_diagnostics` from 0.5
 -- key point is to include the source into the message
-function M.show_current_line_dignostics()
-    local current_line_number = vim.api.nvim_win_get_cursor(0)[1] - 1
-    local current_buffer_diagnostic = vim.diagnostic.get(0, { lnum = current_line_number })
-    local lines = {}
-    for _, v in ipairs(current_buffer_diagnostic) do
-        local src = '[' .. (v.source or 'Unknown') .. '] '
-        local msg_lines = vim.split(v.message, '\n')
-        -- open_floating_preview throws if line contains line breaks
-        local line = #msg_lines > 1 and msg_lines[1] .. '…' or msg_lines[1]
-        table.insert(lines, src .. line)
-    end
-    if #lines > 0 then
-        vim.lsp.util.open_floating_preview(lines, 'txt', {
-            height = #lines,
-            focusable = false,
-        })
-    else
-        print('No known issues on current line')
+function M.show_current_line_dignostics(show_all_lines)
+    return function()
+        local current_line_number = vim.api.nvim_win_get_cursor(0)[1] - 1
+        local current_buffer_diagnostic = vim.diagnostic.get(0, { lnum = current_line_number })
+        local lines = {}
+        for _, v in ipairs(current_buffer_diagnostic) do
+            local src = '[' .. (v.source or 'Unknown') .. '] '
+            local msg_lines = vim.split(v.message, '\n')
+            local offset = string.rep(' ', #src)
+
+            if show_all_lines and #msg_lines > 1 then
+                for i, l in ipairs(msg_lines) do
+                    if i == 1 then
+                        table.insert(lines, src .. l)
+                    else
+                        table.insert(lines, offset .. l)
+                    end
+                end
+            else
+                -- open_floating_preview throws if line contains line breaks
+                table.insert(lines, src .. msg_lines[1] .. '…')
+            end
+        end
+        if #lines > 0 then
+            vim.lsp.util.open_floating_preview(lines, 'txt', {
+                height = #lines + 1,
+                focusable = false,
+            })
+        else
+            print('No known issues on current line')
+        end
     end
 end
 
@@ -50,7 +63,8 @@ function M.on_attach(_, bufnr)
     keymap('<leader>R', vim.lsp.buf.rename, 'lsp rename')
     keymap('<leader>ca', vim.lsp.buf.code_action, 'lsp code_action')
     keymap('gr', vim.lsp.buf.references, 'lsp references')
-    keymap('<leader>L', M.show_current_line_dignostics, 'show current line diagnostic')
+    keymap('<leader>L', M.show_current_line_dignostics(false), 'show current line diagnostic')
+    keymap('<localleader>L', M.show_current_line_dignostics(true), 'show full current line diagnostic')
     keymap('<leader>[', vim.diagnostic.goto_prev, 'go to next diagnostic')
     keymap('<leader>]', vim.diagnostic.goto_next, 'go to prev diagnostic')
     keymap('<localleader>f', vim.lsp.buf.formatting, 'lsp formatting')
