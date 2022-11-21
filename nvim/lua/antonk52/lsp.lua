@@ -136,7 +136,7 @@ function M.setup_lua()
       main = vim.fn.expand(prefix..'main.lua'),
     }
 
-    local BIN = vim.fn.filereadable(GLOBAL_BIN.bin) == 1 and GLOBAL_BIN or LOCAL_BIN
+    local BIN = (GLOBAL_BIN and vim.fn.filereadable(GLOBAL_BIN.bin) == 1) and GLOBAL_BIN or LOCAL_BIN
 
     if vim.fn.filereadable(BIN.bin) ~= 1 then
         print('lua-language-server is not installed or cannot be found')
