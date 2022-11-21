@@ -138,21 +138,37 @@ M.servers = {
 }
 
 function M.setup_lua()
-    local system_name
-    if vim.fn.has('mac') == 1 then
-        system_name = 'macOS'
-    elseif vim.fn.has('unix') == 1 then
-        system_name = 'Linux'
-    elseif vim.fn.has('win32') == 1 then
-        system_name = 'Windows'
-    else
-        return print('Unsupported system for sumneko')
-    end
-    local base = vim.fn.expand('~/.local/share/nvim/lsp_servers/sumneko_lua/extension/server/bin/' .. system_name)
-    local LUA_LSP_BIN = base .. '/lua-language-server'
-    local LUA_LSP_MAIN = base .. '/main.lua'
+    -- when homebrew is installed globally
+    local GLOBAL_BIN = (function()
+      local system_name
+      if vim.fn.has('mac') == 1 then
+          system_name = 'macOS'
+      elseif vim.fn.has('unix') == 1 then
+          system_name = 'Linux'
+      elseif vim.fn.has('win32') == 1 then
+          system_name = 'Windows'
+      else
+          return print('Unsupported system for sumneko')
+      end
+      local base = vim.fn.expand('~/.local/share/nvim/lsp_servers/sumneko_lua/extension/server/bin/' .. system_name)
+      local LUA_LSP_BIN = base .. '/lua-language-server'
+      local LUA_LSP_MAIN = base .. '/main.lua'
 
-    if vim.fn.filereadable(LUA_LSP_BIN) ~= 1 then
+      return {
+        bin = LUA_LSP_BIN,
+        main = LUA_LSP_MAIN,
+      }
+    end)()
+
+    local prefix = '~/homebrew/Cellar/lua-language-server/*/libexec/bin/'
+    local LOCAL_BIN = {
+      bin = vim.fn.expand(prefix..'lua-language-server'),
+      main = vim.fn.expand(prefix..'main.lua'),
+    }
+
+    local BIN = vim.fn.filereadable(GLOBAL_BIN.bin) == 1 and GLOBAL_BIN or LOCAL_BIN
+
+    if vim.fn.filereadable(BIN.bin) ~= 1 then
         print('lua-language-server is not installed or cannot be found')
         return nil
     end
@@ -162,7 +178,7 @@ function M.setup_lua()
     table.insert(runtime_path, 'lua/?/init.lua')
 
     lspconfig.sumneko_lua.setup({
-        cmd = { LUA_LSP_BIN, '-E', LUA_LSP_MAIN },
+        cmd = { BIN.bin, '-E', BIN.main },
         on_attach = M.on_attach,
         settings = {
             Lua = {
