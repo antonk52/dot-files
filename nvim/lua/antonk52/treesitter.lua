@@ -3,6 +3,7 @@ local M = {}
 M.used_parsers = {
     'bash',
     'c',
+    'cpp',
     'css',
     'graphql',
     'html',
