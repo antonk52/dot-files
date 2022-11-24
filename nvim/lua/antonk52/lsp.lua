@@ -302,13 +302,6 @@ function M.setup_completion()
         { name = 'buffer', keyword_length = 3 },
     }
 
-    if vim.env.WORK == nil then
-        table.insert(sources, {
-            name = 'rg',
-            keyword_length = 3,
-        })
-    end
-
     cmp.setup({
         snippet = {
             expand = function(arg)
