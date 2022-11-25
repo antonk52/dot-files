@@ -151,7 +151,6 @@ vim.g.loaded_perl_provider = 0
 
 -- Defaults {{{1
 -- theme
-vim.cmd('syntax enable')
 vim.opt.background = 'dark'
 vim.opt.termguicolors = true
 
@@ -186,7 +185,6 @@ else
     vim.cmd('color lake')
     vim.opt.background = 'dark'
 end
-vim.cmd('hi Comment gui=italic')
 
 -- no numbers by default
 vim.opt.number = false
@@ -194,7 +192,6 @@ vim.opt.relativenumber = false
 
 -- search made easy
 vim.opt.hlsearch = false
-vim.opt.incsearch = true
 vim.opt.inccommand = 'split'
 
 -- 1 tab == 4 spaces
@@ -210,22 +207,13 @@ vim.opt.expandtab = true
 -- always indent by multiple of shiftwidth
 vim.opt.shiftround = true
 
--- indend/deindent at the beginning of a line
-vim.opt.smarttab = true
-
 -- ignore swapfile messages
 vim.opt.shortmess = vim.opt.shortmess + 'A'
 -- no splash screen
 vim.opt.shortmess = vim.opt.shortmess + 'I'
 
--- draw less
-vim.opt.lazyredraw = true
-
 -- detect filechanges outside of the editor
 vim.opt.autoread = true
-
--- never ring the bell for any reason
-vim.opt.belloff = 'all'
 
 -- indent wrapped lines to match start
 vim.opt.breakindent = true
@@ -258,9 +246,6 @@ vim.opt.linebreak = true
 vim.opt.scrolloff = 3
 vim.opt.sidescrolloff = 3
 
--- always show status line
-vim.opt.laststatus = 2
-
 -- enable mouse scroll and select
 vim.opt.mouse = 'a'
 
@@ -274,9 +259,7 @@ vim.g.maplocalleader = ','
 
 -- nvim 0.6 maps Y to yank till the end of the line,
 -- preserving a legacy behaviour
-if vim.fn.has('nvim-0.6') == 1 then
-    vim.keymap.del('', 'Y')
-end
+vim.keymap.del('', 'Y')
 
 vim.keymap.set('n', '<leader>o', '<cmd>edit #<cr>', { desc = 'toggle between two last buffers' })
 vim.keymap.set('v', '<leader>c', '"*y', { noremap = false, desc = 'copy to OS clipboard' })
@@ -284,13 +267,6 @@ vim.keymap.set('', '<leader>v', '"*p', { noremap = false, desc = 'paste from OS 
 vim.keymap.set('n', 'p', ']p', { desc = 'paste under current indentation level' })
 vim.keymap.set('n', '<Tab>', 'za', { desc = 'toggle folds' })
 vim.keymap.set('n', '<leader>n', ':set hlsearch!<cr>', { desc = 'toggle highlight for last search' })
-vim.keymap.set(
-    'n',
-    '<leader>z',
-    'zz',
-    { desc = 'it is more comfortable to center current line to roll over keys than to double press a key' }
-)
-vim.keymap.set('n', '<localleader>h', ':TSHighlightCapturesUnderCursor<cr>', {})
 
 -- Useful when you have many splits & the status line gets truncated
 vim.keymap.set('n', '<leader>p', ':echo expand("%")<CR>', {
@@ -299,18 +275,6 @@ vim.keymap.set('n', '<leader>p', ':echo expand("%")<CR>', {
 vim.keymap.set('n', '<localleader>p', ':silent !echo "%:p" \\| pbcopy<CR>', {
     desc = 'copy current buffer file path',
 })
-vim.keymap.set('n', '<leader>P', ':silent !echo "%" \\| pbcopy<CR>', {
-    silent = true,
-    desc = 'copy absolute path to current buffer',
-})
-
--- manipulate numbers, convenient since my tmux prefix is <C-a>
-vim.keymap.set('n', '<LocalLeader>a', '<C-a>')
-vim.keymap.set('n', '<LocalLeader>x', '<C-x>')
-vim.keymap.set('v', '<LocalLeader>a', '<C-a>')
-vim.keymap.set('v', '<LocalLeader>x', '<C-x>')
-vim.keymap.set('v', '<LocalLeader><LocalLeader>a', 'g<C-a>')
-vim.keymap.set('v', '<LocalLeader><LocalLeader>x', 'g<C-x>')
 
 vim.keymap.set('n', '<leader>§', ':syntax sync fromstart<CR>', {
     silent = true,
@@ -322,10 +286,10 @@ vim.keymap.set('v', '<', '<gv')
 vim.keymap.set('v', '>', '>gv')
 
 -- ctrl j/k/l/h shortcuts to navigate between splits
-vim.keymap.set('n', '<C-J>', '<cmd>lua require("antonk52.layout").navigate("down")<cr>')
-vim.keymap.set('n', '<C-K>', '<cmd>lua require("antonk52.layout").navigate("up")<cr>')
-vim.keymap.set('n', '<C-L>', '<cmd>lua require("antonk52.layout").navigate("right")<cr>')
-vim.keymap.set('n', '<C-H>', '<cmd>lua require("antonk52.layout").navigate("left")<cr>')
+vim.keymap.set('n', '<C-J>', function() require("antonk52.layout").navigate("down") end)
+vim.keymap.set('n', '<C-K>', function() require("antonk52.layout").navigate("up") end)
+vim.keymap.set('n', '<C-L>', function() require("antonk52.layout").navigate("right") end)
+vim.keymap.set('n', '<C-H>', function() require("antonk52.layout").navigate("left") end)
 
 -- leader j/k/l/h resize active split by 5
 vim.keymap.set('n', '<leader>j', '<C-W>5-')
@@ -333,9 +297,9 @@ vim.keymap.set('n', '<leader>k', '<C-W>5+')
 vim.keymap.set('n', '<leader>l', '<C-W>5>')
 vim.keymap.set('n', '<leader>h', '<C-W>5<')
 
-vim.keymap.set('n', '<Leader>=', '<cmd>lua require("antonk52.layout").zoom_split()<cr>')
-vim.keymap.set('n', '<Leader>-', '<cmd>lua require("antonk52.layout").equalify_splits()<cr>')
-vim.keymap.set('n', '<Leader>+', '<cmd>lua require("antonk52.layout").restore_layout()<cr>')
+vim.keymap.set('n', '<Leader>=', function() require("antonk52.layout").zoom_split() end)
+vim.keymap.set('n', '<Leader>-', function() require("antonk52.layout").equalify_splits() end)
+vim.keymap.set('n', '<Leader>+', function() require("antonk52.layout").restore_layout() end)
 
 vim.keymap.set({ 'n', 'v' }, '<Leader>a', '^', {
     desc = 'go to the beginning of the line (^ is too far)',
@@ -352,7 +316,7 @@ vim.keymap.set('n', '<Right>', '<cmd>next<CR>')
 
 -- easy escape for insert mode
 vim.keymap.set('i', 'kj', '<esc>')
-vim.keymap.set('i', 'jk', '<cmd>')
+vim.keymap.set('i', 'jk', '<esc>')
 
 -- Commands {{{1
 local commands = {
@@ -546,11 +510,6 @@ vim.g.fzf_layout = { window = { width = 0.9, height = 0.6 } }
 vim.defer_fn(function()
     require('antonk52.telescope').setup()
 end, 100)
--- supertab {{{2
--- navigate through auto completion options where:
--- - tab takes to the next one - one down
--- - shift tab takes to previous one - one up
-vim.g.SuperTabDefaultCompletionType = '<c-n>'
 
 -- lualine.nvim {{{2
 vim.defer_fn(function()
