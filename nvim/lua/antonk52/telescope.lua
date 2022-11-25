@@ -83,6 +83,23 @@ function M.setup()
     vim.keymap.set('n', '<localleader>s', function()
         require('telescope.builtin').lsp_document_symbols()
     end)
+    vim.api.nvim_del_user_command('Commands')
+    -- Just like builtin commands,
+    -- but no command definitions in display
+    -- for some reason accessing definitions breaks this command on my work machine
+    local function commands()
+        require('telescope.builtin').commands({
+            entry_maker = function(x)
+                return {
+                    value = x,
+                    display = x.name,
+                    ordinal = x.name
+                }
+            end
+        })
+    end
+    vim.keymap.set('n', '<leader>;', commands)
+    vim.keymap.set('n', '<C-p>', commands)
 end
 
 return M
