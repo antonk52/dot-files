@@ -272,9 +272,6 @@ vim.keymap.set('n', '<leader>n', ':set hlsearch!<cr>', { desc = 'toggle highligh
 vim.keymap.set('n', '<leader>p', ':echo expand("%")<CR>', {
     desc = 'print current buffer file path',
 })
-vim.keymap.set('n', '<localleader>p', ':silent !echo "%:p" \\| pbcopy<CR>', {
-    desc = 'copy current buffer file path',
-})
 
 vim.keymap.set('n', '<leader>§', ':syntax sync fromstart<CR>', {
     silent = true,
@@ -463,20 +460,18 @@ require('antonk52.snippets').setup()
 
 -- fzf {{{2
 
+-- buffer list with fuzzy search
+vim.keymap.set('n', '<leader>b', ':Buffers<cr>')
+-- list opened file history
+vim.keymap.set('n', '<leader>H', ':History<cr>')
 -- quick jump to dot files from anywhere
-vim.api.nvim_create_user_command('Dots', function()
+vim.keymap.set('n', '<leader>D', function()
     vim.fn['fzf#run']({
         source = 'cd ~/dot-files && git ls-files',
         sink = 'e',
         dir = '~/dot-files',
     })
-end, { bang = true, nargs = 0 })
-
--- buffer list with fuzzy search
-vim.keymap.set('n', '<leader>b', ':Buffers<cr>')
--- list opened file history
-vim.keymap.set('n', '<leader>H', ':History<cr>')
-vim.keymap.set('n', '<leader>D', ':Dots<cr>')
+end, {desc = 'jump to dot files from anywhere'})
 -- start in a popup
 vim.g.fzf_layout = { window = { width = 0.9, height = 0.6 } }
 
@@ -517,50 +512,34 @@ vim.opt.updatetime = 300
 vim.opt.shortmess = vim.opt.shortmess + 'c'
 
 vim.defer_fn(function()
-    local lsp_to_use = 'native'
-
-    if vim.env.LSP ~= nil then
-        lsp_to_use = vim.env.LSP
-    end
-
-    if lsp_to_use == 'native' then
-        require('antonk52.lsp').setup()
-    end
+    require('antonk52.lsp').setup()
 end, 100)
 
 -- colorizer {{{2
--- color highlight wont work on the first opened buffer,
--- but shaves off 10ms from the startup time
-vim.defer_fn(function()
-    require('colorizer').setup({
-        filetypes = {
-            'css',
-            'scss',
-            'sass',
-            'lua',
-            'javascript',
-            'javascriptreact',
-            'json',
-            'jsonc',
-            'typescript',
-            'typescriptreact',
-            'yml',
-            'yaml',
-        },
-        user_default_options = {
-            css = true,
-            RRGGBBAA = true,
-            AARRGGBB = true,
-            mode = 'background',
-        },
-    })
-    -- These are never used, cannot be skipped via an option
-    -- and commonly in the way when completing for `Colors`
-    vim.api.nvim_del_user_command('ColorizerAttachToBuffer')
-    vim.api.nvim_del_user_command('ColorizerDetachFromBuffer')
-    vim.api.nvim_del_user_command('ColorizerReloadAllBuffers')
-    vim.api.nvim_del_user_command('ColorizerToggle')
-end, 100)
+-- to avoid default user commands
+vim.g.loaded_colorizer = 1
+require('colorizer').setup({
+    filetypes = {
+        'css',
+        'scss',
+        'sass',
+        'lua',
+        'javascript',
+        'javascriptreact',
+        'json',
+        'jsonc',
+        'typescript',
+        'typescriptreact',
+        'yml',
+        'yaml',
+    },
+    user_default_options = {
+        css = true,
+        RRGGBBAA = true,
+        AARRGGBB = true,
+        mode = 'background',
+    },
+})
 
 -- treesitter {{{2
 if vim.env.TREESITTER ~= '0' then
