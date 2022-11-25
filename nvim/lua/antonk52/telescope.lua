@@ -78,17 +78,43 @@ function M.setup()
     -- but does not use treesitter for highlighting
     vim.keymap.set('n', '<leader>/', function()
         local lines = vim.api.nvim_buf_get_lines(0, 1, -1, true)
-        vim.ui.select(lines, {prompt = 'Select line:'}, function(picked)
-            for i, l in ipairs(lines) do
-                if l == picked then
-                    local indent_length = l:match("^%s*"):len()
-                    vim.api.nvim_win_set_cursor(0, {i+1, indent_length+1})
-                    -- center line on the screen
-                    vim.api.nvim_feedkeys('zz', 'n', false)
-                    return
-                end
-            end
-        end)
+        local line_to_number_dict = {}
+        for i, l in ipairs(lines) do
+            line_to_number_dict[l] = i
+        end
+
+        require "telescope.pickers"
+            .new(M.options, {
+                prompt_title = "Buffer lines:",
+                finder = require "telescope.finders".new_table {
+                    results = lines,
+                },
+                sorter = require("telescope.config").values.generic_sorter(M.options),
+                attach_mappings = function(prompt_bufnr)
+                    actions.select_default:replace(function()
+                        local selection = require "telescope.actions.state".get_selected_entry()
+                        local picked_line = selection[1]
+                        print(vim.inspect(selection))
+                        actions.close(prompt_bufnr)
+
+                        local indent_length = picked_line:match("^%s*"):len()
+                        vim.api.nvim_win_set_cursor(
+                            0,
+                            {
+                                -- line number
+                                line_to_number_dict[picked_line] + 1,
+                                -- column number
+                                indent_length+1
+                            }
+                        )
+                        -- center line on the screen
+                        vim.api.nvim_feedkeys('zz', 'n', false)
+                    end)
+
+                    return true
+                end,
+            })
+            :find()
     end)
     vim.keymap.set('n', '<leader>?', function()
         require('telescope.builtin').lsp_document_symbols()
