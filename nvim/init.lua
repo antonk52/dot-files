@@ -462,17 +462,6 @@ vim.cmd('highlight ColorColumn ctermbg=0 guibg=' .. inactive_background_color)
 require('antonk52.snippets').setup()
 
 -- fzf {{{2
--- enable file preview for both Files & GFiles
-vim.api.nvim_create_user_command(
-    'Files',
-    'call fzf#vim#files(<q-args>, fzf#vim#with_preview(), <bang>1)',
-    { bang = true, complete = 'dir', nargs = '?' }
-)
-vim.api.nvim_create_user_command(
-    'GFiles',
-    'call fzf#vim#gitfiles(<q-args>, fzf#vim#with_preview(), <bang>1)',
-    { bang = true, complete = 'dir', nargs = '?' }
-)
 
 -- quick jump to dot files from anywhere
 vim.api.nvim_create_user_command('Dots', function()
@@ -483,22 +472,8 @@ vim.api.nvim_create_user_command('Dots', function()
     })
 end, { bang = true, nargs = 0 })
 
--- use GFiles for projects with git, otherwise gracefully fall-back to all files search
-vim.keymap.set(
-    'n',
-    '<leader>f',
-    "isdirectory(getcwd() . '/.git') ? ':GFiles<cr>' : ':Files<cr>'",
-    { noremap = true, expr = true }
-)
-vim.keymap.set('n', '<leader>F', ':Files<cr>')
 -- buffer list with fuzzy search
 vim.keymap.set('n', '<leader>b', ':Buffers<cr>')
--- In current buffer search with a preview
-vim.keymap.set('n', '<leader>/', ':BLines<cr>')
--- list available snippets
-vim.keymap.set('n', '<leader>s', ':Snippets<cr>')
--- list opened windows
-vim.keymap.set('n', '<leader>W', ':Windows<cr>')
 -- list opened file history
 vim.keymap.set('n', '<leader>H', ':History<cr>')
 vim.keymap.set('n', '<leader>D', ':Dots<cr>')
