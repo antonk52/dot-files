@@ -77,10 +77,21 @@ function M.setup()
         require('telescope.builtin').buffers()
     end)
     vim.keymap.set('n', '<leader>T', M.meta_telescope)
-    vim.keymap.set('n', '<leader>S', function()
-        require('telescope.builtin').current_buffer_fuzzy_find()
+    -- similar to `telescope.builtin.current_buffer_fuzzy_find`
+    -- but does not use treesitter for highlighting
+    vim.keymap.set('n', '<leader>/', function()
+        local lines = vim.api.nvim_buf_get_lines(0, 1, -1, true)
+        print(vim.inspect(lines));
+        vim.ui.select(lines, {prompt = 'Select line:'}, function(picked)
+            for i, l in ipairs(lines) do
+                if l == picked then
+                    local indent_length = l:match("^%s*"):len()
+                    return vim.api.nvim_win_set_cursor(0, {i+1, indent_length+1})
+                end
+            end
+        end)
     end)
-    vim.keymap.set('n', '<localleader>s', function()
+    vim.keymap.set('n', '<leader>?', function()
         require('telescope.builtin').lsp_document_symbols()
     end)
     vim.api.nvim_del_user_command('Commands')
