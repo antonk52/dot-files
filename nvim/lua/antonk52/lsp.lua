@@ -84,7 +84,7 @@ M.servers = {
     cssmodules_ls = {
         on_attach = function(client)
             -- disabled go-to-definition to avoid confusion with tsserver
-            client.server_capabilities.goto_definition = false
+            client.server_capabilities.definitionProvider = false
         end,
         init_options = {
             camelCase = 'dashes',
