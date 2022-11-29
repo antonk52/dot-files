@@ -61,6 +61,7 @@ Plug('jiangmiao/auto-pairs')
 -- consistent coding style
 Plug('editorconfig/editorconfig-vim')
 Plug('L3MON4D3/LuaSnip', { branch = 'ls_snippets_preserve' })
+Plug('folke/neodev.nvim')
 -- live preview markdown files in browser
 -- Plug('iamcco/markdown-preview.nvim', { ['do'] = 'cd app & yarn install', ['for'] = { 'markdown', 'mdx' } })
 
