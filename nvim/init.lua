@@ -401,6 +401,12 @@ vim.api.nvim_create_autocmd('FileType', {
         vim.keymap.set('n', '<LocalLeader>t', function()
             require('antonk52.ts_utils').toggle_listy()
         end, { buffer = true })
+
+        if vim.bo.ft == 'lua' then
+            vim.keymap.set({'n', 'v'}, '%', function()
+                require('antonk52.ts_utils').lua_smart_percent()
+            end, {buffer = true, noremap = false})
+        end
     end,
     desc = 'toggle different style listy things in files that support it',
 })
