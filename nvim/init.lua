@@ -341,10 +341,6 @@ local commands = {
         { nargs = 1 },
     },
 
-    CloseAllFloats = function()
-        require('antonk52.lsp').close_all_floats()
-    end,
-
     -- fat fingers
     Wq = ':wq',
     Ter = ':ter',
