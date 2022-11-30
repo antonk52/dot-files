@@ -253,6 +253,30 @@ vim.opt.mouse = 'a'
 -- persistent undo
 vim.opt.undofile = true
 
+vim.ui.input = function(opts, callback)
+    local buf = vim.api.nvim_create_buf(false, true)
+
+    local win = vim.api.nvim_open_win(buf, true, {
+        relative='cursor', style='minimal', border='single',
+        row=1, col=1, width=opts.width or 30, height=1
+    })
+    local function close_win()
+        vim.api.nvim_win_close(win, true)
+        vim.api.nvim_buf_delete(buf, {force = true})
+        vim.cmd('stopinsert!')
+    end
+    vim.keymap.set('n', 'q', close_win, { buffer=true, silent=true })
+    vim.keymap.set('n', '<ESC>', close_win, { buffer=true, silent=true })
+    vim.keymap.set('i', '<ESC>', close_win, { buffer=true, silent=true })
+    if opts.default then vim.api.nvim_put({opts.default}, "", true, true) end
+    vim.cmd('startinsert!')
+
+    vim.keymap.set('i', '<CR>', function()
+        local content = vim.api.nvim_get_current_line()
+        close_win()
+        callback(vim.trim(content))
+    end, {buffer=true, silent=true})
+end
 -- Mappings {{{1
 
 vim.g.mapleader = ' '
