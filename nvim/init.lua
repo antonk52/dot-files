@@ -509,7 +509,7 @@ end, 100)
 
 -- lualine.nvim {{{2
 vim.defer_fn(function()
-    require('antonk52.lualine')
+    require('antonk52.lualine').setup()
 end, 100)
 
 -- indent-blankline.nvim {{{2

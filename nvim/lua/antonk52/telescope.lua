@@ -1,3 +1,6 @@
+local actions = require('telescope.actions')
+local builtin = require('telescope.builtin')
+
 local M = {}
 
 -- local MIN_WIN_WIDTH_FOR_PREVIEW = 130
@@ -16,7 +19,6 @@ M.options = {
 }
 
 function M.action_meta_telescope()
-    local builtin = require('telescope.builtin')
     vim.ui.select(vim.fn.keys(builtin), { prompt = 'select telescope method' }, function(pick)
         -- TODO provide more options for some methods
         builtin[pick](M.options)
@@ -27,7 +29,7 @@ end
 -- but no command definitions in display
 -- for some reason accessing definitions breaks this command on my work machine
 function M.action_commands()
-    require('telescope.builtin').commands({
+    builtin.commands({
         entry_maker = function(x)
             return {
                 value = x,
@@ -47,7 +49,6 @@ function M.action_buffer_lines()
         line_to_number_dict[l] = i
     end
 
-    local actions = require('telescope.actions')
     require "telescope.pickers"
         .new(M.options, {
             prompt_title = "Buffer lines:",
@@ -112,7 +113,6 @@ function M.action_all_project_files()
 end
 
 function M.setup()
-    local actions = require('telescope.actions')
     require('telescope').setup({
         defaults = {
             mappings = {
@@ -134,12 +134,13 @@ function M.setup()
     vim.keymap.set('n', '<leader>f', M.action_smart_vcs_files)
     vim.keymap.set('n', '<leader>F', M.action_all_project_files,
         { desc = 'force show files, explicitly ignoring certain directories' })
-    vim.keymap.set('n', '<leader>b', require('telescope.builtin').buffers)
+    vim.keymap.set('n', '<leader>b', builtin.buffers)
     vim.keymap.set('n', '<leader>T', M.action_meta_telescope)
     vim.keymap.set('n', '<leader>/', M.action_buffer_lines)
-    vim.keymap.set('n', '<leader>?', require('telescope.builtin').lsp_document_symbols)
+    vim.keymap.set('n', '<leader>?', builtin.lsp_document_symbols)
     vim.api.nvim_del_user_command('Commands')
     vim.keymap.set('n', '<leader>;', M.action_commands)
+    vim.keymap.set('n', '<leader>r', builtin.resume)
     vim.keymap.set('n', '<C-p>', M.action_commands)
 end
 

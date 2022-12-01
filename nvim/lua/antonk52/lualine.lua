@@ -96,7 +96,7 @@ function LLN.filetype()
     return LLN.filetype_map[current_filetype] or current_filetype
 end
 
-require('lualine').setup({
+local DEFAULT = {
     options = {
         theme = LLN.theme,
     },
@@ -108,4 +108,11 @@ require('lualine').setup({
         lualine_y = { LLN.filetype },
         lualine_z = { LLN.lineinfo },
     },
-})
+}
+
+return {
+    setup = function() require('lualine').setup(DEFAULT) end,
+    custom_setup = function(fn)
+        require('lualine').setup(fn(DEFAULT))
+    end
+}
