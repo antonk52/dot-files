@@ -35,7 +35,7 @@ Plug('nvim-treesitter/playground')
 Plug('folke/todo-comments.nvim')
 -- telescope
 Plug('nvim-lua/plenary.nvim')
-Plug('nvim-telescope/telescope.nvim', { ['tag'] = '0.1.0' })
+Plug('nvim-telescope/telescope.nvim', { ['commit'] = '22e13f6' })
 Plug('nvim-telescope/telescope-ui-select.nvim')
 -- fancy UI
 Plug('rcarriga/nvim-notify')

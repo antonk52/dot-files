@@ -139,7 +139,7 @@ function M.setup()
     vim.keymap.set('n', '<leader>/', M.action_buffer_lines)
     vim.keymap.set('n', '<leader>?', builtin.lsp_document_symbols)
     vim.api.nvim_del_user_command('Commands')
-    vim.keymap.set('n', '<leader>;', M.action_commands)
+    vim.keymap.set('n', '<leader>;', builtin.commands)
     vim.keymap.set('n', '<leader>r', builtin.resume)
     vim.keymap.set('n', '<C-p>', M.action_commands)
 end
