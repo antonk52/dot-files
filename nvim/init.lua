@@ -18,6 +18,7 @@ Plug('antonk52/vim-tabber')
 -- types & linting
 Plug('neovim/nvim-lspconfig')
 Plug('simrat39/rust-tools.nvim')
+Plug('j-hui/fidget.nvim')
 Plug('b0o/schemastore.nvim') -- json schemas for json lsp
 Plug('hrsh7th/cmp-buffer')
 Plug('hrsh7th/cmp-path')
