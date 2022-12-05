@@ -24,6 +24,7 @@ function M.setup()
     vim.api.nvim_create_user_command('NoteNew', M.note_new, {})
     vim.api.nvim_create_user_command('NoteWeek', M.note_week_now, {})
     vim.api.nvim_create_user_command('NoteWeekNext', M.note_week_next, {})
+    vim.api.nvim_create_user_command('NoteWeekPrev', M.note_week_prev, {})
 
     vim.api.nvim_create_autocmd('BufWritePre', {
         desc = 'Create missing directories when writing a buffer',
@@ -117,6 +118,17 @@ function M.note_week_next()
     local month = nums[2]
     local week = tonumber(nums[3]) + 1
     vim.cmd('edit ' .. year .. '/' .. month .. '/week_' .. week .. '.md')
+end
+
+function M.note_week_prev()
+    local nums = vim.split(os.date('%Y-%m-%V'), '-')
+    local week = tonumber(nums[3]) - 1
+    local loc = vim.fs.find('week_'..week..'.md', {})
+    if (#loc > 0) then
+        vim.cmd('edit ' .. loc[1])
+    else
+        vim.notify('Previous week note is not found', vim.log.levels.ERROR)
+    end
 end
 
 function M.week_next()
