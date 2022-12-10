@@ -17,7 +17,7 @@ tabspaces: 4
 font:
     normal:
         family: 'Fira Code'
-    size: 16.0
+    size: 18.0
 
 colors:
     cursor:
