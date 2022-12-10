@@ -2,19 +2,19 @@ local lspconfig = require('lspconfig')
 
 local M = {}
 
+M.diag_float_opts = {
+    close_events = {
+        'CursorMoved',
+        'InsertEnter',
+        'FocusLost'
+    },
+    source = true,
+    header = 'Line diagnostics:',
+    prefix = ' ',
+    scope = 'line'
+}
 local function show_line_diagnostics()
-    return vim.diagnostic.open_float(nil,
-        {
-            close_events = {
-                'CursorMoved',
-                'InsertEnter',
-                'FocusLost'
-            },
-            source = true,
-            header = 'Line diagnostics:',
-            prefix = ' ',
-            scope = 'line'
-        })
+    return vim.diagnostic.open_float(nil, M.diag_float_opts)
 end
 
 function M.on_attach(_, bufnr)
@@ -43,8 +43,8 @@ function M.on_attach(_, bufnr)
     keymap('<leader>ca', vim.lsp.buf.code_action, 'lsp code_action')
     keymap('gr', vim.lsp.buf.references, 'lsp references')
     keymap('<leader>L', show_line_diagnostics, 'show current line diagnostic')
-    keymap('<leader>[', vim.diagnostic.goto_prev, 'go to next diagnostic')
-    keymap('<leader>]', vim.diagnostic.goto_next, 'go to prev diagnostic')
+    keymap('<leader>[', function() vim.diagnostic.goto_prev({float = M.diag_float_opts}) end, 'go to prev diagnostic')
+    keymap('<leader>]', function() vim.diagnostic.goto_next({float = M.diag_float_opts}) end, 'go to next diagnostic')
     keymap('<localleader>f', vim.lsp.buf.formatting, 'lsp formatting')
 end
 
