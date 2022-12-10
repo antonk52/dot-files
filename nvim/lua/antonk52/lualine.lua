@@ -22,12 +22,17 @@ LLN.theme = {
         a = { fg = colors.color04, bg = colors.color01 },
         b = { fg = colors.color04, bg = colors.color01 },
         c = { fg = colors.color04, bg = colors.color01 },
+        x = { fg = colors.color04, bg = colors.color01 },
+        y = { fg = colors.color04, bg = colors.color01 },
+        z = { fg = colors.color04, bg = colors.color01 },
     },
     normal = {
         a = { fg = colors.color00, bg = colors.color0B, gui = 'bold' },
         b = { fg = colors.color04, bg = colors.color01 },
         c = { fg = colors.color09, bg = colors.color00 },
-        z = { fg = colors.color00, bg = colors.color0B, gui = 'bold' },
+        x = { fg = colors.color04, bg = colors.color00 },
+        y = { fg = colors.color04, bg = colors.color00 },
+        z = { fg = colors.color04, bg = colors.color00 },
     },
     insert = {
         a = { fg = colors.color00, bg = colors.color0D, gui = 'bold' },
@@ -70,12 +75,6 @@ function LLN.modified()
     end
 end
 
-function LLN.empty()
-    return ''
-end
-function LLN.one()
-    return ' '
-end
 LLN.filetype_map = {
     ['typescript'] = 'ts',
     ['typescript.jest'] = 'ts',
@@ -99,20 +98,24 @@ end
 local DEFAULT = {
     options = {
         theme = LLN.theme,
+        section_separators = { left = '', right = '' },
+        component_separators = { left = '', right = '' },
     },
     sections = {
         lualine_a = { LLN.modified },
         lualine_b = { LLN.filename },
-        lualine_c = { LLN.empty },
-        lualine_x = { LLN.one },
+        lualine_c = {},
+        lualine_x = {},
         lualine_y = { LLN.filetype },
         lualine_z = { LLN.lineinfo },
     },
 }
 
 return {
-    setup = function() require('lualine').setup(DEFAULT) end,
+    setup = function()
+        require('lualine').setup(DEFAULT)
+    end,
     custom_setup = function(fn)
         require('lualine').setup(fn(DEFAULT))
-    end
+    end,
 }
