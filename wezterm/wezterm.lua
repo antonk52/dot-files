@@ -2,7 +2,9 @@ local wezterm = require 'wezterm';
 
 return {
     font = wezterm.font("Fira Code"),
-    font_size = 16.0,
+    -- font = wezterm.font("Fira Code", {weight="DemiBold", stretch="Normal", style="Normal"}),
+
+    font_size = 20.0,
     font_antialias = "Greyscale",
 
     colors = {
@@ -18,4 +20,11 @@ return {
     hide_tab_bar_if_only_one_tab = true,
 
     alternate_buffer_wheel_scroll_speed = 3, -- increase scroll speed
+    -- remove window padding
+    window_padding = {
+        left = 0,
+        right = 0,
+        top = 0,
+        bottom = 0,
+    },
 }
