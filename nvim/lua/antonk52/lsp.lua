@@ -410,8 +410,6 @@ function M.setup()
             lspconfig[lsp].setup(M.lsp_options(opts))
         end
     end
-
-    require"fidget".setup({})
 end
 
 return M

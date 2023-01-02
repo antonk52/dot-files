@@ -29,7 +29,7 @@ local plugins = {
         dependencies = {
             'b0o/schemastore.nvim', -- json schemas for json lsp
             'simrat39/rust-tools.nvim',
-            'j-hui/fidget.nvim', -- lsp progress notifications
+            'arkav/lualine-lsp-progress',
             'folke/neodev.nvim', -- vim api signature help and docs
         },
         config = function()
@@ -329,7 +329,7 @@ end
 
 local lazy_options = {
     root = PLUGINS_LOCATION,
-    lockfile = PLUGINS_LOCATION ..'/lazy-lock.json',
+    lockfile = vim.fn.expand('~/dot-files/nvim') ..'/lazy-lock.json',
     install = {
         colorscheme = {'lake'}
     }

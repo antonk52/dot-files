@@ -29,7 +29,7 @@ LLN.theme = {
     normal = {
         a = { fg = colors.color00, bg = colors.color0B, gui = 'bold' },
         b = { fg = colors.color04, bg = colors.color01 },
-        c = { fg = colors.color09, bg = colors.color00 },
+        c = { fg = colors.color03, bg = colors.color00 },
         x = { fg = colors.color04, bg = colors.color00 },
         y = { fg = colors.color04, bg = colors.color00 },
         z = { fg = colors.color04, bg = colors.color00 },
@@ -104,7 +104,7 @@ local DEFAULT = {
     sections = {
         lualine_a = { LLN.modified },
         lualine_b = { LLN.filename },
-        lualine_c = {},
+        lualine_c = { 'lsp_progress' },
         lualine_x = {},
         lualine_y = { LLN.filetype },
         lualine_z = { LLN.lineinfo },
