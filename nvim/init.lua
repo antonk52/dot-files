@@ -51,79 +51,15 @@ local plugins = {
     },
     {
         'natecraddock/workspaces.nvim',
-        config = function()
-            local workspaces = require('workspaces')
-            workspaces.setup({
-                hooks = {
-                    open = {
-                        -- open directory view after switching
-                        function()
-                            local cmd = 'e .'
-                            vim.cmd(cmd)
-                        end,
-                    },
-                }
-            })
-            -- remove builtin command
-            vim.api.nvim_del_user_command('WorkspacesOpen')
-            -- Includes **both** a name and a file path
-            vim.api.nvim_create_user_command('Workspaces', function()
-                local spaces_dict = {}
-                local max_name_len = 0
-                for _, v in ipairs(workspaces.get()) do
-                    local name_len = #v.name
-                    if name_len > max_name_len and name_len < 24 then
-                        max_name_len = name_len
-                    end
-                    spaces_dict[v.name] = v
-                end
-                local home = vim.fn.expand('~') .. '/'
-                vim.ui.select(vim.tbl_keys(spaces_dict), {
-                    prompt = 'Select workspace:',
-                    format_item = function(x)
-                        local path = spaces_dict[x].path
-                        local offset = #x <= max_name_len and string.rep(' ', (max_name_len + 2) - #x) or '  '
-                        return x .. offset .. path:gsub(home, '')
-                    end,
-                }, workspaces.open)
-            end, { bang = true, nargs = 0 })
-        end
+        config = function() require('antonk52.workspaces').setup() end
     },
     'antonk52/amake.nvim',
     {
         'antonk52/npm_scripts.nvim',
         config = function()
-            local function run_npm_script(same_buffer)
-                return function()
-                    local npm_scripts = require('npm_scripts')
-                    local methods = {}
-                    for k, v in pairs(npm_scripts) do
-                        if type(v) == 'function' and k ~= 'setup' then
-                            table.insert(methods, k)
-                        end
-
-                        vim.ui.select(methods, {}, function(pick)
-                            npm_scripts[pick]({
-                                run_script = same_buffer and function(opts)
-                                    return vim.cmd(
-                                        'term cd ' .. opts.path .. ' && ' .. opts.package_manager .. ' run ' .. opts.name
-                                    )
-                                end or nil,
-                            })
-                        end)
-                    end
-                end
-            end
-            vim.keymap.set('n', '<leader>N', run_npm_script(false), {desc = "run npm script in a different buffer"})
-            vim.keymap.set('n', '<localleader>N', run_npm_script(true), {desc = "run npm script in the same buffer"})
-
             -- has to be deffered to allow telescope setup first to overwrite vim.ui.select
             vim.defer_fn(function()
-                require('npm_scripts').setup({
-                    run_script = function(opts)
-                        vim.cmd('tabnew | term cd ' .. opts.path .. ' && ' .. opts.package_manager .. ' run ' .. opts.name)
-                    end,
-                })
+                require('antonk52.npm_scripts').setup()
             end, 110)
         end
     },
