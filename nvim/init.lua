@@ -22,11 +22,9 @@ vim.opt.rtp:prepend(lazypath)
 -- Plugins {{{1
 local plugins = {
     -- Essentials {{{2
-    -- tab navigation
-    'antonk52/vim-tabber',
-    -- types & linting
+    'antonk52/vim-tabber', -- tab navigation
     {
-        'neovim/nvim-lspconfig',
+        'neovim/nvim-lspconfig', -- types & linting
         enabled = vim.env.LSP ~= '0',
         dependencies = {
             'b0o/schemastore.nvim', -- json schemas for json lsp
@@ -127,7 +125,6 @@ local plugins = {
                     end,
                 })
             end, 110)
-
         end
     },
     'antonk52/gitignore-grabber.nvim',
@@ -213,21 +210,20 @@ local plugins = {
         'junegunn/fzf', -- async project in-file/file search
         build = './install --bin',
         dependencies = {'junegunn/fzf.vim'},
-        config = function()
-            -- buffer list with fuzzy search
-            vim.keymap.set('n', '<leader>b', ':Buffers<cr>')
-            -- list opened file history
-            vim.keymap.set('n', '<leader>H', ':History<cr>')
-            -- quick jump to dot files from anywhere
-            vim.keymap.set('n', '<leader>D', function()
-                vim.fn['fzf#run']({
-                    source = 'cd ~/dot-files && git ls-files',
-                    sink = 'e',
-                    dir = '~/dot-files',
-                })
-            end, {desc = 'jump to dot files from anywhere'})
+        init = function()
+            -- avoid creating all of the commands
+            vim.g.loaded_fzf_vim = 1
             -- start in a popup
             vim.g.fzf_layout = { window = { width = 0.9, height = 0.6 } }
+            -- recreate the only command used
+            vim.api.nvim_create_user_command(
+                'Rg',
+                'call fzf#vim#grep("rg --column --line-number --no-heading --color=always --smart-case -- ".shellescape(<q-args>), 1, fzf#vim#with_preview(), <bang>0)',
+                {
+                    bang = true,
+                    nargs = '*',
+                }
+            )
         end,
     },
     {
@@ -238,13 +234,10 @@ local plugins = {
             'nvim-telescope/telescope-ui-select.nvim',
         },
         config = function()
-            vim.defer_fn(function()
-                require('antonk52.telescope').setup()
-            end, 50)
+            vim.defer_fn(require('antonk52.telescope').setup, 50)
         end,
     },
-    -- fancy UI
-    'rcarriga/nvim-notify',
+    'rcarriga/nvim-notify', -- fancy UI
     {
         'hoob3rt/lualine.nvim',
         config = function() require('antonk52.lualine').setup() end
@@ -252,12 +245,13 @@ local plugins = {
     'tpope/vim-surround', -- change surrounding chars
     {
         'tpope/vim-fugitive', -- git gems
-        config = function()
+        dependencies = {
+            'tpope/vim-rhubarb', -- enables Gbrowse for github.com
+        },
+        init = function()
             vim.g.fugitive_no_maps = 1
         end
     },
-    -- enables Gbrowse for github.com
-    'tpope/vim-rhubarb',
     {
         'tpope/vim-commentary', -- toggle comments
         config = function()
@@ -266,9 +260,8 @@ local plugins = {
             vim.keymap.set('n', '<C-_>', '<plug>CommentaryLine')
         end
     },
-    -- project file viewer
     {
-        'justinmk/vim-dirvish',
+        'justinmk/vim-dirvish', -- project file viewer
         config = function()
             vim.g.dirvish_relative_paths = 1
             -- folders on top
@@ -286,22 +279,20 @@ local plugins = {
     },
     {
         'jiangmiao/auto-pairs', -- auto closes quotes and braces
-        config = function()
+        init = function()
             -- avoid inserting extra space inside surrounding objects `{([`
             vim.g.AutoPairsMapSpace = 0
             vim.g.AutoPairsShortcutToggle = ''
             vim.g.AutoPairsMapCh = 0
         end
     },
-    -- consistent coding style
     {
-        'editorconfig/editorconfig-vim',
-        config = function()
+        'editorconfig/editorconfig-vim', -- consistent coding style
+        init = function()
             -- let's keep this setting as 4 regardless
             vim.g.EditorConfig_disable_rules = { 'tab_width' }
         end
     },
-
     {
         'L3MON4D3/LuaSnip',
         branch = 'ls_snippets_preserve',
@@ -315,12 +306,13 @@ local plugins = {
     {'mattn/emmet-vim', ft = { 'html', 'css', 'javascript', 'typescript' } },
 
     -- Syntax {{{2
-    -- hex/rgb color highlight preview
     {
-        'NvChad/nvim-colorizer.lua',
-        config = function()
+        'NvChad/nvim-colorizer.lua', -- hex/rgb color highlight preview
+        init = function()
             -- to avoid default user commands
             vim.g.loaded_colorizer = 1
+        end,
+        config = function()
             require('colorizer').setup({
                 filetypes = {
                     'css',
@@ -347,7 +339,7 @@ local plugins = {
     },
     {
         'lukas-reineke/indent-blankline.nvim', -- indent lines marks
-        config = function()
+        init = function()
             -- avoid the first indent & increment dashes furer ones
             vim.g.indent_blankline_char_list = { '|', '¦' }
             vim.g.indent_blankline_show_first_indent_level = false
@@ -372,7 +364,8 @@ local plugins = {
     },
     {
         'plasticboy/vim-markdown',
-        config = function()
+        ft = {'markdown', 'md'},
+        init = function()
             vim.g.vim_markdown_frontmatter = 1
             vim.g.vim_markdown_new_list_item_indent = 0
             vim.g.vim_markdown_no_default_key_mappings = 1
@@ -387,7 +380,6 @@ local plugins = {
         end
     },
     {'jxnblk/vim-mdx-js', ft = { 'mdx' } },
-
     -- Themes {{{2
     {'antonk52/lake.vim', branch = 'lua' },
     'andreypopp/vim-colors-plain',
