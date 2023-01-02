@@ -103,7 +103,6 @@ if prompt -l | grep pure &> /dev/null; then
     zstyle :prompt:pure:prompt:error color red
     zstyle ':vcs_info:*:*' unstagedstr '!'
     zstyle ':vcs_info:*:*' stagedstr '+'
-    zstyle ':vcs_info:*:*' formats "$FX[bold]%r$FX[no-bold]/%S" "%s/%b" "%%u%c"
     zstyle ':vcs_info:*:*' actionformats "$FX[bold]%r$FX[no-bold]/%S" "%s/%b" "%u%c (%a)"
 
     prompt pure
