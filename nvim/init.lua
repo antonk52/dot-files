@@ -210,13 +210,38 @@ local plugins = {
         },
     },
     {
+        'junegunn/fzf', -- async project in-file/file search
+        build = './install --bin',
+        dependencies = {'junegunn/fzf.vim'},
+        config = function()
+            -- buffer list with fuzzy search
+            vim.keymap.set('n', '<leader>b', ':Buffers<cr>')
+            -- list opened file history
+            vim.keymap.set('n', '<leader>H', ':History<cr>')
+            -- quick jump to dot files from anywhere
+            vim.keymap.set('n', '<leader>D', function()
+                vim.fn['fzf#run']({
+                    source = 'cd ~/dot-files && git ls-files',
+                    sink = 'e',
+                    dir = '~/dot-files',
+                })
+            end, {desc = 'jump to dot files from anywhere'})
+            -- start in a popup
+            vim.g.fzf_layout = { window = { width = 0.9, height = 0.6 } }
+        end,
+    },
+    {
         'nvim-telescope/telescope.nvim',
         commit = '22e13f6',
         dependencies = {
             'nvim-lua/plenary.nvim',
             'nvim-telescope/telescope-ui-select.nvim',
         },
-        config = function() require('antonk52.telescope').setup() end,
+        config = function()
+            vim.defer_fn(function()
+                require('antonk52.telescope').setup()
+            end, 50)
+        end,
     },
     -- fancy UI
     'rcarriga/nvim-notify',
@@ -258,29 +283,6 @@ local plugins = {
             local inactive_background_color = vim.o.background == 'light' and '#dedede' or '#424949'
 
             vim.cmd('highlight ColorColumn ctermbg=0 guibg=' .. inactive_background_color) end
-    },
-
-    -- async project in-file/file search
-    {
-        'junegunn/fzf',
-        build = './install --bin',
-        dependencies = {'junegunn/fzf.vim'},
-        config = function()
-            -- buffer list with fuzzy search
-            vim.keymap.set('n', '<leader>b', ':Buffers<cr>')
-            -- list opened file history
-            vim.keymap.set('n', '<leader>H', ':History<cr>')
-            -- quick jump to dot files from anywhere
-            vim.keymap.set('n', '<leader>D', function()
-                vim.fn['fzf#run']({
-                    source = 'cd ~/dot-files && git ls-files',
-                    sink = 'e',
-                    dir = '~/dot-files',
-                })
-            end, {desc = 'jump to dot files from anywhere'})
-            -- start in a popup
-            vim.g.fzf_layout = { window = { width = 0.9, height = 0.6 } }
-        end,
     },
     {
         'jiangmiao/auto-pairs', -- auto closes quotes and braces
