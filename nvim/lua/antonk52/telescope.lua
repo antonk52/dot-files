@@ -112,6 +112,19 @@ function M.action_all_project_files()
     require('telescope.builtin').find_files(opts)
 end
 
+function M.dots()
+    require("telescope.builtin").find_files {
+        prompt_title = "dot files",
+        shorten_path = false,
+        cwd = "~/dot-files/",
+
+        layout_strategy = "horizontal",
+        layout_config = {
+            preview_width = 0.4,
+        },
+    }
+end
+
 function M.setup()
     require('telescope').setup({
         defaults = {
@@ -134,11 +147,11 @@ function M.setup()
     vim.keymap.set('n', '<leader>f', M.action_smart_vcs_files)
     vim.keymap.set('n', '<leader>F', M.action_all_project_files,
         { desc = 'force show files, explicitly ignoring certain directories' })
+    vim.keymap.set('n', '<leader>D', M.dots)
     vim.keymap.set('n', '<leader>b', builtin.buffers)
     vim.keymap.set('n', '<leader>T', M.action_meta_telescope)
     vim.keymap.set('n', '<leader>/', M.action_buffer_lines)
     vim.keymap.set('n', '<leader>?', builtin.lsp_document_symbols)
-    vim.api.nvim_del_user_command('Commands')
     vim.keymap.set('n', '<leader>;', builtin.commands)
     vim.keymap.set('n', '<leader>r', builtin.resume)
     vim.keymap.set('n', '<C-p>', M.action_commands)
