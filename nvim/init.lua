@@ -1,95 +1,119 @@
 -- vim: foldmethod=marker foldlevelstart=0 foldlevel=0
+
+-- Bootstrap lazy.nvim plugin manager {{{1
+local PLUGINS_LOCATION = vim.fn.expand('~/dot-files/nvim/plugged')
+local lazypath = PLUGINS_LOCATION .. '/lazy.nvim'
+if not vim.loop.fs_stat(lazypath) then
+  vim.fn.system({
+    'git',
+    'clone',
+    '--filter=blob:none',
+    'https://github.com/folke/lazy.nvim.git',
+    '--branch=stable', -- latest stable release
+    lazypath,
+  })
+end
+vim.opt.rtp:prepend(lazypath)
+
 -- Plugins {{{1
+local plugins = {
+    -- Essentials {{{2
+    -- tab navigation
+    'antonk52/vim-tabber',
+    -- types & linting
+    'neovim/nvim-lspconfig',
+    'simrat39/rust-tools.nvim',
+    'j-hui/fidget.nvim',
+    'b0o/schemastore.nvim', -- json schemas for json lsp
+    'hrsh7th/cmp-buffer',
+    'hrsh7th/cmp-path',
+    'hrsh7th/cmp-cmdline',
+    'hrsh7th/cmp-nvim-lsp',
+    'hrsh7th/cmp-nvim-lua',
+    'hrsh7th/nvim-cmp',
+    'natecraddock/workspaces.nvim',
+    'antonk52/amake.nvim',
+    'antonk52/npm_scripts.nvim',
+    'antonk52/gitignore-grabber.nvim',
+    {
+        'nvim-treesitter/nvim-treesitter',
+        build = function()
+            -- for some reason inlining this string in vim.cmd breaks treesitter
+            local cmd = "TSUpdate"
+            -- We recommend updating the parsers on update
+            vim.cmd(cmd)
 
--- load vim plug if it is not installed
-if vim.fn.empty(vim.fn.glob('~/.config/nvim/autoload/plug.vim')) == 1 then
-    vim.cmd(
-        'silent !curl -fLo ~/.config/nvim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
-    )
-    vim.cmd('autocmd VimEnter * PlugInstall --sync | source $MYVIMRC')
-end
+            local ak_treesitter = require('antonk52.treesitter')
+            ak_treesitter.force_reinstall_parsers(ak_treesitter.used_parsers, false)
+        end,
+    },
+    'nvim-treesitter/nvim-treesitter-textobjects',
+    'nvim-treesitter/playground',
+    'folke/todo-comments.nvim',
+    -- telescope
+    'nvim-lua/plenary.nvim',
+    {'nvim-telescope/telescope.nvim', commit = '22e13f6' },
+    'nvim-telescope/telescope-ui-select.nvim',
+    -- fancy UI
+    'rcarriga/nvim-notify',
+    'hoob3rt/lualine.nvim',
+    -- change surrounding chars
+    'tpope/vim-surround',
+    -- git gems
+    'tpope/vim-fugitive',
+    -- enables Gbrowse for github.com
+    'tpope/vim-rhubarb',
+    -- toggle comments duh
+    'tpope/vim-commentary',
+    -- project file viewer
+    'justinmk/vim-dirvish',
+    'antonk52/dirvish-fs.vim',
+    -- dims inactive splits
+    'blueyed/vim-diminactive',
+    -- async project in-file/file search
+    {'junegunn/fzf', build = './install --bin' },
+    'junegunn/fzf.vim',
+    -- auto closes quotes and braces
+    'jiangmiao/auto-pairs',
+    -- consistent coding style
+    'editorconfig/editorconfig-vim',
+    {'L3MON4D3/LuaSnip', branch = 'ls_snippets_preserve' },
+    'folke/neodev.nvim',
+    -- live preview markdown files in browser
+    -- {'iamcco/markdown-preview.nvim',  build = 'cd app & yarn install', ft = { 'markdown', 'mdx' } },
 
-local Plug = vim.fn['plug#']
+    -- Front end {{{2
+    -- quick html
+    {'mattn/emmet-vim', ft = { 'html', 'css', 'javascript', 'typescript' } },
 
-vim.fn['plug#begin']('~/.config/nvim/plugged')
--- Essentials {{{2
--- tab navigation
-Plug('antonk52/vim-tabber')
--- types & linting
-Plug('neovim/nvim-lspconfig')
-Plug('simrat39/rust-tools.nvim')
-Plug('j-hui/fidget.nvim')
-Plug('b0o/schemastore.nvim') -- json schemas for json lsp
-Plug('hrsh7th/cmp-buffer')
-Plug('hrsh7th/cmp-path')
-Plug('hrsh7th/cmp-cmdline')
-Plug('hrsh7th/cmp-nvim-lsp')
-Plug('hrsh7th/cmp-nvim-lua')
-Plug('hrsh7th/nvim-cmp')
-Plug('natecraddock/workspaces.nvim')
-Plug('antonk52/amake.nvim')
-Plug('antonk52/npm_scripts.nvim')
-Plug('antonk52/gitignore-grabber.nvim')
--- tests
-Plug('nvim-treesitter/nvim-treesitter', { ['do'] = ':TSUpdate' }) -- We recommend updating the parsers on update
-Plug('nvim-treesitter/nvim-treesitter-textobjects')
-Plug('nvim-treesitter/playground')
-Plug('folke/todo-comments.nvim')
--- telescope
-Plug('nvim-lua/plenary.nvim')
-Plug('nvim-telescope/telescope.nvim', { ['commit'] = '22e13f6' })
-Plug('nvim-telescope/telescope-ui-select.nvim')
--- fancy UI
-Plug('rcarriga/nvim-notify')
-Plug('hoob3rt/lualine.nvim')
--- change surrounding chars
-Plug('tpope/vim-surround')
--- git gems
-Plug('tpope/vim-fugitive')
--- enables Gbrowse for github.com
-Plug('tpope/vim-rhubarb')
--- toggle comments duh
-Plug('tpope/vim-commentary')
--- project file viewer
-Plug('justinmk/vim-dirvish')
-Plug('antonk52/dirvish-fs.vim')
--- dims inactive splits
-Plug('blueyed/vim-diminactive')
--- async project in-file/file search
-Plug('junegunn/fzf', { ['do'] = './install --bin' })
-Plug('junegunn/fzf.vim')
--- auto closes quotes and braces
-Plug('jiangmiao/auto-pairs')
--- consistent coding style
-Plug('editorconfig/editorconfig-vim')
-Plug('L3MON4D3/LuaSnip', { branch = 'ls_snippets_preserve' })
-Plug('folke/neodev.nvim')
--- live preview markdown files in browser
--- Plug('iamcco/markdown-preview.nvim', { ['do'] = 'cd app & yarn install', ['for'] = { 'markdown', 'mdx' } })
+    -- Syntax {{{2
+    -- hex/rgb color highlight preview
+    'NvChad/nvim-colorizer.lua',
+    -- indent lines
+    'lukas-reineke/indent-blankline.nvim',
+    'plasticboy/vim-markdown',
+    {'jxnblk/vim-mdx-js', ft = { 'mdx' } },
 
--- Front end {{{2
--- quick html
-Plug('mattn/emmet-vim', { ['for'] = { 'html', 'css', 'javascript', 'typescript' } })
+    -- Themes {{{2
+    {'antonk52/lake.vim', branch = 'lua' },
+    'andreypopp/vim-colors-plain',
+    'NLKNguyen/papercolor-theme',
+}
 
--- Syntax {{{2
--- hex/rgb color highlight preview
-Plug('NvChad/nvim-colorizer.lua')
--- indent lines
-Plug('lukas-reineke/indent-blankline.nvim')
-Plug('plasticboy/vim-markdown')
-Plug('jxnblk/vim-mdx-js', { ['for'] = { 'mdx' } })
-
--- Themes {{{2
-Plug('antonk52/lake.vim', { branch = 'lua' })
-Plug('andreypopp/vim-colors-plain')
-Plug('NLKNguyen/papercolor-theme')
-
---- Misc {{{2
+-- Dayjob specific {{{2
 if vim.env.WORK ~= nil then
-    Plug('this-part-doesnt-matter/' .. vim.env.WORK)
+    table.insert(plugins, 'this-part-doesnt-matter/'..vim.env.WORK)
 end
--- 2}}}
-vim.fn['plug#end']()
+
+local lazy_options = {
+    root = PLUGINS_LOCATION,
+    lockfile = PLUGINS_LOCATION ..'/lazy-lock.json',
+    install = {
+        colorscheme = {'lake'}
+    }
+}
+require('lazy').setup(plugins, lazy_options)
+
 -- Avoid startup work {{{1
 -- Skip loading menu.vim, saves ~100ms
 vim.g.did_install_default_menus = 1
