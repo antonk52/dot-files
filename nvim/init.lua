@@ -1,5 +1,9 @@
 -- vim: foldmethod=marker foldlevelstart=0 foldlevel=0
 
+-- these mappings have to be set before lazy.nvim plugins
+vim.g.mapleader = ' '
+vim.g.maplocalleader = ','
+
 -- Bootstrap lazy.nvim plugin manager {{{1
 local PLUGINS_LOCATION = vim.fn.expand('~/dot-files/nvim/plugged')
 local lazypath = PLUGINS_LOCATION .. '/lazy.nvim'
@@ -23,6 +27,7 @@ local plugins = {
     -- types & linting
     {
         'neovim/nvim-lspconfig',
+        enabled = vim.env.LSP ~= '0',
         dependencies = {
             'b0o/schemastore.nvim', -- json schemas for json lsp
             'simrat39/rust-tools.nvim',
@@ -33,9 +38,7 @@ local plugins = {
             vim.opt.updatetime = 300
             vim.opt.shortmess = vim.opt.shortmess + 'c'
 
-            vim.defer_fn(function()
-                require('antonk52.lsp').setup()
-            end, 100)
+            require('antonk52.lsp').setup()
         end
     },
     {
@@ -113,8 +116,8 @@ local plugins = {
                     end
                 end
             end
-            vim.keymap.set('n', '<leader>N', run_npm_script(false))
-            vim.keymap.set('n', '<localleader>N', run_npm_script(true))
+            vim.keymap.set('n', '<leader>N', run_npm_script(false), {desc = "run npm script in a different buffer"})
+            vim.keymap.set('n', '<localleader>N', run_npm_script(true), {desc = "run npm script in the same buffer"})
 
             -- has to be deffered to allow telescope setup first to overwrite vim.ui.select
             vim.defer_fn(function()
@@ -213,21 +216,13 @@ local plugins = {
             'nvim-lua/plenary.nvim',
             'nvim-telescope/telescope-ui-select.nvim',
         },
-        config = function()
-            vim.defer_fn(function()
-                require('antonk52.telescope').setup()
-            end, 100)
-        end
+        config = function() require('antonk52.telescope').setup() end,
     },
     -- fancy UI
     'rcarriga/nvim-notify',
     {
         'hoob3rt/lualine.nvim',
-        config = function()
-            vim.defer_fn(function()
-                require('antonk52.lualine').setup()
-            end, 100)
-        end
+        config = function() require('antonk52.lualine').setup() end
     },
     'tpope/vim-surround', -- change surrounding chars
     {
@@ -409,6 +404,7 @@ local lazy_options = {
         colorscheme = {'lake'}
     }
 }
+
 require('lazy').setup(plugins, lazy_options)
 
 -- Avoid startup work {{{1
@@ -601,9 +597,6 @@ vim.ui.input = function(opts, callback)
     end, {buffer=true, silent=true})
 end
 -- Mappings {{{1
-
-vim.g.mapleader = ' '
-vim.g.maplocalleader = ','
 
 -- nvim 0.6 maps Y to yank till the end of the line,
 -- preserving a legacy behaviour
