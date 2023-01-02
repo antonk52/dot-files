@@ -332,7 +332,28 @@ local lazy_options = {
     lockfile = vim.fn.expand('~/dot-files/nvim') ..'/lazy-lock.json',
     install = {
         colorscheme = {'lake'}
-    }
+    },
+    performance = {
+        rtp = {
+            disabled_plugins = {
+                '2html_plugin',
+                'getscript',
+                'getscriptPlugin',
+                'logipat',
+                'netrwFileHandlers',
+                'netrwSettings',
+                'rrhelper',
+                'tar',
+                'tarPlugin',
+                'tutor',
+                'tutor_mode_plugin',
+                'vimball',
+                'vimballPlugin',
+                'zip',
+                'zipPlugin',
+            },
+        },
+    },
 }
 
 require('lazy').setup(plugins, lazy_options)
@@ -340,27 +361,6 @@ require('lazy').setup(plugins, lazy_options)
 -- Avoid startup work {{{1
 -- Skip loading menu.vim, saves ~100ms
 vim.g.did_install_default_menus = 1
--- avoid loading builtin plugins
-local disable_plugins = {
-    '2html_plugin',
-    'getscript',
-    'getscriptPlugin',
-    'logipat',
-    'netrwFileHandlers',
-    'netrwSettings',
-    'rrhelper',
-    'tar',
-    'tarPlugin',
-    'tutor',
-    'tutor_mode_plugin',
-    'vimball',
-    'vimballPlugin',
-    'zip',
-    'zipPlugin',
-}
-for _, v in pairs(disable_plugins) do
-    vim.g['loaded_' .. v] = 1
-end
 
 -- use snappier filetype detection
 if vim.fn.has('nvim-0.7') == 1 then
