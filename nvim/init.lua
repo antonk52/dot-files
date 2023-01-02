@@ -21,22 +21,120 @@ local plugins = {
     -- tab navigation
     'antonk52/vim-tabber',
     -- types & linting
-    'neovim/nvim-lspconfig',
-    'simrat39/rust-tools.nvim',
-    'j-hui/fidget.nvim',
-    'b0o/schemastore.nvim', -- json schemas for json lsp
-    'hrsh7th/cmp-buffer',
-    'hrsh7th/cmp-path',
-    'hrsh7th/cmp-cmdline',
-    'hrsh7th/cmp-nvim-lsp',
-    'hrsh7th/cmp-nvim-lua',
-    'hrsh7th/nvim-cmp',
-    'natecraddock/workspaces.nvim',
+    {
+        'neovim/nvim-lspconfig',
+        dependencies = {
+            'b0o/schemastore.nvim', -- json schemas for json lsp
+            'simrat39/rust-tools.nvim',
+            'j-hui/fidget.nvim', -- lsp progress notifications
+            'folke/neodev.nvim', -- vim api signature help and docs
+        },
+        config = function()
+            vim.opt.updatetime = 300
+            vim.opt.shortmess = vim.opt.shortmess + 'c'
+
+            vim.defer_fn(function()
+                require('antonk52.lsp').setup()
+            end, 100)
+        end
+    },
+    {
+        'hrsh7th/nvim-cmp',
+        dependencies = {
+            'hrsh7th/cmp-buffer',
+            'hrsh7th/cmp-path',
+            'hrsh7th/cmp-cmdline',
+            'hrsh7th/cmp-nvim-lsp',
+            'hrsh7th/cmp-nvim-lua',
+        }
+    },
+    {
+        'natecraddock/workspaces.nvim',
+        config = function()
+            local workspaces = require('workspaces')
+            workspaces.setup({
+                hooks = {
+                    open = {
+                        -- open directory view after switching
+                        function()
+                            local cmd = 'e .'
+                            vim.cmd(cmd)
+                        end,
+                    },
+                }
+            })
+            -- remove builtin command
+            vim.api.nvim_del_user_command('WorkspacesOpen')
+            -- Includes **both** a name and a file path
+            vim.api.nvim_create_user_command('Workspaces', function()
+                local spaces_dict = {}
+                local max_name_len = 0
+                for _, v in ipairs(workspaces.get()) do
+                    local name_len = #v.name
+                    if name_len > max_name_len and name_len < 24 then
+                        max_name_len = name_len
+                    end
+                    spaces_dict[v.name] = v
+                end
+                local home = vim.fn.expand('~') .. '/'
+                vim.ui.select(vim.tbl_keys(spaces_dict), {
+                    prompt = 'Select workspace:',
+                    format_item = function(x)
+                        local path = spaces_dict[x].path
+                        local offset = #x <= max_name_len and string.rep(' ', (max_name_len + 2) - #x) or '  '
+                        return x .. offset .. path:gsub(home, '')
+                    end,
+                }, workspaces.open)
+            end, { bang = true, nargs = 0 })
+        end
+    },
     'antonk52/amake.nvim',
-    'antonk52/npm_scripts.nvim',
+    {
+        'antonk52/npm_scripts.nvim',
+        config = function()
+            local function run_npm_script(same_buffer)
+                return function()
+                    local npm_scripts = require('npm_scripts')
+                    local methods = {}
+                    for k, v in pairs(npm_scripts) do
+                        if type(v) == 'function' and k ~= 'setup' then
+                            table.insert(methods, k)
+                        end
+
+                        vim.ui.select(methods, {}, function(pick)
+                            npm_scripts[pick]({
+                                run_script = same_buffer and function(opts)
+                                    return vim.cmd(
+                                        'term cd ' .. opts.path .. ' && ' .. opts.package_manager .. ' run ' .. opts.name
+                                    )
+                                end or nil,
+                            })
+                        end)
+                    end
+                end
+            end
+            vim.keymap.set('n', '<leader>N', run_npm_script(false))
+            vim.keymap.set('n', '<localleader>N', run_npm_script(true))
+
+            -- has to be deffered to allow telescope setup first to overwrite vim.ui.select
+            vim.defer_fn(function()
+                require('npm_scripts').setup({
+                    run_script = function(opts)
+                        vim.cmd('tabnew | term cd ' .. opts.path .. ' && ' .. opts.package_manager .. ' run ' .. opts.name)
+                    end,
+                })
+            end, 110)
+
+        end
+    },
     'antonk52/gitignore-grabber.nvim',
     {
         'nvim-treesitter/nvim-treesitter',
+        enabled = vim.env.TREESITTER ~= '0',
+        dependencies = {
+            'nvim-treesitter/nvim-treesitter-textobjects',
+            'nvim-treesitter/playground',
+        },
         build = function()
             -- for some reason inlining this string in vim.cmd breaks treesitter
             local cmd = "TSUpdate"
@@ -46,39 +144,172 @@ local plugins = {
             local ak_treesitter = require('antonk52.treesitter')
             ak_treesitter.force_reinstall_parsers(ak_treesitter.used_parsers, false)
         end,
+        config = function()
+            -- if you get "wrong architecture error
+            -- open nvim in macos native terminal app and run `:TSInstall`
+            require('nvim-treesitter.configs').setup({
+                -- keep this list empty to avoid downloading languages on startup
+                -- to install use `antonk52.treesitter.force_reinstall_parsers`
+                ensure_installed = {},
+                highlight = { enable = true },
+                indent = { enable = true },
+                textobjects = {
+                    select = {
+                        enable = true,
+                        -- Automatically jump forward to textobj, similar to targets.vim
+                        lookahead = true,
+                        keymaps = {
+                            ["af"] = "@function.outer",
+                            ["if"] = "@function.inner",
+                            ["ac"] = "@class.outer",
+                            ["ic"] = "@class.inner",
+                            ["ab"] = "@block.outer",
+                            ["ib"] = "@block.inner",
+                        },
+                        -- mapping query_strings to modes.
+                        selection_modes = {
+                            ['@parameter.outer'] = 'v', -- charwise
+                            ['@function.outer'] = 'V', -- linewise
+                            ['@class.outer'] = '<c-v>', -- blockwise
+                        },
+                        include_surrounding_whitespace = true,
+                    },
+                },
+                playground = {
+                    enable = true,
+                    disable = {},
+                },
+            })
+        end,
     },
-    'nvim-treesitter/nvim-treesitter-textobjects',
-    'nvim-treesitter/playground',
-    'folke/todo-comments.nvim',
-    -- telescope
-    'nvim-lua/plenary.nvim',
-    {'nvim-telescope/telescope.nvim', commit = '22e13f6' },
-    'nvim-telescope/telescope-ui-select.nvim',
+    {
+        'folke/todo-comments.nvim',
+        config = {
+            -- do not use signs in signcolumn
+            signs = false,
+            keywords = {
+                -- map TODO to `todo` color highlight group
+                TODO = { icon = '', color = 'todo' },
+            },
+            highlight = {
+                -- use treesitter
+                comment_only = true,
+                before = '',
+                keyword = 'fg',
+                -- do not highlight following text
+                after = '',
+                pattern = { [[.*<(KEYWORDS):]], [[.*<(KEYWORDS)\s]], [[.*<(KEYWORDS)]] },
+            },
+            colors = {
+                todo = { 'Todo', 'grey' },
+            },
+            pattern = '\b(KEYWORDS)[: ]?',
+        },
+    },
+    {
+        'nvim-telescope/telescope.nvim',
+        commit = '22e13f6',
+        dependencies = {
+            'nvim-lua/plenary.nvim',
+            'nvim-telescope/telescope-ui-select.nvim',
+        },
+        config = function()
+            vim.defer_fn(function()
+                require('antonk52.telescope').setup()
+            end, 100)
+        end
+    },
     -- fancy UI
     'rcarriga/nvim-notify',
-    'hoob3rt/lualine.nvim',
-    -- change surrounding chars
-    'tpope/vim-surround',
-    -- git gems
-    'tpope/vim-fugitive',
+    {
+        'hoob3rt/lualine.nvim',
+        config = function()
+            vim.defer_fn(function()
+                require('antonk52.lualine').setup()
+            end, 100)
+        end
+    },
+    'tpope/vim-surround', -- change surrounding chars
+    {
+        'tpope/vim-fugitive', -- git gems
+        config = function()
+            vim.g.fugitive_no_maps = 1
+        end
+    },
     -- enables Gbrowse for github.com
     'tpope/vim-rhubarb',
-    -- toggle comments duh
-    'tpope/vim-commentary',
+    {
+        'tpope/vim-commentary', -- toggle comments
+        config = function()
+            -- toggle comments with CTRL _
+            vim.keymap.set('v', '<C-_>', '<plug>Commentary')
+            vim.keymap.set('n', '<C-_>', '<plug>CommentaryLine')
+        end
+    },
     -- project file viewer
-    'justinmk/vim-dirvish',
+    {
+        'justinmk/vim-dirvish',
+        config = function()
+            vim.g.dirvish_relative_paths = 1
+            -- folders on top
+            vim.g.dirvish_mode = ':sort ,^\\v(.*[\\/])|\\ze,'
+        end
+    },
     'antonk52/dirvish-fs.vim',
-    -- dims inactive splits
-    'blueyed/vim-diminactive',
+    {
+        'blueyed/vim-diminactive', -- dims inactive splits
+        config = function()
+            -- bg color for inactive splits
+            local inactive_background_color = vim.o.background == 'light' and '#dedede' or '#424949'
+
+            vim.cmd('highlight ColorColumn ctermbg=0 guibg=' .. inactive_background_color) end
+    },
+
     -- async project in-file/file search
-    {'junegunn/fzf', build = './install --bin' },
-    'junegunn/fzf.vim',
-    -- auto closes quotes and braces
-    'jiangmiao/auto-pairs',
+    {
+        'junegunn/fzf',
+        build = './install --bin',
+        dependencies = {'junegunn/fzf.vim'},
+        config = function()
+            -- buffer list with fuzzy search
+            vim.keymap.set('n', '<leader>b', ':Buffers<cr>')
+            -- list opened file history
+            vim.keymap.set('n', '<leader>H', ':History<cr>')
+            -- quick jump to dot files from anywhere
+            vim.keymap.set('n', '<leader>D', function()
+                vim.fn['fzf#run']({
+                    source = 'cd ~/dot-files && git ls-files',
+                    sink = 'e',
+                    dir = '~/dot-files',
+                })
+            end, {desc = 'jump to dot files from anywhere'})
+            -- start in a popup
+            vim.g.fzf_layout = { window = { width = 0.9, height = 0.6 } }
+        end,
+    },
+    {
+        'jiangmiao/auto-pairs', -- auto closes quotes and braces
+        config = function()
+            -- avoid inserting extra space inside surrounding objects `{([`
+            vim.g.AutoPairsMapSpace = 0
+            vim.g.AutoPairsShortcutToggle = ''
+            vim.g.AutoPairsMapCh = 0
+        end
+    },
     -- consistent coding style
-    'editorconfig/editorconfig-vim',
-    {'L3MON4D3/LuaSnip', branch = 'ls_snippets_preserve' },
-    'folke/neodev.nvim',
+    {
+        'editorconfig/editorconfig-vim',
+        config = function()
+            -- let's keep this setting as 4 regardless
+            vim.g.EditorConfig_disable_rules = { 'tab_width' }
+        end
+    },
+
+    {
+        'L3MON4D3/LuaSnip',
+        branch = 'ls_snippets_preserve',
+        config = function() require('antonk52.snippets').setup() end
+    },
     -- live preview markdown files in browser
     -- {'iamcco/markdown-preview.nvim',  build = 'cd app & yarn install', ft = { 'markdown', 'mdx' } },
 
@@ -88,10 +319,76 @@ local plugins = {
 
     -- Syntax {{{2
     -- hex/rgb color highlight preview
-    'NvChad/nvim-colorizer.lua',
-    -- indent lines
-    'lukas-reineke/indent-blankline.nvim',
-    'plasticboy/vim-markdown',
+    {
+        'NvChad/nvim-colorizer.lua',
+        config = function()
+            -- to avoid default user commands
+            vim.g.loaded_colorizer = 1
+            require('colorizer').setup({
+                filetypes = {
+                    'css',
+                    'scss',
+                    'sass',
+                    'lua',
+                    'javascript',
+                    'javascriptreact',
+                    'json',
+                    'jsonc',
+                    'typescript',
+                    'typescriptreact',
+                    'yml',
+                    'yaml',
+                },
+                user_default_options = {
+                    css = true,
+                    RRGGBBAA = true,
+                    AARRGGBB = true,
+                    mode = 'background',
+                },
+            })
+        end
+    },
+    {
+        'lukas-reineke/indent-blankline.nvim', -- indent lines marks
+        config = function()
+            -- avoid the first indent & increment dashes furer ones
+            vim.g.indent_blankline_char_list = { '|', '¦' }
+            vim.g.indent_blankline_show_first_indent_level = false
+            vim.g.indent_blankline_show_trailing_blankline_indent = false
+            vim.g.indent_blankline_filetype_exclude = {
+                'help',
+                'startify',
+                'dashboard',
+                'packer',
+                'neogitstatus',
+                'NvimTree',
+                'Trouble',
+            }
+
+            -- refresh blank lines after toggleing folds
+            -- to avoid intent lines overlaying the fold line characters
+            vim.keymap.set('n', 'zr', 'zr:IndentBlanklineRefresh<cr>')
+            vim.keymap.set('n', 'za', 'za:IndentBlanklineRefresh<cr>')
+            vim.keymap.set('n', 'zm', 'zm:IndentBlanklineRefresh<cr>')
+            vim.keymap.set('n', 'zo', 'zo:IndentBlanklineRefresh<cr>')
+        end
+    },
+    {
+        'plasticboy/vim-markdown',
+        config = function()
+            vim.g.vim_markdown_frontmatter = 1
+            vim.g.vim_markdown_new_list_item_indent = 0
+            vim.g.vim_markdown_no_default_key_mappings = 1
+            -- there is a separate plugin to handle markdown folds
+            vim.g.vim_markdown_folding_disabled = 1
+            if vim.g.colors_name == 'lake' then
+                -- red & bold list characters -,+,*
+                vim.cmd('hi mkdListItem ctermfg=8 guifg=' .. vim.g.lake_palette['08'].gui .. ' gui=bold')
+                vim.cmd('hi mkdHeading ctermfg=04 guifg=' .. vim.g.lake_palette['0D'].gui)
+                vim.cmd('hi mkdLink gui=none ctermfg=08 guifg=' .. vim.g.lake_palette['08'].gui)
+            end
+        end
+    },
     {'jxnblk/vim-mdx-js', ft = { 'mdx' } },
 
     -- Themes {{{2
@@ -500,306 +797,6 @@ vim.api.nvim_create_autocmd('FileType', {
     end,
     desc = 'Use treesitter for folding in markdown files',
 })
-
--- Plugins {{{1
-
--- dirvish {{{2
-
-vim.g.dirvish_relative_paths = 1
--- folders on top
-vim.g.dirvish_mode = ':sort ,^\\v(.*[\\/])|\\ze,'
-
--- vim-commentary {{{2
-
--- toggle comments with CTRL _
-vim.keymap.set('v', '<C-_>', '<plug>Commentary')
-vim.keymap.set('n', '<C-_>', '<plug>CommentaryLine')
-
--- vim-fugitive {{{2
-vim.g.fugitive_no_maps = 1
-
--- editorconfig {{{2
--- let's keep this setting as 4 regardless
-vim.g.EditorConfig_disable_rules = { 'tab_width' }
-
--- auto-pairs {{{2
--- avoid inserting extra space inside surrounding objects `{([`
-vim.g.AutoPairsMapSpace = 0
-vim.g.AutoPairsShortcutToggle = ''
-
--- Diminactive {{{2
--- bg color for inactive splits
-local inactive_background_color = vim.o.background == 'light' and '#dedede' or '#424949'
-
-vim.cmd('highlight ColorColumn ctermbg=0 guibg=' .. inactive_background_color)
-
--- snippets.nvim {{{2
-
-require('antonk52.snippets').setup()
-
--- fzf {{{2
-
--- buffer list with fuzzy search
-vim.keymap.set('n', '<leader>b', ':Buffers<cr>')
--- list opened file history
-vim.keymap.set('n', '<leader>H', ':History<cr>')
--- quick jump to dot files from anywhere
-vim.keymap.set('n', '<leader>D', function()
-    vim.fn['fzf#run']({
-        source = 'cd ~/dot-files && git ls-files',
-        sink = 'e',
-        dir = '~/dot-files',
-    })
-end, {desc = 'jump to dot files from anywhere'})
--- start in a popup
-vim.g.fzf_layout = { window = { width = 0.9, height = 0.6 } }
-
--- telescope {{{2
-vim.defer_fn(function()
-    require('antonk52.telescope').setup()
-end, 100)
-
--- lualine.nvim {{{2
-vim.defer_fn(function()
-    require('antonk52.lualine').setup()
-end, 100)
-
--- indent-blankline.nvim {{{2
--- avoid the first indent & increment dashes furer ones
-vim.g.indent_blankline_char_list = { '|', '¦' }
-vim.g.indent_blankline_show_first_indent_level = false
-vim.g.indent_blankline_show_trailing_blankline_indent = false
-vim.g.indent_blankline_filetype_exclude = {
-    'help',
-    'startify',
-    'dashboard',
-    'packer',
-    'neogitstatus',
-    'NvimTree',
-    'Trouble',
-}
-
--- refresh blank lines after toggleing folds
--- to avoid intent lines overlaying the fold line characters
-vim.keymap.set('n', 'zr', 'zr:IndentBlanklineRefresh<cr>')
-vim.keymap.set('n', 'za', 'za:IndentBlanklineRefresh<cr>')
-vim.keymap.set('n', 'zm', 'zm:IndentBlanklineRefresh<cr>')
-vim.keymap.set('n', 'zo', 'zo:IndentBlanklineRefresh<cr>')
-
--- lsp {{{2
-vim.opt.updatetime = 300
-vim.opt.shortmess = vim.opt.shortmess + 'c'
-
-vim.defer_fn(function()
-    require('antonk52.lsp').setup()
-end, 100)
-
--- colorizer {{{2
--- to avoid default user commands
-vim.g.loaded_colorizer = 1
-require('colorizer').setup({
-    filetypes = {
-        'css',
-        'scss',
-        'sass',
-        'lua',
-        'javascript',
-        'javascriptreact',
-        'json',
-        'jsonc',
-        'typescript',
-        'typescriptreact',
-        'yml',
-        'yaml',
-    },
-    user_default_options = {
-        css = true,
-        RRGGBBAA = true,
-        AARRGGBB = true,
-        mode = 'background',
-    },
-})
-
--- treesitter {{{2
-if vim.env.TREESITTER ~= '0' then
-    vim.defer_fn(function()
-        -- if you get "wrong architecture error
-        -- open nvim in macos native terminal app and run `:TSInstall`
-        require('nvim-treesitter.configs').setup({
-            -- keep this list empty to avoid downloading languages on startup
-            -- to install use `antonk52.treesitter.force_reinstall_parsers`
-            ensure_installed = {},
-            highlight = { enable = true },
-            indent = { enable = true },
-            textobjects = {
-                select = {
-                    enable = true,
-
-                    -- Automatically jump forward to textobj, similar to targets.vim
-                    lookahead = true,
-
-                    keymaps = {
-                        ["af"] = "@function.outer",
-                        ["if"] = "@function.inner",
-                        ["ac"] = "@class.outer",
-                        ["ic"] = "@class.inner",
-                        ["ab"] = "@block.outer",
-                        ["ib"] = "@block.inner",
-                    },
-                    -- You can choose the select mode (default is charwise 'v')
-                    --
-                    -- Can also be a function which gets passed a table with the keys
-                    -- * query_string: eg '@function.inner'
-                    -- * method: eg 'v' or 'o'
-                    -- and should return the mode ('v', 'V', or '<c-v>') or a table
-                    -- mapping query_strings to modes.
-                    selection_modes = {
-                        ['@parameter.outer'] = 'v', -- charwise
-                        ['@function.outer'] = 'V', -- linewise
-                        ['@class.outer'] = '<c-v>', -- blockwise
-                    },
-                    -- If you set this to `true` (default is `false`) then any textobject is
-                    -- extended to include preceding or succeeding whitespace. Succeeding
-                    -- whitespace has priority in order to act similarly to eg the built-in
-                    -- `ap`.
-                    --
-                    -- Can also be a function which gets passed a table with the keys
-                    -- * query_string: eg '@function.inner'
-                    -- * selection_mode: eg 'v'
-                    -- and should return true of false
-                    include_surrounding_whitespace = true,
-                },
-            },
-            playground = {
-                enable = true,
-                disable = {},
-                -- Debounced time for highlighting nodes in the playground from source code
-                updatetime = 25,
-                -- Whether the query persists across vim sessions
-                persist_queries = false,
-                keybindings = {
-                    toggle_query_editor = 'o',
-                    toggle_hl_groups = 'i',
-                    toggle_injected_languages = 't',
-                    toggle_anonymous_nodes = 'a',
-                    toggle_language_display = 'I',
-                    focus_language = 'f',
-                    unfocus_language = 'F',
-                    update = 'R',
-                    goto_node = '<cr>',
-                    show_help = '?',
-                },
-            },
-        })
-
-        -- todo-comments {{{3
-        require('todo-comments').setup({
-            -- do not use signs in signcolumn
-            signs = false,
-            keywords = {
-                -- map TODO to `todo` color highlight group
-                TODO = { icon = '', color = 'todo' },
-            },
-            highlight = {
-                -- use treesitter
-                comment_only = true,
-                before = '',
-                keyword = 'fg',
-                -- do not highlight following text
-                after = '',
-                pattern = { [[.*<(KEYWORDS):]], [[.*<(KEYWORDS)\s]], [[.*<(KEYWORDS)]] },
-            },
-            colors = {
-                todo = { 'Todo', 'grey' },
-            },
-            pattern = '\b(KEYWORDS)[: ]?',
-        })
-    end, 100)
-end
-
--- vim-markdown {{{2
-vim.g.vim_markdown_frontmatter = 1
-vim.g.vim_markdown_new_list_item_indent = 0
-vim.g.vim_markdown_no_default_key_mappings = 1
--- there is a separate plugin to handle markdown folds
-vim.g.vim_markdown_folding_disabled = 1
-if vim.g.colors_name == 'lake' then
-    -- red & bold list characters -,+,*
-    vim.cmd('hi mkdListItem ctermfg=8 guifg=' .. vim.g.lake_palette['08'].gui .. ' gui=bold')
-    vim.cmd('hi mkdHeading ctermfg=04 guifg=' .. vim.g.lake_palette['0D'].gui)
-    vim.cmd('hi mkdLink gui=none ctermfg=08 guifg=' .. vim.g.lake_palette['08'].gui)
-end
-
--- npm_scripts {{{2
-local function run_npm_script(same_buffer)
-    return function()
-        local npm_scripts = require('npm_scripts')
-        local methods = {}
-        for k, v in pairs(npm_scripts) do
-            if type(v) == 'function' and k ~= 'setup' then
-                table.insert(methods, k)
-            end
-
-            vim.ui.select(methods, {}, function(pick)
-                npm_scripts[pick]({
-                    run_script = same_buffer and function(opts)
-                        return vim.cmd(
-                            'term cd ' .. opts.path .. ' && ' .. opts.package_manager .. ' run ' .. opts.name
-                        )
-                    end or nil,
-                })
-            end)
-        end
-    end
-end
-vim.keymap.set('n', '<leader>N', run_npm_script(false))
-vim.keymap.set('n', '<localleader>N', run_npm_script(true))
-
--- has to be deffered to allow telescope setup first to overwrite vim.ui.select
-vim.defer_fn(function()
-    require('npm_scripts').setup({
-        run_script = function(opts)
-            vim.cmd('tabnew | term cd ' .. opts.path .. ' && ' .. opts.package_manager .. ' run ' .. opts.name)
-        end,
-    })
-end, 110)
-
--- {{{2 workspaces
-local workspaces = require('workspaces')
-workspaces.setup({
-    hooks = {
-        open = {
-            -- open directory view after switching
-            function()
-                vim.cmd('e .')
-            end,
-        },
-    },
-})
-
--- remove builtin command
-vim.api.nvim_del_user_command('WorkspacesOpen')
--- Includes **both** a name and a file path
-vim.api.nvim_create_user_command('Workspaces', function()
-    local spaces_dict = {}
-    local max_name_len = 0
-    for _, v in ipairs(workspaces.get()) do
-        local name_len = #v.name
-        if name_len > max_name_len and name_len < 24 then
-            max_name_len = name_len
-        end
-        spaces_dict[v.name] = v
-    end
-    local home = vim.fn.expand('~') .. '/'
-    vim.ui.select(vim.tbl_keys(spaces_dict), {
-        prompt = 'Select workspace:',
-        format_item = function(x)
-            local path = spaces_dict[x].path
-            local offset = #x <= max_name_len and string.rep(' ', (max_name_len + 2) - #x) or '  '
-            return x .. offset .. path:gsub(home, '')
-        end,
-    }, workspaces.open)
-end, { bang = true, nargs = 0 })
 
 -- load local init.lua {{{1
 local local_init_lua = vim.fn.expand('~/.config/local_init.lua')
