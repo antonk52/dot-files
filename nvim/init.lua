@@ -354,6 +354,22 @@ local lazy_options = {
             },
         },
     },
+    ui = {
+        icons = {
+            cmd = "⌘",
+            config = "🛠",
+            event = "📅",
+            ft = "📂",
+            init = "⚙",
+            keys = "🗝",
+            plugin = "🔌",
+            runtime = "💻",
+            source = "📄",
+            start = "🚀",
+            task = "📌",
+            lazy = "💤 ",
+        },
+    },
 }
 
 require('lazy').setup(plugins, lazy_options)
