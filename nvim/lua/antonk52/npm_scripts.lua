@@ -10,11 +10,13 @@ local function run_npm_script(same_buffer)
 
             vim.ui.select(methods, {}, function(pick)
                 npm_scripts[pick]({
-                    run_script = same_buffer and function(opts)
-                        return vim.cmd(
-                            'term cd ' .. opts.path .. ' && ' .. opts.package_manager .. ' run ' .. opts.name
-                        )
-                    end or nil,
+                    run_script = same_buffer
+                            and function(opts)
+                                return vim.cmd(
+                                    'term cd ' .. opts.path .. ' && ' .. opts.package_manager .. ' run ' .. opts.name
+                                )
+                            end
+                        or nil,
                 })
             end)
         end
