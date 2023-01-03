@@ -8,14 +8,14 @@ vim.g.maplocalleader = ','
 local PLUGINS_LOCATION = vim.fn.expand('~/dot-files/nvim/plugged')
 local lazypath = PLUGINS_LOCATION .. '/lazy.nvim'
 if not vim.loop.fs_stat(lazypath) then
-  vim.fn.system({
-    'git',
-    'clone',
-    '--filter=blob:none',
-    'https://github.com/folke/lazy.nvim.git',
-    '--branch=stable', -- latest stable release
-    lazypath,
-  })
+    vim.fn.system({
+        'git',
+        'clone',
+        '--filter=blob:none',
+        'https://github.com/folke/lazy.nvim.git',
+        '--branch=stable', -- latest stable release
+        lazypath,
+    })
 end
 vim.opt.rtp:prepend(lazypath)
 
@@ -37,7 +37,7 @@ local plugins = {
             vim.opt.shortmess = vim.opt.shortmess + 'c'
 
             require('antonk52.lsp').setup()
-        end
+        end,
     },
     {
         'hrsh7th/nvim-cmp',
@@ -48,11 +48,15 @@ local plugins = {
             'hrsh7th/cmp-nvim-lsp',
             'hrsh7th/cmp-nvim-lua',
         },
-        config = function() require('antonk52.completion').setup() end
+        config = function()
+            require('antonk52.completion').setup()
+        end,
     },
     {
         'natecraddock/workspaces.nvim',
-        config = function() require('antonk52.workspaces').setup() end
+        config = function()
+            require('antonk52.workspaces').setup()
+        end,
     },
     'antonk52/amake.nvim',
     {
@@ -62,7 +66,7 @@ local plugins = {
             vim.defer_fn(function()
                 require('antonk52.npm_scripts').setup()
             end, 110)
-        end
+        end,
     },
     'antonk52/gitignore-grabber.nvim',
     {
@@ -74,7 +78,7 @@ local plugins = {
         },
         build = function()
             -- for some reason inlining this string in vim.cmd breaks treesitter
-            local cmd = "TSUpdate"
+            local cmd = 'TSUpdate'
             -- We recommend updating the parsers on update
             vim.cmd(cmd)
 
@@ -96,12 +100,12 @@ local plugins = {
                         -- Automatically jump forward to textobj, similar to targets.vim
                         lookahead = true,
                         keymaps = {
-                            ["af"] = "@function.outer",
-                            ["if"] = "@function.inner",
-                            ["ac"] = "@class.outer",
-                            ["ic"] = "@class.inner",
-                            ["ab"] = "@block.outer",
-                            ["ib"] = "@block.inner",
+                            ['af'] = '@function.outer',
+                            ['if'] = '@function.inner',
+                            ['ac'] = '@class.outer',
+                            ['ic'] = '@class.inner',
+                            ['ab'] = '@block.outer',
+                            ['ib'] = '@block.inner',
                         },
                         -- mapping query_strings to modes.
                         selection_modes = {
@@ -146,7 +150,7 @@ local plugins = {
     {
         'junegunn/fzf', -- async project in-file/file search
         build = './install --bin',
-        dependencies = {'junegunn/fzf.vim'},
+        dependencies = { 'junegunn/fzf.vim' },
         init = function()
             -- avoid creating all of the commands
             vim.g.loaded_fzf_vim = 1
@@ -177,7 +181,9 @@ local plugins = {
     'rcarriga/nvim-notify', -- fancy UI
     {
         'hoob3rt/lualine.nvim',
-        config = function() require('antonk52.lualine').setup() end
+        config = function()
+            require('antonk52.lualine').setup()
+        end,
     },
     'tpope/vim-surround', -- change surrounding chars
     {
@@ -187,7 +193,7 @@ local plugins = {
         },
         init = function()
             vim.g.fugitive_no_maps = 1
-        end
+        end,
     },
     {
         'tpope/vim-commentary', -- toggle comments
@@ -195,7 +201,7 @@ local plugins = {
             -- toggle comments with CTRL _
             vim.keymap.set('v', '<C-_>', '<plug>Commentary')
             vim.keymap.set('n', '<C-_>', '<plug>CommentaryLine')
-        end
+        end,
     },
     {
         'justinmk/vim-dirvish', -- project file viewer
@@ -203,7 +209,7 @@ local plugins = {
             vim.g.dirvish_relative_paths = 1
             -- folders on top
             vim.g.dirvish_mode = ':sort ,^\\v(.*[\\/])|\\ze,'
-        end
+        end,
     },
     'antonk52/dirvish-fs.vim',
     {
@@ -212,7 +218,8 @@ local plugins = {
             -- bg color for inactive splits
             local inactive_background_color = vim.o.background == 'light' and '#dedede' or '#424949'
 
-            vim.cmd('highlight ColorColumn ctermbg=0 guibg=' .. inactive_background_color) end
+            vim.cmd('highlight ColorColumn ctermbg=0 guibg=' .. inactive_background_color)
+        end,
     },
     {
         'jiangmiao/auto-pairs', -- auto closes quotes and braces
@@ -221,26 +228,28 @@ local plugins = {
             vim.g.AutoPairsMapSpace = 0
             vim.g.AutoPairsShortcutToggle = ''
             vim.g.AutoPairsMapCh = 0
-        end
+        end,
     },
     {
         'editorconfig/editorconfig-vim', -- consistent coding style
         init = function()
             -- let's keep this setting as 4 regardless
             vim.g.EditorConfig_disable_rules = { 'tab_width' }
-        end
+        end,
     },
     {
         'L3MON4D3/LuaSnip',
         branch = 'ls_snippets_preserve',
-        config = function() require('antonk52.snippets').setup() end
+        config = function()
+            require('antonk52.snippets').setup()
+        end,
     },
     -- live preview markdown files in browser
     -- {'iamcco/markdown-preview.nvim',  build = 'cd app & yarn install', ft = { 'markdown', 'mdx' } },
 
     -- Front end {{{2
     -- quick html
-    {'mattn/emmet-vim', ft = { 'html', 'css', 'javascript', 'typescript' } },
+    { 'mattn/emmet-vim', ft = { 'html', 'css', 'javascript', 'typescript' } },
 
     -- Syntax {{{2
     {
@@ -272,7 +281,7 @@ local plugins = {
                     mode = 'background',
                 },
             })
-        end
+        end,
     },
     {
         'lukas-reineke/indent-blankline.nvim', -- indent lines marks
@@ -297,11 +306,11 @@ local plugins = {
             vim.keymap.set('n', 'za', 'za:IndentBlanklineRefresh<cr>')
             vim.keymap.set('n', 'zm', 'zm:IndentBlanklineRefresh<cr>')
             vim.keymap.set('n', 'zo', 'zo:IndentBlanklineRefresh<cr>')
-        end
+        end,
     },
     {
         'plasticboy/vim-markdown',
-        ft = {'markdown', 'md'},
+        ft = { 'markdown', 'md' },
         init = function()
             vim.g.vim_markdown_frontmatter = 1
             vim.g.vim_markdown_new_list_item_indent = 0
@@ -314,25 +323,25 @@ local plugins = {
                 vim.cmd('hi mkdHeading ctermfg=04 guifg=' .. vim.g.lake_palette['0D'].gui)
                 vim.cmd('hi mkdLink gui=none ctermfg=08 guifg=' .. vim.g.lake_palette['08'].gui)
             end
-        end
+        end,
     },
-    {'jxnblk/vim-mdx-js', ft = { 'mdx' } },
+    { 'jxnblk/vim-mdx-js', ft = { 'mdx' } },
     -- Themes {{{2
-    {'antonk52/lake.vim', branch = 'lua' },
+    { 'antonk52/lake.vim', branch = 'lua' },
     'andreypopp/vim-colors-plain',
     'NLKNguyen/papercolor-theme',
 }
 
 -- Dayjob specific {{{2
 if vim.env.WORK ~= nil then
-    table.insert(plugins, 'this-part-doesnt-matter/'..vim.env.WORK)
+    table.insert(plugins, 'this-part-doesnt-matter/' .. vim.env.WORK)
 end
 
 local lazy_options = {
     root = PLUGINS_LOCATION,
-    lockfile = vim.fn.expand('~/dot-files/nvim') ..'/lazy-lock.json',
+    lockfile = vim.fn.expand('~/dot-files/nvim') .. '/lazy-lock.json',
     install = {
-        colorscheme = {'lake'}
+        colorscheme = { 'lake' },
     },
     performance = {
         rtp = {
@@ -357,18 +366,18 @@ local lazy_options = {
     },
     ui = {
         icons = {
-            cmd = "⌘",
-            config = "🛠",
-            event = "📅",
-            ft = "📂",
-            init = "⚙",
-            keys = "🗝",
-            plugin = "🔌",
-            runtime = "💻",
-            source = "📄",
-            start = "🚀",
-            task = "📌",
-            lazy = "💤 ",
+            cmd = '⌘',
+            config = '🛠',
+            event = '📅',
+            ft = '📂',
+            init = '⚙',
+            keys = '🗝',
+            plugin = '🔌',
+            runtime = '💻',
+            source = '📄',
+            start = '🚀',
+            task = '📌',
+            lazy = '💤 ',
         },
     },
 }
@@ -523,25 +532,32 @@ vim.ui.input = function(opts, callback)
     local buf = vim.api.nvim_create_buf(false, true)
 
     local win = vim.api.nvim_open_win(buf, true, {
-        relative='cursor', style='minimal', border='single',
-        row=1, col=1, width=opts.width or 30, height=1
+        relative = 'cursor',
+        style = 'minimal',
+        border = 'single',
+        row = 1,
+        col = 1,
+        width = opts.width or 30,
+        height = 1,
     })
     local function close_win()
         vim.api.nvim_win_close(win, true)
-        vim.api.nvim_buf_delete(buf, {force = true})
+        vim.api.nvim_buf_delete(buf, { force = true })
         vim.cmd('stopinsert!')
     end
-    vim.keymap.set('n', 'q', close_win, { buffer=true, silent=true })
-    vim.keymap.set('n', '<ESC>', close_win, { buffer=true, silent=true })
-    vim.keymap.set('i', '<ESC>', close_win, { buffer=true, silent=true })
-    if opts.default then vim.api.nvim_put({opts.default}, "", true, true) end
+    vim.keymap.set('n', 'q', close_win, { buffer = true, silent = true })
+    vim.keymap.set('n', '<ESC>', close_win, { buffer = true, silent = true })
+    vim.keymap.set('i', '<ESC>', close_win, { buffer = true, silent = true })
+    if opts.default then
+        vim.api.nvim_put({ opts.default }, '', true, true)
+    end
     vim.cmd('startinsert!')
 
     vim.keymap.set('i', '<CR>', function()
         local content = vim.api.nvim_get_current_line()
         close_win()
         callback(vim.trim(content))
-    end, {buffer=true, silent=true})
+    end, { buffer = true, silent = true })
 end
 -- Mappings {{{1
 
@@ -571,10 +587,18 @@ vim.keymap.set('v', '<', '<gv')
 vim.keymap.set('v', '>', '>gv')
 
 -- ctrl j/k/l/h shortcuts to navigate between splits
-vim.keymap.set('n', '<C-J>', function() require("antonk52.layout").navigate("down") end)
-vim.keymap.set('n', '<C-K>', function() require("antonk52.layout").navigate("up") end)
-vim.keymap.set('n', '<C-L>', function() require("antonk52.layout").navigate("right") end)
-vim.keymap.set('n', '<C-H>', function() require("antonk52.layout").navigate("left") end)
+vim.keymap.set('n', '<C-J>', function()
+    require('antonk52.layout').navigate('down')
+end)
+vim.keymap.set('n', '<C-K>', function()
+    require('antonk52.layout').navigate('up')
+end)
+vim.keymap.set('n', '<C-L>', function()
+    require('antonk52.layout').navigate('right')
+end)
+vim.keymap.set('n', '<C-H>', function()
+    require('antonk52.layout').navigate('left')
+end)
 
 -- leader j/k/l/h resize active split by 5
 vim.keymap.set('n', '<leader>j', '<C-W>5-')
@@ -582,9 +606,15 @@ vim.keymap.set('n', '<leader>k', '<C-W>5+')
 vim.keymap.set('n', '<leader>l', '<C-W>5>')
 vim.keymap.set('n', '<leader>h', '<C-W>5<')
 
-vim.keymap.set('n', '<Leader>=', function() require("antonk52.layout").zoom_split() end)
-vim.keymap.set('n', '<Leader>-', function() require("antonk52.layout").equalify_splits() end)
-vim.keymap.set('n', '<Leader>+', function() require("antonk52.layout").restore_layout() end)
+vim.keymap.set('n', '<Leader>=', function()
+    require('antonk52.layout').zoom_split()
+end)
+vim.keymap.set('n', '<Leader>-', function()
+    require('antonk52.layout').equalify_splits()
+end)
+vim.keymap.set('n', '<Leader>+', function()
+    require('antonk52.layout').restore_layout()
+end)
 
 vim.keymap.set({ 'n', 'v' }, '<Leader>a', '^', {
     desc = 'go to the beginning of the line (^ is too far)',
@@ -694,7 +724,7 @@ local function stylua(check)
         check and '--check' or '',
         vim.fn.expand('%'),
     }
-    vim.cmd('!'..table.concat(cmd, ' '))
+    vim.cmd('!' .. table.concat(cmd, ' '))
 end
 
 vim.api.nvim_create_autocmd('FileType', {
@@ -705,16 +735,20 @@ vim.api.nvim_create_autocmd('FileType', {
         end, { buffer = true })
 
         if vim.bo.ft == 'lua' then
-            vim.keymap.set({'n', 'v'}, '%', function()
+            vim.keymap.set({ 'n', 'v' }, '%', function()
                 require('antonk52.ts_utils').lua_smart_percent()
-            end, {buffer = true, noremap = false})
+            end, { buffer = true, noremap = false })
 
-            vim.api.nvim_buf_create_user_command(0, 'Stylua', function() stylua(false) end, {
+            vim.api.nvim_buf_create_user_command(0, 'Stylua', function()
+                stylua(false)
+            end, {
                 desc = 'Format file using stylua',
                 bang = true,
                 nargs = 0,
             })
-            vim.api.nvim_buf_create_user_command(0, 'StyluaCheck', function() stylua(true) end, {
+            vim.api.nvim_buf_create_user_command(0, 'StyluaCheck', function()
+                stylua(true)
+            end, {
                 desc = 'Check if file needs formatting using stylua',
                 bang = true,
                 nargs = 0,

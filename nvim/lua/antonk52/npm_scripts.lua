@@ -22,8 +22,8 @@ local function run_npm_script(same_buffer)
 end
 
 function M.setup()
-    vim.keymap.set('n', '<leader>N', run_npm_script(false), {desc = "run npm script in a different buffer"})
-    vim.keymap.set('n', '<localleader>N', run_npm_script(true), {desc = "run npm script in the same buffer"})
+    vim.keymap.set('n', '<leader>N', run_npm_script(false), { desc = 'run npm script in a different buffer' })
+    vim.keymap.set('n', '<localleader>N', run_npm_script(true), { desc = 'run npm script in the same buffer' })
 
     require('npm_scripts').setup({
         run_script = function(opts)

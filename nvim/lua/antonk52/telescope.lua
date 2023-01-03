@@ -34,9 +34,9 @@ function M.action_commands()
             return {
                 value = x,
                 display = x.name,
-                ordinal = x.name
+                ordinal = x.name,
             }
-        end
+        end,
     })
 end
 
@@ -49,38 +49,33 @@ function M.action_buffer_lines()
         line_to_number_dict[l] = i
     end
 
-    require "telescope.pickers"
-        .new(M.options, {
-            prompt_title = "Buffer lines:",
-            finder = require "telescope.finders".new_table {
-                results = lines,
-            },
-            sorter = require("telescope.config").values.generic_sorter(M.options),
-            attach_mappings = function(prompt_bufnr)
-                actions.select_default:replace(function()
-                    local selection = require "telescope.actions.state".get_selected_entry()
-                    local picked_line = selection[1]
-                    print(vim.inspect(selection))
-                    actions.close(prompt_bufnr)
+    require('telescope.pickers').new(M.options, {
+        prompt_title = 'Buffer lines:',
+        finder = require('telescope.finders').new_table({
+            results = lines,
+        }),
+        sorter = require('telescope.config').values.generic_sorter(M.options),
+        attach_mappings = function(prompt_bufnr)
+            actions.select_default:replace(function()
+                local selection = require('telescope.actions.state').get_selected_entry()
+                local picked_line = selection[1]
+                print(vim.inspect(selection))
+                actions.close(prompt_bufnr)
 
-                    local indent_length = picked_line:match("^%s*"):len()
-                    vim.api.nvim_win_set_cursor(
-                        0,
-                        {
-                            -- line number
-                            line_to_number_dict[picked_line] + 1,
-                            -- column number
-                            indent_length+1
-                        }
-                    )
-                    -- center line on the screen
-                    vim.api.nvim_feedkeys('zz', 'n', false)
-                end)
+                local indent_length = picked_line:match('^%s*'):len()
+                vim.api.nvim_win_set_cursor(0, {
+                    -- line number
+                    line_to_number_dict[picked_line] + 1,
+                    -- column number
+                    indent_length + 1,
+                })
+                -- center line on the screen
+                vim.api.nvim_feedkeys('zz', 'n', false)
+            end)
 
-                return true
-            end,
-        })
-        :find()
+            return true
+        end,
+    }):find()
 end
 
 function M.action_smart_vcs_files()
@@ -113,16 +108,16 @@ function M.action_all_project_files()
 end
 
 function M.dots()
-    require("telescope.builtin").find_files {
-        prompt_title = "dot files",
+    require('telescope.builtin').find_files({
+        prompt_title = 'dot files',
         shorten_path = false,
-        cwd = "~/dot-files/",
+        cwd = '~/dot-files/',
 
-        layout_strategy = "horizontal",
+        layout_strategy = 'horizontal',
         layout_config = {
             preview_width = 0.4,
         },
-    }
+    })
 end
 
 function M.setup()
@@ -145,8 +140,12 @@ function M.setup()
     require('telescope').load_extension('ui-select')
     require('telescope').load_extension('workspaces')
     vim.keymap.set('n', '<leader>f', M.action_smart_vcs_files)
-    vim.keymap.set('n', '<leader>F', M.action_all_project_files,
-        { desc = 'force show files, explicitly ignoring certain directories' })
+    vim.keymap.set(
+        'n',
+        '<leader>F',
+        M.action_all_project_files,
+        { desc = 'force show files, explicitly ignoring certain directories' }
+    )
     vim.keymap.set('n', '<leader>D', M.dots)
     vim.keymap.set('n', '<leader>b', builtin.buffers)
     vim.keymap.set('n', '<leader>T', M.action_meta_telescope)

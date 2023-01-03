@@ -194,34 +194,39 @@ function M.lua_smart_percent()
                 local child_type = n:type()
                 if child_type == 'else_statement' or child_type == 'elseif_statement' then
                     local cl1, cc2 = n:range()
-                    vim.api.nvim_win_set_cursor(0, {cl1 + 1, cc2})
+                    vim.api.nvim_win_set_cursor(0, { cl1 + 1, cc2 })
                     return
                 end
             end
             -- otherwise to to end
-            vim.api.nvim_win_set_cursor(0, {l2 + 1, c2 - 3})
+            vim.api.nvim_win_set_cursor(0, { l2 + 1, c2 - 3 })
         else
-            vim.api.nvim_win_set_cursor(0, {l1 + 1, c1})
+            vim.api.nvim_win_set_cursor(0, { l1 + 1, c1 })
         end
     elseif node_type == 'else_statement' or node_type == 'elseif_statement' then
         local next_node = ts_utils.get_next_node(node, false, false)
         -- if we have next `elseif` go there
         if next_node then
             local nnl1, nnc1 = next_node:range()
-            vim.api.nvim_win_set_cursor(0, {nnl1 + 1, nnc1})
+            vim.api.nvim_win_set_cursor(0, { nnl1 + 1, nnc1 })
         else
             -- otherwise go to `end`
             local _, _, pl2, pc2 = node:parent():range()
-            vim.api.nvim_win_set_cursor(0, {pl2 + 1, pc2 - 3})
+            vim.api.nvim_win_set_cursor(0, { pl2 + 1, pc2 - 3 })
         end
-    elseif node_type == 'function_declaration' or node_type == 'function_definition' or node_type == 'while_statement' or node_type == 'for_statement' then
+    elseif
+        node_type == 'function_declaration'
+        or node_type == 'function_definition'
+        or node_type == 'while_statement'
+        or node_type == 'for_statement'
+    then
         local l1, c1, l2, c2 = node:range()
         if word_under_cursor == 'end' then
             -- go to `end`
-            vim.api.nvim_win_set_cursor(0, {l1 + 1, c1})
+            vim.api.nvim_win_set_cursor(0, { l1 + 1, c1 })
         else
             -- go to `begging`
-            vim.api.nvim_win_set_cursor(0, {l2 + 1, c2 - 3})
+            vim.api.nvim_win_set_cursor(0, { l2 + 1, c2 - 3 })
         end
     end
 end

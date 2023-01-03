@@ -123,8 +123,8 @@ end
 function M.note_week_prev()
     local nums = vim.split(os.date('%Y-%m-%V'), '-')
     local week = tonumber(nums[3]) - 1
-    local loc = vim.fs.find('week_'..week..'.md', {})
-    if (#loc > 0) then
+    local loc = vim.fs.find('week_' .. week .. '.md', {})
+    if #loc > 0 then
         vim.cmd('edit ' .. loc[1])
     else
         vim.notify('Previous week note is not found', vim.log.levels.ERROR)

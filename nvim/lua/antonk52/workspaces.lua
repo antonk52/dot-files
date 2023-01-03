@@ -12,7 +12,7 @@ function M.setup()
                     vim.cmd(cmd)
                 end,
             },
-        }
+        },
     })
     -- remove builtin command
     vim.api.nvim_del_user_command('WorkspacesOpen')

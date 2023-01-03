@@ -6,12 +6,12 @@ M.diag_float_opts = {
     close_events = {
         'CursorMoved',
         'InsertEnter',
-        'FocusLost'
+        'FocusLost',
     },
     source = true,
     header = 'Line diagnostics:',
     prefix = ' ',
-    scope = 'line'
+    scope = 'line',
 }
 local function show_line_diagnostics()
     return vim.diagnostic.open_float(nil, M.diag_float_opts)
@@ -43,8 +43,12 @@ function M.on_attach(_, bufnr)
     keymap('<leader>ca', vim.lsp.buf.code_action, 'lsp code_action')
     keymap('gr', vim.lsp.buf.references, 'lsp references')
     keymap('<leader>L', show_line_diagnostics, 'show current line diagnostic')
-    keymap('<leader>[', function() vim.diagnostic.goto_prev({float = M.diag_float_opts}) end, 'go to prev diagnostic')
-    keymap('<leader>]', function() vim.diagnostic.goto_next({float = M.diag_float_opts}) end, 'go to next diagnostic')
+    keymap('<leader>[', function()
+        vim.diagnostic.goto_prev({ float = M.diag_float_opts })
+    end, 'go to prev diagnostic')
+    keymap('<leader>]', function()
+        vim.diagnostic.goto_next({ float = M.diag_float_opts })
+    end, 'go to next diagnostic')
     keymap('<localleader>f', vim.lsp.buf.formatting, 'lsp formatting')
 end
 
@@ -110,30 +114,30 @@ M.servers = {
 function M.setup_lua()
     -- when homebrew is installed globally
     local GLOBAL_BIN = (function()
-      local system_name
-      if vim.fn.has('mac') == 1 then
-          system_name = 'macOS'
-      elseif vim.fn.has('unix') == 1 then
-          system_name = 'Linux'
-      elseif vim.fn.has('win32') == 1 then
-          system_name = 'Windows'
-      else
-          return print('Unsupported system for sumneko')
-      end
-      local base = vim.fn.expand('~/.local/share/nvim/lsp_servers/sumneko_lua/extension/server/bin/' .. system_name)
-      local LUA_LSP_BIN = base .. '/lua-language-server'
-      local LUA_LSP_MAIN = base .. '/main.lua'
+        local system_name
+        if vim.fn.has('mac') == 1 then
+            system_name = 'macOS'
+        elseif vim.fn.has('unix') == 1 then
+            system_name = 'Linux'
+        elseif vim.fn.has('win32') == 1 then
+            system_name = 'Windows'
+        else
+            return print('Unsupported system for sumneko')
+        end
+        local base = vim.fn.expand('~/.local/share/nvim/lsp_servers/sumneko_lua/extension/server/bin/' .. system_name)
+        local LUA_LSP_BIN = base .. '/lua-language-server'
+        local LUA_LSP_MAIN = base .. '/main.lua'
 
-      return {
-        bin = LUA_LSP_BIN,
-        main = LUA_LSP_MAIN,
-      }
+        return {
+            bin = LUA_LSP_BIN,
+            main = LUA_LSP_MAIN,
+        }
     end)()
 
     local prefix = '~/homebrew/Cellar/lua-language-server/*/libexec/bin/'
     local LOCAL_BIN = {
-      bin = vim.fn.expand(prefix..'lua-language-server'),
-      main = vim.fn.expand(prefix..'main.lua'),
+        bin = vim.fn.expand(prefix .. 'lua-language-server'),
+        main = vim.fn.expand(prefix .. 'main.lua'),
     }
 
     local BIN = (GLOBAL_BIN and vim.fn.filereadable(GLOBAL_BIN.bin) == 1) and GLOBAL_BIN or LOCAL_BIN
@@ -144,7 +148,7 @@ function M.setup_lua()
     end
 
     -- must be called before `lspconfig.sumneko_lua.setup`
-    require("neodev").setup({})
+    require('neodev').setup({})
 
     local runtime_path = vim.split(package.path, ';')
     table.insert(runtime_path, 'lua/?.lua')
