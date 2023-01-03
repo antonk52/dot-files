@@ -4,6 +4,8 @@
 
 1. Clone repository
     <br>`cd ~ && git clone git://github.com/antonk52/dot-files.git && cd dot-files`
+1. Prepare dotfiles
+    <br>`./scripts/prepare-dotfiles.sh`
 1. Prepare macOS(xcode) if on a mac
     <br>`./scripts/prepare-macos.sh`
 1. Create symlinks before installing applications
