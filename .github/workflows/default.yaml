@@ -7,8 +7,8 @@ jobs:
     name: stylua
     runs-on: ubuntu-20.04
     steps:
-      - uses: actions/checkout@v2
-      - uses: JohnnyMorganz/stylua-action@1.0.0
+      - uses: actions/checkout@v3
+      - uses: JohnnyMorganz/stylua-action@v2
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           # CLI arguments
@@ -18,7 +18,7 @@ jobs:
     name: luacheck
     runs-on: ubuntu-20.04
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: nebularg/actions-luacheck@v1
         with:
           files: wezterm nvim

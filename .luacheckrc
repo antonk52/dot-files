@@ -3,9 +3,13 @@
 codes = true
 
 globals = {
-  "vim",
+    'vim',
 }
 
 exclude_files = {
-    'nvim/plugged/**/*.lua'
+    'nvim/plugged/**/*.lua',
+}
+
+ignore = {
+    '631', -- line too long
 }
