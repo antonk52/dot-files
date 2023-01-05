@@ -104,6 +104,7 @@ function M.visual_link()
         end)
     else
         -- TODO: select multiline links
+        vim.notify('multiline link is not supported', vim.log.levels.ERROR)
     end
 end
 
