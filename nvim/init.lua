@@ -242,6 +242,8 @@ local plugins = {
         branch = 'ls_snippets_preserve',
         config = function()
             require('antonk52.snippets').setup()
+            vim.api.nvim_del_user_command('LuaSnipUnlinkCurrent')
+            vim.api.nvim_del_user_command('LuaSnipListAvailable')
         end,
     },
     -- live preview markdown files in browser
@@ -527,6 +529,9 @@ vim.opt.mouse = 'a'
 
 -- persistent undo
 vim.opt.undofile = true
+
+-- avoid mapping gx in netrw as for conflict reasons
+vim.g.netrw_nogx = 1
 
 vim.ui.input = function(opts, callback)
     local buf = vim.api.nvim_create_buf(false, true)

@@ -359,9 +359,6 @@ function M.setup()
     })
 
     vim.api.nvim_create_user_command('EditSnippets', 'edit ~/.config/nvim/lua/antonk52/snippets.lua', { bang = true })
-
-    vim.api.nvim_del_user_command('LuaSnipUnlinkCurrent')
-    vim.api.nvim_del_user_command('LuaSnipListAvailable')
 end
 
 return M
