@@ -334,11 +334,6 @@ local plugins = {
     'NLKNguyen/papercolor-theme',
 }
 
--- Dayjob specific {{{2
-if vim.env.WORK ~= nil then
-    table.insert(plugins, 'this-part-doesnt-matter/' .. vim.env.WORK)
-end
-
 local lazy_options = {
     root = PLUGINS_LOCATION,
     lockfile = vim.fn.expand('~/dot-files/nvim') .. '/lazy-lock.json',
@@ -383,6 +378,14 @@ local lazy_options = {
         },
     },
 }
+
+-- Dayjob specific {{{2
+if vim.env.WORK_PLUGIN_PATH ~= nil then
+    table.insert(plugins, {
+        'this-part-doesnt-matter/' .. vim.env.WORK,
+        dir = vim.fn.expand(vim.env.WORK_PLUGIN_PATH)
+    })
+end
 
 require('lazy').setup(plugins, lazy_options)
 
