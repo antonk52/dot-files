@@ -41,7 +41,7 @@ LLN.theme = {
         a = { fg = colors.color00, bg = colors.color08 },
     },
     visual = {
-        a = { fg = colors.color00, bg = colors.color0E },
+        a = { fg = colors.color00, bg = colors.color0E, gui = 'bold' },
     },
 }
 

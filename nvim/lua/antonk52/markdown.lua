@@ -97,11 +97,6 @@ function M.setup()
     vim.keymap.set('n', '<localleader>t', M.toggle_checkbox, { buffer = 0, silent = true })
     vim.keymap.set('n', 'j', 'gj', { buffer = 0 })
     vim.keymap.set('n', 'k', 'gk', { buffer = 0 })
-    -- these have to be mapped via a string instead of lua functions
-    -- to preserve the visual block bounds
-    vim.keymap.set('v', '<C-b>', ":lua require('antonk52.markdown').visual_bold()<cr>", { buffer = 0 })
-    vim.keymap.set('v', '<C-i>', ":lua require('antonk52.markdown').visual_italic()<cr>", { buffer = 0 })
-    vim.keymap.set('v', '<C-k>', ":lua require('antonk52.markdown').visual_link()<cr>", { buffer = 0 })
     vim.opt.spell = true
     vim.opt.spellsuggest = 'best'
     vim.bo.spelllang = 'ru_ru,en_us'
