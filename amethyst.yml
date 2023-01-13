@@ -15,12 +15,10 @@ layouts:
 mod1:
   - option
   - shift
-  - command
 mod2:
   - option
   - shift
   - control
-  - command
 
 mouse-follows-focus: false
 focus-follows-mouse: false
