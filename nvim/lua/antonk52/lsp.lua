@@ -109,6 +109,8 @@ M.servers = {
             '.eslintrc.json'
         ),
     },
+
+    marksman = {},
 }
 
 function M.setup_lua()
