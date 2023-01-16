@@ -661,6 +661,9 @@ local commands = {
     NotesMode = function()
         require('antonk52.notes').setup()
     end,
+    Lspformat = function()
+        vim.lsp.buf.format()
+    end,
 
     -- for some reason :help colorcolumn suggest setting it via `set colorcolumn=123`
     -- that has no effect, but setting it using `let &colorcolumn=123` works
