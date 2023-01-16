@@ -26,7 +26,7 @@ colors:
         cursor: '#fc03e8' # bright pink
 
 mouse:
-    hide_when_typing: true
+    hide_when_typing: false
 
 dynamic_title: true
 
