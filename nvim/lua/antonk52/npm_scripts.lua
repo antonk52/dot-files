@@ -7,19 +7,21 @@ local function run_npm_script(same_buffer)
             if type(v) == 'function' and k ~= 'setup' then
                 table.insert(methods, k)
             end
-
-            vim.ui.select(methods, {}, function(pick)
-                npm_scripts[pick]({
-                    run_script = same_buffer
-                            and function(opts)
-                                return vim.cmd(
-                                    'term cd ' .. opts.path .. ' && ' .. opts.package_manager .. ' run ' .. opts.name
-                                )
-                            end
-                        or nil,
-                })
-            end)
         end
+        vim.ui.select(methods, {prompt = 'Select script:'}, function(pick)
+            if pick == nil then
+                return
+            end
+            npm_scripts[pick]({
+                run_script = same_buffer
+                        and function(opts)
+                            return vim.cmd(
+                                'term cd ' .. opts.path .. ' && ' .. opts.package_manager .. ' run ' .. opts.name
+                            )
+                        end
+                    or nil,
+            })
+        end)
     end
 end
 
