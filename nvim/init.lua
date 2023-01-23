@@ -66,10 +66,9 @@ local plugins = {
     {
         'antonk52/npm_scripts.nvim',
         config = function()
-            -- has to be deffered to allow telescope setup first to overwrite vim.ui.select
-            vim.defer_fn(function()
-                require('antonk52.npm_scripts').setup()
-            end, 110)
+            vim.keymap.set('n', '<leader>N', function()
+                require('antonk52.npm_scripts').run()
+            end, { desc = 'Run npm script' })
         end,
     },
     'antonk52/gitignore-grabber.nvim',
