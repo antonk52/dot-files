@@ -128,7 +128,7 @@ local plugins = {
     },
     {
         'folke/todo-comments.nvim',
-        config = {
+        opts = {
             -- do not use signs in signcolumn
             signs = false,
             keywords = {

@@ -15,7 +15,7 @@
   "gitignore-grabber.nvim": { "branch": "main", "commit": "365c1a2255f1badf5aa8a963a07f869a81ab6575" },
   "indent-blankline.nvim": { "branch": "master", "commit": "c4c203c3e8a595bc333abaf168fcb10c13ed5fb7" },
   "lake.vim": { "branch": "lua", "commit": "e2a2df744750ff78ca5b54736deea1c6bc589476" },
-  "lazy.nvim": { "branch": "main", "commit": "317df42fcf05761e2e8526d91f282a0f868ff766" },
+  "lazy.nvim": { "branch": "main", "commit": "a24331762cc41df636d9d3541aafa301f958cf4a" },
   "lualine-lsp-progress": { "branch": "master", "commit": "56842d097245a08d77912edf5f2a69ba29f275d7" },
   "lualine.nvim": { "branch": "master", "commit": "0050b308552e45f7128f399886c86afefc3eb988" },
   "markdowny.nvim": { "branch": "main", "commit": "e8df5415cd294148d912948acdebf7dee000a14d" },
