@@ -41,7 +41,7 @@ local plugins = {
     },
     {
         'antonk52/markdowny.nvim',
-        config = true,
+        opts = {filetypes = {'markdown', 'hgcommit', 'gitcommit'}},
     },
     {
         'hrsh7th/nvim-cmp',
