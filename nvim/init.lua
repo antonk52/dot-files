@@ -249,6 +249,13 @@ local plugins = {
             vim.api.nvim_del_user_command('LuaSnipListAvailable')
         end,
     },
+    {
+        'shortcuts/no-neck-pain.nvim',
+        version = '*',
+        opts = {
+            width = 82,
+        }
+    },
     -- live preview markdown files in browser
     -- {'iamcco/markdown-preview.nvim',  build = 'cd app & yarn install', ft = { 'markdown', 'mdx' } },
 
