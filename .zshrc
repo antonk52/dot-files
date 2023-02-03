@@ -24,8 +24,7 @@ export HOMEBREW_NO_AUTO_UPDATE="1"
 DOT_FILES="$HOME"/dot-files
 
 # use base16 colors
-BASE16_SHELL="$DOT_FILES"/base16-shell
-[ -n "$PS1" ] && [ -s "$BASE16_SHELL"/profile_helper.sh ] && eval "$("$BASE16_SHELL"/profile_helper.sh)"
+source "$DOT_FILES/base16-shell/base16-shell.plugin.zsh"
 
 # global node modules
 export PATH="$HOME"/.npm-global/bin:$PATH
