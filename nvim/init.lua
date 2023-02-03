@@ -41,7 +41,7 @@ local plugins = {
     },
     {
         'antonk52/markdowny.nvim',
-        opts = {filetypes = {'markdown', 'hgcommit', 'gitcommit'}},
+        opts = { filetypes = { 'markdown', 'hgcommit', 'gitcommit' } },
     },
     {
         'hrsh7th/nvim-cmp',
@@ -178,6 +178,7 @@ local plugins = {
             'nvim-telescope/telescope-ui-select.nvim',
         },
         config = function()
+            ---@diagnostic disable-next-line: param-type-mismatch
             vim.defer_fn(require('antonk52.telescope').setup, 50)
         end,
     },
@@ -254,7 +255,7 @@ local plugins = {
         version = '*',
         opts = {
             width = 82,
-        }
+        },
     },
     -- live preview markdown files in browser
     -- {'iamcco/markdown-preview.nvim',  build = 'cd app & yarn install', ft = { 'markdown', 'mdx' } },
@@ -340,6 +341,7 @@ local plugins = {
     { 'jxnblk/vim-mdx-js', ft = { 'mdx' } },
     -- Themes {{{2
     { 'antonk52/lake.vim', branch = 'lua' },
+    'projekt0n/github-nvim-theme',
     'andreypopp/vim-colors-plain',
     'NLKNguyen/papercolor-theme',
 }
@@ -348,7 +350,7 @@ local lazy_options = {
     root = PLUGINS_LOCATION,
     lockfile = vim.fn.expand('~/dot-files/nvim') .. '/lazy-lock.json',
     install = {
-        colorscheme = { 'lake' },
+        -- colorscheme = { 'lake' },
     },
     performance = {
         rtp = {
@@ -393,7 +395,7 @@ local lazy_options = {
 if vim.env.WORK_PLUGIN_PATH ~= nil then
     table.insert(plugins, {
         'this-part-doesnt-matter/' .. vim.env.WORK,
-        dir = vim.fn.expand(vim.env.WORK_PLUGIN_PATH)
+        dir = vim.fn.expand(vim.env.WORK_PLUGIN_PATH),
     })
 end
 
@@ -458,7 +460,7 @@ vim.opt.listchars = { tab = '▸ ', trail = '∙' }
 local function get_background()
     if vim.fn.filereadable('/Users/antonk52/.base16_theme') == 1 then
         local target = vim.fn.resolve('/Users/antonk52/.base16_theme')
-        local path_items = vim.split(target, '/')
+        local path_items = vim.split(target, '/', {})
         local file_name = path_items[#path_items]
         if file_name == 'base16-github.sh' then
             return 'light'
@@ -546,6 +548,7 @@ vim.opt.undofile = true
 -- avoid mapping gx in netrw as for conflict reasons
 vim.g.netrw_nogx = 1
 
+---@diagnostic disable-next-line: duplicate-set-field
 vim.ui.input = function(opts, callback)
     local buf = vim.api.nvim_create_buf(false, true)
 
@@ -679,6 +682,14 @@ local commands = {
         end,
         { nargs = 1 },
     },
+    ['ColorLight'] = function()
+        vim.cmd('colorscheme github_light')
+        require('lualine').setup({options = {theme = 'github_light_default'}})
+    end,
+    ['ColorDark'] = function()
+        vim.cmd('colorscheme lake')
+        require('antonk52.lualine').setup()
+    end,
 
     -- fat fingers
     Wq = ':wq',
