@@ -685,6 +685,8 @@ local commands = {
     ['ColorLight'] = function()
         vim.cmd('colorscheme github_light')
         require('lualine').setup({options = {theme = 'github_light_default'}})
+        -- override highlighing groups that dont match personal preferrences
+        vim.api.nvim_set_hl(0, 'TSPunctSpecial', {fg='#24292f'})
     end,
     ['ColorDark'] = function()
         vim.cmd('colorscheme lake')
