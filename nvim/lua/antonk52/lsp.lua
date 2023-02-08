@@ -1,4 +1,5 @@
 local lspconfig = require('lspconfig')
+local lspconfig_util = require('lspconfig.util')
 
 local M = {}
 
@@ -67,6 +68,18 @@ M.servers = {
             -- force disable typescript formatting
             client.server_capabilities.document_formatting = false
         end,
+        single_file_support = false,
+        root_dir = lspconfig_util.root_pattern(
+            'package-lock.json',
+            'yarn.lock'
+        ),
+    },
+
+    denols = {
+        root_dir = lspconfig_util.root_pattern(
+            'deno.json',
+            'deno.jsonc'
+        ),
     },
 
     hhvm = {},
@@ -100,7 +113,7 @@ M.servers = {
             -- force enable formatting
             client.server_capabilities.document_formatting = true
         end,
-        root_dir = require('lspconfig.util').root_pattern(
+        root_dir = lspconfig_util.root_pattern(
             '.eslintrc',
             '.eslintrc.js',
             '.eslintrc.cjs',
