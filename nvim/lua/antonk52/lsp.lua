@@ -169,7 +169,7 @@ function M.setup_lua()
     table.insert(runtime_path, 'lua/?.lua')
     table.insert(runtime_path, 'lua/?/init.lua')
 
-    lspconfig.sumneko_lua.setup({
+    lspconfig.lua_ls.setup({
         cmd = { BIN.bin, '-E', BIN.main },
         on_attach = M.on_attach,
         settings = {
