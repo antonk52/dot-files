@@ -178,7 +178,6 @@ local plugins = {
             'nvim-telescope/telescope-ui-select.nvim',
         },
         config = function()
-            ---@diagnostic disable-next-line: param-type-mismatch
             vim.defer_fn(require('antonk52.telescope').setup, 50)
         end,
     },
