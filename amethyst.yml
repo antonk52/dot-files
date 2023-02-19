@@ -10,7 +10,6 @@ layouts:
   - wide
   - column
   - fullscreen
-  - bsp # binary space partition
 
 mod1:
   - option
