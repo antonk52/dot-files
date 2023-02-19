@@ -11,11 +11,7 @@ M.options = {
         prompt = { '─', '│', '─', '│', '├', '┤', '┘', '└' },
         preview = borders,
     },
-    -- file_ignore_patterns = { "/node_modules/" },
     width = 0.99,
-    -- prompt_title = false,
-    -- results_title = false,
-    -- preview_title = false
 }
 
 function M.action_meta_telescope()
@@ -42,6 +38,7 @@ end
 
 -- similar to `telescope.builtin.current_buffer_fuzzy_find`
 -- but does not use treesitter for highlighting
+-- jumps to the first char from the search (similar to default `/`)
 function M.action_buffer_lines()
     local lines = vim.api.nvim_buf_get_lines(0, 1, -1, true)
     local line_to_number_dict = {}
@@ -59,15 +56,25 @@ function M.action_buffer_lines()
             actions.select_default:replace(function()
                 local selection = require('telescope.actions.state').get_selected_entry()
                 local picked_line = selection[1]
-                print(vim.inspect(selection))
+                local searched_for = require('telescope.actions.state').get_current_line()
+                local first_search_char = string.sub(searched_for, 1, 1)
+
+                local col = string.find(picked_line, first_search_char)
+                -- when first char is reversed casing
+                if col == nil then
+                    local rev_char = first_search_char == string.upper(first_search_char)
+                        and string.lower(first_search_char)
+                        or string.upper(first_search_char)
+                    col = string.find(picked_line, rev_char)
+
+                end
                 actions.close(prompt_bufnr)
 
-                local indent_length = picked_line:match('^%s*'):len()
                 vim.api.nvim_win_set_cursor(0, {
                     -- line number
                     line_to_number_dict[picked_line] + 1,
                     -- column number
-                    indent_length + 1,
+                    col,
                 })
                 -- center line on the screen
                 vim.api.nvim_feedkeys('zz', 'n', false)
