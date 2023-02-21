@@ -29,6 +29,7 @@ function M.run()
 
             npm_scripts[pick]({
                 run_script = function(opts)
+                    -- ensures to preserve the split when the command exists
                     local remain_cmd = 'tmux set remain-on-exit on'
                     local run_cmd = 'cd ' .. opts.path .. ' && ' .. opts.package_manager .. ' run ' .. opts.name
                     local loc_to_cmd = {
