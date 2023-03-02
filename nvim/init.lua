@@ -723,6 +723,16 @@ for k, v in pairs(commands) do
     end
 end
 
+-- plugin manager
+-- easier to see all options at a glance
+for _, v in ipairs({'check', 'restore', 'update', 'clean'}) do
+    vim.api.nvim_create_user_command(
+        'Lazy'..v:sub(1, 1):upper()..v:sub(2),
+        function() require('lazy.view.commands').commands[v]() end,
+        {desc = 'Lazy '..v}
+    )
+end
+
 -- Autocommands {{{1
 
 -- neovim terminal
