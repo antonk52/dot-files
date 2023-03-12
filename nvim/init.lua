@@ -254,9 +254,11 @@ local plugins = {
         version = '*',
         opts = {
             width = 82,
-            toggleMapping = false,
-            widthUpMapping = false,
-            widthDownMapping = false,
+            mappings = {
+                toggleMapping = false,
+                widthUpMapping = false,
+                widthDownMapping = false,
+            },
         },
     },
     -- live preview markdown files in browser
