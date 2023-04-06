@@ -33,7 +33,6 @@ dynamic_title: true
 cursor:
     unfocused_hollow: true
 
-alt_send_esc: true
 key_bindings:
     - key: Return
       mods: Command
