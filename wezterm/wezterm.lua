@@ -1,11 +1,10 @@
 local wezterm = require('wezterm')
 
 return {
-    font = wezterm.font('Fira Code'),
+    font = wezterm.font('Fira Code', {weight = 'Regular'}),
     -- font = wezterm.font("Fira Code", {weight="DemiBold", stretch="Normal", style="Normal"}),
 
     font_size = 20.0,
-    font_antialias = 'Greyscale',
 
     colors = {
         cursor_bg = '#cdcecf',
