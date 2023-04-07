@@ -229,13 +229,6 @@ local plugins = {
         end,
     },
     {
-        'editorconfig/editorconfig-vim', -- consistent coding style
-        init = function()
-            -- let's keep this setting as 4 regardless
-            vim.g.EditorConfig_disable_rules = { 'tab_width' }
-        end,
-    },
-    {
         'L3MON4D3/LuaSnip',
         branch = 'ls_snippets_preserve',
         config = function()

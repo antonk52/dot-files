@@ -8,7 +8,6 @@
   "cmp-nvim-lua": { "branch": "main", "commit": "f3491638d123cfd2c8048aefaf66d246ff250ca6" },
   "cmp-path": { "branch": "main", "commit": "91ff86cd9c29299a64f968ebb45846c485725f23" },
   "dirvish-fs.vim": { "branch": "master", "commit": "6b498764ffe6d5e985e54ae0485dd4a5c3c864ee" },
-  "editorconfig-vim": { "branch": "master", "commit": "7f4e4dfc58c480d154116614e616d90aac77204d" },
   "emmet-vim": { "branch": "master", "commit": "def5d57a1ae5afb1b96ebe83c4652d1c03640f4d" },
   "fzf": { "branch": "master", "commit": "f1a96296525975ea7d4c45aebc4fed5117cecb72" },
   "fzf.vim": { "branch": "master", "commit": "dc71692255b62d1f67dc55c8e51ab1aa467b1d46" },
