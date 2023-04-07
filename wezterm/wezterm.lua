@@ -3,9 +3,14 @@ local wezterm = require('wezterm')
 return {
     font = wezterm.font('Fira Code', {weight = 'Regular'}),
     font_rules = {
-        italic = false,
+        {
+            font = wezterm.font_with_fallback({
+                family = 'Fira Code'
+            }),
+            -- disable italics
+            italic = false
+        }
     },
-    -- font = wezterm.font("Fira Code", {weight="DemiBold", stretch="Normal", style="Normal"}),
 
     font_size = 20.0,
 
