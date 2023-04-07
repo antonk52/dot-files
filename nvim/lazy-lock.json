@@ -30,7 +30,6 @@
   "nvim-treesitter": { "branch": "master", "commit": "c85d059c462ae7de0aa2a6ed0589f0b223e0e6a9" },
   "nvim-treesitter-textobjects": { "branch": "master", "commit": "b55fe6175f0001347a433c9df358c8cbf8a4e90f" },
   "papercolor-theme": { "branch": "master", "commit": "9051480ad9129ff4ab4fffb38b44779b9081626f" },
-  "playground": { "branch": "master", "commit": "4044b53c4d4fcd7a78eae20b8627f78ce7dc6f56" },
   "plenary.nvim": { "branch": "master", "commit": "253d34830709d690f013daf2853a9d21ad7accab" },
   "rust-tools.nvim": { "branch": "master", "commit": "71d2cf67b5ed120a0e31b2c8adb210dd2834242f" },
   "schemastore.nvim": { "branch": "main", "commit": "a592fbe98959d13014b022ec1b1418498309019c" },

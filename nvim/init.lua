@@ -77,7 +77,6 @@ local plugins = {
         enabled = vim.env.TREESITTER ~= '0',
         dependencies = {
             'nvim-treesitter/nvim-treesitter-textobjects',
-            'nvim-treesitter/playground',
         },
         build = function()
             -- for some reason inlining this string in vim.cmd breaks treesitter
@@ -118,10 +117,6 @@ local plugins = {
                         },
                         include_surrounding_whitespace = true,
                     },
-                },
-                playground = {
-                    enable = true,
-                    disable = {},
                 },
             })
         end,
@@ -674,9 +669,8 @@ local commands = {
     NotesMode = function()
         require('antonk52.notes').setup()
     end,
-    Lspformat = function()
-        vim.lsp.buf.format()
-    end,
+    Lspformat = vim.lsp.buf.format,
+    TSPlayground = vim.treesitter.inspect_tree,
 
     -- for some reason :help colorcolumn suggest setting it via `set colorcolumn=123`
     -- that has no effect, but setting it using `let &colorcolumn=123` works
