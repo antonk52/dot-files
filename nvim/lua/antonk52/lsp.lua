@@ -50,7 +50,7 @@ function M.on_attach(_, bufnr)
     keymap('<leader>]', function()
         vim.diagnostic.goto_next({ float = M.diag_float_opts })
     end, 'go to next diagnostic')
-    keymap('<localleader>f', vim.lsp.buf.formatting, 'lsp formatting')
+    keymap('<localleader>f', vim.lsp.buf.format, 'lsp format')
 end
 
 M.servers = {
