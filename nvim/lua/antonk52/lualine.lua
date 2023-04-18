@@ -105,9 +105,9 @@ local DEFAULT = {
         lualine_a = { LLN.modified },
         lualine_b = { LLN.filename },
         lualine_c = { 'lsp_progress' },
-        lualine_x = {},
-        lualine_y = { LLN.filetype },
-        lualine_z = { LLN.lineinfo },
+        lualine_x = { LLN.filetype, LLN.lineinfo },
+        lualine_y = {},
+        lualine_z = {},
     },
 }
 
