@@ -671,6 +671,7 @@ local commands = {
         vim.api.nvim_set_hl(0, '@exception', {fg='#d73a49'})
         vim.api.nvim_set_hl(0, '@keyword.operator', {fg='#d73a49'})
         vim.api.nvim_set_hl(0, '@text.todo', {fg='#24292f'})
+        vim.api.nvim_set_hl(0, '@text.strike', {link='Comment'})
         vim.api.nvim_set_hl(0, 'CursorLine', {bg='#f3f3f3'})
     end,
     ['ColorDark'] = function()
