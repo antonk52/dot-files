@@ -449,27 +449,8 @@ vim.opt.guicursor = 'i-ci-ve:hor24'
 vim.opt.list = true
 vim.opt.listchars = { tab = '▸ ', trail = '∙' }
 
-local function get_background()
-    if vim.fn.filereadable('/Users/antonk52/.base16_theme') == 1 then
-        local target = vim.fn.resolve('/Users/antonk52/.base16_theme')
-        local path_items = vim.split(target, '/', {})
-        local file_name = path_items[#path_items]
-        if file_name == 'base16-github.sh' then
-            return 'light'
-        end
-    end
-
-    return 'dark'
-end
-
--- TODO: support light background option in lake
-if get_background() == 'light' then
-    vim.cmd('color plain')
-    vim.opt.background = 'light'
-else
-    vim.cmd('color lake')
-    vim.opt.background = 'dark'
-end
+vim.opt.background = 'dark'
+vim.cmd('color lake')
 
 -- no numbers by default
 vim.opt.number = false
