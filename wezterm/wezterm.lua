@@ -34,4 +34,17 @@ return {
         top = 0,
         bottom = 0,
     },
+    keys = {
+      {
+        -- used to toggle comment in nvim, 
+        key = '-',
+        mods = 'CTRL',
+        action = wezterm.action.DisableDefaultAssignment
+      },
+      {
+        key = '+',
+        mods = 'CTRL',
+        action = wezterm.action.DisableDefaultAssignment
+      }
+    },
 }
