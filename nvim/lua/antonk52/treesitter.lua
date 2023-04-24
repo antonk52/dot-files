@@ -27,7 +27,7 @@ M.used_parsers = {
 -- pass parsers table to turn off certain parsers
 -- @example { jsonc = false }
 function M.force_reinstall_parsers(parsers, exit)
-    parsers = parsers or {}
+    parsers = parsers or M.used_parsers
     local TSI = require('nvim-treesitter.install')
 
     if exit then
