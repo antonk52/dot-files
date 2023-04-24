@@ -563,7 +563,7 @@ vim.keymap.set('n', '<leader>o', '<cmd>edit #<cr>', { desc = 'toggle between two
 vim.keymap.set('v', '<leader>c', '"*y', { noremap = false, desc = 'copy to OS clipboard' })
 vim.keymap.set('', '<leader>v', '"*p', { noremap = false, desc = 'paste from OS clipboard' })
 vim.keymap.set('n', 'p', ']p', { desc = 'paste under current indentation level' })
-vim.keymap.set('n', '<Tab>', 'za', { desc = 'toggle folds' })
+vim.keymap.set('n', '<leader>z', 'za', { desc = 'toggle folds' })
 vim.keymap.set('n', '<leader>n', ':set hlsearch!<cr>', { desc = 'toggle highlight for last search' })
 
 -- Useful when you have many splits & the status line gets truncated
