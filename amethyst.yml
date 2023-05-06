@@ -28,6 +28,21 @@ smart-window-margins: true
 
 use-canary-build: true
 
-bsp:
+select-tall-layout:
+  mod: mod1
+  key: a
+select-wide-layout:
+  mod: mod1
+  key: s
+select-fullscreen-layout:
+  mod: mod1
+  key: d
+select-column-layout:
+  mod: mod1
+  key: f
+select-tall-right-layout:
   mod: mod1
   key: g
+relaunch-amethyst:
+  mod: mod2
+  key: z
