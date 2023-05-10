@@ -68,18 +68,6 @@ M.servers = {
             -- force disable typescript formatting
             client.server_capabilities.document_formatting = false
         end,
-        single_file_support = false,
-        root_dir = lspconfig_util.root_pattern(
-            'package-lock.json',
-            'yarn.lock'
-        ),
-    },
-
-    denols = {
-        root_dir = lspconfig_util.root_pattern(
-            'deno.json',
-            'deno.jsonc'
-        ),
     },
 
     hhvm = {},
