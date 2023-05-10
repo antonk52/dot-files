@@ -11,6 +11,7 @@
   "emmet-vim": { "branch": "master", "commit": "def5d57a1ae5afb1b96ebe83c4652d1c03640f4d" },
   "fzf": { "branch": "master", "commit": "94999101e358385f3ca67a6ec9512f549196b802" },
   "fzf.vim": { "branch": "master", "commit": "dc71692255b62d1f67dc55c8e51ab1aa467b1d46" },
+  "git.nvim": { "branch": "main", "commit": "b6af70899ad0163b4b49f72b03b2b9702c174f10" },
   "github-nvim-theme": { "branch": "main", "commit": "861245ed4be1356c59b7d87ee55057e6d37f65e9" },
   "gitignore-grabber.nvim": { "branch": "main", "commit": "365c1a2255f1badf5aa8a963a07f869a81ab6575" },
   "indent-blankline.nvim": { "branch": "master", "commit": "018bd04d80c9a73d399c1061fa0c3b14a7614399" },
@@ -39,10 +40,8 @@
   "vim-commentary": { "branch": "master", "commit": "e87cd90dc09c2a203e13af9704bd0ef79303d755" },
   "vim-diminactive": { "branch": "master", "commit": "6f2e14e6ff6a038285937c378ec3685e6ff7ee36" },
   "vim-dirvish": { "branch": "master", "commit": "6233243f0caa71d27d27ea102540a88bce8eb6ea" },
-  "vim-fugitive": { "branch": "master", "commit": "5f0d280b517cacb16f59316659966c7ca5e2bea2" },
   "vim-markdown": { "branch": "master", "commit": "cc82d88e2a791f54d2b6e2b26e41f743351ac947" },
   "vim-mdx-js": { "branch": "master", "commit": "17179d7f2a73172af5f9a8d65b01a3acf12ddd50" },
-  "vim-rhubarb": { "branch": "master", "commit": "ee69335de176d9325267b0fd2597a22901d927b1" },
   "vim-surround": { "branch": "master", "commit": "3d188ed2113431cf8dac77be61b842acb64433d9" },
   "vim-tabber": { "branch": "master", "commit": "1d454c8cf73c69527646e7f61d95088d9ee2f541" },
   "workspaces.nvim": { "branch": "master", "commit": "d1ccebe224037cd955de844b8500d21e175728e9" }

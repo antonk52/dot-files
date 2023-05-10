@@ -185,12 +185,15 @@ local plugins = {
     },
     'tpope/vim-surround', -- change surrounding chars
     {
-        'tpope/vim-fugitive', -- git gems
-        dependencies = {
-            'tpope/vim-rhubarb', -- enables Gbrowse for github.com
-        },
-        init = function()
-            vim.g.fugitive_no_maps = 1
+        'dinhhuy258/git.nvim',
+        config = function()
+            require('git').setup({
+                default_mappings = false,
+            })
+
+            vim.api.nvim_create_user_command("GitBrowse", function() require('git.browse').open(false) end, {
+                bang = true,
+            })
         end,
     },
     {
