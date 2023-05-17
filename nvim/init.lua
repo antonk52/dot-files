@@ -255,10 +255,6 @@ local plugins = {
     -- live preview markdown files in browser
     -- {'iamcco/markdown-preview.nvim',  build = 'cd app & yarn install', ft = { 'markdown', 'mdx' } },
 
-    -- Front end {{{2
-    -- quick html
-    { 'mattn/emmet-vim', ft = { 'html', 'css', 'javascript', 'typescript' } },
-
     -- Syntax {{{2
     {
         'NvChad/nvim-colorizer.lua', -- hex/rgb color highlight preview
@@ -336,7 +332,20 @@ local plugins = {
     { 'jxnblk/vim-mdx-js', ft = { 'mdx' } },
     -- Themes {{{2
     { 'antonk52/lake.vim', branch = 'lua' },
-    'projekt0n/github-nvim-theme',
+    {
+        'projekt0n/github-nvim-theme',
+        config = function()
+            require('github-theme').setup({
+                options = {
+                    styles = {
+                        comments = 'NONE',
+                        keywords = 'NONE',
+                    },
+                },
+            })
+        end,
+
+    },
     'andreypopp/vim-colors-plain',
     'NLKNguyen/papercolor-theme',
 }
