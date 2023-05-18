@@ -77,6 +77,7 @@ local plugins = {
         enabled = vim.env.TREESITTER ~= '0',
         dependencies = {
             'nvim-treesitter/nvim-treesitter-textobjects',
+            'nvim-treesitter/playground',
         },
         build = function()
             -- for some reason inlining this string in vim.cmd breaks treesitter
@@ -117,6 +118,10 @@ local plugins = {
                         },
                         include_surrounding_whitespace = true,
                     },
+                },
+                playground = {
+                    enable = true,
+                    disable = {},
                 },
             })
         end,
@@ -685,6 +690,7 @@ local commands = {
         vim.api.nvim_set_hl(0, '@text.todo', {fg='#24292f'})
         vim.api.nvim_set_hl(0, '@text.strike', {link='Comment'})
         vim.api.nvim_set_hl(0, 'CursorLine', {bg='#f3f3f3'})
+        vim.api.nvim_set_hl(0, 'Todo', {bg='#d73a49'})
     end,
     ['ColorDark'] = function()
         vim.cmd('colorscheme lake')
