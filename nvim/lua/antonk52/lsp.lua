@@ -67,6 +67,8 @@ M.servers = {
         on_attach = function(client)
             -- force disable typescript formatting
             client.server_capabilities.document_formatting = false
+            -- disable highlighting hints from tsserver
+            client.server_capabilities.semanticTokensProvider = nil
         end,
     },
 
