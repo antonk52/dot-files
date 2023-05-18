@@ -336,7 +336,7 @@ local plugins = {
     },
     { 'jxnblk/vim-mdx-js', ft = { 'mdx' } },
     -- Themes {{{2
-    { 'antonk52/lake.vim', branch = 'lua' },
+    'antonk52/lake.nvim',
     {
         'projekt0n/github-nvim-theme',
         config = function()
