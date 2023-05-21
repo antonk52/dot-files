@@ -316,6 +316,8 @@ local plugins = {
             vim.keymap.set('n', 'zm', 'zm:IndentBlanklineRefresh<cr>')
             vim.keymap.set('n', 'zo', 'zo:IndentBlanklineRefresh<cr>')
         end,
+        -- prevent starting before a coloroscheme applied
+        event = 'VeryLazy',
     },
     {
         'plasticboy/vim-markdown',
