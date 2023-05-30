@@ -90,6 +90,39 @@ LLN.filetype_map = {
     ['markdown'] = 'md',
 }
 
+function LLN.diagnostics()
+    local all_diagnostics = vim.diagnostic.get(0)
+    local errors = 0
+    local warns = 0
+    local WARN_SIGN = 'w'
+    local ERROR_SIGN = 'e'
+
+    for _, v in ipairs(all_diagnostics) do
+        if v.severity == vim.diagnostic.severity.WARN then
+            warns = warns + 1
+        end
+        if v.severity == vim.diagnostic.severity.ERROR then
+            errors = errors + 1
+        end
+    end
+
+    local result = ''
+
+    if errors == 0 and warns == 0 then
+        return result
+    end
+
+    if errors > 0 and warns > 0 then
+        return errors..ERROR_SIGN..' '..warns..WARN_SIGN
+    end
+
+    if errors > 0 then
+        return errors..ERROR_SIGN
+    else
+        return warns..WARN_SIGN
+    end
+end
+
 function LLN.filetype()
     local current_filetype = vim.bo.filetype
     return LLN.filetype_map[current_filetype] or current_filetype
@@ -105,7 +138,7 @@ local DEFAULT = {
         lualine_a = { LLN.modified },
         lualine_b = { LLN.filename },
         lualine_c = { 'lsp_progress' },
-        lualine_x = { LLN.filetype, LLN.lineinfo },
+        lualine_x = { LLN.diagnostics, LLN.filetype, LLN.lineinfo },
         lualine_y = {},
         lualine_z = {},
     },
