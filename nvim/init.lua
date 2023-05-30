@@ -348,6 +348,11 @@ local plugins = {
                         comments = 'NONE',
                         keywords = 'NONE',
                     },
+                    groups = {
+                         Todo = {
+                            link = 'WarningMsg'
+                        }
+                    }
                 },
             })
         end,
