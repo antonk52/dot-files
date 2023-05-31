@@ -78,6 +78,7 @@ local plugins = {
         dependencies = {
             'nvim-treesitter/nvim-treesitter-textobjects',
             'nvim-treesitter/playground',
+            'nvim-treesitter/nvim-treesitter-context',
         },
         build = function()
             -- for some reason inlining this string in vim.cmd breaks treesitter
@@ -123,6 +124,11 @@ local plugins = {
                     enable = true,
                     disable = {},
                 },
+            })
+            require'treesitter-context'.setup({
+                max_lines = 0,
+                mode = 'topline', -- show context for the top line, not currently focused line
+                separator = nil, -- no separator line
             })
         end,
     },
