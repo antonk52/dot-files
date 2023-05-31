@@ -90,37 +90,50 @@ LLN.filetype_map = {
     ['markdown'] = 'md',
 }
 
+-- essentially a repro of lualine builtin diagnostics
+-- but with first letter **after** the count and no icons
 function LLN.diagnostics()
     local all_diagnostics = vim.diagnostic.get(0)
-    local errors = 0
-    local warns = 0
-    local WARN_SIGN = 'w'
-    local ERROR_SIGN = 'e'
+    local s = vim.diagnostic.severity
+
+    local diagnostics = {
+        error = 0,
+        warn = 0,
+        info = 0,
+        hint = 0,
+    }
+    local color = {
+        error = 'DiagnosticError',
+        warn  = 'DiagnosticWarn',
+        info  = 'DiagnosticInfo',
+        hint  = 'DiagnosticHint',
+    }
 
     for _, v in ipairs(all_diagnostics) do
-        if v.severity == vim.diagnostic.severity.WARN then
-            warns = warns + 1
+        if v.severity == s.ERROR then
+            diagnostics.error = diagnostics.error + 1
         end
-        if v.severity == vim.diagnostic.severity.ERROR then
-            errors = errors + 1
+        if v.severity == s.WARN then
+            diagnostics.warn = diagnostics.warn + 1
+        end
+        if v.severity == s.INFO then
+            diagnostics.info = diagnostics.info + 1
+        end
+        if v.severity == s.HINT then
+            diagnostics.hint = diagnostics.hint + 1
         end
     end
 
-    local result = ''
+    local items = {}
 
-    if errors == 0 and warns == 0 then
-        return result
+    -- always maintain this order
+    for _, k in pairs({'error', 'warn', 'info', 'hint'}) do
+        if diagnostics[k] > 0 then
+            table.insert(items, '%#'..color[k]..'#'..diagnostics[k]..k:sub(1, 1))
+        end
     end
 
-    if errors > 0 and warns > 0 then
-        return errors..ERROR_SIGN..' '..warns..WARN_SIGN
-    end
-
-    if errors > 0 then
-        return errors..ERROR_SIGN
-    else
-        return warns..WARN_SIGN
-    end
+    return table.concat(items, ' ')
 end
 
 function LLN.filetype()
