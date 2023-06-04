@@ -79,6 +79,7 @@ local plugins = {
             'nvim-treesitter/nvim-treesitter-textobjects',
             'nvim-treesitter/playground',
             'nvim-treesitter/nvim-treesitter-context',
+            'JoosepAlviste/nvim-ts-context-commentstring',
         },
         build = function()
             -- for some reason inlining this string in vim.cmd breaks treesitter
@@ -123,6 +124,9 @@ local plugins = {
                 playground = {
                     enable = true,
                     disable = {},
+                },
+                context_commentstring = {
+                    enable = true,
                 },
             })
             require'treesitter-context'.setup({
@@ -209,10 +213,13 @@ local plugins = {
     },
     {
         'tpope/vim-commentary', -- toggle comments
+        dependencies = {
+            'JoosepAlviste/nvim-ts-context-commentstring',
+        },
         config = function()
             -- toggle comments with CTRL _
-            vim.keymap.set('v', '<C-_>', '<plug>Commentary')
-            vim.keymap.set('n', '<C-_>', '<plug>CommentaryLine')
+            vim.keymap.set('v', '<C-_>', '<plug>ContextCommentaryLine')
+            vim.keymap.set('n', '<C-_>', '<plug>ContextCommentaryLine')
         end,
     },
     {
