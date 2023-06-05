@@ -138,12 +138,14 @@ local plugins = {
     },
     {
         'folke/todo-comments.nvim',
+        enable = false,
         opts = {
             -- do not use signs in signcolumn
             signs = false,
             keywords = {
-                -- map TODO to `todo` color highlight group
-                TODO = { icon = '', color = 'todo' },
+                TODO = { icon = '', color = 'warn' },
+                INFO = { icon = '', color = 'info' },
+                FIXME = { icon = '', color = 'info' },
             },
             highlight = {
                 -- use treesitter
@@ -155,7 +157,8 @@ local plugins = {
                 pattern = { [[.*<(KEYWORDS):]], [[.*<(KEYWORDS)\s]], [[.*<(KEYWORDS)]] },
             },
             colors = {
-                todo = { 'Todo', 'grey' },
+                warn = { 'DiagnosticWarn', 'grey' },
+                info = { 'DiagnosticInfo', 'blue' },
             },
             pattern = '\b(KEYWORDS)[: ]?',
         },
