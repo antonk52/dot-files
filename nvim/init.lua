@@ -221,7 +221,7 @@ local plugins = {
         },
         config = function()
             -- toggle comments with CTRL _
-            vim.keymap.set('v', '<C-_>', '<plug>ContextCommentaryLine')
+            vim.keymap.set('v', '<C-_>', '<plug>Commentary')
             vim.keymap.set('n', '<C-_>', '<plug>ContextCommentaryLine')
         end,
     },
