@@ -237,14 +237,22 @@ local plugins = {
         end,
     },
     {
-        'tpope/vim-commentary', -- toggle comments
+        'echasnovski/mini.nvim',
         dependencies = {
             'JoosepAlviste/nvim-ts-context-commentstring',
         },
         config = function()
-            -- toggle comments with CTRL _
-            vim.keymap.set('v', '<C-_>', '<plug>Commentary')
-            vim.keymap.set('n', '<C-_>', '<plug>ContextCommentaryLine')
+            require('mini.comment').setup({
+                options = {
+                    custom_commentstring = function()
+                        return require('ts_context_commentstring.internal').calculate_commentstring({}) or vim.bo.commentstring
+                    end,
+                },
+                mappings = {
+                    comment = '<C-_>',
+                    comment_line = '<C-_>',
+                },
+            })
         end,
     },
     {
