@@ -270,6 +270,7 @@ local plugins = {
                     comment_line = '<C-_>',
                 },
             })
+            require('mini.pairs').setup() -- autoclose ([{
         end,
     },
     {
@@ -288,15 +289,6 @@ local plugins = {
             local inactive_background_color = vim.o.background == 'light' and '#dedede' or '#424949'
 
             vim.cmd('highlight ColorColumn ctermbg=0 guibg=' .. inactive_background_color)
-        end,
-    },
-    {
-        'jiangmiao/auto-pairs', -- auto closes quotes and braces
-        init = function()
-            -- avoid inserting extra space inside surrounding objects `{([`
-            vim.g.AutoPairsMapSpace = 0
-            vim.g.AutoPairsShortcutToggle = ''
-            vim.g.AutoPairsMapCh = 0
         end,
     },
     {
