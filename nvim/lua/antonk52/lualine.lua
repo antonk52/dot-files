@@ -1,9 +1,5 @@
 local LLN = {}
 
-function LLN.lineinfo()
-    return vim.fn.line('.') .. ':' .. vim.fn.virtcol('.')
-end
-
 function LLN.filename()
     local expanded = vim.fn.substitute(vim.fn.expand('%:f'), vim.fn.getcwd() .. '/', '', '')
     local filename
@@ -106,7 +102,7 @@ local DEFAULT = {
         lualine_a = { LLN.modified },
         lualine_b = { LLN.filename },
         lualine_c = { 'lsp_progress' },
-        lualine_x = { LLN.diagnostics, LLN.filetype, LLN.lineinfo },
+        lualine_x = { LLN.diagnostics, LLN.filetype, 'location' },
         lualine_y = {},
         lualine_z = {},
     },
