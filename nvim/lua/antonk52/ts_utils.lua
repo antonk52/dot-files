@@ -15,6 +15,9 @@ local lua_percentish_nodes = {
 -- just like the default `%` but for lua where there is no block punctuation
 function M.lua_smart_percent()
     local node = ts_utils.get_node_at_cursor()
+    if node == nil then
+        return
+    end
     local node_type = node:type()
     if not vim.tbl_contains(lua_percentish_nodes, node_type) then
         vim.fn.feedkeys('%', 'n')
