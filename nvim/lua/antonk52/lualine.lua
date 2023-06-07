@@ -1,49 +1,4 @@
 local LLN = {}
-local colors = {
-    color00 = '#2b303b',
-    color01 = '#343d46',
-    color02 = '#4f5b66',
-    color03 = '#65737e',
-    color04 = '#a7adba',
-    color05 = '#c0c5ce',
-    color06 = '#dfe1e8',
-    color07 = '#eff1f5',
-    color08 = '#bf616a',
-    color09 = '#d08770',
-    color0A = '#ebcb8b',
-    color0B = '#a3be8c',
-    color0C = '#96b5b4',
-    color0D = '#8fa1b3',
-    color0E = '#b48ead',
-    color0F = '#ab7967',
-}
-LLN.theme = {
-    inactive = {
-        a = { fg = colors.color04, bg = colors.color01 },
-        b = { fg = colors.color04, bg = colors.color01 },
-        c = { fg = colors.color04, bg = colors.color01 },
-        x = { fg = colors.color04, bg = colors.color01 },
-        y = { fg = colors.color04, bg = colors.color01 },
-        z = { fg = colors.color04, bg = colors.color01 },
-    },
-    normal = {
-        a = { fg = colors.color00, bg = colors.color0B, gui = 'bold' },
-        b = { fg = colors.color04, bg = colors.color01 },
-        c = { fg = colors.color03, bg = colors.color00 },
-        x = { fg = colors.color04, bg = colors.color00 },
-        y = { fg = colors.color04, bg = colors.color00 },
-        z = { fg = colors.color04, bg = colors.color00 },
-    },
-    insert = {
-        a = { fg = colors.color00, bg = colors.color0D, gui = 'bold' },
-    },
-    replace = {
-        a = { fg = colors.color00, bg = colors.color08 },
-    },
-    visual = {
-        a = { fg = colors.color00, bg = colors.color0E, gui = 'bold' },
-    },
-}
 
 function LLN.lineinfo()
     return vim.fn.line('.') .. ':' .. vim.fn.virtcol('.')
@@ -143,7 +98,7 @@ end
 
 local DEFAULT = {
     options = {
-        theme = LLN.theme,
+        theme = 'auto',
         section_separators = { left = '', right = '' },
         component_separators = { left = '', right = '' },
     },

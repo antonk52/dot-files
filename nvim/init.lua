@@ -744,7 +744,6 @@ local commands = {
         { nargs = 1 },
     },
     ['ColorLight'] = function()
-        require('lualine').setup({options = {theme = 'github_light_default'}})
         vim.cmd('colorscheme github_light')
         -- override highlighing groups that dont match personal preferrences
         -- or differ from github's website theme
@@ -766,7 +765,6 @@ local commands = {
     end,
     ['ColorDark'] = function()
         vim.cmd('colorscheme lake')
-        require('antonk52.lualine').setup()
     end,
 
     -- fat fingers
