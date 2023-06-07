@@ -719,9 +719,6 @@ vim.keymap.set('i', 'jk', '<esc>')
 -- Commands {{{1
 local commands = {
     ToggleNumbers = 'set number! relativenumber!',
-    Todo = function()
-        require('antonk52.todo').find_todo()
-    end,
     Reroot = function()
         require('antonk52.root').reroot()
     end,
