@@ -271,6 +271,16 @@ local plugins = {
                 },
             })
             require('mini.pairs').setup() -- autoclose ([{
+            require('mini.splitjoin').setup({
+                mappings = {
+                    toggle = '',
+                    split = '',
+                    join = '',
+                }
+            })
+            vim.api.nvim_create_user_command('SplitJoin', require('mini.splitjoin').toggle, {
+                bang = true,
+            })
         end,
     },
     {
@@ -865,7 +875,7 @@ vim.api.nvim_create_autocmd('FileType', {
             })
         end
     end,
-    desc = 'toggle different style listy things in files that support it',
+    desc = 'enable smart % in files that support it',
 })
 
 vim.api.nvim_create_autocmd('FileType', {
