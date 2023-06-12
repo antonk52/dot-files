@@ -845,10 +845,6 @@ end
 vim.api.nvim_create_autocmd('FileType', {
     pattern = { 'lua', 'javascript', 'typescript', 'javascriptreact', 'typescriptreact', 'json' },
     callback = function()
-        vim.keymap.set('n', '<LocalLeader>t', function()
-            require('antonk52.ts_utils').toggle_listy()
-        end, { buffer = true })
-
         if vim.bo.ft == 'lua' then
             vim.keymap.set({ 'n', 'v' }, '%', function()
                 require('antonk52.ts_utils').lua_smart_percent()
