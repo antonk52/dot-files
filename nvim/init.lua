@@ -65,16 +65,16 @@ local plugins = {
             require('spectre').setup()
 
             vim.keymap.set('n', '<leader>S', '<cmd>lua require("spectre").open()<CR>', {
-                desc = "Open Spectre"
+                desc = 'Open Spectre',
             })
             vim.keymap.set('n', '<leader>sw', '<cmd>lua require("spectre").open_visual({select_word=true})<CR>', {
-                desc = "Search current word"
+                desc = 'Search current word',
             })
             vim.keymap.set('v', '<leader>sw', '<esc><cmd>lua require("spectre").open_visual()<CR>', {
-                desc = "Search current word"
+                desc = 'Search current word',
             })
             vim.keymap.set('n', '<leader>sf', '<cmd>lua require("spectre").open_file_search({select_word=true})<CR>', {
-                desc = "Search on current file"
+                desc = 'Search on current file',
             })
         end,
     },
@@ -97,17 +97,17 @@ local plugins = {
         'folke/trouble.nvim',
         opts = {
             icons = false,
-            fold_open = "v", -- icon used for open folds
-            fold_closed = ">", -- icon used for closed folds
+            fold_open = 'v', -- icon used for open folds
+            fold_closed = '>', -- icon used for closed folds
             indent_lines = false, -- add an indent guide below the fold icons
             signs = {
                 -- icons / text used for a diagnostic
-                error = "error",
-                warning = "warn",
-                hint = "hint",
-                information = "info"
+                error = 'error',
+                warning = 'warn',
+                hint = 'hint',
+                information = 'info',
             },
-            use_diagnostic_signs = false -- enabling this will use the signs defined in your lsp client
+            use_diagnostic_signs = false, -- enabling this will use the signs defined in your lsp client
         },
     },
     'antonk52/gitignore-grabber.nvim',
@@ -168,7 +168,7 @@ local plugins = {
                     enable = true,
                 },
             })
-            require'treesitter-context'.setup({
+            require('treesitter-context').setup({
                 max_lines = 0,
                 mode = 'topline', -- show context for the top line, not currently focused line
                 separator = nil, -- no separator line
@@ -248,7 +248,9 @@ local plugins = {
                 default_mappings = false,
             })
 
-            vim.api.nvim_create_user_command("GitBrowse", function() require('git.browse').open(false) end, {
+            vim.api.nvim_create_user_command('GitBrowse', function()
+                require('git.browse').open(false)
+            end, {
                 bang = true,
             })
         end,
@@ -262,7 +264,8 @@ local plugins = {
             require('mini.comment').setup({
                 options = {
                     custom_commentstring = function()
-                        return require('ts_context_commentstring.internal').calculate_commentstring({}) or vim.bo.commentstring
+                        return require('ts_context_commentstring.internal').calculate_commentstring({})
+                            or vim.bo.commentstring
                     end,
                 },
                 mappings = {
@@ -276,7 +279,7 @@ local plugins = {
                     toggle = '',
                     split = '',
                     join = '',
-                }
+                },
             })
             vim.api.nvim_create_user_command('SplitJoin', require('mini.splitjoin').toggle, {
                 bang = true,
@@ -414,14 +417,13 @@ local plugins = {
                         keywords = 'NONE',
                     },
                     groups = {
-                         Todo = {
-                            link = 'WarningMsg'
-                        }
-                    }
+                        Todo = {
+                            link = 'WarningMsg',
+                        },
+                    },
                 },
             })
         end,
-
     },
     'andreypopp/vim-colors-plain',
     'NLKNguyen/papercolor-theme',
@@ -744,21 +746,21 @@ local commands = {
         vim.cmd('colorscheme github_light')
         -- override highlighing groups that dont match personal preferrences
         -- or differ from github's website theme
-        vim.api.nvim_set_hl(0, 'TSPunctSpecial', {fg='#24292f'})
-        vim.api.nvim_set_hl(0, '@type.builtin', {fg='#24292f'})
-        vim.api.nvim_set_hl(0, '@variable', {fg='#24292f'})
-        vim.api.nvim_set_hl(0, '@constant', {fg='#24292f'})
-        vim.api.nvim_set_hl(0, '@type', {fg='#24292f'})
-        vim.api.nvim_set_hl(0, '@method', {fg='#6f42c1'})
-        vim.api.nvim_set_hl(0, '@method.call', {fg='#6f42c1'})
-        vim.api.nvim_set_hl(0, '@conditional', {fg='#6f42c1'})
-        vim.api.nvim_set_hl(0, '@property', {fg='#005cc5'})
-        vim.api.nvim_set_hl(0, '@exception', {fg='#d73a49'})
-        vim.api.nvim_set_hl(0, '@keyword.operator', {fg='#d73a49'})
-        vim.api.nvim_set_hl(0, '@text.todo', {fg='#24292f'})
-        vim.api.nvim_set_hl(0, '@text.strike', {link='Comment'})
-        vim.api.nvim_set_hl(0, 'CursorLine', {bg='#f3f3f3'})
-        vim.api.nvim_set_hl(0, 'Todo', {bg='#d73a49'})
+        vim.api.nvim_set_hl(0, 'TSPunctSpecial', { fg = '#24292f' })
+        vim.api.nvim_set_hl(0, '@type.builtin', { fg = '#24292f' })
+        vim.api.nvim_set_hl(0, '@variable', { fg = '#24292f' })
+        vim.api.nvim_set_hl(0, '@constant', { fg = '#24292f' })
+        vim.api.nvim_set_hl(0, '@type', { fg = '#24292f' })
+        vim.api.nvim_set_hl(0, '@method', { fg = '#6f42c1' })
+        vim.api.nvim_set_hl(0, '@method.call', { fg = '#6f42c1' })
+        vim.api.nvim_set_hl(0, '@conditional', { fg = '#6f42c1' })
+        vim.api.nvim_set_hl(0, '@property', { fg = '#005cc5' })
+        vim.api.nvim_set_hl(0, '@exception', { fg = '#d73a49' })
+        vim.api.nvim_set_hl(0, '@keyword.operator', { fg = '#d73a49' })
+        vim.api.nvim_set_hl(0, '@text.todo', { fg = '#24292f' })
+        vim.api.nvim_set_hl(0, '@text.strike', { link = 'Comment' })
+        vim.api.nvim_set_hl(0, 'CursorLine', { bg = '#f3f3f3' })
+        vim.api.nvim_set_hl(0, 'Todo', { bg = '#d73a49' })
     end,
     ['ColorDark'] = function()
         vim.cmd('colorscheme lake')
@@ -781,12 +783,10 @@ end
 
 -- plugin manager
 -- easier to see all options at a glance
-for _, v in ipairs({'check', 'restore', 'update', 'clean'}) do
-    vim.api.nvim_create_user_command(
-        'Lazy'..v:sub(1, 1):upper()..v:sub(2),
-        function() require('lazy.view.commands').commands[v]() end,
-        {desc = 'Lazy '..v}
-    )
+for _, v in ipairs({ 'check', 'restore', 'update', 'clean' }) do
+    vim.api.nvim_create_user_command('Lazy' .. v:sub(1, 1):upper() .. v:sub(2), function()
+        require('lazy.view.commands').commands[v]()
+    end, { desc = 'Lazy ' .. v })
 end
 
 -- Autocommands {{{1
