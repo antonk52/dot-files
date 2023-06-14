@@ -149,3 +149,10 @@ elif [ -f "$homebrew_local_autojump_file" ]
 then
     . "$homebrew_local_autojump_file"
 fi
+
+# bun completions
+[ -s "/Users/antonk52/.bun/_bun" ] && source "/Users/antonk52/.bun/_bun"
+
+# bun
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
