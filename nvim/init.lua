@@ -172,6 +172,7 @@ local plugins = {
                 max_lines = 0,
                 mode = 'topline', -- show context for the top line, not currently focused line
                 separator = nil, -- no separator line
+                on_attach = function() return vim.bo.ft ~= 'markdown' end
             })
         end,
     },
