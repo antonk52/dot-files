@@ -388,23 +388,6 @@ local plugins = {
         -- prevent starting before a coloroscheme applied
         event = 'VeryLazy',
     },
-    {
-        'plasticboy/vim-markdown',
-        ft = { 'markdown', 'md' },
-        init = function()
-            vim.g.vim_markdown_frontmatter = 1
-            vim.g.vim_markdown_new_list_item_indent = 0
-            vim.g.vim_markdown_no_default_key_mappings = 1
-            -- there is a separate plugin to handle markdown folds
-            vim.g.vim_markdown_folding_disabled = 1
-            if vim.g.colors_name == 'lake' then
-                -- red & bold list characters -,+,*
-                vim.cmd('hi mkdListItem ctermfg=8 guifg=' .. vim.g.lake_palette['08'].gui .. ' gui=bold')
-                vim.cmd('hi mkdHeading ctermfg=04 guifg=' .. vim.g.lake_palette['0D'].gui)
-                vim.cmd('hi mkdLink gui=none ctermfg=08 guifg=' .. vim.g.lake_palette['08'].gui)
-            end
-        end,
-    },
     { 'jxnblk/vim-mdx-js', ft = { 'mdx' } },
     -- Themes {{{2
     'antonk52/lake.nvim',

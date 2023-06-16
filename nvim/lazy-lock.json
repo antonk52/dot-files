@@ -43,7 +43,6 @@
   "vim-colors-plain": { "branch": "master", "commit": "908ed31ad398c18b47a3f4f71c97313754484ff8" },
   "vim-diminactive": { "branch": "master", "commit": "6f2e14e6ff6a038285937c378ec3685e6ff7ee36" },
   "vim-dirvish": { "branch": "master", "commit": "191341c06ccfaacd81d8fc8bbc0a789459f86a88" },
-  "vim-markdown": { "branch": "master", "commit": "cc82d88e2a791f54d2b6e2b26e41f743351ac947" },
   "vim-mdx-js": { "branch": "master", "commit": "17179d7f2a73172af5f9a8d65b01a3acf12ddd50" },
   "vim-surround": { "branch": "master", "commit": "3d188ed2113431cf8dac77be61b842acb64433d9" },
   "vim-tabber": { "branch": "master", "commit": "1d454c8cf73c69527646e7f61d95088d9ee2f541" },
