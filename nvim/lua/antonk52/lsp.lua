@@ -26,6 +26,15 @@ function M.on_attach(_, bufnr)
     local function keymap(from, to, desc)
         vim.keymap.set('n', from, to, { buffer = bufnr or 0, silent = true, desc = desc })
     end
+    local function formatLsp()
+        vim.lsp.buf.format({
+            -- never use tsserver to format files
+            filter = function(c) return c ~= 'tsserver' end,
+            async = true,
+        })
+    end
+    vim.api.nvim_buf_create_user_command(0, 'FormatLsp', formatLsp, {})
+
 
     keymap('gD', vim.lsp.buf.declaration, 'lsp declaration')
     keymap('gd', vim.lsp.buf.definition, 'lsp definition')
@@ -50,7 +59,7 @@ function M.on_attach(_, bufnr)
     keymap('<leader>]', function()
         vim.diagnostic.goto_next({ float = M.diag_float_opts })
     end, 'go to next diagnostic')
-    keymap('<localleader>f', vim.lsp.buf.format, 'lsp format')
+    keymap('<localleader>f', formatLsp, 'lsp format')
 end
 
 M.servers = {
@@ -293,10 +302,6 @@ function M.lsp_options(options)
 end
 
 function M.setup()
-    vim.api.nvim_create_user_command('FormatLsp', function()
-        vim.lsp.buf.formatting()
-    end, {})
-
     -- M.setup_eslint_d()
     M.setup_lua()
     M.setup_column_signs()
