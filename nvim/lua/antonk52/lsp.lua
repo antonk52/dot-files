@@ -29,12 +29,13 @@ function M.on_attach(_, bufnr)
     local function formatLsp()
         vim.lsp.buf.format({
             -- never use tsserver to format files
-            filter = function(c) return c ~= 'tsserver' end,
+            filter = function(c)
+                return c ~= 'tsserver'
+            end,
             async = true,
         })
     end
     vim.api.nvim_buf_create_user_command(0, 'FormatLsp', formatLsp, {})
-
 
     keymap('gD', vim.lsp.buf.declaration, 'lsp declaration')
     keymap('gd', vim.lsp.buf.definition, 'lsp definition')
