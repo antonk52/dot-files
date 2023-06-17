@@ -21,7 +21,6 @@ vim.opt.rtp:prepend(lazypath)
 
 -- Plugins {{{1
 local plugins = {
-    -- Essentials {{{2
     'antonk52/vim-tabber', -- tab navigation
     {
         'neovim/nvim-lspconfig', -- types & linting
@@ -176,7 +175,9 @@ local plugins = {
                 max_lines = 0,
                 mode = 'topline', -- show context for the top line, not currently focused line
                 separator = nil, -- no separator line
-                on_attach = function() return vim.bo.ft ~= 'markdown' end
+                on_attach = function()
+                    return vim.bo.ft ~= 'markdown'
+                end,
             })
         end,
     },
@@ -337,7 +338,6 @@ local plugins = {
     -- live preview markdown files in browser
     -- {'iamcco/markdown-preview.nvim',  build = 'cd app & yarn install', ft = { 'markdown', 'mdx' } },
 
-    -- Syntax {{{2
     {
         'NvChad/nvim-colorizer.lua', -- hex/rgb color highlight preview
         init = function()
@@ -381,7 +381,6 @@ local plugins = {
         event = 'VeryLazy',
     },
     { 'jxnblk/vim-mdx-js', ft = { 'mdx' } },
-    -- Themes {{{2
     'antonk52/lake.nvim',
     {
         'projekt0n/github-nvim-theme',
@@ -401,8 +400,6 @@ local plugins = {
             })
         end,
     },
-    'andreypopp/vim-colors-plain',
-    'NLKNguyen/papercolor-theme',
 }
 
 local lazy_options = {
