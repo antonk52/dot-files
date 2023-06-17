@@ -77,12 +77,14 @@ local plugins = {
                 desc = 'Search on current file',
             })
         end,
+        event = 'VeryLazy',
     },
     {
         'natecraddock/workspaces.nvim',
         config = function()
             require('antonk52.workspaces').setup()
         end,
+        event = 'VeryLazy',
     },
     'antonk52/amake.nvim',
     {
@@ -92,6 +94,7 @@ local plugins = {
                 require('antonk52.npm_scripts').run()
             end, { desc = 'Run npm script' })
         end,
+        event = 'VeryLazy',
     },
     {
         'folke/trouble.nvim',
@@ -109,6 +112,7 @@ local plugins = {
             },
             use_diagnostic_signs = false, -- enabling this will use the signs defined in your lsp client
         },
+        event = 'VeryLazy',
     },
     'antonk52/gitignore-grabber.nvim',
     {
@@ -178,7 +182,6 @@ local plugins = {
     },
     {
         'folke/todo-comments.nvim',
-        enable = false,
         opts = {
             -- do not use signs in signcolumn
             signs = false,
@@ -202,6 +205,7 @@ local plugins = {
             },
             pattern = '\b(KEYWORDS)[: ]?',
         },
+        event = 'VeryLazy',
     },
     {
         'junegunn/fzf', -- async project in-file/file search
@@ -222,6 +226,7 @@ local plugins = {
                 }
             )
         end,
+        event = 'VeryLazy',
     },
     {
         'nvim-telescope/telescope.nvim',
@@ -255,6 +260,7 @@ local plugins = {
                 bang = true,
             })
         end,
+        event = 'VeryLazy',
     },
     {
         'echasnovski/mini.nvim',
@@ -286,6 +292,7 @@ local plugins = {
                 bang = true,
             })
         end,
+        event = 'VeryLazy',
     },
     {
         'justinmk/vim-dirvish', -- project file viewer
@@ -325,6 +332,7 @@ local plugins = {
                 widthDownMapping = false,
             },
         },
+        event = 'VeryLazy',
     },
     -- live preview markdown files in browser
     -- {'iamcco/markdown-preview.nvim',  build = 'cd app & yarn install', ft = { 'markdown', 'mdx' } },
