@@ -338,24 +338,8 @@ local plugins = {
         end,
         config = function()
             require('colorizer').setup({
-                filetypes = {
-                    'css',
-                    'scss',
-                    'sass',
-                    'lua',
-                    'javascript',
-                    'javascriptreact',
-                    'json',
-                    'jsonc',
-                    'typescript',
-                    'typescriptreact',
-                    'yml',
-                    'yaml',
-                },
                 user_default_options = {
                     css = true,
-                    RRGGBBAA = true,
-                    AARRGGBB = true,
                     mode = 'background',
                 },
             })
