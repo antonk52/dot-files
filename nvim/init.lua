@@ -187,24 +187,17 @@ local plugins = {
             -- do not use signs in signcolumn
             signs = false,
             keywords = {
-                TODO = { icon = '', color = 'warn' },
+                TODO = { icon = '', color = 'warning' },
                 INFO = { icon = '', color = 'info' },
                 FIXME = { icon = '', color = 'info' },
             },
             highlight = {
-                -- use treesitter
-                comment_only = true,
-                before = '',
                 keyword = 'fg',
                 -- do not highlight following text
                 after = '',
-                pattern = { [[.*<(KEYWORDS):]], [[.*<(KEYWORDS)\s]], [[.*<(KEYWORDS)]] },
+                -- include keyword without `:` or keyword only
+                pattern = '.*<(KEYWORDS)[: ]?',
             },
-            colors = {
-                warn = { 'DiagnosticWarn', 'grey' },
-                info = { 'DiagnosticInfo', 'blue' },
-            },
-            pattern = '\b(KEYWORDS)[: ]?',
         },
         event = 'VeryLazy',
     },
