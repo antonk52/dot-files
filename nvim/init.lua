@@ -21,7 +21,6 @@ vim.opt.rtp:prepend(lazypath)
 
 -- Plugins {{{1
 local plugins = {
-    'antonk52/vim-tabber', -- tab navigation
     {
         'neovim/nvim-lspconfig', -- types & linting
         enabled = vim.env.LSP ~= '0',
@@ -240,7 +239,6 @@ local plugins = {
             vim.defer_fn(require('antonk52.telescope').setup, 50)
         end,
     },
-    'rcarriga/nvim-notify', -- fancy UI
     {
         'hoob3rt/lualine.nvim',
         config = function()
