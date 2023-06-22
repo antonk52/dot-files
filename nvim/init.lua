@@ -181,26 +181,6 @@ local plugins = {
         end,
     },
     {
-        'folke/todo-comments.nvim',
-        opts = {
-            -- do not use signs in signcolumn
-            signs = false,
-            keywords = {
-                TODO = { icon = '', color = 'warning' },
-                INFO = { icon = '', color = 'info' },
-                FIXME = { icon = '', color = 'info' },
-            },
-            highlight = {
-                keyword = 'fg',
-                -- do not highlight following text
-                after = '',
-                -- include keyword without `:` or keyword only
-                pattern = '.*<(KEYWORDS)[: ]?',
-            },
-        },
-        event = 'VeryLazy',
-    },
-    {
         'junegunn/fzf', -- async project in-file/file search
         build = './install --bin',
         dependencies = { 'junegunn/fzf.vim' },
@@ -282,6 +262,14 @@ local plugins = {
             })
             vim.api.nvim_create_user_command('SplitJoin', require('mini.splitjoin').toggle, {
                 bang = true,
+            })
+            require('mini.hipatterns').setup({
+                highlighters = {
+                    fixme = { pattern = '%f[%w]()FIXME()%f[%W]', group = 'DiagnosticError'},
+                    todo = { pattern = '%f[%w]()TODO()%f[%W]', group = 'DiagnosticWarn'},
+                    note = { pattern = '%f[%w]()NOTE()%f[%W]', group = 'DiagnosticInfo'},
+                    info = { pattern = '%f[%w]()INFO()%f[%W]', group = 'DiagnosticInfo'},
+                }
             })
         end,
         event = 'VeryLazy',
