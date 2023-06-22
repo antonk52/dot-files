@@ -23,7 +23,7 @@ mouse-follows-focus: false
 focus-follows-mouse: false
 
 window-margins: true
-window-margin-size: 12
+window-margin-size: 0
 smart-window-margins: true
 
 use-canary-build: true
