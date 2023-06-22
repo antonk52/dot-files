@@ -218,7 +218,6 @@ local plugins = {
             require('antonk52.lualine').setup()
         end,
     },
-    'tpope/vim-surround', -- change surrounding chars
     {
         'dinhhuy258/git.nvim',
         config = function()
@@ -270,6 +269,23 @@ local plugins = {
                     note = { pattern = '%f[%w]()NOTE()%f[%W]', group = 'DiagnosticInfo'},
                     info = { pattern = '%f[%w]()INFO()%f[%W]', group = 'DiagnosticInfo'},
                 }
+            })
+            require('mini.surround').setup({
+                mappings = {
+                    add = 'ys',
+                    delete = 'ds',
+                    replace = 'cs',
+                    find = '',
+                    highlight = '',
+                    update_n_lines = '',
+                    suffix_last = '',
+                    suffix_next = '',
+                },
+                -- no padding space
+                custom_surroundings = {
+                    ['('] = { output = { left = '(', right = ')'}},
+                    ['['] = { output = { left = '[', right = ']'}},
+                },
             })
         end,
         event = 'VeryLazy',
