@@ -206,7 +206,6 @@ local plugins = {
     },
     {
         'nvim-telescope/telescope.nvim',
-        commit = '22e13f6',
         dependencies = {
             'nvim-lua/plenary.nvim',
             'nvim-telescope/telescope-ui-select.nvim',
