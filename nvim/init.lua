@@ -170,8 +170,11 @@ local plugins = {
                     enable = true,
                 },
             })
+            -- TODO: replace with 'Bekaboo/dropbar.nvim',
+            -- after updating to nvim 0.10
             require('treesitter-context').setup({
-                max_lines = 0,
+                max_lines = 2,
+                multiline_threshold = 2,
                 mode = 'topline', -- show context for the top line, not currently focused line
                 separator = nil, -- no separator line
                 on_attach = function()
