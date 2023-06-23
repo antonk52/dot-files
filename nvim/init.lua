@@ -342,14 +342,14 @@ local plugins = {
             -- to avoid default user commands
             vim.g.loaded_colorizer = 1
         end,
-        config = function()
-            require('colorizer').setup({
-                user_default_options = {
-                    css = true,
-                    mode = 'background',
-                },
-            })
-        end,
+        name = 'colorizer',
+        opt = {
+            user_default_options = {
+                css = true,
+                mode = 'background',
+            },
+        },
+        config = true,
     },
     {
         'lukas-reineke/indent-blankline.nvim', -- indent lines marks
