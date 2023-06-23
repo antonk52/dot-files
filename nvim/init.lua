@@ -242,6 +242,7 @@ local plugins = {
             'JoosepAlviste/nvim-ts-context-commentstring',
         },
         config = function()
+            require('mini.bracketed').setup()
             require('mini.comment').setup({
                 options = {
                     custom_commentstring = function()
