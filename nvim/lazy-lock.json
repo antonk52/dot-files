@@ -8,8 +8,6 @@
   "cmp-path": { "branch": "main", "commit": "91ff86cd9c29299a64f968ebb45846c485725f23" },
   "colorizer": { "branch": "master", "commit": "dde3084106a70b9a79d48f426f6d6fec6fd203f7" },
   "dirvish-fs.vim": { "branch": "master", "commit": "6b498764ffe6d5e985e54ae0485dd4a5c3c864ee" },
-  "fzf": { "branch": "master", "commit": "e6095cb7e84de2757359cae4169115270845d618" },
-  "fzf.vim": { "branch": "master", "commit": "1dcdb21db618055134cd611f4f5918f6d00a5df0" },
   "git.nvim": { "branch": "main", "commit": "7a342e61f28e321ef08e00fca4be74ff3ef88335" },
   "github-nvim-theme": { "branch": "main", "commit": "36b8a376221bf72affbfc9ed99d4577a0377586b" },
   "gitignore-grabber.nvim": { "branch": "main", "commit": "365c1a2255f1badf5aa8a963a07f869a81ab6575" },

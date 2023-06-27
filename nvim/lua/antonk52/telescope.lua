@@ -46,43 +46,44 @@ function M.action_buffer_lines()
         line_to_number_dict[l] = i
     end
 
-    require('telescope.pickers').new(M.options, {
-        prompt_title = 'Buffer lines:',
-        finder = require('telescope.finders').new_table({
-            results = lines,
-        }),
-        sorter = require('telescope.config').values.generic_sorter(M.options),
-        attach_mappings = function(prompt_bufnr)
-            actions.select_default:replace(function()
-                local selection = require('telescope.actions.state').get_selected_entry()
-                local picked_line = selection[1]
-                local searched_for = require('telescope.actions.state').get_current_line()
-                local first_search_char = string.sub(searched_for, 1, 1)
+    require('telescope.pickers')
+        .new(M.options, {
+            prompt_title = 'Buffer lines:',
+            finder = require('telescope.finders').new_table({
+                results = lines,
+            }),
+            sorter = require('telescope.config').values.generic_sorter(M.options),
+            attach_mappings = function(prompt_bufnr)
+                actions.select_default:replace(function()
+                    local selection = require('telescope.actions.state').get_selected_entry()
+                    local picked_line = selection[1]
+                    local searched_for = require('telescope.actions.state').get_current_line()
+                    local first_search_char = string.sub(searched_for, 1, 1)
 
-                local col = string.find(picked_line, first_search_char)
-                -- when first char is reversed casing
-                if col == nil then
-                    local rev_char = first_search_char == string.upper(first_search_char)
-                        and string.lower(first_search_char)
-                        or string.upper(first_search_char)
-                    col = string.find(picked_line, rev_char)
+                    local col = string.find(picked_line, first_search_char)
+                    -- when first char is reversed casing
+                    if col == nil then
+                        local rev_char = first_search_char == string.upper(first_search_char)
+                                and string.lower(first_search_char)
+                            or string.upper(first_search_char)
+                        col = string.find(picked_line, rev_char)
+                    end
+                    actions.close(prompt_bufnr)
 
-                end
-                actions.close(prompt_bufnr)
+                    vim.api.nvim_win_set_cursor(0, {
+                        -- line number
+                        line_to_number_dict[picked_line] + 1,
+                        -- column number
+                        col,
+                    })
+                    -- center line on the screen
+                    vim.api.nvim_feedkeys('zz', 'n', false)
+                end)
 
-                vim.api.nvim_win_set_cursor(0, {
-                    -- line number
-                    line_to_number_dict[picked_line] + 1,
-                    -- column number
-                    col,
-                })
-                -- center line on the screen
-                vim.api.nvim_feedkeys('zz', 'n', false)
-            end)
-
-            return true
-        end,
-    }):find()
+                return true
+            end,
+        })
+        :find()
 end
 
 function M.action_smart_vcs_files()
@@ -161,6 +162,14 @@ function M.setup()
     vim.keymap.set('n', '<leader>;', builtin.commands)
     vim.keymap.set('n', '<leader>r', builtin.resume)
     vim.keymap.set('n', '<C-p>', M.action_commands)
+
+    vim.api.nvim_create_user_command('Rg', function(a)
+        builtin.live_grep()
+        -- allow live grep to finish first
+        vim.schedule(function()
+            vim.fn.feedkeys(a.args)
+        end)
+    end, { nargs = 1 })
 end
 
 return M

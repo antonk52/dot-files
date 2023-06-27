@@ -182,27 +182,6 @@ local plugins = {
         end,
     },
     {
-        'junegunn/fzf', -- async project in-file/file search
-        build = './install --bin',
-        dependencies = { 'junegunn/fzf.vim' },
-        init = function()
-            -- avoid creating all of the commands
-            vim.g.loaded_fzf_vim = 1
-            -- start in a popup
-            vim.g.fzf_layout = { window = { width = 0.9, height = 0.6 } }
-            -- recreate the only command used
-            vim.api.nvim_create_user_command(
-                'Rg',
-                'call fzf#vim#grep("rg --column --line-number --no-heading --color=always --smart-case -- ".shellescape(<q-args>), 1, fzf#vim#with_preview(), <bang>0)',
-                {
-                    bang = true,
-                    nargs = '*',
-                }
-            )
-        end,
-        event = 'VeryLazy',
-    },
-    {
         'nvim-telescope/telescope.nvim',
         dependencies = {
             'nvim-lua/plenary.nvim',
@@ -711,7 +690,6 @@ local commands = {
     NotesMode = function()
         require('antonk52.notes').setup()
     end,
-    Lspformat = vim.lsp.buf.format,
     TSPlayground = vim.treesitter.inspect_tree,
 
     -- for some reason :help colorcolumn suggest setting it via `set colorcolumn=123`
