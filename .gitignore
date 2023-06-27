@@ -11,3 +11,6 @@ karabiner/*
 scripts/npm-completions.zsh
 
 **/.DS_Store
+
+zsh-autosuggestions
+dependencies
