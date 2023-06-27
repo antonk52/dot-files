@@ -23,7 +23,7 @@ vim.opt.rtp:prepend(lazypath)
 local plugins = {
     {
         'neovim/nvim-lspconfig', -- types & linting
-        enabled = vim.env.LSP ~= '0',
+        cond = vim.env.LSP ~= '0',
         dependencies = {
             'b0o/schemastore.nvim', -- json schemas for json lsp
             'simrat39/rust-tools.nvim',
@@ -40,6 +40,7 @@ local plugins = {
     {
         'antonk52/markdowny.nvim',
         opts = { filetypes = { 'markdown', 'hgcommit', 'gitcommit' } },
+        cond = true,
     },
     {
         'hrsh7th/nvim-cmp',
@@ -87,12 +88,9 @@ local plugins = {
     'antonk52/amake.nvim',
     {
         'antonk52/npm_scripts.nvim',
-        config = function()
-            vim.keymap.set('n', '<leader>N', function()
-                require('antonk52.npm_scripts').run()
-            end, { desc = 'Run npm script' })
-        end,
-        event = 'VeryLazy',
+        keys = {
+            {'<leader>N', '<cmd>lua require("antonk52.npm_scripts").run()<CR>', desc = 'Run npm script'}
+        },
     },
     {
         'folke/trouble.nvim',
@@ -115,7 +113,7 @@ local plugins = {
     'antonk52/gitignore-grabber.nvim',
     {
         'nvim-treesitter/nvim-treesitter',
-        enabled = vim.env.TREESITTER ~= '0',
+        cond = vim.env.TREESITTER ~= '0',
         dependencies = {
             'nvim-treesitter/nvim-treesitter-textobjects',
             'nvim-treesitter/playground',
@@ -302,15 +300,7 @@ local plugins = {
         end,
     },
     'antonk52/dirvish-fs.vim',
-    {
-        'blueyed/vim-diminactive', -- dims inactive splits
-        config = function()
-            -- bg color for inactive splits
-            local inactive_background_color = vim.o.background == 'light' and '#dedede' or '#424949'
-
-            vim.cmd('highlight ColorColumn ctermbg=0 guibg=' .. inactive_background_color)
-        end,
-    },
+    'blueyed/vim-diminactive', -- dims inactive splits
     {
         'L3MON4D3/LuaSnip',
         branch = 'ls_snippets_preserve',
