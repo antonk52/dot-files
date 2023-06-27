@@ -372,6 +372,7 @@ local plugins = {
     'antonk52/lake.nvim',
     {
         'projekt0n/github-nvim-theme',
+        event = 'VeryLazy',
         config = function()
             require('github-theme').setup({
                 options = {
@@ -379,13 +380,31 @@ local plugins = {
                         comments = 'NONE',
                         keywords = 'NONE',
                     },
-                    groups = {
-                        Todo = {
-                            link = 'WarningMsg',
-                        },
-                    },
                 },
             })
+            vim.api.nvim_create_user_command('ColorLight', function()
+                vim.cmd('colorscheme github_light')
+                -- override highlighing groups that dont match personal preferrences
+                -- or differ from github's website theme
+                --
+                -- setup(opts.groups.all) did not override so doing it manually
+                vim.api.nvim_set_hl(0, 'TSPunctSpecial', { fg = '#24292f' })
+                vim.api.nvim_set_hl(0, '@punctuation.delimiter', { fg = '#24292f' })
+                vim.api.nvim_set_hl(0, '@type.builtin', { fg = '#24292f' })
+                vim.api.nvim_set_hl(0, '@variable', { fg = '#24292f' })
+                vim.api.nvim_set_hl(0, '@constant', { fg = '#24292f' })
+                vim.api.nvim_set_hl(0, '@type', { fg = '#24292f' })
+                vim.api.nvim_set_hl(0, '@method', { fg = '#6f42c1' })
+                vim.api.nvim_set_hl(0, '@method.call', { fg = '#6f42c1' })
+                vim.api.nvim_set_hl(0, '@conditional', { fg = '#6f42c1' })
+                vim.api.nvim_set_hl(0, '@property', { fg = '#005cc5' })
+                vim.api.nvim_set_hl(0, '@exception', { fg = '#d73a49' })
+                vim.api.nvim_set_hl(0, '@keyword.operator', { fg = '#d73a49' })
+                vim.api.nvim_set_hl(0, '@text.todo', { fg = '#24292f' })
+                vim.api.nvim_set_hl(0, '@text.strike', { link = 'Comment' })
+                vim.api.nvim_set_hl(0, 'CursorLine', { bg = '#f3f3f3' })
+                vim.api.nvim_set_hl(0, 'Todo', { bg = '#d73a49' })
+            end, {})
         end,
     },
 }
@@ -703,29 +722,7 @@ local commands = {
         end,
         { nargs = 1 },
     },
-    ['ColorLight'] = function()
-        vim.cmd('colorscheme github_light')
-        -- override highlighing groups that dont match personal preferrences
-        -- or differ from github's website theme
-        vim.api.nvim_set_hl(0, 'TSPunctSpecial', { fg = '#24292f' })
-        vim.api.nvim_set_hl(0, '@type.builtin', { fg = '#24292f' })
-        vim.api.nvim_set_hl(0, '@variable', { fg = '#24292f' })
-        vim.api.nvim_set_hl(0, '@constant', { fg = '#24292f' })
-        vim.api.nvim_set_hl(0, '@type', { fg = '#24292f' })
-        vim.api.nvim_set_hl(0, '@method', { fg = '#6f42c1' })
-        vim.api.nvim_set_hl(0, '@method.call', { fg = '#6f42c1' })
-        vim.api.nvim_set_hl(0, '@conditional', { fg = '#6f42c1' })
-        vim.api.nvim_set_hl(0, '@property', { fg = '#005cc5' })
-        vim.api.nvim_set_hl(0, '@exception', { fg = '#d73a49' })
-        vim.api.nvim_set_hl(0, '@keyword.operator', { fg = '#d73a49' })
-        vim.api.nvim_set_hl(0, '@text.todo', { fg = '#24292f' })
-        vim.api.nvim_set_hl(0, '@text.strike', { link = 'Comment' })
-        vim.api.nvim_set_hl(0, 'CursorLine', { bg = '#f3f3f3' })
-        vim.api.nvim_set_hl(0, 'Todo', { bg = '#d73a49' })
-    end,
-    ['ColorDark'] = function()
-        vim.cmd('colorscheme lake')
-    end,
+    ['ColorDark'] = 'colorscheme lake',
 
     -- fat fingers
     Wq = ':wq',
