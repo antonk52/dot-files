@@ -89,7 +89,7 @@ local plugins = {
     {
         'antonk52/npm_scripts.nvim',
         keys = {
-            {'<leader>N', '<cmd>lua require("antonk52.npm_scripts").run()<CR>', desc = 'Run npm script'}
+            { '<leader>N', '<cmd>lua require("antonk52.npm_scripts").run()<CR>', desc = 'Run npm script' },
         },
     },
     {
@@ -109,6 +109,31 @@ local plugins = {
             use_diagnostic_signs = false, -- enabling this will use the signs defined in your lsp client
         },
         event = 'VeryLazy',
+    },
+    {
+        'dmmulroy/tsc.nvim',
+        config = function()
+            local tsc = require('tsc')
+            vim.api.nvim_create_user_command('TSCAll', function()
+                tsc.setup({
+                    flags = {
+                        build = true,
+                    },
+                    bin_path = require('tsc.utils').find_tsc_bin(),
+                })
+                tsc.run()
+            end, { nargs = 0, desc = 'tsc entire project' })
+            vim.api.nvim_create_user_command('TSCLocal', function()
+                tsc.setup({
+                    flags = {
+                        build = false,
+                    },
+                    bin_path = require('tsc.utils').find_tsc_bin(),
+                })
+                tsc.run()
+            end, { nargs = 0, desc = 'tsc local package' })
+        end,
+        cmd = { 'TSCLocal', 'TSCAll' },
     },
     'antonk52/gitignore-grabber.nvim',
     {
@@ -244,11 +269,11 @@ local plugins = {
             })
             require('mini.hipatterns').setup({
                 highlighters = {
-                    fixme = { pattern = '%f[%w]()FIXME()%f[%W]', group = 'DiagnosticError'},
-                    todo = { pattern = '%f[%w]()TODO()%f[%W]', group = 'DiagnosticWarn'},
-                    note = { pattern = '%f[%w]()NOTE()%f[%W]', group = 'DiagnosticInfo'},
-                    info = { pattern = '%f[%w]()INFO()%f[%W]', group = 'DiagnosticInfo'},
-                }
+                    fixme = { pattern = '%f[%w]()FIXME()%f[%W]', group = 'DiagnosticError' },
+                    todo = { pattern = '%f[%w]()TODO()%f[%W]', group = 'DiagnosticWarn' },
+                    note = { pattern = '%f[%w]()NOTE()%f[%W]', group = 'DiagnosticInfo' },
+                    info = { pattern = '%f[%w]()INFO()%f[%W]', group = 'DiagnosticInfo' },
+                },
             })
             require('mini.surround').setup({
                 mappings = {
@@ -263,8 +288,8 @@ local plugins = {
                 },
                 -- no padding space
                 custom_surroundings = {
-                    ['('] = { output = { left = '(', right = ')'}},
-                    ['['] = { output = { left = '[', right = ']'}},
+                    ['('] = { output = { left = '(', right = ')' } },
+                    ['['] = { output = { left = '[', right = ']' } },
                 },
             })
         end,
