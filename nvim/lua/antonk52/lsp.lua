@@ -60,7 +60,23 @@ function M.on_attach(_, bufnr)
     keymap('<leader>]', function()
         vim.diagnostic.goto_next({ float = M.diag_float_opts })
     end, 'go to next diagnostic')
-    keymap('<localleader>f', formatLsp, 'lsp format')
+    keymap('<localleader>F', formatLsp, 'lsp format')
+    keymap('<localleader>f', function()
+        vim.lsp.buf.code_action({
+            filter = function(a)
+                return a.kind == 'quickfix' and a.title == 'Fix this prettier/prettier problem'
+            end,
+            apply = true,
+        })
+    end, 'apply prettier fix')
+    keymap('<localleader>ld', function()
+        vim.lsp.buf.code_action({
+            filter = function(a)
+                return a.kind == 'quickfix' and a.command.command == 'eslint.applyDisableLine'
+            end,
+            apply = true,
+        })
+    end, 'apply prettier fix')
 end
 
 M.servers = {
@@ -213,7 +229,7 @@ function M.setup_eslint_d()
             formatStdin = true,
         }
         local function eslint_config_exists()
-            local eslintrc = vim.fn.glob('.eslintrc*', 0, 1)
+            local eslintrc = vim.fn.glob('.eslintrc*', false, true)
 
             if not vim.tbl_isempty(eslintrc) then
                 return true
