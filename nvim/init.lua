@@ -346,30 +346,15 @@ local plugins = {
         config = true,
     },
     {
-        'lukas-reineke/indent-blankline.nvim', -- indent lines marks
-        init = function()
-            -- avoid the first indent & increment dashes furer ones
-            vim.g.indent_blankline_char_list = { '|', '¦' }
-            vim.g.indent_blankline_show_first_indent_level = false
-            vim.g.indent_blankline_show_trailing_blankline_indent = false
-            vim.g.indent_blankline_filetype_exclude = {
-                'help',
-                'startify',
-                'dashboard',
-                'packer',
-                'neogitstatus',
-                'NvimTree',
-                'Trouble',
-            }
-
-            -- refresh blank lines after toggleing folds
-            -- to avoid intent lines overlaying the fold line characters
-            vim.keymap.set('n', 'zr', 'zr:IndentBlanklineRefresh<cr>')
-            vim.keymap.set('n', 'za', 'za:IndentBlanklineRefresh<cr>')
-            vim.keymap.set('n', 'zm', 'zm:IndentBlanklineRefresh<cr>')
-            vim.keymap.set('n', 'zo', 'zo:IndentBlanklineRefresh<cr>')
+        'nvimdev/indentmini.nvim',
+        config = function()
+            require('indentmini').setup({
+                char = "│",
+                exclude = {
+                    "markdown",
+                }
+            })
         end,
-        -- prevent starting before a coloroscheme applied
         event = 'VeryLazy',
     },
     { 'jxnblk/vim-mdx-js', ft = { 'mdx' } },
