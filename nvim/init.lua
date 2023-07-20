@@ -373,26 +373,34 @@ local plugins = {
             })
             vim.api.nvim_create_user_command('ColorLight', function()
                 vim.cmd('colorscheme github_light')
+                local t = require('github-theme.palette.github_light').palette
+                local c = {
+                    black = t.black.base, -- "#24292f"
+                    red = t.red.base, -- "#cf222e"
+                    blue = t.blue.base, -- "#0969da"
+                }
+
                 -- override highlighing groups that dont match personal preferrences
                 -- or differ from github's website theme
                 --
                 -- setup(opts.groups.all) did not override so doing it manually
-                vim.api.nvim_set_hl(0, 'TSPunctSpecial', { fg = '#24292f' })
-                vim.api.nvim_set_hl(0, '@punctuation.delimiter', { fg = '#24292f' })
-                vim.api.nvim_set_hl(0, '@type.builtin', { fg = '#24292f' })
-                vim.api.nvim_set_hl(0, '@variable', { fg = '#24292f' })
-                vim.api.nvim_set_hl(0, '@constant', { fg = '#24292f' })
-                vim.api.nvim_set_hl(0, '@type', { fg = '#24292f' })
-                vim.api.nvim_set_hl(0, '@method', { fg = '#6f42c1' })
-                vim.api.nvim_set_hl(0, '@method.call', { fg = '#6f42c1' })
-                vim.api.nvim_set_hl(0, '@conditional', { fg = '#6f42c1' })
-                vim.api.nvim_set_hl(0, '@property', { fg = '#005cc5' })
-                vim.api.nvim_set_hl(0, '@exception', { fg = '#d73a49' })
-                vim.api.nvim_set_hl(0, '@keyword.operator', { fg = '#d73a49' })
-                vim.api.nvim_set_hl(0, '@text.todo', { fg = '#24292f' })
+                vim.api.nvim_set_hl(0, 'TSPunctSpecial', { fg = c.black })
+                vim.api.nvim_set_hl(0, '@punctuation.delimiter', { fg = c.black })
+                vim.api.nvim_set_hl(0, '@type.builtin', { fg = c.black })
+                vim.api.nvim_set_hl(0, '@variable', { fg = c.black })
+                vim.api.nvim_set_hl(0, '@constant', { fg = c.black })
+                vim.api.nvim_set_hl(0, '@type', { fg = c.black })
+                vim.api.nvim_set_hl(0, '@method', { fg = c.black })
+                vim.api.nvim_set_hl(0, '@method.call', { fg = c.black })
+                vim.api.nvim_set_hl(0, '@conditional', { fg = c.black })
+                vim.api.nvim_set_hl(0, '@property', { fg = c.blue })
+                vim.api.nvim_set_hl(0, '@exception', { fg = c.red })
+                vim.api.nvim_set_hl(0, '@keyword.operator', { fg = c.red })
+                vim.api.nvim_set_hl(0, '@text.todo', { fg = c.black })
                 vim.api.nvim_set_hl(0, '@text.strike', { link = 'Comment' })
-                vim.api.nvim_set_hl(0, 'CursorLine', { bg = '#f3f3f3' })
-                vim.api.nvim_set_hl(0, 'Todo', { bg = '#d73a49' })
+                vim.api.nvim_set_hl(0, 'CursorLine', { bg = t.scale.gray[1] })
+                vim.api.nvim_set_hl(0, 'Todo', { bg = c.red })
+                vim.api.nvim_set_hl(0, 'IndentLine', { fg = t.scale.gray[3] })
             end, {})
         end,
     },
