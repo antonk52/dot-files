@@ -393,6 +393,9 @@ local plugins = {
                 vim.api.nvim_set_hl(0, '@method', { fg = c.black })
                 vim.api.nvim_set_hl(0, '@method.call', { fg = c.black })
                 vim.api.nvim_set_hl(0, '@conditional', { fg = c.black })
+                -- Used for jsx tags too
+                -- see my old PR https://github.com/nvim-treesitter/nvim-treesitter/pull/1556
+                vim.api.nvim_set_hl(0, '@constructor', { fg = c.black })
                 vim.api.nvim_set_hl(0, '@property', { fg = c.blue })
                 vim.api.nvim_set_hl(0, '@exception', { fg = c.red })
                 vim.api.nvim_set_hl(0, '@keyword.operator', { fg = c.red })
