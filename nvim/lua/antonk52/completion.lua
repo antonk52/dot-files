@@ -89,43 +89,60 @@ local snippet_sources = {
 function M.setup()
     register_snippet_source()
 
+    local mapping = {
+        ['<Tab>'] = function(fallback)
+            if vim.env.WORK == nil and require('copilot.suggestion').is_visible() then
+                require('copilot.suggestion').accept()
+            elseif cmp.visible() then
+                cmp.select_next_item()
+            else
+                fallback()
+            end
+        end,
+        ['<S-Tab>'] = function(fallback)
+            if cmp.visible() then
+                cmp.select_prev_item()
+            else
+                fallback()
+            end
+        end,
+        ['<C-y>'] = cmp.mapping.confirm(),
+        ['<C-j>'] = cmp.mapping(function(fallback)
+            if cmp.visible() then
+                cmp.scroll_docs(4)
+            else
+                fallback()
+            end
+        end),
+        ['<C-k>'] = cmp.mapping(function(fallback)
+            if cmp.visible() then
+                cmp.scroll_docs(-4)
+            else
+                fallback()
+            end
+        end),
+    }
+
+    if vim.env.WORK == nil then
+        mapping['<C-w>'] = function()
+            if require('copilot.suggestion').is_visible() then
+                require('copilot.suggestion').accept_word()
+            end
+        end
+        mapping['<C-e>'] = function()
+            if require('copilot.suggestion').is_visible() then
+                require('copilot.suggestion').accept_line()
+            end
+        end
+    end
+
     cmp.setup({
         snippet = {
             expand = function(arg)
                 require('luasnip').lsp_expand(arg.body)
             end,
         },
-        mapping = {
-            ['<Tab>'] = function(fallback)
-                if cmp.visible() then
-                    cmp.select_next_item()
-                else
-                    fallback()
-                end
-            end,
-            ['<S-Tab>'] = function(fallback)
-                if cmp.visible() then
-                    cmp.select_prev_item()
-                else
-                    fallback()
-                end
-            end,
-            ['<C-y>'] = cmp.mapping.confirm(),
-            ['<C-j>'] = cmp.mapping(function(fallback)
-                if cmp.visible() then
-                    cmp.scroll_docs(4)
-                else
-                    fallback()
-                end
-            end),
-            ['<C-k>'] = cmp.mapping(function(fallback)
-                if cmp.visible() then
-                    cmp.scroll_docs(-4)
-                else
-                    fallback()
-                end
-            end),
-        },
+        mapping = mapping,
         formatting = {
             format = function(entry, vim_item)
                 local name_map = {

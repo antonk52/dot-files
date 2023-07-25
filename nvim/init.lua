@@ -38,6 +38,17 @@ local plugins = {
         end,
     },
     {
+        'zbirenbaum/copilot.lua',
+        cond = vim.env.WORK == nil,
+        config = function()
+            require("copilot").setup({
+                suggestion = {
+                    auto_trigger = true
+                }
+            })
+        end,
+    },
+    {
         'antonk52/markdowny.nvim',
         opts = { filetypes = { 'markdown', 'hgcommit', 'gitcommit' } },
         cond = true,
