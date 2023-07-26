@@ -140,6 +140,8 @@ M.servers = {
     },
 
     marksman = {},
+
+    tailwindcss = {},
 }
 
 function M.setup_lua()
