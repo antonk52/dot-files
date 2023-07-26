@@ -39,19 +39,22 @@ local plugins = {
     },
     {
         'zbirenbaum/copilot.lua',
-        cond = vim.env.WORK == nil,
         config = function()
-            require("copilot").setup({
-                suggestion = {
-                    auto_trigger = true
-                }
-            })
+            if vim.env.WORK == nil then
+                require("copilot").setup({
+                    suggestion = {
+                        auto_trigger = true
+                    }
+                })
+            else
+                return print('no copilot at work')
+            end
         end,
+        event = 'VeryLazy',
     },
     {
         'antonk52/markdowny.nvim',
         opts = { filetypes = { 'markdown', 'hgcommit', 'gitcommit' } },
-        cond = true,
     },
     {
         'hrsh7th/nvim-cmp',
