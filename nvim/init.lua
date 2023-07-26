@@ -2,7 +2,7 @@
 
 -- these mappings have to be set before lazy.nvim plugins
 vim.g.mapleader = ' '
-vim.g.maplocalleader = ","
+vim.g.maplocalleader = ','
 
 -- Bootstrap lazy.nvim plugin manager {{{1
 local PLUGINS_LOCATION = vim.fn.expand('~/dot-files/nvim/plugged')

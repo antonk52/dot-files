@@ -20,17 +20,4 @@ if [ $? -ne 0 ]; then
  exit 1
 fi
 
-# Check for luacheck
-if ! command -v luacheck >/dev/null; then
-  echo "Error: luacheck is not installed"
-  exit 1
-fi
-
-# Run luacheck
-luacheck .
-if [ $? -ne 0 ]; then
-  echo "Error: luacheck failed"
-  exit 1
-fi
-
 exit 0

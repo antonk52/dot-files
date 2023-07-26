@@ -8,5 +8,5 @@ format-check:
 	@stylua --check ./nvim ./wezterm
 
 git-hooks:
-	@ln -sf ./.githooks/pre-commit .git/hooks/pre-commit
+	@ln -s ../../.githooks/pre-commit .git/hooks/pre-commit
 	@echo "Git hooks installed."
