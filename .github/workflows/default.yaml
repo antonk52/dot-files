@@ -14,11 +14,18 @@ jobs:
           # CLI arguments
           args: --check ./nvim
 
-  luacheck:
-    name: luacheck
+  selene:
+    name: selene
     runs-on: ubuntu-20.04
     steps:
-      - uses: actions/checkout@v3
-      - uses: nebularg/actions-luacheck@v1
+      - name: Setup Rust
+        uses: actions-rs/toolchain@v1
         with:
-          files: wezterm nvim
+          toolchain: stable
+          override: true
+
+      - name: Install Selene linter
+        run: cargo install selene
+
+      - name: Run lint
+        run: make lint
