@@ -41,10 +41,10 @@ local plugins = {
         'zbirenbaum/copilot.lua',
         config = function()
             if vim.env.WORK == nil then
-                require("copilot").setup({
+                require('copilot').setup({
                     suggestion = {
-                        auto_trigger = true
-                    }
+                        auto_trigger = true,
+                    },
                 })
             else
                 return print('no copilot at work')
@@ -363,10 +363,10 @@ local plugins = {
         'nvimdev/indentmini.nvim',
         config = function()
             require('indentmini').setup({
-                char = "│",
+                char = '│',
                 exclude = {
-                    "markdown",
-                }
+                    'markdown',
+                },
             })
         end,
         event = 'VeryLazy',

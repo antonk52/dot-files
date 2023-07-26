@@ -15,11 +15,8 @@ function M.reroot()
         vim.endswith(abs_path_to_current_buffer, root_to_current_buffer_path)
         and #root_to_current_buffer_path < #abs_path_to_current_buffer
     then
-        current_session_root_path = string.sub(
-            #root_to_current_buffer_path,
-            1,
-            #root_to_current_buffer_path - #abs_path_to_current_buffer
-        )
+        current_session_root_path =
+            string.sub(#root_to_current_buffer_path, 1, #root_to_current_buffer_path - #abs_path_to_current_buffer)
     end
 
     local path_items = vim.split(current_session_root_path, '/')

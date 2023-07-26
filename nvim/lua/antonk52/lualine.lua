@@ -55,9 +55,9 @@ function LLN.diagnostics()
     }
     local color = {
         error = 'DiagnosticError',
-        warn  = 'DiagnosticWarn',
-        info  = 'DiagnosticInfo',
-        hint  = 'DiagnosticHint',
+        warn = 'DiagnosticWarn',
+        info = 'DiagnosticInfo',
+        hint = 'DiagnosticHint',
     }
 
     for _, v in ipairs(all_diagnostics) do
@@ -78,9 +78,9 @@ function LLN.diagnostics()
     local items = {}
 
     -- always maintain this order
-    for _, k in pairs({'error', 'warn', 'info', 'hint'}) do
+    for _, k in pairs({ 'error', 'warn', 'info', 'hint' }) do
         if diagnostics[k] > 0 then
-            table.insert(items, '%#'..color[k]..'#'..diagnostics[k]..k:sub(1, 1))
+            table.insert(items, '%#' .. color[k] .. '#' .. diagnostics[k] .. k:sub(1, 1))
         end
     end
 

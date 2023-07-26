@@ -1,15 +1,15 @@
 local wezterm = require('wezterm')
 
 return {
-    font = wezterm.font('Fira Code', {weight = 'Regular'}),
+    font = wezterm.font('Fira Code', { weight = 'Regular' }),
     font_rules = {
         {
             font = wezterm.font_with_fallback({
-                family = 'Fira Code'
+                family = 'Fira Code',
             }),
             -- disable italics
-            italic = false
-        }
+            italic = false,
+        },
     },
 
     font_size = 20.0,
@@ -35,16 +35,16 @@ return {
         bottom = 0,
     },
     keys = {
-      {
-        -- used to toggle comment in nvim, 
-        key = '-',
-        mods = 'CTRL',
-        action = wezterm.action.DisableDefaultAssignment
-      },
-      {
-        key = '+',
-        mods = 'CTRL',
-        action = wezterm.action.DisableDefaultAssignment
-      }
+        {
+            -- used to toggle comment in nvim,
+            key = '-',
+            mods = 'CTRL',
+            action = wezterm.action.DisableDefaultAssignment,
+        },
+        {
+            key = '+',
+            mods = 'CTRL',
+            action = wezterm.action.DisableDefaultAssignment,
+        },
     },
 }
