@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 # Check for stylus
 if ! command -v stylua >/dev/null; then
@@ -6,16 +6,23 @@ if ! command -v stylua >/dev/null; then
   exit 1
 fi
 
+echo "Running lint check..."
+make lint
+if [ $? -ne 0 ]; then
+ echo "Lint check failed, aborting commit."
+ exit 1
+fi
+
+echo "Running format check..."
+make format-check
+if [ $? -ne 0 ]; then
+ echo "Format check failed, aborting commit."
+ exit 1
+fi
+
 # Check for luacheck
 if ! command -v luacheck >/dev/null; then
   echo "Error: luacheck is not installed"
-  exit 1
-fi
-
-# Run stylua
-stylua --check .
-if [ $? -ne 0 ]; then
-  echo "Error: stylua failed"
   exit 1
 fi
 

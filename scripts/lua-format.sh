@@ -1,1 +1,0 @@
-stylua ./nvim ./wezterm
