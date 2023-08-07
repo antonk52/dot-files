@@ -50,3 +50,5 @@
     defaultBranch = main
 [merge]
     conflictStyle = diff3
+[include]
+    path = ~/.config/git/private/config
