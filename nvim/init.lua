@@ -352,6 +352,8 @@ local plugins = {
         end,
         name = 'colorizer',
         opt = {
+            '*',
+            '!lazy', -- no highlight in lazy buffers
             user_default_options = {
                 css = true,
                 mode = 'background',
