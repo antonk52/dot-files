@@ -112,12 +112,8 @@ function notes()
   $EDITOR "$FILE_PATH" -c "cd $NOTES_PATH" -c "NotesMode"
 }
 
-function colors()
-{
-    theme_name=$(ls "$BASE16_SHELL"/scripts | sed 's/\.sh$//g' | sed 's/base16-//g' | fzf)
-
-    [ "$theme_name" ] && eval "base16_$theme_name" || echo ''
-}
+alias colorlight="~/dot-files/scripts/base16-github.sh"
+alias colordark="~/dot-files/scripts/base16-tomorrow-night.sh"
 
 function cdf()
 {
