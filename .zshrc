@@ -21,10 +21,12 @@ export CARGO_HOME="$XDG_DATA_HOME"/cargo
 # disable autoupdates when running other brew commands
 export HOMEBREW_NO_AUTO_UPDATE="1"
 
-DOT_FILES="$HOME"/dot-files
+export DOT_FILES="$HOME"/dot-files
 
-# use base16 colors
-source "$DOT_FILES/base16-shell/base16-shell.plugin.zsh"
+# pick up base16 colortheme
+if [ -f ~/.base16_theme ]; then
+    . ~/.base16_theme
+fi
 
 # global node modules
 export PATH="$HOME"/.npm-global/bin:$PATH
