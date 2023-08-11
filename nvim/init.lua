@@ -155,7 +155,6 @@ local plugins = {
         cond = vim.env.TREESITTER ~= '0',
         dependencies = {
             'nvim-treesitter/nvim-treesitter-textobjects',
-            'nvim-treesitter/playground',
             'nvim-treesitter/nvim-treesitter-context',
             'JoosepAlviste/nvim-ts-context-commentstring',
         },
@@ -198,10 +197,6 @@ local plugins = {
                         },
                         include_surrounding_whitespace = true,
                     },
-                },
-                playground = {
-                    enable = true,
-                    disable = {},
                 },
                 context_commentstring = {
                     enable = true,
