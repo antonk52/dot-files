@@ -352,6 +352,7 @@ local plugins = {
             user_default_options = {
                 css = true,
                 mode = 'background',
+                tailwind = true,
             },
         },
         config = true,
