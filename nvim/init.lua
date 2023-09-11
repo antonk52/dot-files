@@ -158,10 +158,7 @@ local plugins = {
             'JoosepAlviste/nvim-ts-context-commentstring',
         },
         build = function()
-            -- for some reason inlining this string in vim.cmd breaks treesitter
-            local cmd = 'TSUpdate'
-            -- We recommend updating the parsers on update
-            vim.cmd(cmd)
+            vim.cmd('TSUpdate')
 
             local ak_treesitter = require('antonk52.treesitter')
             ak_treesitter.force_reinstall_parsers(ak_treesitter.used_parsers, false)
