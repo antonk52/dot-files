@@ -219,46 +219,55 @@ local plugins = {
     {
         -- TODO: replace with 'Bekaboo/dropbar.nvim',
         -- after updating to nvim 0.10
-        "utilyre/barbecue.nvim",
-        name = "barbecue",
-        version = "*",
+        'utilyre/barbecue.nvim',
+        name = 'barbecue',
+        version = '*',
         dependencies = {
-            "SmiteshP/nvim-navic",
+            'SmiteshP/nvim-navic',
         },
-        opts = {
-            symbols = {
-                separator = "/",
-            },
-            -- instead of icons
-            kinds = {
-                File = "F",
-                Module = "M",
-                Namespace = "N",
-                Package = "P",
-                Class = "C",
-                Method = "M",
-                Property = "P",
-                Field = "F",
-                Constructor = "C",
-                Enum = "E",
-                Interface = "I",
-                Function = "F",
-                Variable = "V",
-                Constant = "C",
-                String = "S",
-                Number = "N",
-                Boolean = "B",
-                Array = "A",
-                Object = "O",
-                Key = "K",
-                Null = "N",
-                EnumMember = "E",
-                Struct = "S",
-                Event = "E",
-                Operator = "O",
-                TypeParameter = "T",
-            },
-        },
+        config = function()
+            require('barbecue').setup({
+                symbols = {
+                    separator = '/',
+                },
+                -- instead of icons
+                kinds = {
+                    File = 'F',
+                    Module = 'M',
+                    Namespace = 'N',
+                    Package = 'P',
+                    Class = 'C',
+                    Method = 'M',
+                    Property = 'P',
+                    Field = 'F',
+                    Constructor = 'C',
+                    Enum = 'E',
+                    Interface = 'I',
+                    Function = 'F',
+                    Variable = 'V',
+                    Constant = 'C',
+                    String = 'S',
+                    Number = 'N',
+                    Boolean = 'B',
+                    Array = 'A',
+                    Object = 'O',
+                    Key = 'K',
+                    Null = 'N',
+                    EnumMember = 'E',
+                    Struct = 'S',
+                    Event = 'E',
+                    Operator = 'O',
+                    TypeParameter = 'T',
+                },
+            })
+
+            vim.keymap.set('n', '<leader>{', function()
+                require('barbecue.ui').navigate(-2)
+            end, { desc = 'navigate to previous node' })
+            vim.keymap.set('n', '<leader>}', function()
+                require('barbecue.ui').navigate(-1)
+            end, { desc = 'navigate to current node' })
+        end,
     },
     {
         'dinhhuy258/git.nvim',
