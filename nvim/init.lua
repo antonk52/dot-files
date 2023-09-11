@@ -155,7 +155,6 @@ local plugins = {
         cond = vim.env.TREESITTER ~= '0',
         dependencies = {
             'nvim-treesitter/nvim-treesitter-textobjects',
-            'nvim-treesitter/nvim-treesitter-context',
             'JoosepAlviste/nvim-ts-context-commentstring',
         },
         build = function()
@@ -202,17 +201,6 @@ local plugins = {
                     enable = true,
                 },
             })
-            -- TODO: replace with 'Bekaboo/dropbar.nvim',
-            -- after updating to nvim 0.10
-            require('treesitter-context').setup({
-                max_lines = 2,
-                multiline_threshold = 2,
-                mode = 'topline', -- show context for the top line, not currently focused line
-                separator = nil, -- no separator line
-                on_attach = function()
-                    return vim.bo.ft ~= 'markdown'
-                end,
-            })
         end,
     },
     {
@@ -230,6 +218,50 @@ local plugins = {
         config = function()
             require('antonk52.lualine').setup()
         end,
+    },
+    {
+        -- TODO: replace with 'Bekaboo/dropbar.nvim',
+        -- after updating to nvim 0.10
+        "utilyre/barbecue.nvim",
+        name = "barbecue",
+        version = "*",
+        dependencies = {
+            "SmiteshP/nvim-navic",
+        },
+        opts = {
+            symbols = {
+                separator = "/",
+            },
+            -- instead of icons
+            kinds = {
+                File = "F",
+                Module = "M",
+                Namespace = "N",
+                Package = "P",
+                Class = "C",
+                Method = "M",
+                Property = "P",
+                Field = "F",
+                Constructor = "C",
+                Enum = "E",
+                Interface = "I",
+                Function = "F",
+                Variable = "V",
+                Constant = "C",
+                String = "S",
+                Number = "N",
+                Boolean = "B",
+                Array = "A",
+                Object = "O",
+                Key = "K",
+                Null = "N",
+                EnumMember = "E",
+                Struct = "S",
+                Event = "E",
+                Operator = "O",
+                TypeParameter = "T",
+            },
+        },
     },
     {
         'dinhhuy258/git.nvim',
