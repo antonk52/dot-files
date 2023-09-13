@@ -124,6 +124,7 @@ local plugins = {
         },
         event = 'VeryLazy',
     },
+    { 'marilari88/twoslash-queries.nvim' },
     {
         'dmmulroy/tsc.nvim',
         config = function()

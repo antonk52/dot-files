@@ -18,7 +18,8 @@ local function show_line_diagnostics()
     return vim.diagnostic.open_float(nil, M.diag_float_opts)
 end
 
-function M.on_attach(_, bufnr)
+function M.on_attach(client, bufnr)
+    require("twoslash-queries").attach(client, bufnr)
     -- Enable completion triggered by <c-x><c-o>
     vim.api.nvim_buf_set_option(bufnr or 0, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
 
