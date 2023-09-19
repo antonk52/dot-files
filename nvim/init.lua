@@ -87,6 +87,9 @@ local plugins = {
             vim.keymap.set('n', '<leader>sf', '<cmd>lua require("spectre").open_file_search({select_word=true})<CR>', {
                 desc = 'Search on current file',
             })
+            vim.api.nvim_create_user_command('FindAndReplace', function()
+                require('spectre').open()
+            end, { desc = 'Open Spectre' })
         end,
         event = 'VeryLazy',
     },
