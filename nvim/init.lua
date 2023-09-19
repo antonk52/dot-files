@@ -454,7 +454,7 @@ local plugins = {
                 vim.api.nvim_set_hl(0, '@keyword.operator', { fg = c.red })
                 vim.api.nvim_set_hl(0, '@text.todo', { fg = c.black })
                 vim.api.nvim_set_hl(0, '@text.strike', { link = 'Comment' })
-                vim.api.nvim_set_hl(0, 'CursorLine', { bg = t.scale.gray[1] })
+                vim.api.nvim_set_hl(0, 'CursorLine', { bg = t.scale.gray[2] })
                 vim.api.nvim_set_hl(0, 'Todo', { bg = c.red })
                 vim.api.nvim_set_hl(0, 'IndentLine', { fg = t.scale.gray[3] })
             end, {})
