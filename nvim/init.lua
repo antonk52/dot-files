@@ -1,5 +1,3 @@
--- vim: foldmethod=marker foldlevelstart=0 foldlevel=0
-
 -- these mappings have to be set before lazy.nvim plugins
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ','
@@ -765,15 +763,7 @@ local commands = {
     end,
     TSPlayground = vim.treesitter.inspect_tree,
 
-    -- for some reason :help colorcolumn suggest setting it via `set colorcolumn=123`
-    -- that has no effect, but setting it using `let &colorcolumn=123` works
-    SetColorColumn = {
-        function(arg)
-            vim.opt.colorcolumn = arg.args
-        end,
-        { nargs = 1 },
-    },
-    ['ColorDark'] = 'colorscheme lake',
+    ColorDark = 'colorscheme lake',
 
     -- fat fingers
     Wq = ':wq',
