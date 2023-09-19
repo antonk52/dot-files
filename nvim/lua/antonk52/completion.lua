@@ -71,13 +71,7 @@ end
 local snippet_sources = {
     { name = 'snippets_nvim', keyword_length = 1 },
 
-    {
-        name = 'nvim_lsp',
-        entry_filter = function(entry)
-            -- from cmp docs :h cmp-config.sources[n].entry_filter
-            return require('cmp.types').lsp.CompletionItemKind[entry:get_kind()] ~= 'Text'
-        end,
-    },
+    { name = 'nvim_lsp' },
 
     { name = 'nvim_lua' },
 
