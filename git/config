@@ -38,6 +38,7 @@
     cm = commit -m
     amend = commit --amend --no-edit
     reword = commit --amend --only -v --
+    clonesubmodules = submodule update --init --recursive
 [advice]
     statusHints = false
 [includeIf "gitdir:~/Documents/dev/work/"]
