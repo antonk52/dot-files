@@ -742,6 +742,8 @@ vim.keymap.set('n', '<Leader>e', '$')
 vim.keymap.set('v', '<Leader>e', '$h')
 
 vim.keymap.set('n', '<C-t>', '<cmd>tabedit<CR>', { desc = 'open a new tab' })
+vim.keymap.set('n', '<C-s>', '<cmd>w!<CR>', { desc = 'save file' })
+vim.keymap.set('i', '<C-s>', '<C-o>:w!<CR>', { desc = 'save file' })
 
 -- to navigate between buffers
 vim.keymap.set('n', '<Left>', '<cmd>prev<CR>')
