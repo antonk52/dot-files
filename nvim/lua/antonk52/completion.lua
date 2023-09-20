@@ -14,7 +14,7 @@ local function register_snippet_source()
         local bufnr = vim.api.nvim_get_current_buf()
 
         if not self.cache[bufnr] then
-            local snippets = require('luasnip').snippets
+            local snippets = require('luasnip').get_snippets()
             local filetype = vim.bo.filetype
 
             local result = {}
@@ -60,7 +60,7 @@ local function register_snippet_source()
     end
 
     function source.is_available()
-        local snippets = require('luasnip').snippets
+        local snippets = require('luasnip').get_snippets()
 
         return snippets._global ~= nil or snippets[vim.bo.filetype] ~= nil
     end
