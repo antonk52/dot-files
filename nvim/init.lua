@@ -362,7 +362,7 @@ local plugins = {
     'blueyed/vim-diminactive', -- dims inactive splits
     {
         'L3MON4D3/LuaSnip',
-        tag = 'v2.*',
+        tag = 'v2.0.0',
         config = function()
             require('antonk52.snippets').setup()
             vim.api.nvim_del_user_command('LuaSnipUnlinkCurrent')
