@@ -164,12 +164,45 @@ function M.setup()
     vim.keymap.set('n', '<leader>r', builtin.resume)
     vim.keymap.set('n', '<C-p>', M.action_commands)
 
+    -- Repro of Rg command from fzf.vim
     vim.api.nvim_create_user_command('Rg', function(a)
-        builtin.live_grep()
-        -- allow live grep to finish first
-        vim.schedule(function()
-            vim.fn.feedkeys(a.args)
-        end)
+        local pickers = require('telescope.pickers')
+        local finders = require('telescope.finders')
+        local previewers = require('telescope.previewers')
+        local make_entry = require('telescope.make_entry')
+        local conf = require('telescope.config').values
+
+        local opts = {
+            cwd = vim.loop.cwd(),
+            __inverted = false,
+            __matches = false,
+        }
+
+        -- this is the tricky part
+        -- live_grep picker uses `make_entry.gen_from_vimgrep` by default
+        -- while `new_oneshot_job` uses `make_entry.gen_from_string` entry maker
+        opts.entry_maker = make_entry.gen_from_vimgrep(opts)
+
+        local cmd = {
+            'rg',
+            '--color=never',
+            '--no-heading',
+            '--with-filename',
+            '--line-number',
+            '--column',
+            '--smart-case',
+            '--',
+            a.args,
+        }
+
+        pickers
+            .new(opts, {
+                prompt_title = 'RG',
+                finder = finders.new_oneshot_job(cmd, opts),
+                previewer = previewers.vim_buffer_vimgrep.new(opts),
+                sorter = conf.generic_sorter(opts),
+            })
+            :find()
     end, { nargs = 1 })
 end
 
