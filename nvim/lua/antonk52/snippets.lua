@@ -5,6 +5,10 @@ local parse_snippet = luasnip.parser.parse_snippet
 local fmt = require('luasnip.extras.fmt').fmt
 local rep = require('luasnip.extras').rep
 local l = require('luasnip.extras').lambda
+local s = luasnip.snippet
+local t = luasnip.text_node
+local i = luasnip.insert_node
+
 function M.lines(tbl)
     return table.concat(tbl, '\n')
 end
@@ -14,7 +18,17 @@ luasnip.config.set_config({
     updateevents = 'TextChanged,TextChangedI',
 })
 
-local utils = require('antonk52.utils')
+local function is_js_test_file()
+    local file = vim.fn.expand('%')
+    if file == '' then
+        return false
+    end
+
+    local test_file = vim.fn.match(file, '\\(_spec\\|spec\\|Spec\\|-test\\|test\\)\\.\\(js\\|jsx\\|ts\\|tsx\\)$') ~= -1
+    local indirect_test_file = vim.fn.match(file, '\\v/\\(__tests__\\|test\\)/.+\\.(js|jsx|ts|tsx)$') ~= -1
+
+    return test_file or indirect_test_file
+end
 
 local javascript_snippets = {
     parse_snippet('shebang', '#!/usr/bin/env node'),
@@ -92,6 +106,45 @@ local javascript_snippets = {
             '}, [${2:dependencies}]);',
         })
     ),
+
+    -- These snippets are using this format because it is the only way
+    -- you can specify condition and show condition for a snippet
+    s('desc', {
+        t({ "describe('" }),
+        i(1, 'what are we testing'),
+        t({ "', () => {", '' }),
+        i(0, ''),
+        t({ '', '});' }),
+    }, {
+        condition = is_js_test_file,
+        show_condition = is_js_test_file,
+    }),
+    s('it', {
+        t({ "it('" }),
+        i(1, 'what to test'),
+        t({ "', () => {", '    const result = ' }),
+        i(2, 'funcName'),
+        t({ '(' }),
+        i(3, 'args'),
+        t({ ');', '    const expected = ' }),
+        i(4, 'what do we expect?'),
+        t({ ';', '    expect(result).toEqual(expected)', '});' }),
+    }, {
+        condition = is_js_test_file,
+        show_condition = is_js_test_file,
+    }),
+    s('mock', {
+        t({ "jest.mock('" }),
+        i(1, 'file/path/to/mock'),
+        t({ "', () => ({", '    ' }),
+        i(2, 'exportedFunc'),
+        t({ ': jest.fn(' }),
+        i(0, ''),
+        t({ '),', '}));' }),
+    }, {
+        condition = is_js_test_file,
+        show_condition = is_js_test_file,
+    }),
 }
 
 M.default_snippets = {
@@ -262,63 +315,6 @@ M.default_snippets = {
     ['typescriptreact'] = javascript_snippets,
 }
 
-local jest_snippets = utils.shallow_merge(javascript_snippets, {
-    parse_snippet(
-        'desc',
-        M.lines({
-            "describe('${1:what are we testing}', () => {",
-            '    $0',
-            '});',
-        })
-    ),
-    parse_snippet(
-        'it',
-        M.lines({
-            "it('${1:what to test}', () => {",
-            '    const result = ${2:funcName}(${3:args});',
-            "    const expected = ${4:'what do we expect?'};",
-            '',
-            '    expect(result).toEqual(expected);',
-            '});',
-        })
-    ),
-    parse_snippet(
-        'mock',
-        M.lines({
-            "jest.mock('${1:file/path/to/mock}', () => ({",
-            '    ${2:exportedFunc}: jest.fn($0),',
-            '}));',
-        })
-    ),
-})
-
-function M.set_snippets_for_filetype()
-    local file = vim.fn.expand('%')
-    if file == '' then
-        luasnip.snippets = M.default_snippets
-        return nil
-    end
-    local test_file = vim.fn.match(file, '\\(_spec\\|spec\\|Spec\\|-test\\)\\.\\(js\\|jsx\\|ts\\|tsx\\)$') ~= -1
-    local indirect_test_file = vim.fn.match(file, '\\v/__tests__/.+\\.(js|jsx|ts|tsx)$') ~= -1
-
-    if test_file or indirect_test_file then
-        -- instead of setting compound file type manually extends current
-        -- file type snippets to include jest snippets
-        luasnip.snippets = utils.shallow_merge(M.default_snippets, {
-            ['javascript'] = jest_snippets,
-            ['javascript.jsx'] = jest_snippets,
-            ['javascriptreact'] = jest_snippets,
-            ['typescript'] = jest_snippets,
-            ['typescript.tsx'] = jest_snippets,
-            ['typescriptreact'] = jest_snippets,
-        })
-
-        return nil
-    end
-
-    luasnip.snippets = M.default_snippets
-end
-
 function M.expand_or_jump()
     if luasnip.expand_or_jumpable() then
         luasnip.expand_or_jump()
@@ -351,12 +347,10 @@ function M.setup()
         { bang = true }
     )
 
-    luasnip.snippets = M.default_snippets
-
-    vim.api.nvim_create_autocmd('BufEnter', {
-        pattern = '*',
-        callback = M.set_snippets_for_filetype,
-    })
+    -- load initial snippets
+    for ft, snippets in pairs(M.default_snippets) do
+        luasnip.add_snippets(ft, snippets)
+    end
 
     vim.api.nvim_create_user_command('EditSnippets', 'edit ~/.config/nvim/lua/antonk52/snippets.lua', { bang = true })
 end
