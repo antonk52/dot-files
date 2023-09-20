@@ -128,6 +128,11 @@ function M.setup()
                 require('copilot.suggestion').accept_line()
             end
         end
+        mapping['<C-q>'] = function()
+            if require('copilot.suggestion').is_visible() then
+                require('copilot.suggestion').dismiss()
+            end
+        end
     end
 
     cmp.setup({
