@@ -103,9 +103,14 @@ local plugins = {
     'antonk52/amake.nvim',
     {
         'antonk52/npm_scripts.nvim',
-        keys = {
-            { '<leader>N', '<cmd>lua require("antonk52.npm_scripts").run()<CR>', desc = 'Run npm script' },
-        },
+        opts = {},
+        config = function()
+            local run = function()
+                require('antonk52.npm_scripts').run()
+            end
+            vim.keymap.set('n', '<leader>N', run, { desc = 'Run npm script' })
+            vim.api.nvim_create_user_command('NpmScript', run, {})
+        end,
     },
     {
         'folke/trouble.nvim',
