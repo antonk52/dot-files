@@ -107,44 +107,33 @@ local javascript_snippets = {
         })
     ),
 
-    -- These snippets are using this format because it is the only way
-    -- you can specify condition and show condition for a snippet
-    s('desc', {
-        t({ "describe('" }),
-        i(1, 'what are we testing'),
-        t({ "', () => {", '' }),
-        i(0, ''),
-        t({ '', '});' }),
-    }, {
-        condition = is_js_test_file,
-        show_condition = is_js_test_file,
-    }),
-    s('it', {
-        t({ "it('" }),
-        i(1, 'what to test'),
-        t({ "', () => {", '    const result = ' }),
-        i(2, 'funcName'),
-        t({ '(' }),
-        i(3, 'args'),
-        t({ ');', '    const expected = ' }),
-        i(4, 'what do we expect?'),
-        t({ ';', '    expect(result).toEqual(expected)', '});' }),
-    }, {
-        condition = is_js_test_file,
-        show_condition = is_js_test_file,
-    }),
-    s('mock', {
-        t({ "jest.mock('" }),
-        i(1, 'file/path/to/mock'),
-        t({ "', () => ({", '    ' }),
-        i(2, 'exportedFunc'),
-        t({ ': jest.fn(' }),
-        i(0, ''),
-        t({ '),', '}));' }),
-    }, {
-        condition = is_js_test_file,
-        show_condition = is_js_test_file,
-    }),
+    parse_snippet(
+        {trig = 'desc', condition = is_js_test_file, show_condition = is_js_test_file},
+        M.lines({
+            "describe('${1:what are we testing}', () => {",
+            '    $0',
+            '});',
+        })
+    ),
+    parse_snippet(
+        {trig = 'it', condition = is_js_test_file, show_condition = is_js_test_file},
+        M.lines({
+            "it('${1:what to test}', () => {",
+            '    const result = ${2:funcName}(${3:args});',
+            "    const expected = ${4:'what do we expect?'};",
+            '',
+            '    expect(result).toEqual(expected);',
+            '});',
+        })
+    ),
+    parse_snippet(
+        {trig = 'mock', condition = is_js_test_file, show_condition = is_js_test_file},
+        M.lines({
+            "jest.mock('${1:file/path/to/mock}', () => ({",
+            '    ${2:exportedFunc}: jest.fn($0),',
+            '}));',
+        })
+    ),
 }
 
 M.default_snippets = {
