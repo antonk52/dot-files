@@ -238,7 +238,7 @@ local plugins = {
                 symbols = {
                     separator = '/',
                 },
-                exclude_filetypes = { 'netrw', 'toggleterm', 'dirvish', 'hgssl', 'hghistory' },
+                exclude_filetypes = { 'netrw', 'toggleterm', 'dirvish', 'hgssl', 'hghistory', 'hgcommit' },
                 -- instead of icons
                 kinds = {
                     File = 'F',
