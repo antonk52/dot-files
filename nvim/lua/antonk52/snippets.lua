@@ -71,10 +71,10 @@ local javascript_snippets = {
     parse_snippet('import', "import ${0:thing} from '${1:package}';"),
     parse_snippet('imp', "import ${0:thing} from '${1:package}';"),
 
-    luasnip.snippet('useState', {
-        luasnip.text_node('const ['),
-        luasnip.insert_node(1, 'state'),
-        luasnip.text_node(', use'),
+    s('useState', {
+        t('const ['),
+        i(1, 'state'),
+        t(', use'),
         -- capitalize first char
         l(
             l._1:gsub('^.', function(c)
@@ -82,11 +82,11 @@ local javascript_snippets = {
             end),
             1
         ),
-        luasnip.text_node('] = useState<'),
-        luasnip.insert_node(2, 'Type'),
-        luasnip.text_node('>('),
-        luasnip.insert_node(3, 'defaultValue'),
-        luasnip.text_node(');'),
+        t('] = useState<'),
+        i(2, 'Type'),
+        t('>('),
+        i(3, 'defaultValue'),
+        t(');'),
     }),
 
     parse_snippet(
@@ -108,7 +108,7 @@ local javascript_snippets = {
     ),
 
     parse_snippet(
-        {trig = 'desc', condition = is_js_test_file, show_condition = is_js_test_file},
+        { trig = 'desc', condition = is_js_test_file, show_condition = is_js_test_file },
         M.lines({
             "describe('${1:what are we testing}', () => {",
             '    $0',
@@ -116,7 +116,7 @@ local javascript_snippets = {
         })
     ),
     parse_snippet(
-        {trig = 'it', condition = is_js_test_file, show_condition = is_js_test_file},
+        { trig = 'it', condition = is_js_test_file, show_condition = is_js_test_file },
         M.lines({
             "it('${1:what to test}', () => {",
             '    const result = ${2:funcName}(${3:args});',
@@ -127,7 +127,7 @@ local javascript_snippets = {
         })
     ),
     parse_snippet(
-        {trig = 'mock', condition = is_js_test_file, show_condition = is_js_test_file},
+        { trig = 'mock', condition = is_js_test_file, show_condition = is_js_test_file },
         M.lines({
             "jest.mock('${1:file/path/to/mock}', () => ({",
             '    ${2:exportedFunc}: jest.fn($0),',
@@ -139,7 +139,7 @@ local javascript_snippets = {
 M.default_snippets = {
     all = {
         parse_snippet('todo', 'TODO(antonk52): '),
-        luasnip.snippet(
+        s(
             'date',
             luasnip.function_node(function()
                 return os.date()
@@ -157,7 +157,7 @@ M.default_snippets = {
     },
     lua = {
         parse_snippet('l', 'local ${1:name} = ${2:value}'),
-        luasnip.snippet('req', fmt("local {} = require('{}')", { luasnip.insert_node(1, 'package'), rep(1) })),
+        s('req', fmt("local {} = require('{}')", { luasnip.insert_node(1, 'package'), rep(1) })),
         parse_snippet('fun', 'function($1) $0 end'),
         parse_snippet('lfun', 'local function $1($2) $0 end'),
         parse_snippet(
