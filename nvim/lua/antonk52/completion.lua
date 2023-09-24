@@ -4,6 +4,8 @@ local cmp = require('cmp')
 local snippet_sources = {
     { name = 'luasnip', keyword_length = 1 },
 
+    { name = 'emoji', insert = true },
+
     { name = 'nvim_lsp' },
 
     { name = 'nvim_lua' },
@@ -32,6 +34,7 @@ function M.setup()
             end
         end,
         ['<C-y>'] = cmp.mapping.confirm(),
+        ['<CR>'] = cmp.mapping.confirm(),
         ['<C-j>'] = cmp.mapping(function(fallback)
             if cmp.visible() then
                 cmp.scroll_docs(4)
