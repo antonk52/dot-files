@@ -709,7 +709,7 @@
                         ]
                     },
                     {
-                        "description": "CAPS_LOCK to shift+option (Amethyst mod1) or ESCAPE (If Alone)",
+                        "description": "CAPS_LOCK to CTRL or ESCAPE (If Alone)",
                         "manipulators": [
                             {
                                 "from": {
@@ -725,10 +725,7 @@
                                 },
                                 "to": [
                                     {
-                                        "key_code": "left_shift",
-                                        "modifiers": [
-                                            "left_option"
-                                        ]
+                                        "key_code": "left_control"
                                     }
                                 ],
                                 "to_if_alone": [
@@ -767,15 +764,16 @@
                         ]
                     },
                     {
-                        "description": "CAPS_LOCK + [] to navigate workspaces",
+                        "description": "TAB + [] to navigate workspaces",
                         "manipulators": [
                             {
                                 "from": {
                                     "key_code": "open_bracket",
                                     "modifiers": {
                                         "mandatory": [
-                                            "left_shift",
-                                            "left_option"
+                                            "left_control",
+                                            "left_option",
+                                            "left_shift"
                                         ]
                                     }
                                 },
@@ -794,8 +792,9 @@
                                     "key_code": "close_bracket",
                                     "modifiers": {
                                         "mandatory": [
-                                            "left_shift",
-                                            "left_option"
+                                            "left_control",
+                                            "left_option",
+                                            "left_shift"
                                         ]
                                     }
                                 },
@@ -1016,7 +1015,7 @@
                         ]
                     },
                     {
-                        "description": "capslock + [enter|'] - toggles between terminal and browser",
+                        "description": "tab + enter - toggles between terminal and browser",
                         "manipulators": [
                             {
                                 "from": {
@@ -1024,23 +1023,7 @@
                                     "modifiers": {
                                         "mandatory": [
                                             "left_shift",
-                                            "left_option"
-                                        ]
-                                    }
-                                },
-                                "to": [
-                                    {
-                                        "shell_command": "/Users/$(whoami)/dot-files/scripts/toggle-term-browser.sh"
-                                    }
-                                ],
-                                "type": "basic"
-                            },
-                            {
-                                "from": {
-                                    "key_code": "quote",
-                                    "modifiers": {
-                                        "mandatory": [
-                                            "left_shift",
+                                            "left_control",
                                             "left_option"
                                         ]
                                     }
