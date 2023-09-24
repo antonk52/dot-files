@@ -6,7 +6,7 @@
 
 layouts:
   - tall
-  - tall-right
+  - two-pane
   - wide
   - column
   - fullscreen
@@ -77,7 +77,7 @@ select-fullscreen-layout:
 select-column-layout:
   mod: mod2
   key: f
-select-tall-right-layout:
+select-two-pane-layout:
   mod: mod2
   key: g
 relaunch-amethyst:
