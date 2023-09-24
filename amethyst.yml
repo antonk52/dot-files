@@ -28,20 +28,57 @@ smart-window-margins: true
 
 use-canary-build: true
 
+floating: []
+
+cycle-layout:
+  mod: mod2
+  key: space
+
+shrink-main:
+  mod: mod2
+  key: h
+expand-main:
+  mod: mod2
+  key: l
+# Focus next window
+focus-cw:
+  mod: mod2
+  key: j
+# Focus prev window
+focus-ccw:
+  mod: mod2
+  key: k
+# Focus next screen
+focus-screen-cw:
+  mod: mod2
+  key: n
+# Throw focused window on the next screen
+swap-screen-cw:
+  mod: mod2
+  key: m
+# Move current windown on the same screen
+swap-cw:
+  mod: mod2
+  key: r
+togge-float:
+  mod: mod2
+  key: t
+
+# Layouts
 select-tall-layout:
-  mod: mod1
+  mod: mod2
   key: a
 select-wide-layout:
-  mod: mod1
+  mod: mod2
   key: s
 select-fullscreen-layout:
-  mod: mod1
+  mod: mod2
   key: d
 select-column-layout:
-  mod: mod1
+  mod: mod2
   key: f
 select-tall-right-layout:
-  mod: mod1
+  mod: mod2
   key: g
 relaunch-amethyst:
   mod: mod2
