@@ -74,7 +74,7 @@ local javascript_snippets = {
     s('useState', {
         t('const ['),
         i(1, 'state'),
-        t(', use'),
+        t(', set'),
         -- capitalize first char
         l(
             l._1:gsub('^.', function(c)
@@ -82,9 +82,7 @@ local javascript_snippets = {
             end),
             1
         ),
-        t('] = useState<'),
-        i(2, 'Type'),
-        t('>('),
+        t('] = useState('),
         i(3, 'defaultValue'),
         t(');'),
     }),
