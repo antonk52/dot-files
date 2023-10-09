@@ -109,10 +109,8 @@ local DEFAULT = {
 }
 
 return {
-    setup = function()
-        require('lualine').setup(DEFAULT)
-    end,
-    custom_setup = function(fn)
+    setup = function(fn)
+        fn = fn or function(x) return x end
         require('lualine').setup(fn(DEFAULT))
     end,
 }
