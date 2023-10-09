@@ -517,8 +517,8 @@ local lazy_options = {
 -- Dayjob specific {{{2
 if vim.env.WORK_PLUGIN_PATH ~= nil then
     table.insert(plugins, {
-        'this-part-doesnt-matter/' .. vim.env.WORK,
         dir = vim.fn.expand(vim.env.WORK_PLUGIN_PATH),
+        name = vim.env.WORK_PLUGIN_PATH,
     })
 end
 
