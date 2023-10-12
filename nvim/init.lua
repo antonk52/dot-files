@@ -706,7 +706,7 @@ vim.keymap.set('n', '<leader>z', 'za', { desc = 'toggle folds' })
 vim.keymap.set('n', '<leader>n', ':set hlsearch!<cr>', { desc = 'toggle highlight for last search' })
 
 vim.keymap.set('n', '+', '<C-a>', { desc = 'increment number under cursor' })
-vim.keymap.set('n', '-', '<C-x>', { desc = 'decrement number under cursor' })
+vim.keymap.set('n', '_', '<C-x>', { desc = 'decrement number under cursor' })
 
 -- Useful when you have many splits & the status line gets truncated
 vim.keymap.set('n', '<leader>p', ':echo expand("%")<CR>', {
