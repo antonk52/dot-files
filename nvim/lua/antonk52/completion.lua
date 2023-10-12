@@ -15,11 +15,33 @@ local snippet_sources = {
     { name = 'buffer', keyword_length = 3 },
 }
 
+local noop = function() end
+
+---@class AI_completion
+local AI = {
+    is_visible = function()
+        return false
+    end,
+    accept = noop,
+    accept_word = noop,
+    accept_line = noop,
+    dismiss = noop,
+}
+
+---@param opts AI_completion
+function M.update_ai_completion(opts)
+    AI.is_visible = opts.is_visible
+    AI.accept = opts.accept
+    AI.accept_word = opts.accept_word
+    AI.accept_line = opts.accept_line
+    AI.dismiss = opts.dismiss
+end
+
 function M.setup()
     local mapping = {
         ['<Tab>'] = function(fallback)
-            if vim.env.WORK == nil and require('copilot.suggestion').is_visible() then
-                require('copilot.suggestion').accept()
+            if AI.is_visible() then
+                AI.accept()
             elseif cmp.visible() then
                 cmp.select_next_item()
             else
@@ -29,6 +51,27 @@ function M.setup()
         ['<S-Tab>'] = function(fallback)
             if cmp.visible() then
                 cmp.select_prev_item()
+            else
+                fallback()
+            end
+        end,
+        ['<C-d>'] = function(fallback)
+            if AI.is_visible() then
+                AI.dismiss()
+            else
+                fallback()
+            end
+        end,
+        ['<C-e>'] = function(fallback)
+            if AI.is_visible() then
+                AI.accept_word()
+            else
+                fallback()
+            end
+        end,
+        ['<C-r>'] = function(fallback)
+            if AI.is_visible() then
+                AI.accept_line()
             else
                 fallback()
             end
@@ -50,24 +93,6 @@ function M.setup()
             end
         end),
     }
-
-    if vim.env.WORK == nil then
-        mapping['<C-w>'] = function()
-            if require('copilot.suggestion').is_visible() then
-                require('copilot.suggestion').accept_word()
-            end
-        end
-        mapping['<C-e>'] = function()
-            if require('copilot.suggestion').is_visible() then
-                require('copilot.suggestion').accept_line()
-            end
-        end
-        mapping['<C-q>'] = function()
-            if require('copilot.suggestion').is_visible() then
-                require('copilot.suggestion').dismiss()
-            end
-        end
-    end
 
     cmp.setup({
         snippet = {

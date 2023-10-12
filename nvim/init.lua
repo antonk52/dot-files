@@ -44,6 +44,14 @@ local plugins = {
                         auto_trigger = true,
                     },
                 })
+                local c = require('copilot.suggestion')
+                require('antonk52.completion').update_ai_completion({
+                    is_visible = c.is_visible,
+                    accept = c.accept,
+                    accept_word = c.accept_word,
+                    accept_line = c.accept_line,
+                    dismiss = c.dismiss,
+                })
             else
                 return print('no copilot at work')
             end
