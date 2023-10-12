@@ -110,7 +110,9 @@ local DEFAULT = {
 
 return {
     setup = function(fn)
-        fn = fn or function(x) return x end
+        fn = fn or function(x)
+            return x
+        end
         require('lualine').setup(fn(DEFAULT))
     end,
 }
