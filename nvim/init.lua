@@ -413,18 +413,6 @@ local plugins = {
         },
         config = true,
     },
-    {
-        'nvimdev/indentmini.nvim',
-        config = function()
-            require('indentmini').setup({
-                char = '│',
-                exclude = {
-                    'markdown',
-                },
-            })
-        end,
-        event = 'VeryLazy',
-    },
     { 'jxnblk/vim-mdx-js', ft = { 'mdx' } },
     'antonk52/lake.nvim',
     {
@@ -586,7 +574,12 @@ vim.opt.guicursor = 'i-ci-ve:hor24'
 
 -- Show “invisible” characters
 vim.opt.list = true
-vim.opt.listchars = { tab = '▸ ', trail = '∙' }
+local LIST_CHARS = {
+    tab = '▸ ',
+    trail = '∙',
+    leadmultispace = '│   ',
+}
+vim.opt.listchars = LIST_CHARS
 
 vim.opt.background = 'dark'
 vim.cmd('color lake')
@@ -846,6 +839,33 @@ vim.api.nvim_create_autocmd('FileType', {
             -- enable syntax in treesitter syntax files
             vim.bo.filetype = 'scheme'
         end
+    end,
+})
+
+local function update_listchars_for_spaces(space_count)
+    local leadmultispace = space_count == 2 and '│ ' or '│   '
+    vim.opt.listchars = vim.tbl_extend('force', LIST_CHARS, { leadmultispace = leadmultispace })
+end
+
+vim.api.nvim_create_autocmd('BufReadPost', {
+    pattern = { '*' },
+    callback = function()
+        local lines = vim.api.nvim_buf_get_lines(0, 0, 100, false)
+
+        -- check if there are indented lines
+        -- and set listchars accordingly
+        for lnum, line in ipairs(lines) do
+            if line:find('^%s') ~= nil then
+                local indent_level = vim.fn.indent(lnum)
+                if indent_level == 2 then
+                    return update_listchars_for_spaces(2)
+                elseif indent_level == 4 then
+                    return update_listchars_for_spaces(4)
+                end
+            end
+        end
+
+        update_listchars_for_spaces(2)
     end,
 })
 
