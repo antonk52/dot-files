@@ -175,18 +175,14 @@ local plugins = {
             'JoosepAlviste/nvim-ts-context-commentstring',
         },
         build = function()
+            -- only updates parsers that need an update
             vim.cmd('TSUpdate')
-
-            local ak_treesitter = require('antonk52.treesitter')
-            ak_treesitter.force_reinstall_parsers(ak_treesitter.used_parsers, false)
         end,
         config = function()
             -- if you get "wrong architecture error
             -- open nvim in macos native terminal app and run `:TSInstall`
             require('nvim-treesitter.configs').setup({
-                -- keep this list empty to avoid downloading languages on startup
-                -- to install use `antonk52.treesitter.force_reinstall_parsers`
-                ensure_installed = {},
+                ensure_installed = require('antonk52.treesitter').used_parsers,
                 highlight = { enable = true },
                 indent = { enable = true },
                 textobjects = {
@@ -215,6 +211,10 @@ local plugins = {
                     enable = true,
                 },
             })
+
+            vim.api.nvim_create_user_command('TSForseReinstallParses', function()
+                require('antonk52.treesitter').force_reinstall_parsers()
+            end, { desc = 'Force reinstall parsers' })
         end,
     },
     {
