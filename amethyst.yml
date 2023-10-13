@@ -60,9 +60,12 @@ swap-screen-cw:
 swap-cw:
   mod: mod2
   key: r
-togge-float:
+toggle-float:
   mod: mod2
   key: t
+toggle-tiling:
+  mod: mod2
+  key: x
 
 # Layouts
 select-tall-layout:
