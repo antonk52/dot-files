@@ -853,11 +853,18 @@ vim.api.nvim_create_autocmd('BufReadPost', {
     pattern = { '*' },
     callback = function()
         local lines = vim.api.nvim_buf_get_lines(0, 0, 100, false)
+        local tab = '\t'
 
         -- check if there are indented lines
         -- and set listchars accordingly
         for lnum, line in ipairs(lines) do
             if line:find('^%s') ~= nil then
+                local first_char = line:sub(1, 1)
+                if first_char == tab then
+                    -- do not use spaces in this buffer
+                    vim.bo.expandtab = false
+                    return
+                end
                 local indent_level = vim.fn.indent(lnum)
                 if indent_level == 2 then
                     return update_listchars_for_spaces(2)
