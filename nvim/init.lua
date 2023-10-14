@@ -574,12 +574,11 @@ vim.opt.guicursor = 'i-ci-ve:hor24'
 
 -- Show “invisible” characters
 vim.opt.list = true
-local LIST_CHARS = {
+vim.opt.listchars = {
     tab = '▸ ',
     trail = '∙',
     leadmultispace = '│   ',
 }
-vim.opt.listchars = LIST_CHARS
 
 vim.opt.background = 'dark'
 vim.cmd('color lake')
@@ -843,8 +842,9 @@ vim.api.nvim_create_autocmd('FileType', {
 })
 
 local function update_listchars_for_spaces(space_count)
-    local leadmultispace = space_count == 2 and '│ ' or '│   '
-    vim.opt.listchars = vim.tbl_extend('force', LIST_CHARS, { leadmultispace = leadmultispace })
+    -- use opt_local explicitly to prevent over windows
+    -- from overriding indent chars in the current window
+    vim.opt_local.listchars:append({ leadmultispace = space_count == 2 and '│ ' or '│   ' })
     vim.bo.tabstop = space_count
     vim.bo.shiftwidth = space_count
 end
