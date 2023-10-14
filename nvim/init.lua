@@ -845,6 +845,8 @@ vim.api.nvim_create_autocmd('FileType', {
 local function update_listchars_for_spaces(space_count)
     local leadmultispace = space_count == 2 and '│ ' or '│   '
     vim.opt.listchars = vim.tbl_extend('force', LIST_CHARS, { leadmultispace = leadmultispace })
+    vim.bo.tabstop = space_count
+    vim.bo.shiftwidth = space_count
 end
 
 vim.api.nvim_create_autocmd('BufReadPost', {
