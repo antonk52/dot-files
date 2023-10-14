@@ -288,6 +288,27 @@ local plugins = {
         end,
     },
     {
+        'nvimdev/indentmini.nvim',
+        config = function()
+            require('indentmini').setup({
+                char = '│',
+                exclude = {
+                    'markdown',
+                },
+            })
+        end,
+    },
+    {
+        -- only used to update expandtab/shiftwidth/tabstop
+        'antonk52/denty.nvim',
+        config = function()
+            require('denty').setup({
+                -- delegated to indentmini.nvim
+                enable_indent_char = false
+            })
+        end,
+    },
+    {
         'dinhhuy258/git.nvim',
         config = function()
             require('git').setup({
@@ -838,43 +859,6 @@ vim.api.nvim_create_autocmd('FileType', {
             -- enable syntax in treesitter syntax files
             vim.bo.filetype = 'scheme'
         end
-    end,
-})
-
-local function update_listchars_for_spaces(space_count)
-    -- use opt_local explicitly to prevent over windows
-    -- from overriding indent chars in the current window
-    vim.opt_local.listchars:append({ leadmultispace = space_count == 2 and '│ ' or '│   ' })
-    vim.bo.tabstop = space_count
-    vim.bo.shiftwidth = space_count
-end
-
-vim.api.nvim_create_autocmd('BufReadPost', {
-    pattern = { '*' },
-    callback = function()
-        local lines = vim.api.nvim_buf_get_lines(0, 0, 100, false)
-        local tab = '\t'
-
-        -- check if there are indented lines
-        -- and set listchars accordingly
-        for lnum, line in ipairs(lines) do
-            local first_char = line:sub(1, 1)
-            if first_char == ' ' or first_char == tab then
-                if first_char == tab then
-                    -- do not use spaces in this buffer
-                    vim.bo.expandtab = false
-                    return
-                end
-                local indent_level = vim.fn.indent(lnum)
-                if indent_level == 4 then
-                    return update_listchars_for_spaces(4)
-                elseif indent_level == 2 then
-                    return update_listchars_for_spaces(2)
-                end
-            end
-        end
-
-        update_listchars_for_spaces(2)
     end,
 })
 
