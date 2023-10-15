@@ -389,7 +389,6 @@ local plugins = {
             vim.g.dirvish_mode = ':sort ,^\\v(.*[\\/])|\\ze,'
         end,
     },
-    'antonk52/dirvish-fs.vim',
     'blueyed/vim-diminactive', -- dims inactive splits
     {
         'L3MON4D3/LuaSnip',

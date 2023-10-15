@@ -12,7 +12,6 @@
   "colorizer": { "branch": "master", "commit": "dde3084106a70b9a79d48f426f6d6fec6fd203f7" },
   "copilot.lua": { "branch": "master", "commit": "1a8032ae496916ccc7a7a52ee79194fbef29f462" },
   "denty.nvim": { "branch": "main", "commit": "b9722a37cfadb3be9f00b7ef738f1e9eeb140e07" },
-  "dirvish-fs.vim": { "branch": "master", "commit": "6b498764ffe6d5e985e54ae0485dd4a5c3c864ee" },
   "git.nvim": { "branch": "main", "commit": "741696687486f25f8b73d9e4c76ab2ede9998f39" },
   "github-nvim-theme": { "branch": "main", "commit": "48f95f763e1a98e508260a20e448c3ff2d91213a" },
   "gitignore-grabber.nvim": { "branch": "main", "commit": "365c1a2255f1badf5aa8a963a07f869a81ab6575" },
