@@ -877,28 +877,26 @@ local function stylua(check)
 end
 
 vim.api.nvim_create_autocmd('FileType', {
-    pattern = { 'lua', 'javascript', 'typescript', 'javascriptreact', 'typescriptreact', 'json' },
+    pattern = { 'lua' },
     callback = function()
-        if vim.bo.ft == 'lua' then
-            vim.keymap.set({ 'n', 'v' }, '%', function()
-                require('antonk52.ts_utils').lua_smart_percent()
-            end, { buffer = true, noremap = false })
+        vim.keymap.set({ 'n', 'v' }, '%', function()
+            require('antonk52.ts_utils').lua_smart_percent()
+        end, { buffer = true, noremap = false })
 
-            vim.api.nvim_buf_create_user_command(0, 'Stylua', function()
-                stylua(false)
-            end, {
+        vim.api.nvim_buf_create_user_command(0, 'Stylua', function()
+            stylua(false)
+        end, {
                 desc = 'Format file using stylua',
                 bang = true,
                 nargs = 0,
             })
-            vim.api.nvim_buf_create_user_command(0, 'StyluaCheck', function()
-                stylua(true)
-            end, {
+        vim.api.nvim_buf_create_user_command(0, 'StyluaCheck', function()
+            stylua(true)
+        end, {
                 desc = 'Check if file needs formatting using stylua',
                 bang = true,
                 nargs = 0,
             })
-        end
     end,
     desc = 'enable smart % in files that support it',
 })
