@@ -304,7 +304,7 @@ local plugins = {
         config = function()
             require('denty').setup({
                 -- delegated to indentmini.nvim
-                enable_indent_char = false
+                enable_indent_char = false,
             })
         end,
     },
@@ -859,46 +859,6 @@ vim.api.nvim_create_autocmd('FileType', {
             vim.bo.filetype = 'scheme'
         end
     end,
-})
-
-local function stylua(check)
-    local has_stylua = vim.fn.executable('stylua') == 1
-
-    if not has_stylua then
-        vim.notify('stylua is not available')
-    end
-
-    local cmd = {
-        'stylua',
-        check and '--check' or '',
-        vim.fn.expand('%'),
-    }
-    vim.cmd('!' .. table.concat(cmd, ' '))
-end
-
-vim.api.nvim_create_autocmd('FileType', {
-    pattern = { 'lua' },
-    callback = function()
-        vim.keymap.set({ 'n', 'v' }, '%', function()
-            require('antonk52.ts_utils').lua_smart_percent()
-        end, { buffer = true, noremap = false })
-
-        vim.api.nvim_buf_create_user_command(0, 'Stylua', function()
-            stylua(false)
-        end, {
-                desc = 'Format file using stylua',
-                bang = true,
-                nargs = 0,
-            })
-        vim.api.nvim_buf_create_user_command(0, 'StyluaCheck', function()
-            stylua(true)
-        end, {
-                desc = 'Check if file needs formatting using stylua',
-                bang = true,
-                nargs = 0,
-            })
-    end,
-    desc = 'enable smart % in files that support it',
 })
 
 vim.api.nvim_create_autocmd('FileType', {
