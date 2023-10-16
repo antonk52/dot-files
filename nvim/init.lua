@@ -480,6 +480,7 @@ local plugins = {
                 vim.api.nvim_set_hl(0, 'CursorLine', { bg = t.scale.gray[2] })
                 vim.api.nvim_set_hl(0, 'Todo', { bg = c.red })
                 vim.api.nvim_set_hl(0, 'IndentLine', { fg = t.scale.gray[3] })
+                vim.api.nvim_set_hl(0, 'DiagnosticHint', { fg = t.scale.gray[5] })
             end, {})
         end,
     },
