@@ -64,8 +64,6 @@ fi
 
 if command -v compdef &> /dev/null; then
     source "$DOT_FILES/dependencies/zsh-yarn-completions/zsh-yarn-completions.plugin.zsh"
-else
-    echo "No yarn completion initiated, compdef is not available"
 fi
 
 # misc 1{{{
