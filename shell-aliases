@@ -109,7 +109,7 @@ function notes()
   has_notes_window=$(tmux list-windows | grep notes)
   [ "$has_notes_window" ] || tmux rename-window "notes"
 
-  $EDITOR "$FILE_PATH" -c "cd $NOTES_PATH" -c "NotesMode"
+  eval $EDITOR "$FILE_PATH" -c "cd $NOTES_PATH" -c "NotesMode"
 }
 
 alias colorlight="~/dot-files/scripts/base16-github.sh"
