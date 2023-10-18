@@ -50,7 +50,8 @@ local function remove()
 end
 
 local function add()
-    local new_path = _escape(vim.fn.input('Enter the new node path: ', vim.fn.expand('%'), 'file'))
+    -- no need to escape for fn.mkdir or fn.writefile
+    local new_path = vim.fn.input('Enter the new node path: ', vim.fn.expand('%'), 'file')
     local is_file = vim.fn.match(new_path, '\\/$', '') == -1
 
     if vim.fn.filereadable(new_path) == 1 or vim.fn.isdirectory(new_path) == 1 then
