@@ -33,7 +33,7 @@ local function remove()
     local confirmed = 0
 
     if is_file then
-        print('Are you sure you want to delete it? [y/N]')
+        vim.notify('Are you sure you want to delete it? [y/N]')
         local choice = vim.fn.nr2char(vim.fn.getchar())
         confirmed = choice == 'y'
     else
@@ -44,7 +44,7 @@ local function remove()
     if confirmed then
         vim.fn.system(rm_cmd .. ' ' .. target)
     else
-        print('Remove aborted')
+        vim.notify('Remove aborted', vim.log.levels.WARN)
     end
     vim.cmd('edit')
 end
@@ -55,13 +55,13 @@ local function add()
     local is_file = vim.fn.match(new_path, '\\/$', '') == -1
 
     if vim.fn.filereadable(new_path) == 1 or vim.fn.isdirectory(new_path) == 1 then
-        print('Already exists')
+        vim.notify('Already exists', vim.log.levels.WARN)
     else
         if is_file then
             local result = vim.fn.writefile({ '' }, new_path)
 
             if result == -1 then
-                print('Failed to create a file')
+                vim.notify('Failed to create a file', vim.log.levels.ERROR)
             end
         else
             vim.fn.mkdir(new_path, 'p')
