@@ -32,7 +32,9 @@ local plugins = {
             vim.opt.updatetime = 300
             vim.opt.shortmess = vim.opt.shortmess + 'c'
 
-            require('antonk52.lsp').setup()
+            vim.schedule(function()
+                require('antonk52.lsp').setup()
+            end)
         end,
     },
     {
@@ -193,6 +195,7 @@ local plugins = {
         config = function()
             -- if you get "wrong architecture error
             -- open nvim in macos native terminal app and run `:TSInstall`
+            ---@diagnostic disable-next-line: missing-fields
             require('nvim-treesitter.configs').setup({
                 ensure_installed = require('antonk52.treesitter').used_parsers,
                 highlight = { enable = true },
@@ -236,7 +239,9 @@ local plugins = {
             'nvim-telescope/telescope-ui-select.nvim',
         },
         config = function()
-            vim.defer_fn(require('antonk52.telescope').setup, 50)
+            vim.defer_fn(function()
+                require('antonk52.telescope').setup()
+            end, 50)
         end,
     },
     {
