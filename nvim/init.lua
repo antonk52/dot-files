@@ -298,6 +298,7 @@ local plugins = {
                 require('barbecue.ui').navigate(-1)
             end, { desc = 'navigate to current node' })
         end,
+        event = 'VeryLazy',
     },
     {
         'nvimdev/indentmini.nvim',
