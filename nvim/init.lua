@@ -38,29 +38,6 @@ local plugins = {
         end,
     },
     {
-        'zbirenbaum/copilot.lua',
-        config = function()
-            if vim.env.WORK == nil then
-                require('copilot').setup({
-                    suggestion = {
-                        auto_trigger = true,
-                    },
-                })
-                local c = require('copilot.suggestion')
-                require('antonk52.completion').update_ai_completion({
-                    is_visible = c.is_visible,
-                    accept = c.accept,
-                    accept_word = c.accept_word,
-                    accept_line = c.accept_line,
-                    dismiss = c.dismiss,
-                })
-            else
-                return print('no copilot at work')
-            end
-        end,
-        event = 'VeryLazy',
-    },
-    {
         'antonk52/markdowny.nvim',
         opts = { filetypes = { 'markdown', 'hgcommit', 'gitcommit' } },
     },
@@ -85,9 +62,30 @@ local plugins = {
             'hrsh7th/cmp-nvim-lua',
             'saadparwaiz1/cmp_luasnip',
             'L3MON4D3/LuaSnip',
+            'zbirenbaum/copilot.lua',
         },
         config = function()
-            require('antonk52.completion').setup()
+            local ak_completion = require('antonk52.completion')
+            ak_completion.setup()
+
+            -- ai suggestions
+            if vim.env.WORK == nil then
+                require('copilot').setup({
+                    suggestion = {
+                        auto_trigger = true,
+                    },
+                })
+                local c = require('copilot.suggestion')
+                ak_completion.update_ai_completion({
+                    is_visible = c.is_visible,
+                    accept = c.accept,
+                    accept_word = c.accept_word,
+                    accept_line = c.accept_line,
+                    dismiss = c.dismiss,
+                })
+            else
+                return print('no copilot at work')
+            end
         end,
         event = 'VeryLazy',
     },
