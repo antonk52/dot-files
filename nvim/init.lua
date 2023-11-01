@@ -530,6 +530,7 @@ local lazy_options = {
             keys = '🗝',
             plugin = '🔌',
             runtime = '💻',
+            require = '🌙',
             source = '📄',
             start = '🚀',
             task = '📌',
