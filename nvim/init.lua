@@ -150,7 +150,7 @@ local plugins = {
     {
         'folke/trouble.nvim',
         opts = {
-            icons = false,
+            icons = true,
             fold_open = 'v', -- icon used for open folds
             fold_closed = '>', -- icon used for closed folds
             indent_lines = false, -- add an indent guide below the fold icons
@@ -276,35 +276,6 @@ local plugins = {
                     separator = '/',
                 },
                 exclude_filetypes = { 'netrw', 'toggleterm', 'dirvish', 'hgssl', 'hghistory', 'hgcommit' },
-                -- instead of icons
-                kinds = {
-                    File = 'F',
-                    Module = 'M',
-                    Namespace = 'N',
-                    Package = 'P',
-                    Class = 'C',
-                    Method = 'M',
-                    Property = 'P',
-                    Field = 'F',
-                    Constructor = 'C',
-                    Enum = 'E',
-                    Interface = 'I',
-                    Function = 'F',
-                    Variable = 'V',
-                    Constant = 'C',
-                    String = 'S',
-                    Number = 'N',
-                    Boolean = 'B',
-                    Array = 'A',
-                    Object = 'O',
-                    Key = 'K',
-                    Null = 'N',
-                    EnumMember = 'E',
-                    Struct = 'S',
-                    Event = 'E',
-                    Operator = 'O',
-                    TypeParameter = 'T',
-                },
             })
 
             vim.keymap.set('n', '<leader>{', function()
@@ -532,23 +503,6 @@ local lazy_options = {
                 'zip',
                 'zipPlugin',
             },
-        },
-    },
-    ui = {
-        icons = {
-            cmd = '⌘',
-            config = '🛠',
-            event = '📅',
-            ft = '📂',
-            init = '⚙',
-            keys = '🗝',
-            plugin = '🔌',
-            runtime = '💻',
-            require = '🌙',
-            source = '📄',
-            start = '🚀',
-            task = '📌',
-            lazy = '💤 ',
         },
     },
 }
