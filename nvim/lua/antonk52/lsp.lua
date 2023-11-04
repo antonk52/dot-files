@@ -18,6 +18,68 @@ local function show_line_diagnostics()
     return vim.diagnostic.open_float(nil, M.diag_float_opts)
 end
 
+local function cross_lsp_definition()
+    local util = require('vim.lsp.util')
+    local req_params = util.make_position_params()
+    local all_clients = vim.lsp.get_active_clients()
+
+    ---@table (Location | Location[] | LocationLink[] | null)
+    local raw_responses = {}
+    -- esentially redoing Promise.all with filtering of empty/nil values
+    local responded = 0
+
+    local function make_cb(client)
+        return function(err, response)
+            if err == nil and response ~= nil then
+                table.insert(raw_responses, { response = response, encoding = client.offset_encoding })
+            end
+
+            responded = responded + 1
+
+            if responded == #all_clients then
+                local flatten_responses = {}
+                local flatten_responses_encoding = {}
+                for _, v in ipairs(raw_responses) do
+                    -- first check for Location | LocationLink because
+                    -- tbl_islist returns `false` for empty lists
+                    if v.response.uri or v.response.targetUri then
+                        table.insert(flatten_responses, v.response)
+                        table.insert(flatten_responses_encoding, v.encoding)
+                    elseif vim.tbl_islist(v.response) then
+                        for _, v2 in ipairs(v.response) do
+                            table.insert(flatten_responses, v2)
+                            table.insert(flatten_responses_encoding, v.encoding)
+                        end
+                    end
+                end
+
+                if #flatten_responses == 0 then
+                    return
+                end
+
+                -- if there is only one response, jump to it
+                if #flatten_responses == 1 and not vim.tbl_islist(flatten_responses[1]) then
+                    return util.jump_to_location(flatten_responses[1], flatten_responses_encoding[1])
+                end
+
+                -- TODO: change to telescope or any other picker with preview
+                local items = util.locations_to_items(flatten_responses, nil)
+
+                vim.fn.setqflist({}, ' ', { title = 'LSP locations', items = items })
+                vim.api.nvim_command('botright copen')
+            end
+        end
+    end
+
+    for _, client in ipairs(all_clients) do
+        if client.supports_method('textDocument/definition') then
+            client.request('textDocument/definition', req_params, make_cb(client))
+        else
+            responded = responded + 1
+        end
+    end
+end
+
 function M.on_attach(client, bufnr)
     require('twoslash-queries').attach(client, bufnr)
     -- Enable completion triggered by <c-x><c-o>
@@ -39,7 +101,7 @@ function M.on_attach(client, bufnr)
     vim.api.nvim_buf_create_user_command(0, 'FormatLsp', formatLsp, {})
 
     keymap('gD', vim.lsp.buf.declaration, 'lsp declaration')
-    keymap('gd', vim.lsp.buf.definition, 'lsp definition')
+    keymap('gd', cross_lsp_definition, 'lsp definition')
     keymap('K', vim.lsp.buf.hover, 'lsp hover')
     keymap('<leader>t', vim.lsp.buf.hover, 'lsp hover')
     keymap('gi', vim.lsp.buf.implementation, 'lsp implementation')
@@ -118,10 +180,6 @@ M.servers = {
     cssls = {},
 
     cssmodules_ls = {
-        on_attach = function(client)
-            -- disabled go-to-definition to avoid confusion with tsserver
-            client.server_capabilities.definitionProvider = false
-        end,
         init_options = {
             camelCase = 'dashes',
         },
