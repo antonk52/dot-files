@@ -12,6 +12,7 @@ M.options = {
         preview = borders,
     },
     width = 0.99,
+    disable_devicons = true,
 }
 
 function M.action_meta_telescope()

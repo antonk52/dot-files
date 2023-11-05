@@ -269,6 +269,7 @@ local plugins = {
         version = '*',
         dependencies = {
             'SmiteshP/nvim-navic',
+            'nvim-tree/nvim-web-devicons',
         },
         config = function()
             require('barbecue').setup({
@@ -473,6 +474,7 @@ local plugins = {
                 vim.api.nvim_set_hl(0, 'Todo', { bg = c.red })
                 vim.api.nvim_set_hl(0, 'IndentLine', { fg = t.scale.gray[3] })
                 vim.api.nvim_set_hl(0, 'DiagnosticHint', { fg = t.scale.gray[5] })
+                vim.api.nvim_set_hl(0, 'Directory', { fg = c.blue, bold = true })
             end, {})
         end,
     },
