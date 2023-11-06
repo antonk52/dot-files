@@ -91,7 +91,7 @@ alias cal='cal -m &> /dev/null && cal -m || cal'
 alias bang='notify -t "Well hello there" -m "Your time has come" -i "https://thenib.imgix.net/usq/1d97429f-4a64-4d52-bfdb-c36172c05228/this-is-not-fine-001-dae9d5.png" >/dev/null 2>&1'
 alias imgcat='~/dot-files/scripts/imgcat'
 
-NOTES_PATH="$HOME"/Documents/notes
+export NOTES_PATH="$HOME"/Documents/notes
 alias tasks='"$EDITOR" "$NOTES_PATH"/tasks.md'
 function notes()
 {
@@ -109,7 +109,7 @@ function notes()
   has_notes_window=$(tmux list-windows | grep notes)
   [ "$has_notes_window" ] || tmux rename-window "notes"
 
-  eval $EDITOR "$FILE_PATH" -c "cd $NOTES_PATH" -c "NotesMode"
+  eval NOTES_PATH=$NOTES_PATH $EDITOR "$FILE_PATH" -c "cd $NOTES_PATH" -c "NotesMode"
 }
 
 alias colorlight="~/dot-files/scripts/base16-github.sh"

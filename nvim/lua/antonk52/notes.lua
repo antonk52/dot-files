@@ -38,6 +38,7 @@ function M.goto_today()
 end
 
 function M.setup()
+    vim.cmd('cd ' .. vim.fn.expand(vim.env.NOTES_PATH))
     M.source_rus_keymap()
 
     vim.keymap.set('n', '<localleader>s', '<cmd>Rg tags.*' .. vim.fn.expand('<cword>') .. '<cr>')
