@@ -11,7 +11,11 @@ M.options = {
         prompt = { '─', '│', '─', '│', '├', '┤', '┘', '└' },
         preview = borders,
     },
-    width = 0.99,
+    layout_config = {
+        horizontal = {
+            width = 0.99,
+        },
+    },
     disable_devicons = true,
 }
 
