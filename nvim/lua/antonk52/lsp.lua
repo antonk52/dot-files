@@ -134,14 +134,6 @@ function M.on_attach(client, bufnr)
             apply = true,
         })
     end, 'apply prettier fix')
-    keymap('<localleader>ld', function()
-        vim.lsp.buf.code_action({
-            filter = function(a)
-                return a.kind == 'quickfix' and a.command.command == 'eslint.applyDisableLine'
-            end,
-            apply = true,
-        })
-    end, 'apply prettier fix')
 end
 
 M.servers = {
