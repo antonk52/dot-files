@@ -38,6 +38,7 @@ function M.update_ai_completion(opts)
 end
 
 function M.setup()
+    local luasnip = require('luasnip')
     local mapping = {
         ['<Tab>'] = function(fallback)
             if AI.is_visible() then
@@ -51,6 +52,20 @@ function M.setup()
         ['<S-Tab>'] = function(fallback)
             if cmp.visible() then
                 cmp.select_prev_item()
+            else
+                fallback()
+            end
+        end,
+        ['<Up>'] = function(fallback)
+            if cmp.visible() then
+                cmp.select_prev_item()
+            else
+                fallback()
+            end
+        end,
+        ['<Down>'] = function(fallback)
+            if cmp.visible() then
+                cmp.select_next_item()
             else
                 fallback()
             end
@@ -78,13 +93,31 @@ function M.setup()
         end,
         ['<C-y>'] = cmp.mapping.confirm(),
         ['<CR>'] = cmp.mapping.confirm(),
-        ['<C-j>'] = cmp.mapping(function(fallback)
-            if cmp.visible() then
-                cmp.scroll_docs(4)
+        -- U for Undo
+        ['<C-u>'] = function(fallback)
+            if luasnip.jumpable(-1) then
+                luasnip.jump(-1)
             else
                 fallback()
             end
-        end),
+        end,
+        -- O for Open
+        ['<C-o>'] = function(fallback)
+            if luasnip.expand_or_jumpable() then
+                luasnip.expand_or_jump()
+            elseif cmp.visible() then
+                cmp.confirm()
+            else
+                fallback()
+            end
+        end,
+        ['<C-p>'] = function(fallback)
+            if luasnip.choice_active() then
+                luasnip.change_choice(1)
+            else
+                fallback()
+            end
+        end,
         ['<C-k>'] = cmp.mapping(function(fallback)
             if cmp.visible() then
                 cmp.scroll_docs(-4)
@@ -97,7 +130,7 @@ function M.setup()
     cmp.setup({
         snippet = {
             expand = function(arg)
-                require('luasnip').lsp_expand(arg.body)
+                luasnip.lsp_expand(arg.body)
             end,
         },
         mapping = mapping,

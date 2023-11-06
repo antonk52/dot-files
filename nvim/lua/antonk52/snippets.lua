@@ -321,13 +321,6 @@ function M.toggle_choice()
 end
 
 function M.setup()
-    -- `u` - Undo
-    vim.keymap.set({ 'i', 's' }, '<C-u>', M.jump_back)
-    -- `o` - Open
-    vim.keymap.set({ 'i', 's' }, '<C-o>', M.expand_or_jump)
-    -- toggle choices
-    vim.keymap.set({ 'i', 's' }, '<C-p>', M.toggle_choice)
-
     vim.api.nvim_create_user_command(
         'SnippetsSource',
         'source ~/.config/nvim/lua/antonk52/snippets.lua | lua require("antonk52.snippets").setup()',
