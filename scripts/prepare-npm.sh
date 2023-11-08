@@ -11,10 +11,10 @@ fi
 # newly created packages should be MIT licensed
 npm config set init.license MIT
 
-npm config set init.version 0.1.0
-npm config set init.author.email $(git config --get user.email)
-npm config set init.author.name $(git config --get user.name)
-npm config set init.author.url "https://github.com/antonk52"
+npm config set --init-version 0.1.0
+npm config set --init-author-email $(git config --get user.email)
+npm config set --init-author-name $(git config --get user.name)
+npm config set --init-author-url "https://github.com/antonk52"
 
 # install global node dependencies
 
