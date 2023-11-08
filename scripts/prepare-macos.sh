@@ -54,7 +54,7 @@ function setup_dock() {
     defaults write com.apple.dock autohide -int 1 \
         && defaults write com.apple.dock magnification -int 0 \
         && defaults write com.apple.dock launchanim -int 0 \
-        && defaults write com.apple.dock orientation = 'left' \
+        && defaults write com.apple.dock orientation -string 'left' \
         && defaults write com.apple.dock tilesize -int 52 \
         && defaults write com.apple.dock show-recents -int 0 \
         && defaults write com.apple.dock wvous-br-corner -int 1 \
@@ -65,7 +65,7 @@ function setup_dock() {
 
 # menu
 function setup_menu_clock() {
-    defaults write com.apple.menuextra.clock DateFormat = "HH:mm" \
+    defaults write com.apple.menuextra.clock DateFormat -string "HH:mm" \
         && defaults write com.apple.menuextra.clock FlashDateSeparators -int 0 \
         && defaults write com.apple.menuextra.clock Show24Hour -int 1 \
         && defaults write com.apple.menuextra.clock ShowDayOfMonth -int 0 \
