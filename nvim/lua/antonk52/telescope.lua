@@ -177,11 +177,11 @@ function M.setup()
         local make_entry = require('telescope.make_entry')
         local conf = require('telescope.config').values
 
-        local opts = {
+        local opts = vim.tbl_extend('keep', {
             cwd = vim.loop.cwd(),
             __inverted = false,
             __matches = false,
-        }
+        }, M.options)
 
         -- this is the tricky part
         -- live_grep picker uses `make_entry.gen_from_vimgrep` by default
