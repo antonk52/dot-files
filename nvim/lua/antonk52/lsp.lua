@@ -3,27 +3,12 @@ local lspconfig_util = require('lspconfig.util')
 
 local M = {}
 
-M.diag_float_opts = {
-    close_events = {
-        'CursorMoved',
-        'InsertEnter',
-        'FocusLost',
-    },
-    source = true,
-    header = 'Line diagnostics:',
-    prefix = ' ',
-    scope = 'line',
-}
-local function show_line_diagnostics()
-    return vim.diagnostic.open_float(nil, M.diag_float_opts)
-end
-
 local function cross_lsp_definition()
     local util = require('vim.lsp.util')
     local req_params = util.make_position_params()
     local all_clients = vim.lsp.get_active_clients()
 
-    ---@table (Location | Location[] | LocationLink[] | null)
+    ---@table (Location | Location[] | LocationLink[] | nil)
     local raw_responses = {}
     -- esentially redoing Promise.all with filtering of empty/nil values
     local responded = 0
@@ -116,13 +101,9 @@ function M.on_attach(client, bufnr)
     keymap('<leader>R', vim.lsp.buf.rename, 'lsp rename')
     keymap('<leader>ca', vim.lsp.buf.code_action, 'lsp code_action')
     keymap('gr', vim.lsp.buf.references, 'lsp references')
-    keymap('<leader>L', show_line_diagnostics, 'show current line diagnostic')
-    keymap('<leader>[', function()
-        vim.diagnostic.goto_prev({ float = M.diag_float_opts })
-    end, 'go to prev diagnostic')
-    keymap('<leader>]', function()
-        vim.diagnostic.goto_next({ float = M.diag_float_opts })
-    end, 'go to next diagnostic')
+    keymap('<leader>L', vim.diagnostic.open_float, 'show current line diagnostic')
+    keymap('<leader>[', vim.diagnostic.goto_prev, 'go to prev diagnostic')
+    keymap('<leader>]', vim.diagnostic.goto_next, 'go to next diagnostic')
     keymap('<localleader>F', function()
         require('conform').format({ lsp_fallback = false })
     end, 'Conform format')
@@ -370,6 +351,21 @@ function M.lsp_options(options)
 end
 
 function M.setup()
+    -- set global diagnostic settings to avoid passing them
+    -- to every vim.diagnostic method explicitly
+    vim.diagnostic.config({
+        float = {
+            close_events = {
+                'CursorMoved',
+                'InsertEnter',
+                'FocusLost',
+            },
+            source = true,
+            header = 'Line diagnostics:',
+            prefix = ' ',
+            scope = 'line',
+        },
+    })
     -- M.setup_eslint_d()
     M.setup_lua()
     M.setup_column_signs()
