@@ -58,6 +58,9 @@ local function add()
         vim.notify('Already exists', vim.log.levels.WARN)
     else
         if is_file then
+            local dir_path = vim.fs.dirname(new_path)
+            -- prep dir if it does not exist
+            vim.fn.mkdir(dir_path, 'p')
             local result = vim.fn.writefile({ '' }, new_path)
 
             if result == -1 then
