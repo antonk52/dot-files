@@ -51,7 +51,8 @@ local function cross_lsp_definition()
                 local items = util.locations_to_items(flatten_responses, nil)
 
                 vim.fn.setqflist({}, ' ', { title = 'LSP locations', items = items })
-                vim.api.nvim_command('botright copen')
+                -- vim.api.nvim_command('botright copen')
+                vim.api.nvim_command('Telescope quickfix')
             end
         end
     end
