@@ -760,6 +760,13 @@ local commands = {
         require('antonk52.tsc').run_global()
     end,
 
+    TestRun = function()
+        require('antonk52.test_js').run_buffer()
+    end,
+    TestAttach = function()
+        require('antonk52.test_js').attach_to_buffer()
+    end,
+
     -- fat fingers
     Wq = ':wq',
     Ter = ':ter',
