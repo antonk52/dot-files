@@ -166,31 +166,6 @@ local plugins = {
         event = 'VeryLazy',
     },
     { 'marilari88/twoslash-queries.nvim' },
-    {
-        'dmmulroy/tsc.nvim',
-        config = function()
-            local tsc = require('tsc')
-            vim.api.nvim_create_user_command('TSCAll', function()
-                tsc.setup({
-                    flags = {
-                        build = true,
-                    },
-                    bin_path = require('tsc.utils').find_tsc_bin(),
-                })
-                tsc.run()
-            end, { nargs = 0, desc = 'tsc entire project' })
-            vim.api.nvim_create_user_command('TSCLocal', function()
-                tsc.setup({
-                    flags = {
-                        build = false,
-                    },
-                    bin_path = require('tsc.utils').find_tsc_bin(),
-                })
-                tsc.run()
-            end, { nargs = 0, desc = 'tsc local package' })
-        end,
-        cmd = { 'TSCLocal', 'TSCAll' },
-    },
     'antonk52/gitignore-grabber.nvim',
     {
         'nvim-treesitter/nvim-treesitter',
@@ -206,7 +181,6 @@ local plugins = {
         config = function()
             -- if you get "wrong architecture error
             -- open nvim in macos native terminal app and run `:TSInstall`
-            ---@diagnostic disable-next-line: missing-fields
             require('nvim-treesitter.configs').setup({
                 ensure_installed = require('antonk52.treesitter').used_parsers,
                 highlight = { enable = true },
@@ -778,6 +752,13 @@ local commands = {
     TSPlayground = vim.treesitter.inspect_tree,
 
     ColorDark = 'colorscheme lake',
+
+    TSCLocal = function()
+        require('antonk52.tsc').run_local()
+    end,
+    TSCGlobal = function()
+        require('antonk52.tsc').run_global()
+    end,
 
     -- fat fingers
     Wq = ':wq',
