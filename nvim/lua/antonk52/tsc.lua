@@ -6,7 +6,7 @@ local M = {}
 local function lookupTSConfigDir()
     local stop_dir = vim.env.HOME
     local files = { 'tsconfig.json', 'jsconfig.json' }
-    local current_dir = vim.fn.expand('%:h')
+    local current_dir = vim.fn.expand('%:p:h')
     while stop_dir ~= current_dir do
         for _, file in ipairs(files) do
             local filepath = current_dir .. '/' .. file
