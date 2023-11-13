@@ -107,7 +107,7 @@ local function run_jest(bufnr, bin, cwd)
     local tmp_file = vim.fn.tempname()
     job:new({
         command = bin,
-        args = { '--json', '--outputFile='..tmp_file, vim.fn.expand('%:p') },
+        args = { '--json', '--outputFile=' .. tmp_file, vim.fn.expand('%:p') },
         cwd = cwd,
         -- plenary does not call on_stdout when jest outputs single line json in stdout,
         -- instead lets write it to a file and read from it

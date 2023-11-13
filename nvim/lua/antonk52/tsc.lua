@@ -101,7 +101,11 @@ local function callTSC(opts)
                 if return_val == 0 then
                     vim.notify('No errors', vim.log.levels.INFO, { title = 'tsc' })
                 else
-                    vim.notify('Tsc exited with errors. ' .. (vim.loop.now() - start_ms) .. 'ms', vim.log.levels.ERROR, { title = 'tsc' })
+                    vim.notify(
+                        'Tsc exited with errors. ' .. (vim.loop.now() - start_ms) .. 'ms',
+                        vim.log.levels.ERROR,
+                        { title = 'tsc' }
+                    )
                     vim.fn.setqflist({}, ' ', { title = 'TSC Errors', items = errors })
                     require('telescope.builtin').quickfix({})
                 end

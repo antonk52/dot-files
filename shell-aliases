@@ -106,8 +106,10 @@ function notes()
   fi
 
   # If there is no "notes" window, rename the current one
-  has_notes_window=$(tmux list-windows | grep notes)
-  [ "$has_notes_window" ] || tmux rename-window "notes"
+  if [[ -n "$TMUX" ]]; then
+    has_notes_window=$(tmux list-windows | grep notes)
+    [ "$has_notes_window" ] || tmux rename-window "notes"
+  fi
 
   eval NOTES_PATH=$NOTES_PATH $EDITOR "$FILE_PATH" -c "cd $NOTES_PATH" -c "NotesMode"
 }
