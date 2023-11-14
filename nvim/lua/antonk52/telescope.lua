@@ -93,35 +93,65 @@ end
 
 function M.action_smart_vcs_files()
     if vim.fn.isdirectory(vim.fn.getcwd() .. '/.git') == 1 then
-        require('telescope.builtin').git_files(M.options)
-    else
-        M.action_all_project_files()
+        return require('telescope.builtin').git_files(M.options)
     end
-end
 
-function M.action_all_project_files()
     local opts = {
-        find_command = {
-            'fd',
-            '--type',
-            'file',
-            '-E',
-            'node_modules',
-            '-E',
-            'build',
-            '-E',
-            'dist',
-            '-E',
-            'lib',
-            '--ignore-file',
-            '.gitignore',
-        },
-    }
-    for k, v in pairs(M.options) do
-        opts[k] = v
-    end
+        find_command = function()
+            local cwd = vim.loop.cwd() or vim.fn.getcwd()
+            local gitignore_path = cwd .. '/.gitignore'
+            -- we are not in a git repository, but we have .gitignore(mercurial)
+            if vim.fn.filereadable(gitignore_path) == 1 then
+                local ignore_lines = vim.fn.readfile(gitignore_path)
 
-    require('telescope.builtin').find_files(opts)
+                ignore_lines = vim.tbl_filter(function(line)
+                    if vim.startswith(line, '#') then
+                        return false
+                    elseif vim.trim(line) == '' then
+                        return false
+                    else
+                        return true
+                    end
+                end, ignore_lines)
+
+                local find_command = {
+                    'fd',
+                    '--type',
+                    'file',
+                }
+
+                for _, l in ipairs(ignore_lines) do
+                    table.insert(find_command, '-E')
+                    -- these need to be wrapped in "" in shell
+                    -- telescope will do this for you
+                    -- if you do it yourself fd will ignore it
+                    table.insert(find_command, l)
+                end
+
+                table.insert(find_command, '.')
+
+                vim.print('find command', table.concat(find_command, ' '))
+
+                return find_command
+            else
+                return {
+                    'fd',
+                    '--type',
+                    'file',
+                    '-E',
+                    'node_modules',
+                    '-E',
+                    'build',
+                    '-E',
+                    'dist',
+                    '--ignore-file',
+                    '.gitignore',
+                }
+            end
+        end,
+    }
+
+    require('telescope.builtin').find_files(vim.tbl_extend('keep', opts, M.options))
 end
 
 function M.dots()
