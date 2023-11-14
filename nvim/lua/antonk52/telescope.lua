@@ -26,6 +26,42 @@ function M.action_meta_telescope()
     end)
 end
 
+local _is_inside_git_repo = nil
+local function is_inside_git_repo()
+    if _is_inside_git_repo ~= nil then
+        return _is_inside_git_repo
+    else
+        local result = vim.fn.systemlist({ 'git', 'rev-parse', '--is-inside-work-tree' })
+        _is_inside_git_repo = result[1] == 'true'
+        return _is_inside_git_repo
+    end
+end
+---@return string[]
+local function get_nongit_ignore_patterns()
+    local cwd = vim.loop.cwd() or vim.fn.getcwd()
+    local gitignore_path = cwd .. '/.gitignore'
+    -- we are not in a git repository, but we have .gitignore(mercurial)
+    if vim.fn.filereadable(gitignore_path) == 1 then
+        local ignore_lines = vim.fn.readfile(gitignore_path)
+
+        return vim.tbl_filter(function(line)
+            if vim.startswith(line, '#') then
+                return false
+            elseif vim.trim(line) == '' then
+                return false
+            else
+                return true
+            end
+        end, ignore_lines)
+    else
+        return {
+            'node_modules',
+            'build',
+            'dist',
+        }
+    end
+end
+
 -- Just like builtin commands,
 -- but no command definitions in display
 -- for some reason accessing definitions breaks this command on my work machine
@@ -92,62 +128,25 @@ function M.action_buffer_lines()
 end
 
 function M.action_smart_vcs_files()
-    if vim.fn.isdirectory(vim.fn.getcwd() .. '/.git') == 1 then
+    if is_inside_git_repo() then
         return require('telescope.builtin').git_files(M.options)
     end
 
     local opts = {
         find_command = function()
-            local cwd = vim.loop.cwd() or vim.fn.getcwd()
-            local gitignore_path = cwd .. '/.gitignore'
-            -- we are not in a git repository, but we have .gitignore(mercurial)
-            if vim.fn.filereadable(gitignore_path) == 1 then
-                local ignore_lines = vim.fn.readfile(gitignore_path)
-
-                ignore_lines = vim.tbl_filter(function(line)
-                    if vim.startswith(line, '#') then
-                        return false
-                    elseif vim.trim(line) == '' then
-                        return false
-                    else
-                        return true
-                    end
-                end, ignore_lines)
-
-                local find_command = {
-                    'fd',
-                    '--type',
-                    'file',
-                }
-
-                for _, l in ipairs(ignore_lines) do
-                    table.insert(find_command, '-E')
-                    -- these need to be wrapped in "" in shell
-                    -- telescope will do this for you
-                    -- if you do it yourself fd will ignore it
-                    table.insert(find_command, l)
-                end
-
-                table.insert(find_command, '.')
-
-                vim.print('find command', table.concat(find_command, ' '))
-
-                return find_command
-            else
-                return {
-                    'fd',
-                    '--type',
-                    'file',
-                    '-E',
-                    'node_modules',
-                    '-E',
-                    'build',
-                    '-E',
-                    'dist',
-                    '--ignore-file',
-                    '.gitignore',
-                }
+            local ignore_patterns = get_nongit_ignore_patterns()
+            local find_command = {
+                'fd',
+                '--type',
+                'file',
+            }
+            for _, p in ipairs(ignore_patterns) do
+                table.insert(find_command, '-E')
+                table.insert(find_command, p)
             end
+            table.insert(find_command, '.')
+
+            return find_command
         end,
     }
 
@@ -219,22 +218,35 @@ function M.setup()
         -- while `new_oneshot_job` uses `make_entry.gen_from_string` entry maker
         opts.entry_maker = make_entry.gen_from_vimgrep(opts)
 
-        local cmd = {
-            'rg',
-            '--color=never',
-            '--no-heading',
-            '--with-filename',
-            '--line-number',
-            '--column',
-            '--smart-case',
-            '--',
-            a.args,
-        }
+        local command = (function()
+            local cmd = {
+                'rg',
+                '--color=never',
+                '--no-heading',
+                '--with-filename',
+                '--line-number',
+                '--column',
+                '--smart-case',
+            }
+
+            if not is_inside_git_repo() then
+                local ignore_patterns = get_nongit_ignore_patterns()
+                for _, p in ipairs(ignore_patterns) do
+                    table.insert(cmd, '--iglob')
+                    table.insert(cmd, '!' .. p)
+                end
+            end
+
+            table.insert(cmd, '--')
+            table.insert(cmd, a.args)
+
+            return cmd
+        end)()
 
         pickers
             .new(opts, {
                 prompt_title = 'RG',
-                finder = finders.new_oneshot_job(cmd, opts),
+                finder = finders.new_oneshot_job(command, opts),
                 previewer = previewers.vim_buffer_vimgrep.new(opts),
                 sorter = conf.generic_sorter(opts),
             })
