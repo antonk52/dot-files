@@ -3,10 +3,11 @@ local M = {}
 
 local ns = vim.api.nvim_create_namespace('test_js')
 
-local function find_line_with_text_in_buffer(buf, text)
-    local lines = vim.api.nvim_buf_get_lines(buf, 0, -1, false)
+local function find_line_with_text_in_buffer(lines, needle)
+    -- escape special characters in needle
+    needle = needle:gsub('+', '%%+'):gsub('-', '%%-') -- :gsub('*', '%%*'):gsub('/', '%%/'):gsub('%%', '%%%'):gsub('^', '%%^'):gsub('#', '%%#'):gsub('&', '%%&'):gsub('~', '%%~'):gsub('|', '%%|')
     for i, line in ipairs(lines) do
-        if line:find(text) ~= nil then
+        if line:find(needle) ~= nil then
             return i
         end
     end
