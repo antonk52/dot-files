@@ -92,9 +92,11 @@ function M.action_buffer_lines()
 end
 
 function M.action_smart_vcs_files()
-    local method_name = vim.fn.isdirectory(vim.fn.getcwd() .. '/.git') == 1 and 'git_files' or 'find_files'
-
-    require('telescope.builtin')[method_name](M.options)
+    if vim.fn.isdirectory(vim.fn.getcwd() .. '/.git') == 1 then
+        require('telescope.builtin').git_files(M.options)
+    else
+        M.action_all_project_files()
+    end
 end
 
 function M.action_all_project_files()
@@ -109,6 +111,8 @@ function M.action_all_project_files()
             'build',
             '-E',
             'dist',
+            '-E',
+            'lib',
             '--ignore-file',
             '.gitignore',
         },
@@ -153,12 +157,9 @@ function M.setup()
     require('telescope').load_extension('ui-select')
     require('telescope').load_extension('workspaces')
     vim.keymap.set('n', '<leader>f', M.action_smart_vcs_files)
-    vim.keymap.set(
-        'n',
-        '<leader>F',
-        M.action_all_project_files,
-        { desc = 'force show files, explicitly ignoring certain directories' }
-    )
+    vim.keymap.set('n', '<leader>F', function()
+        require('telescope.builtin').find_files(M.options)
+    end, { desc = 'force show files, explicitly ignoring certain directories' })
     vim.keymap.set('n', '<leader>D', M.dots)
     vim.keymap.set('n', '<leader>b', builtin.buffers)
     vim.keymap.set('n', '<leader>T', M.action_meta_telescope)
