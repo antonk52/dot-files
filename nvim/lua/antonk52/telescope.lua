@@ -241,6 +241,7 @@ function M.setup()
             :find()
     end, { nargs = 1 })
     vim.api.nvim_create_user_command('TelescopeLiveGrep', 'Telescope live_grep', {})
+    vim.api.nvim_create_user_command('TelescopeResume', 'Telescope resume', {})
 end
 
 return M
