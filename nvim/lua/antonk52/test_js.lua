@@ -50,6 +50,7 @@ local function mark_parsed_json_output(bufnr, parsed_output)
                     message = assert_result.failureMessages[1],
                     time = assert_result.duration,
                     title = assert_result.title,
+                    location = assert_result.location,
                 }
                 table.insert(parsed_results, parsed_result)
             end
@@ -66,12 +67,21 @@ local function mark_parsed_json_output(bufnr, parsed_output)
 
     local failed_tests = {}
 
+    local lines = nil
     for _, test in ipairs(parsed_results) do
         local icon = status_to_iconf[test.status]
         local text = icon .. ' ' .. (test.message or '')
 
-        local lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
-        local line = find_line_with_text_in_buffer(lines, test.title)
+        local line = (function()
+            if test.location then
+                return test.location.line
+            else
+                lines = lines or vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
+                local line = find_line_with_text_in_buffer(lines, test.title)
+
+                return line
+            end
+        end)()
 
         if line == nil then
             vim.notify('Failed to find line for test: ' .. test.title, vim.log.levels.WARN)
@@ -132,7 +142,7 @@ local function run_jest(bufnr, bin, cwd, env)
     local start = vim.loop.now()
     job:new({
         command = bin,
-        args = { '--json', '--outputFile=' .. tmp_file, vim.fn.expand('%:p') },
+        args = { '--json', '--outputFile=' .. tmp_file, '--testLocationInResults', vim.fn.expand('%:p') },
         cwd = cwd,
         env = env or {},
         -- plenary does not call on_stdout when jest outputs single line json in stdout,
