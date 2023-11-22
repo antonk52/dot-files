@@ -753,12 +753,18 @@ local commands = {
 
     ColorDark = 'colorscheme lake',
 
-    TSCLocal = function()
-        require('antonk52.tsc').run_local()
-    end,
-    TSCGlobal = function()
-        require('antonk52.tsc').run_global()
-    end,
+    TSCLocal = {
+        function()
+            require('antonk52.tsc').run_local()
+        end,
+        { desc = 'Run tsc next the closest package.json/tsconfig/jsconfig to current buffer' },
+    },
+    TSCGlobal = {
+        function()
+            require('antonk52.tsc').run_global()
+        end,
+        { desc = 'Run tsc next the blosest package.json/tsconfig/jsconfig to cwd' },
+    },
 
     TestRun = function()
         require('antonk52.test_js').run_buffer()

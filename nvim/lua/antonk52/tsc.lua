@@ -5,7 +5,7 @@ local M = {}
 -- from buffer to root
 local function lookupTSConfigDir()
     local stop_dir = vim.env.HOME
-    local files = { 'tsconfig.json', 'jsconfig.json' }
+    local files = { 'tsconfig.json', 'jsconfig.json', 'package.json' }
     local current_dir = vim.fn.expand('%:p:h')
     while stop_dir ~= current_dir do
         for _, file in ipairs(files) do
@@ -42,7 +42,7 @@ local function lookdownTSConfigDir()
         i = i - 1
     end
 
-    local files = { 'tsconfig.json', 'jsconfig.json' }
+    local files = { 'tsconfig.json', 'jsconfig.json', 'package.json' }
     i = 1
     current_dir = dirs_from_stop_dir[i]
     while current_dir ~= nil do
@@ -62,15 +62,28 @@ local function callTSC(opts)
     vim.schedule(function()
         vim.notify('Running tsc...', vim.log.levels.INFO, { title = 'tsc' })
     end)
-    opts = vim.tbl_extend('force', { args = {}, cwd = vim.loop.cwd() }, opts or {})
+    local project_cwd = vim.loop.cwd() or vim.fn.getcwd()
+    opts = vim.tbl_extend('force', { args = {}, cwd = project_cwd }, opts or {})
     local errors = {}
+
+    local filename_prefix = string.sub(
+        opts.cwd,
+            -- 2 for the next slash too
+        #project_cwd + 2
+    )
+
+    vim.print({
+        opts_cwd = opts.cwd,
+        project_cwd = project_cwd,
+        filename_prefix = filename_prefix,
+    })
 
     local start_ms = vim.loop.now()
 
     local job = Job:new({
         command = 'npx',
         args = { 'tsc', '--noEmit', '--pretty', 'false' },
-        cwd = opts.cwd or vim.loop.cwd(),
+        cwd = opts.cwd or project_cwd,
         on_stdout = function(_, data)
             local lines = vim.split(data, '\n', true)
             for _, line in ipairs(lines) do
@@ -80,7 +93,8 @@ local function callTSC(opts)
                         line:match('(%g+)%((%d+),(%d+)%): (%a+) (%g+): (.+)')
                     if filename ~= nil then
                         table.insert(errors, {
-                            filename = filename,
+                            filename = filename_prefix == '' and filename
+                                or string.format('%s/%s', filename_prefix, filename),
                             lnum = line_number,
                             col = col,
                             text = message,
