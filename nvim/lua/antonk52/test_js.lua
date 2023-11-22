@@ -77,9 +77,9 @@ local function mark_parsed_json_output(bufnr, parsed_output)
                 return test.location.line
             else
                 lines = lines or vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
-                local line = find_line_with_text_in_buffer(lines, test.title)
+                local res_line = find_line_with_text_in_buffer(lines, test.title)
 
-                return line
+                return res_line
             end
         end)()
 
