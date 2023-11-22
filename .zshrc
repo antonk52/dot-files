@@ -34,7 +34,7 @@ export PATH="$HOME"/.npm-global/bin:$PATH
 export PATH="$HOME"/.cargo/bin:"$HOME"/.local/share/cargo/bin:$PATH
 # pip packages
 export PATH="$HOME"/Library/Python/3.9/bin:$PATH
-export PATH="$HOME"/homebrew/bin:"$HOME"/homebrew/sbin:"$HOME"/homebrew/opt/node@16/bin:$PATH
+export PATH=$PATH:"$HOME"/homebrew/bin:"$HOME"/homebrew/sbin:"$HOME"/homebrew/opt/node@16/bin
 
 # avoid using find if `fd` is installed
 if command -v fd &> /dev/null; then
