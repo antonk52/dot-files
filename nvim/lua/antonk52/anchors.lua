@@ -14,7 +14,8 @@ local ns = api.nvim_create_namespace('antonk52_marks')
 ---@field desc string
 
 local DB = {}
-DB.location = vim.fn.stdpath('data') .. '/anchor-marks.json'
+-- "/Users/antonk52/.config/anchor-marks.json"
+DB.location = vim.env.XDG_CONFIG_HOME .. '/anchor-marks.json'
 ---@param project_marks table<string, Mark>
 function DB.save(project_marks)
     local full_db = DB.load('all')
