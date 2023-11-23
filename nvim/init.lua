@@ -250,6 +250,10 @@ local plugins = {
                     separator = '/',
                 },
                 exclude_filetypes = { 'netrw', 'toggleterm', 'dirvish', 'hgssl', 'hghistory', 'hgcommit' },
+                theme = {
+                    -- make barbecue bar stand out from buffer content
+                    normal = { bg = require('lake').theme.color01 },
+                },
             })
 
             vim.keymap.set('n', '<leader>{', function()
