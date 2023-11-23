@@ -172,7 +172,6 @@ local plugins = {
         cond = vim.env.TREESITTER ~= '0',
         dependencies = {
             'nvim-treesitter/nvim-treesitter-textobjects',
-            'JoosepAlviste/nvim-ts-context-commentstring',
         },
         build = function()
             -- only updates parsers that need an update
@@ -300,6 +299,12 @@ local plugins = {
             })
         end,
         event = 'VeryLazy',
+    },
+    {
+        'JoosepAlviste/nvim-ts-context-commentstring',
+        init = function()
+            vim.g.skip_ts_context_commentstring_module = true
+        end,
     },
     {
         'echasnovski/mini.nvim',
