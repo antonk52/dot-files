@@ -237,21 +237,25 @@ function M.setup()
                 end
             end
 
+            -- signals to rg that no more flags will be provided
             table.insert(cmd, '--')
-            table.insert(cmd, a.args)
+
+            for _, v in ipairs(a.fargs) do
+                table.insert(cmd, v)
+            end
 
             return cmd
         end)()
 
         pickers
             .new(opts, {
-                prompt_title = 'RG',
+                prompt_title = #a.fargs > 1 and string.format('RG in "%s"', a.fargs[2]) or 'RG',
                 finder = finders.new_oneshot_job(command, opts),
                 previewer = previewers.vim_buffer_vimgrep.new(opts),
                 sorter = conf.generic_sorter(opts),
             })
             :find()
-    end, { nargs = 1 })
+    end, { nargs = '+' })
     vim.api.nvim_create_user_command('TelescopeLiveGrep', 'Telescope live_grep', {})
     vim.api.nvim_create_user_command('TelescopeResume', 'Telescope resume', {})
 end
