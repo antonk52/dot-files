@@ -55,6 +55,12 @@ function M.setup()
     end
 
     set_goto_mapping()
+    vim.opt_local.concealcursor = 'n'
+    vim.opt_local.listchars = {
+        leadmultispace = '  ',
+        tab = '▸ ',
+        trail = '∙',
+    }
 
     vim.api.nvim_create_autocmd('FileType', {
         desc = 'set notes specific keymappings',
