@@ -223,9 +223,7 @@ local plugins = {
             'nvim-telescope/telescope-ui-select.nvim',
         },
         config = function()
-            vim.defer_fn(function()
-                require('antonk52.telescope').setup()
-            end, 50)
+            require('antonk52.telescope').setup()
         end,
     },
     {
