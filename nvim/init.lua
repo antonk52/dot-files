@@ -680,6 +680,8 @@ vim.keymap.set('n', '<leader>n', ':set hlsearch!<cr>', { desc = 'toggle highligh
 vim.keymap.set('n', '+', '<C-a>', { desc = 'increment number under cursor' })
 vim.keymap.set('n', '_', '<C-x>', { desc = 'decrement number under cursor' })
 
+vim.keymap.set('n', '<localleader>=', 'gg=G', { desc = 'reindent entire buffer' })
+
 -- Useful when you have many splits & the status line gets truncated
 vim.keymap.set('n', '<leader>p', ':echo expand("%")<CR>', {
     desc = 'print current buffer file path',
