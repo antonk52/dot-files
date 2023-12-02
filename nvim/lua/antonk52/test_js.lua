@@ -151,6 +151,10 @@ local function run_jest(bufnr, bin, cwd, env)
             vim.schedule(function()
                 local finish = vim.loop.now() - start
                 vim.notify('Jest took ' .. finish .. 'ms', vim.log.levels.INFO)
+                if vim.fn.filereadable(tmp_file) == 0 then
+                    vim.notify('Output file is not readable\n'..tmp_file, vim.log.levels.ERROR)
+                    return
+                end
                 ---string[]
                 local json_str = vim.fn.readfile(tmp_file)
                 if json_str == nil then
