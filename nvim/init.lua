@@ -676,6 +676,8 @@ vim.keymap.set('', '<leader>v', '"*p', { noremap = false, desc = 'paste from OS 
 vim.keymap.set('n', 'p', ']p', { desc = 'paste under current indentation level' })
 vim.keymap.set('n', '<leader>z', 'za', { desc = 'toggle folds' })
 vim.keymap.set('n', '<leader>n', ':set hlsearch!<cr>', { desc = 'toggle highlight for last search' })
+vim.keymap.set('n', 'n', '<cmd>set hlsearch<cr>n', { desc = 'always have highlighted search results when navigating' })
+vim.keymap.set('n', 'N', '<cmd>set hlsearch<cr>n', { desc = 'always have highlighted search results when navigating' })
 
 vim.keymap.set('n', '+', '<C-a>', { desc = 'increment number under cursor' })
 vim.keymap.set('n', '_', '<C-x>', { desc = 'decrement number under cursor' })

@@ -68,7 +68,7 @@ local function callTSC(opts)
 
     local filename_prefix = string.sub(
         opts.cwd,
-        -- 2 for the next slash too
+            -- 2 for the next slash too
         #project_cwd + 2
     )
 
