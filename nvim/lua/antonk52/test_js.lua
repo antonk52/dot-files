@@ -73,7 +73,8 @@ local function mark_parsed_json_output(bufnr, parsed_output)
         local text = icon .. ' ' .. (test.message or '')
 
         local line = (function()
-            if test.location then
+            -- test can be nil if test timed out
+            if test and test.location then
                 return test.location.line
             else
                 lines = lines or vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
