@@ -399,9 +399,8 @@ local plugins = {
             vim.g.loaded_colorizer = 1
         end,
         name = 'colorizer',
-        opt = {
-            '*',
-            '!lazy', -- no highlight in lazy buffers
+        opts = {
+            filetypes = { "*", "!lazy" },
             user_default_options = {
                 css = true,
                 mode = 'background',
