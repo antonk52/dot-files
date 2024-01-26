@@ -62,21 +62,6 @@ local function get_nongit_ignore_patterns()
     end
 end
 
--- Just like builtin commands,
--- but no command definitions in display
--- for some reason accessing definitions breaks this command on my work machine
-function M.action_commands()
-    builtin.commands({
-        entry_maker = function(x)
-            return {
-                value = x,
-                display = x.name,
-                ordinal = x.name,
-            }
-        end,
-    })
-end
-
 -- similar to `telescope.builtin.current_buffer_fuzzy_find`
 -- but does not use treesitter for highlighting
 -- jumps to the first char from the search (similar to default `/`)
@@ -197,7 +182,6 @@ function M.setup()
     vim.keymap.set('n', '<leader>?', builtin.lsp_document_symbols)
     vim.keymap.set('n', '<leader>;', builtin.commands)
     vim.keymap.set('n', '<leader>r', builtin.resume)
-    vim.keymap.set('n', '<C-p>', M.action_commands)
 
     -- Repro of Rg command from fzf.vim
     vim.api.nvim_create_user_command('Rg', function(a)
