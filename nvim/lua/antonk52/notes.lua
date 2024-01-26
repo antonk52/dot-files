@@ -40,6 +40,7 @@ end
 function M.setup()
     vim.cmd('cd ' .. vim.fn.expand(vim.env.NOTES_PATH))
     M.source_rus_keymap()
+    vim.opt.shiftwidth = 2
 
     vim.keymap.set('n', '<localleader>s', '<cmd>Rg tags.*' .. vim.fn.expand('<cword>') .. '<cr>')
 
@@ -57,7 +58,7 @@ function M.setup()
     set_goto_mapping()
     vim.opt_local.concealcursor = 'n'
     vim.opt_local.listchars = {
-        leadmultispace = '  ',
+        leadmultispace = '│ ',
         tab = '▸ ',
         trail = '∙',
     }
