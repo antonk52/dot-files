@@ -19,6 +19,8 @@ M.used_parsers = {
     'rust',
     'scss',
     'toml',
+    'vim',
+    'vimdoc',
     'tsx',
     'typescript',
     'yaml',
