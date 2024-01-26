@@ -492,6 +492,9 @@ local lazy_options = {
             },
         },
     },
+    ui = {
+        size = { width = 0.95, height = 0.95 },
+    }
 }
 
 -- Dayjob specific {{{2
