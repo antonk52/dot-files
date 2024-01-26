@@ -325,6 +325,9 @@ local plugins = {
                 },
             })
             require('mini.pairs').setup() -- autoclose ([{
+            require('mini.cursorword').setup({delay = 300})
+            vim.cmd('hi! link MiniCursorWord Visual')
+            vim.cmd('hi! link MiniCursorWordCurrent CursorLine')
             require('mini.splitjoin').setup({
                 mappings = {
                     toggle = '',
@@ -423,6 +426,8 @@ local plugins = {
             })
             vim.api.nvim_create_user_command('ColorLight', function()
                 vim.cmd('colorscheme github_light')
+                vim.cmd('hi! link MiniCursorWord Visual')
+                vim.cmd('hi! link MiniCursorWordCurrent CursorLine')
                 local t = require('github-theme.palette.github_light').palette
                 local c = {
                     black = t.black.base, -- "#24292f"
@@ -762,7 +767,11 @@ local commands = {
     end,
     TSPlayground = vim.treesitter.inspect_tree,
 
-    ColorDark = 'colorscheme lake',
+    ColorDark = function()
+        vim.cmd('colorscheme lake')
+        vim.cmd('hi! link MiniCursorWord Visual')
+        vim.cmd('hi! link MiniCursorWordCurrent CursorLine')
+    end,
 
     TSCLocal = {
         function()
