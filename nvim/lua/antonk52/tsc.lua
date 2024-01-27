@@ -1,23 +1,21 @@
 local Job = require('plenary.job')
 
 local M = {}
+local TSC_ROOT_FILES = { 'tsconfig.json', 'jsconfig.json', 'package.json' }
 
 -- from buffer to root
 local function lookupTSConfigDir()
-    local stop_dir = vim.env.HOME
-    local files = { 'tsconfig.json', 'jsconfig.json', 'package.json' }
-    local current_dir = vim.fn.expand('%:p:h')
-    while stop_dir ~= current_dir do
-        for _, file in ipairs(files) do
-            local filepath = current_dir .. '/' .. file
-            if vim.fn.filereadable(filepath) == 1 then
-                return current_dir
-            end
-        end
+    local current_buf_dir = vim.fn.expand('%:p:h')
 
-        current_dir = vim.fn.fnamemodify(current_dir, ':h')
+    local root_markers = vim.fs.find(
+        TSC_ROOT_FILES,
+        { upward = true, type = 'file', stop = vim.fs.dirname(vim.env.HOME), limit = 1, path = current_buf_dir }
+    )
+    if #root_markers > 0 then
+        return vim.fs.dirname(root_markers[1])
+    else
+        return nil
     end
-    return nil
 end
 
 -- from root to buffer
@@ -42,11 +40,10 @@ local function lookdownTSConfigDir()
         i = i - 1
     end
 
-    local files = { 'tsconfig.json', 'jsconfig.json', 'package.json' }
     i = 1
     current_dir = dirs_from_stop_dir[i]
     while current_dir ~= nil do
-        for _, file in ipairs(files) do
+        for _, file in ipairs(TSC_ROOT_FILES) do
             local filepath = current_dir .. '/' .. file
             if vim.fn.filereadable(filepath) == 1 then
                 return current_dir
@@ -71,12 +68,6 @@ local function callTSC(opts)
             -- 2 for the next slash too
         #project_cwd + 2
     )
-
-    vim.print({
-        opts_cwd = opts.cwd,
-        project_cwd = project_cwd,
-        filename_prefix = filename_prefix,
-    })
 
     local start_ms = vim.loop.now()
 
