@@ -620,7 +620,12 @@ vim.opt.foldlevelstart = 20
 vim.opt.foldlevel = 20
 -- use wider line for folding
 vim.opt.fillchars = { fold = '⏤' }
-vim.opt.foldtext = 'antonk52#fold#it()'
+
+-- default
+-- +--  7 lines: set foldmethod=indent··············
+-- new
+-- ⏤⏤⏤⏤► [7 lines]: set foldmethod=indent ⏤⏤⏤⏤⏤⏤⏤⏤⏤⏤
+vim.opt.foldtext = '"⏤⏤⏤⏤► [".(v:foldend - v:foldstart + 1)." lines] ".trim(getline(v:foldstart))." "'
 
 -- break long lines on breakable chars
 -- instead of the last fitting character
