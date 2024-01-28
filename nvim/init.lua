@@ -386,7 +386,7 @@ local plugins = {
             vim.g.dirvish_mode = ':sort ,^\\v(.*[\\/])|\\ze,'
         end,
     },
-    { 'levouh/tint.nvim', opts = { tint = -15, tint_background_colors = true } },
+    { 'levouh/tint.nvim', opts = { tint = -35, tint_background_colors = true } },
     {
         'shortcuts/no-neck-pain.nvim',
         version = '*',
