@@ -875,10 +875,6 @@ vim.api.nvim_create_autocmd('FileType', {
     desc = 'Use treesitter for folding in markdown files',
 })
 
-vim.defer_fn(function()
-    require('antonk52.anchors').setup()
-end, 50)
-
 -- load local init.lua {{{1
 local local_init_lua = vim.fn.expand('~/.config/local_init.lua')
 if vim.fn.filereadable(local_init_lua) == 1 then
