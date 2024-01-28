@@ -148,6 +148,12 @@ local plugins = {
     },
     'antonk52/amake.nvim',
     {
+        'akinsho/toggleterm.nvim',
+        version = '*',
+        opts = { open_mapping = '<localleader>t', direction = 'tab' },
+        event = 'VeryLazy',
+    },
+    {
         'antonk52/npm_scripts.nvim',
         opts = {},
         config = function()
@@ -272,27 +278,6 @@ local plugins = {
             end, { desc = 'navigate to current node' })
         end,
         event = 'VeryLazy',
-    },
-    {
-        'nvimdev/indentmini.nvim',
-        config = function()
-            require('indentmini').setup({
-                char = '│',
-                exclude = {
-                    'markdown',
-                },
-            })
-        end,
-    },
-    {
-        -- only used to update expandtab/shiftwidth/tabstop
-        'antonk52/denty.nvim',
-        config = function()
-            require('denty').setup({
-                -- delegated to indentmini.nvim
-                enable_indent_char = false,
-            })
-        end,
     },
     {
         'dinhhuy258/git.nvim',
@@ -468,7 +453,6 @@ local plugins = {
                 vim.api.nvim_set_hl(0, '@text.strike', { link = 'Comment' })
                 vim.api.nvim_set_hl(0, 'CursorLine', { bg = t.scale.gray[2] })
                 vim.api.nvim_set_hl(0, 'Todo', { bg = c.red })
-                vim.api.nvim_set_hl(0, 'IndentLine', { fg = t.scale.gray[3] })
                 vim.api.nvim_set_hl(0, 'DiagnosticHint', { fg = t.scale.gray[5] })
                 vim.api.nvim_set_hl(0, 'Directory', { fg = c.blue, bold = true })
             end, {})
@@ -838,6 +822,27 @@ vim.api.nvim_create_autocmd('FileType', {
         end
     end,
     desc = 'Use treesitter for folding in markdown files',
+})
+
+-- update listchars based on shiftwidth
+local function update_listchars()
+    local shiftwidth = vim.bo.shiftwidth
+
+    if shiftwidth == 4 then
+        vim.opt.listchars:append({ leadmultispace = '│   ' })
+    elseif shiftwidth == 2 then
+        vim.opt.listchars:append({ leadmultispace = '│ ' })
+    else
+        vim.opt.listchars:append({ leadmultispace = ' ' })
+    end
+end
+vim.api.nvim_create_autocmd('BufReadPost', {
+    pattern = '*',
+    callback = update_listchars,
+})
+vim.api.nvim_create_autocmd('OptionSet', {
+    pattern = { 'tabstop', 'shiftwidth' },
+    callback = update_listchars,
 })
 
 -- load local init.lua {{{1
