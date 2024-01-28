@@ -336,7 +336,7 @@ local plugins = {
                 },
             })
             require('mini.pairs').setup() -- autoclose ([{
-            require('mini.cursorword').setup({delay = 300})
+            require('mini.cursorword').setup({ delay = 300 })
             vim.cmd('hi! link MiniCursorWord Visual')
             vim.cmd('hi! link MiniCursorWordCurrent CursorLine')
             require('mini.splitjoin').setup({
@@ -386,7 +386,7 @@ local plugins = {
             vim.g.dirvish_mode = ':sort ,^\\v(.*[\\/])|\\ze,'
         end,
     },
-    'blueyed/vim-diminactive', -- dims inactive splits
+    { 'levouh/tint.nvim', opts = { tint = -15, tint_background_colors = true } },
     {
         'shortcuts/no-neck-pain.nvim',
         version = '*',
