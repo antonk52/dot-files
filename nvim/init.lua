@@ -129,6 +129,17 @@ local plugins = {
         event = 'VeryLazy',
     },
     {
+        'stevearc/dressing.nvim',
+        opts = {
+            input = {
+                border = 'single',
+            },
+            select = {
+                enabled = false,
+            },
+        },
+    },
+    {
         'natecraddock/workspaces.nvim',
         config = function()
             require('antonk52.workspaces').setup()
@@ -400,7 +411,7 @@ local plugins = {
         end,
         name = 'colorizer',
         opts = {
-            filetypes = { "*", "!lazy" },
+            filetypes = { '*', '!lazy' },
             user_default_options = {
                 css = true,
                 mode = 'background',
@@ -494,7 +505,7 @@ local lazy_options = {
     },
     ui = {
         size = { width = 0.95, height = 0.95 },
-    }
+    },
 }
 
 -- Dayjob specific {{{2
@@ -510,13 +521,6 @@ require('lazy').setup(plugins, lazy_options)
 -- Avoid startup work {{{1
 -- Skip loading menu.vim, saves ~100ms
 vim.g.did_install_default_menus = 1
-
--- use snappier filetype detection
-if vim.fn.has('nvim-0.7') == 1 then
-    vim.g.do_filetype_lua = 1
-    -- do not turn these off for plugins such as markdown-vim that use older syntax within markdown
-    -- vim.g.did_load_filetypes = 0
-end
 
 -- Set them directly if they are installed, otherwise disable them. To avoid the
 -- runtime check cost, which can be slow.
@@ -610,10 +614,6 @@ vim.opt.splitbelow = true
 -- open vertical splits to the right of the current window
 vim.opt.splitright = true
 
--- make current line number stand out a little
--- TODO
--- vim.opt.highlight = vim.opt.highlight + 'N:DiffText'
-
 -- folding
 vim.opt.foldmethod = 'indent'
 vim.opt.foldlevelstart = 20
@@ -644,40 +644,6 @@ vim.opt.undofile = true
 -- avoid mapping gx in netrw as for conflict reasons
 vim.g.netrw_nogx = 1
 
----@diagnostic disable-next-line: duplicate-set-field
-vim.ui.input = function(opts, callback)
-    local buf = vim.api.nvim_create_buf(false, true)
-
-    local win = vim.api.nvim_open_win(buf, true, {
-        relative = 'cursor',
-        style = 'minimal',
-        border = 'single',
-        row = 1,
-        col = 1,
-        width = opts.width or 30,
-        height = 1,
-    })
-    local function close_win()
-        vim.api.nvim_win_close(win, true)
-        vim.api.nvim_buf_delete(buf, { force = true })
-        vim.cmd('stopinsert!')
-    end
-    vim.keymap.set('n', 'q', close_win, { buffer = true, silent = true })
-    vim.keymap.set('n', '<ESC>', close_win, { buffer = true, silent = true })
-    vim.keymap.set('i', '<ESC>', close_win, { buffer = true, silent = true })
-    if opts.default then
-        vim.api.nvim_put({ opts.default }, '', true, true)
-    end
-    vim.cmd('startinsert!')
-
-    vim.keymap.set('i', '<CR>', function()
-        local content = vim.api.nvim_get_current_line()
-        close_win()
-        callback(vim.trim(content))
-    end, { buffer = true, silent = true })
-end
--- Mappings {{{1
-
 -- nvim 0.6 maps Y to yank till the end of the line,
 -- preserving a legacy behaviour
 vim.keymap.del('', 'Y')
@@ -693,8 +659,6 @@ vim.keymap.set('n', 'N', '<cmd>set hlsearch<cr>n', { desc = 'always have highlig
 
 vim.keymap.set('n', '+', '<C-a>', { desc = 'increment number under cursor' })
 vim.keymap.set('n', '_', '<C-x>', { desc = 'decrement number under cursor' })
-
-vim.keymap.set('n', '<localleader>=', 'gg=G', { desc = 'reindent entire buffer' })
 
 -- Useful when you have many splits & the status line gets truncated
 vim.keymap.set('n', '<leader>p', ':echo expand("%")<CR>', {
@@ -776,6 +740,7 @@ local commands = {
 
     ColorDark = function()
         vim.cmd('colorscheme lake')
+        -- TODO create an issue for miniCursorWord to supply a highlight group to link to
         vim.cmd('hi! link MiniCursorWord Visual')
         vim.cmd('hi! link MiniCursorWordCurrent CursorLine')
     end,
