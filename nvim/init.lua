@@ -265,9 +265,23 @@ local plugins = {
                 },
                 exclude_filetypes = { 'netrw', 'toggleterm', 'dirvish', 'hgssl', 'hghistory', 'hgcommit' },
                 theme = {
-                    -- make barbecue bar stand out from buffer content
-                    normal = { bg = require('lake').theme.color01 },
+                    -- for some reason linking to hl group
+                    -- makes colored items loose their color
+                    normal = { bg = vim.api.nvim_get_hl(0, { name = 'ColorColumn' }).bg },
                 },
+            })
+
+            vim.api.nvim_create_autocmd('ColorScheme', {
+                pattern = '*',
+                callback = function()
+                    require('barbecue').setup({
+                        theme = {
+                            -- for some reason linking to hl group
+                            -- makes colored items loose their color
+                            normal = { bg = vim.api.nvim_get_hl(0, { name = 'ColorColumn' }).bg },
+                        },
+                    })
+                end,
             })
 
             vim.keymap.set('n', '<leader>{', function()
@@ -552,6 +566,7 @@ vim.opt.list = true
 vim.opt.listchars = {
     tab = '▸ ',
     trail = '∙',
+    multispace = '∙',
     leadmultispace = '│   ',
 }
 
