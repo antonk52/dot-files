@@ -7,15 +7,50 @@ end
 -- I only want to see the initial loading progress
 local loaded_lsp = {}
 
+local lsp_status_cache = nil
+
 function M.lsp_init()
+    if vim.fn.has('nvim-0.10') == 1 then
+        local statuses = lsp_status_cache
+        if not statuses then
+            statuses = {}
+            for _, client in ipairs(vim.lsp.get_active_clients()) do
+                for progress in client.progress do
+                    local msg = progress.value
+                    if type(msg) == 'table' and msg.kind ~= 'end' then
+                        local percentage = ''
+                        if msg.percentage then
+                            percentage = string.format('%2d', msg.percentage) .. '%% '
+                        end
+                        local title = msg.title or ''
+                        local message = msg.message or ''
+                        statuses[client.name] = percentage .. title .. ' ' .. message
+                    else
+                        statuses[client.name] = nil
+                    end
+                end
+            end
+
+            lsp_status_cache = statuses
+        end
+
+        local items = {}
+        for k, v in pairs(statuses) do
+            table.insert(items, k .. ': ' .. v)
+        end
+
+        return table.concat(items, ' │ ')
+    end
+
     local msgs = vim.lsp.util.get_progress_messages()
     local result = {}
     for _, v in ipairs(msgs) do
+        local name = v.name or 'UNKNOWN'
         if v.done then
-            if not loaded_lsp[v.name] then
-                table.insert(result, v.name .. ':✓')
+            if not loaded_lsp[name] then
+                table.insert(result, name .. ':✓')
                 vim.defer_fn(function()
-                    loaded_lsp[v.name] = true
+                    loaded_lsp[name] = true
                 end, 3000)
             end
         else
@@ -25,20 +60,25 @@ function M.lsp_init()
             end
             local title = v.title or ''
             local message = v.message or ''
-            table.insert(result, v.name .. ': ' .. percentage .. title .. ' ' .. message)
+            table.insert(result, name .. ': ' .. percentage .. title .. ' ' .. message)
         end
     end
 
     return table.concat(result, ' │ ')
 end
 
--- redraw statusline on lsp progress update
-vim.cmd('autocmd User LspProgressUpdate redrawstatus')
-
 local function infer_colors()
     vim.api.nvim_set_hl(0, 'StatusLineModified', {
-        bg = string.format('#%06x', vim.api.nvim_get_hl_by_name('MoreMsg', true).foreground), -- MoreMsg.fg
-        fg = string.format('#%06x', vim.api.nvim_get_hl_by_name('Normal', true).background), -- Normal.bg
+        bg = string.format(
+            '#%06x',
+            vim.fn.has('nvim-0.10') == 1 and vim.api.nvim_get_hl_by_name('MoreMsg', true).foreground
+                or vim.api.nvim_get_hl(0, { name = 'MoreMsg' }).fg
+        ),
+        fg = string.format(
+            '#%06x',
+            vim.fn.has('nvim-0.10') == 1 and vim.api.nvim_get_hl_by_name('Normal', true).background
+                or vim.api.nvim_get_hl(0, { name = 'Normal' }).bg
+        ),
         bold = true,
     })
 end
@@ -132,6 +172,10 @@ function M.render()
     })
 
     return table.concat(elements, '')
+end
+
+function M.refresh_lsp_status()
+    lsp_status_cache = nil
 end
 
 return M
