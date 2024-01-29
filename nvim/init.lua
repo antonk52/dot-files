@@ -399,7 +399,6 @@ local plugins = {
         },
         config = true,
     },
-    { 'jxnblk/vim-mdx-js', ft = { 'mdx' } },
     'antonk52/lake.nvim',
     {
         'projekt0n/github-nvim-theme',
@@ -862,6 +861,13 @@ vim.api.nvim_create_autocmd('FileType', {
         end
     end,
     desc = 'Use treesitter for folding in markdown files',
+})
+-- use markdown for mdx files
+vim.api.nvim_create_autocmd('BufReadPost', {
+    pattern = '*.mdx',
+    callback = function()
+        vim.bo.filetype = 'markdown'
+    end,
 })
 
 -- update listchars based on shiftwidth
