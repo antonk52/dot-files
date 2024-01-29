@@ -134,7 +134,14 @@ local plugins = {
                 border = 'single',
             },
             select = {
-                enabled = false,
+                backend = { 'telescope' },
+                telescope = {
+                    layout_config = {
+                        width = 90,
+                        height = 80,
+                        preview_width = 0.6,
+                    },
+                },
             },
         },
     },
@@ -236,7 +243,6 @@ local plugins = {
         'nvim-telescope/telescope.nvim',
         dependencies = {
             'nvim-lua/plenary.nvim',
-            'nvim-telescope/telescope-ui-select.nvim',
         },
         config = function()
             require('antonk52.telescope').setup()

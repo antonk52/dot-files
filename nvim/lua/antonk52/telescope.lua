@@ -21,8 +21,10 @@ M.options = {
 
 function M.action_meta_telescope()
     vim.ui.select(vim.fn.keys(builtin), { prompt = 'select telescope method' }, function(pick)
+        if pick then
         -- TODO provide more options for some methods
-        builtin[pick](M.options)
+            builtin[pick](M.options)
+        end
     end)
 end
 
@@ -162,13 +164,7 @@ function M.setup()
                 },
             },
         },
-        extensions = {
-            ['ui-select'] = {
-                require('telescope.themes').get_dropdown({}),
-            },
-        },
     })
-    require('telescope').load_extension('ui-select')
     require('telescope').load_extension('workspaces')
     vim.keymap.set('n', '<leader>f', M.action_smart_vcs_files)
     vim.keymap.set('n', '<leader>F', function()
