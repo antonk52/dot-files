@@ -319,22 +319,6 @@ function M.setup_eslint_d()
     end
 end
 
-function M.setup_column_signs()
-    local column_signs = {
-        DiagnosticSignError = '●',
-        DiagnosticSignWarn = '●',
-        DiagnosticSignHint = '◉',
-        DiagnosticSignInformation = '◉',
-    }
-    for name, char in pairs(column_signs) do
-        vim.fn.sign_define(name, {
-            texthl = name,
-            text = char,
-            numhl = name,
-        })
-    end
-end
-
 function M.lsp_options(options)
     local result = {
         on_attach = M.on_attach,
@@ -372,10 +356,17 @@ function M.setup()
             prefix = ' ',
             scope = 'line',
         },
+        signs = {
+            text = {
+                [vim.diagnostic.severity.ERROR] = '●',
+                [vim.diagnostic.severity.WARN] = '●',
+                [vim.diagnostic.severity.HINT] = '◉',
+                [vim.diagnostic.severity.INFO] = '◉',
+            },
+        },
     })
     -- M.setup_eslint_d()
     M.setup_lua()
-    M.setup_column_signs()
     require('rust-tools').setup({
         server = {
             on_attach = M.on_attach,

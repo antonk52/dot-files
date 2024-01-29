@@ -120,6 +120,7 @@ function M.action_smart_vcs_files()
     end
 
     local opts = {
+        hidden = true,
         find_command = function()
             local ignore_patterns = get_nongit_ignore_patterns()
             local find_command = {
