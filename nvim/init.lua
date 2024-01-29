@@ -378,7 +378,7 @@ local plugins = {
             vim.g.dirvish_mode = ':sort ,^\\v(.*[\\/])|\\ze,'
         end,
     },
-    { 'levouh/tint.nvim', opts = { tint = -35, tint_background_colors = true } },
+    { 'levouh/tint.nvim', opts = { tint = -15, tint_background_colors = true } },
     -- live preview markdown files in browser
     -- {'iamcco/markdown-preview.nvim',  build = 'cd app & yarn install', ft = { 'markdown', 'mdx' } },
 
@@ -715,7 +715,6 @@ local commands = {
     NotesMode = function()
         require('antonk52.notes').setup()
     end,
-    TSPlayground = vim.treesitter.inspect_tree,
 
     ColorDark = function()
         vim.cmd('colorscheme lake')
@@ -782,6 +781,14 @@ vim.api.nvim_create_autocmd({'WinEnter', 'BufEnter'}, {
     desc = 'restore statusline when entering window',
     callback = function()
         vim.opt.statusline = "%!v:lua.require'antonk52.statusline'.render()"
+    end,
+})
+-- refresh statusline on DiagnosticChanged
+vim.api.nvim_create_autocmd('DiagnosticChanged', {
+    pattern = '*',
+    desc = 'refresh statusline on DiagnosticChanged',
+    callback = function()
+        vim.cmd.redrawstatus()
     end,
 })
 

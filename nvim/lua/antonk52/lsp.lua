@@ -237,6 +237,12 @@ function M.setup_lua()
                 diagnostics = {
                     -- Get the language server to recognize the `vim` global
                     globals = { 'vim' },
+                    disable = {
+                        'missing-fields',
+                        'duplicate-set-field',
+                        'undefined-field',
+                        'inject-field',
+                    },
                 },
                 workspace = {
                     -- Make the server aware of Neovim runtime files
