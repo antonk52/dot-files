@@ -25,7 +25,6 @@ local plugins = {
         dependencies = {
             'b0o/schemastore.nvim', -- json schemas for json lsp
             'simrat39/rust-tools.nvim',
-            'arkav/lualine-lsp-progress',
             'folke/neodev.nvim', -- vim api signature help and docs
         },
         config = function()
@@ -241,12 +240,6 @@ local plugins = {
         },
         config = function()
             require('antonk52.telescope').setup()
-        end,
-    },
-    {
-        'hoob3rt/lualine.nvim',
-        config = function()
-            require('antonk52.lualine').setup()
         end,
     },
     {
@@ -788,6 +781,22 @@ for _, v in ipairs({ 'check', 'restore', 'update', 'clean' }) do
 end
 
 -- Autocommands {{{1
+
+-- Statusline
+vim.api.nvim_create_autocmd({'WinLeave', 'BufLeave'}, {
+    pattern = '*',
+    desc = 'simplify statusline when leaving window',
+    callback = function()
+        vim.wo.statusline = ' %f%=%p%%  %l:%c '
+    end,
+})
+vim.api.nvim_create_autocmd({'WinEnter', 'BufEnter'}, {
+    pattern = '*',
+    desc = 'restore statusline when entering window',
+    callback = function()
+        vim.opt.statusline = "%!v:lua.require'antonk52.statusline'.render()"
+    end,
+})
 
 -- neovim terminal
 vim.api.nvim_create_autocmd('TermOpen', {
