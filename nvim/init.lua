@@ -379,19 +379,6 @@ local plugins = {
         end,
     },
     { 'levouh/tint.nvim', opts = { tint = -35, tint_background_colors = true } },
-    {
-        'shortcuts/no-neck-pain.nvim',
-        version = '*',
-        opts = {
-            width = 82,
-            mappings = {
-                toggleMapping = false,
-                widthUpMapping = false,
-                widthDownMapping = false,
-            },
-        },
-        event = 'VeryLazy',
-    },
     -- live preview markdown files in browser
     -- {'iamcco/markdown-preview.nvim',  build = 'cd app & yarn install', ft = { 'markdown', 'mdx' } },
 

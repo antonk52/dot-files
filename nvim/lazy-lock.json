@@ -21,7 +21,6 @@
   "markdowny.nvim": { "branch": "main", "commit": "083782f05e67cc08c6378affec9f55a913ac55f4" },
   "mini.nvim": { "branch": "main", "commit": "40086c0a646100c766e8e05cd6e7d75bb1ca37de" },
   "neodev.nvim": { "branch": "main", "commit": "7cb4f7f29c6bf6f1d21a37f6dd6d12ba64266b09" },
-  "no-neck-pain.nvim": { "branch": "main", "commit": "b305821ca45897db6276e9ae5893747bb24040c7" },
   "npm_scripts.nvim": { "branch": "main", "commit": "ef6e73fbb53a2ed2cccd7fea09b39a87f5874edc" },
   "nvim-cmp": { "branch": "main", "commit": "538e37ba87284942c1d76ed38dd497e54e65b891" },
   "nvim-lspconfig": { "branch": "master", "commit": "9bedcfed749755e43fc8bed46f85ce2044fe3b77" },
