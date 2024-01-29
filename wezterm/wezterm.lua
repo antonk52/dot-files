@@ -26,6 +26,8 @@ return {
     enable_tab_bar = true,
     hide_tab_bar_if_only_one_tab = true,
 
+    enable_kitty_keyboard = true,
+
     alternate_buffer_wheel_scroll_speed = 3, -- increase scroll speed
     -- remove window padding
     window_padding = {
