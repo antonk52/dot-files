@@ -384,10 +384,8 @@ local plugins = {
             vim.g.dirvish_mode = ':sort ,^\\v(.*[\\/])|\\ze,'
         end,
     },
-    { 'levouh/tint.nvim', opts = { tint = -15, tint_background_colors = true } },
     -- live preview markdown files in browser
     -- {'iamcco/markdown-preview.nvim',  build = 'cd app & yarn install', ft = { 'markdown', 'mdx' } },
-
     {
         'NvChad/nvim-colorizer.lua', -- hex/rgb color highlight preview
         init = function()
@@ -434,6 +432,7 @@ local plugins = {
                 --
                 -- setup(opts.groups.all) did not override so doing it manually
                 vim.api.nvim_set_hl(0, 'TSPunctSpecial', { fg = c.black })
+                vim.api.nvim_set_hl(0, 'NormalNC', { link = 'ColorColumn' })
                 vim.api.nvim_set_hl(0, '@punctuation.delimiter', { fg = c.black })
                 vim.api.nvim_set_hl(0, '@type.builtin', { fg = c.black })
                 vim.api.nvim_set_hl(0, '@variable', { fg = c.black })
