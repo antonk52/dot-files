@@ -22,7 +22,7 @@ M.options = {
 function M.action_meta_telescope()
     vim.ui.select(vim.fn.keys(builtin), { prompt = 'select telescope method' }, function(pick)
         if pick then
-        -- TODO provide more options for some methods
+            -- TODO provide more options for some methods
             builtin[pick](M.options)
         end
     end)
