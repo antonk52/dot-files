@@ -167,6 +167,7 @@ function M.render()
     end, {
         hi_next('StatusLineModified') .. M.modified(),
         hi_next('CursorLineNr') .. ' ' .. M.filename() .. ' ',
+        '%<',
         hi_next('Normal') .. '%=', -- right align
         hi_next('Comment') .. M.lsp_init(),
         '  ',
