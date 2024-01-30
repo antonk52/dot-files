@@ -1,4 +1,5 @@
 local M = {}
+local has_nvim_0_10_x = vim.fn.has('nvim-0.10') == 1
 local hi_next = function(group)
     return '%#' .. group .. '#'
 end
@@ -10,7 +11,7 @@ local loaded_lsp = {}
 local lsp_status_cache = nil
 
 function M.lsp_init()
-    if vim.fn.has('nvim-0.10') == 1 then
+    if has_nvim_0_10_x then
         local statuses = lsp_status_cache
         if not statuses then
             statuses = {}
@@ -176,6 +177,52 @@ end
 
 function M.refresh_lsp_status()
     lsp_status_cache = nil
+end
+
+function M.setup()
+    vim.api.nvim_create_autocmd({ 'WinLeave', 'BufLeave' }, {
+        pattern = '*',
+        desc = 'simplify statusline when leaving window',
+        callback = function()
+            vim.wo.statusline = ' %f%=%p%%  %l:%c '
+        end,
+    })
+    vim.api.nvim_create_autocmd({ 'WinEnter', 'BufEnter' }, {
+        pattern = '*',
+        desc = 'restore statusline when entering window',
+        callback = function()
+            vim.opt.statusline = "%!v:lua.require'antonk52.statusline'.render()"
+        end,
+    })
+    -- redraw statusline on lsp progress update
+    if has_nvim_0_10_x then
+        local throttle_timer = nil
+        vim.api.nvim_create_autocmd('LspProgress', {
+            pattern = '*',
+            callback = function()
+                -- LspProgress fires frequently, so we throttle statusline updates.
+                if throttle_timer then
+                    throttle_timer:stop()
+                end
+
+                throttle_timer = vim.defer_fn(function()
+                    throttle_timer = nil
+                    require('antonk52.statusline').refresh_lsp_status()
+                    vim.cmd.redrawstatus()
+                end, 80)
+            end,
+        })
+    else
+        vim.cmd('autocmd User LspProgressUpdate redrawstatus')
+    end
+    -- refresh statusline on DiagnosticChanged
+    vim.api.nvim_create_autocmd('DiagnosticChanged', {
+        pattern = '*',
+        desc = 'refresh statusline on DiagnosticChanged',
+        callback = function()
+            vim.cmd.redrawstatus()
+        end,
+    })
 end
 
 return M

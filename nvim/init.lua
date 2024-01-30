@@ -628,6 +628,8 @@ vim.opt.undofile = true
 -- avoid mapping gx in netrw as for conflict reasons
 vim.g.netrw_nogx = 1
 
+require('antonk52.statusline').setup()
+
 -- nvim 0.6 maps Y to yank till the end of the line,
 -- preserving a legacy behaviour
 vim.keymap.del('', 'Y')
@@ -772,52 +774,6 @@ for _, v in ipairs({ 'check', 'restore', 'update', 'clean' }) do
 end
 
 -- Autocommands {{{1
-
--- Statusline
-vim.api.nvim_create_autocmd({ 'WinLeave', 'BufLeave' }, {
-    pattern = '*',
-    desc = 'simplify statusline when leaving window',
-    callback = function()
-        vim.wo.statusline = ' %f%=%p%%  %l:%c '
-    end,
-})
-vim.api.nvim_create_autocmd({ 'WinEnter', 'BufEnter' }, {
-    pattern = '*',
-    desc = 'restore statusline when entering window',
-    callback = function()
-        vim.opt.statusline = "%!v:lua.require'antonk52.statusline'.render()"
-    end,
-})
-
-if vim.fn.has('nvim-0.10') == 1 then
-    local throttle_timer = nil
-    vim.api.nvim_create_autocmd('LspProgress', {
-        pattern = '*',
-        callback = function()
-            -- LspProgress fires frequently, so we throttle statusline updates.
-            if throttle_timer then
-                throttle_timer:stop()
-            end
-
-            throttle_timer = vim.defer_fn(function()
-                throttle_timer = nil
-                require('antonk52.statusline').refresh_lsp_status()
-                vim.cmd.redrawstatus()
-            end, 80)
-        end,
-    })
-else
-    -- refresh statusline on DiagnosticChanged
-    vim.api.nvim_create_autocmd('DiagnosticChanged', {
-        pattern = '*',
-        desc = 'refresh statusline on DiagnosticChanged',
-        callback = function()
-            vim.cmd.redrawstatus()
-        end,
-    })
-    -- redraw statusline on lsp progress update
-    vim.cmd('autocmd User LspProgressUpdate redrawstatus')
-end
 
 -- neovim terminal
 vim.api.nvim_create_autocmd('TermOpen', {
