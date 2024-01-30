@@ -120,26 +120,30 @@ function M.filetype()
     return filetype_map[current_filetype] or current_filetype
 end
 
--- essentially a repro of lualine builtin diagnostics
+local diagnostics_cache = { error = 0, warn = 0, info = 0, hint = 0 }
 function M.diagnostics()
-    local all_diagnostics = vim.diagnostic.get(0)
     local s = vim.diagnostic.severity
+    local diagnostics = diagnostics_cache
 
-    local diagnostics = { error = 0, warn = 0, info = 0, hint = 0 }
+    if not diagnostics then
+        diagnostics = { error = 0, warn = 0, info = 0, hint = 0 }
+        local all_diagnostics = vim.diagnostic.get(0)
 
-    for _, v in ipairs(all_diagnostics) do
-        if v.severity == s.ERROR then
-            diagnostics.error = diagnostics.error + 1
+        for _, v in ipairs(all_diagnostics) do
+            if v.severity == s.ERROR then
+                diagnostics.error = diagnostics.error + 1
+            end
+            if v.severity == s.WARN then
+                diagnostics.warn = diagnostics.warn + 1
+            end
+            if v.severity == s.INFO then
+                diagnostics.info = diagnostics.info + 1
+            end
+            if v.severity == s.HINT then
+                diagnostics.hint = diagnostics.hint + 1
+            end
         end
-        if v.severity == s.WARN then
-            diagnostics.warn = diagnostics.warn + 1
-        end
-        if v.severity == s.INFO then
-            diagnostics.info = diagnostics.info + 1
-        end
-        if v.severity == s.HINT then
-            diagnostics.hint = diagnostics.hint + 1
-        end
+        diagnostics_cache = diagnostics
     end
 
     local items = {}
@@ -152,6 +156,9 @@ function M.diagnostics()
     local result = table.concat(items, ' ')
 
     return #result > 0 and result .. '  ' or ''
+end
+function M.refresh_diagnostics()
+    diagnostics_cache = nil
 end
 
 function M.render()
@@ -220,6 +227,7 @@ function M.setup()
         pattern = '*',
         desc = 'refresh statusline on DiagnosticChanged',
         callback = function()
+            M.refresh_diagnostics()
             vim.cmd.redrawstatus()
         end,
     })
