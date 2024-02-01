@@ -17,7 +17,7 @@
   "github-nvim-theme": { "branch": "main", "commit": "067cb69b93957ace0d0d83811453b401d1fb672c" },
   "gitignore-grabber.nvim": { "branch": "main", "commit": "365c1a2255f1badf5aa8a963a07f869a81ab6575" },
   "lake.nvim": { "branch": "main", "commit": "a50e36448467b1680c53391c6c7828bcaf226ece" },
-  "lazy.nvim": { "branch": "main", "commit": "96584866b9c5e998cbae300594d0ccfd0c464627" },
+  "lazy.nvim": { "branch": "main", "commit": "28126922c9b54e35a192ac415788f202c3944c9f" },
   "markdowny.nvim": { "branch": "main", "commit": "083782f05e67cc08c6378affec9f55a913ac55f4" },
   "mini.nvim": { "branch": "main", "commit": "40086c0a646100c766e8e05cd6e7d75bb1ca37de" },
   "neodev.nvim": { "branch": "main", "commit": "7cb4f7f29c6bf6f1d21a37f6dd6d12ba64266b09" },
@@ -36,6 +36,5 @@
   "toggleterm.nvim": { "branch": "main", "commit": "cbd041d91b90cd3c02df03fe6133208888f8e008" },
   "trouble.nvim": { "branch": "main", "commit": "f1168feada93c0154ede4d1fe9183bf69bac54ea" },
   "twoslash-queries.nvim": { "branch": "main", "commit": "ea2dd86618d3aa4e176bfafc31cab2b1d1feb157" },
-  "vim-dirvish": { "branch": "master", "commit": "babbf69f7bb5274f0461e04a59d3e059bee27314" },
-  "workspaces.nvim": { "branch": "master", "commit": "d6e0bd7e11790790e07dc9d8d353144c8b4edfb8" }
+  "vim-dirvish": { "branch": "master", "commit": "babbf69f7bb5274f0461e04a59d3e059bee27314" }
 }

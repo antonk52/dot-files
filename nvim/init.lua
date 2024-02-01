@@ -145,13 +145,6 @@ local plugins = {
             },
         },
     },
-    {
-        'natecraddock/workspaces.nvim',
-        config = function()
-            require('antonk52.workspaces').setup()
-        end,
-        event = 'VeryLazy',
-    },
     'antonk52/amake.nvim',
     {
         'akinsho/toggleterm.nvim',

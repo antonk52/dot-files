@@ -3,7 +3,6 @@ local builtin = require('telescope.builtin')
 
 local M = {}
 
--- local MIN_WIN_WIDTH_FOR_PREVIEW = 130
 local borders = { '─', '│', '─', '│', '┌', '┐', '┘', '└' }
 M.options = {
     borderchars = {
@@ -146,6 +145,7 @@ function M.dots()
         prompt_title = 'dot files',
         shorten_path = false,
         cwd = '~/dot-files/',
+        hidden = true,
 
         layout_strategy = 'horizontal',
         layout_config = {
@@ -166,7 +166,6 @@ function M.setup()
             },
         },
     })
-    require('telescope').load_extension('workspaces')
     vim.keymap.set('n', '<leader>f', M.action_smart_vcs_files)
     vim.keymap.set('n', '<leader>F', function()
         require('telescope.builtin').find_files(M.options)
