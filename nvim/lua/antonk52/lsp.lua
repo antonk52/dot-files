@@ -253,6 +253,9 @@ function M.setup_lua()
                 telemetry = {
                     enable = false,
                 },
+                completion = {
+                    callSnippet = 'Replace',
+                },
             },
         },
     })
