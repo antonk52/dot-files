@@ -41,31 +41,36 @@ function M.lsp_init()
         end
 
         return table.concat(items, ' │ ')
-    end
-
-    local msgs = vim.lsp.util.get_progress_messages()
-    local result = {}
-    for _, v in ipairs(msgs) do
-        local name = v.name or 'UNKNOWN'
-        if v.done then
-            if not loaded_lsp[name] then
-                table.insert(result, name .. ':✓')
-                vim.defer_fn(function()
-                    loaded_lsp[name] = true
-                end, 3000)
+    else
+        -- nvim 0.9 or older
+        local msgs = vim.lsp.util.get_progress_messages()
+        -- {[lsp_name]: status_str} to remove duplicated messages from the same lsp
+        local status_dict = {}
+        for _, v in ipairs(msgs) do
+            local name = v.name or 'UNKNOWN'
+            if v.done then
+                if not loaded_lsp[name] then
+                    status_dict[name] = '✓'
+                    vim.defer_fn(function()
+                        loaded_lsp[name] = true
+                    end, 3000)
+                end
+            else
+                local percentage = ''
+                if v.percentage then
+                    percentage = string.format('%2d', v.percentage) .. '%% '
+                end
+                local title = v.title or ''
+                local message = v.message or ''
+                status_dict[name] = percentage .. title .. ' ' .. message
             end
-        else
-            local percentage = ''
-            if v.percentage then
-                percentage = string.format('%2d', v.percentage) .. '%% '
-            end
-            local title = v.title or ''
-            local message = v.message or ''
-            table.insert(result, name .. ': ' .. percentage .. title .. ' ' .. message)
         end
+        local result = {}
+        for k, v in pairs(status_dict) do
+            table.insert(result, k .. ':' .. v)
+        end
+        return table.concat(result, ' │ ')
     end
-
-    return table.concat(result, ' │ ')
 end
 
 local function infer_colors()
