@@ -66,57 +66,66 @@ local function cross_lsp_definition()
     end
 end
 
-function M.on_attach(client, bufnr)
-    require('twoslash-queries').attach(client, bufnr)
-    -- Enable completion triggered by <c-x><c-o>
-    vim.api.nvim_buf_set_option(bufnr or 0, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
+-- set keymaps without having to pass a function to on_attach
+vim.api.nvim_create_autocmd('LspAttach', {
+    callback = function(args)
+        local bufnr = args.buf
+        local client = vim.lsp.get_client_by_id(args.data.client_id)
+        if client.server_capabilities.completionProvider then
+            vim.bo[bufnr].omnifunc = 'v:lua.vim.lsp.omnifunc'
+        end
+        if client.server_capabilities.definitionProvider then
+            vim.bo[bufnr].tagfunc = 'v:lua.vim.lsp.tagfunc'
+        end
+        require('twoslash-queries').attach(client, bufnr)
 
-    -- Mappings.
-    local function keymap(from, to, desc)
-        vim.keymap.set('n', from, to, { buffer = bufnr or 0, silent = true, desc = desc })
-    end
-    local function formatLsp()
-        vim.lsp.buf.format({
-            -- never use tsserver to format files
-            filter = function(c)
-                return c ~= 'tsserver'
-            end,
-            async = true,
-        })
-    end
-    vim.api.nvim_buf_create_user_command(0, 'FormatLsp', formatLsp, {})
+        -- Mappings.
+        local function keymap(from, to, desc)
+            vim.keymap.set('n', from, to, { buffer = bufnr or 0, silent = true, desc = desc })
+        end
+        local function formatLsp()
+            vim.lsp.buf.format({
+                -- never use tsserver to format files
+                filter = function(c)
+                    return c ~= 'tsserver'
+                end,
+                async = true,
+            })
+        end
+        vim.api.nvim_buf_create_user_command(0, 'FormatLsp', formatLsp, {})
 
-    keymap('gD', vim.lsp.buf.declaration, 'lsp declaration')
-    keymap('gd', cross_lsp_definition, 'lsp definition')
-    keymap('K', vim.lsp.buf.hover, 'lsp hover')
-    keymap('<leader>t', vim.lsp.buf.hover, 'lsp hover')
-    keymap('gi', vim.lsp.buf.implementation, 'lsp implementation')
-    keymap('gk', vim.lsp.buf.signature_help, 'lsp signature_help')
-    keymap('<leader>wa', vim.lsp.buf.add_workspace_folder, 'lsp add_workspace_folder')
-    keymap('<leader>wr', vim.lsp.buf.remove_workspace_folder, 'lsp remove_workspace_folder')
-    keymap('<leader>wl', function()
-        print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
-    end, 'print workspace folders')
-    keymap('<leader>ws', vim.lsp.buf.workspace_symbol, 'lsp workspace_symbol')
-    keymap('gK', vim.lsp.buf.type_definition, 'lsp type_definition')
-    keymap('<leader>R', vim.lsp.buf.rename, 'lsp rename')
-    keymap('<leader>ca', vim.lsp.buf.code_action, 'lsp code_action')
-    keymap('gr', vim.lsp.buf.references, 'lsp references')
-    keymap('<leader>L', vim.diagnostic.open_float, 'show current line diagnostic')
-    keymap('<leader>[', vim.diagnostic.goto_prev, 'go to prev diagnostic')
-    keymap('<leader>]', vim.diagnostic.goto_next, 'go to next diagnostic')
-    keymap('<localleader>F', function()
-        require('conform').format({ lsp_fallback = false })
-    end, 'Conform format')
-    keymap('<localleader>f', function()
-        vim.lsp.buf.code_action({
-            filter = function(a)
-                return a.kind == 'quickfix' and a.title == 'Fix this prettier/prettier problem'
-            end,
-            apply = true,
-        })
-    end, 'apply prettier fix')
-end
+        keymap('gD', vim.lsp.buf.declaration, 'lsp declaration')
+        keymap('gd', cross_lsp_definition, 'lsp definition')
+        keymap('K', vim.lsp.buf.hover, 'lsp hover')
+        keymap('<leader>t', vim.lsp.buf.hover, 'lsp hover')
+        keymap('gi', vim.lsp.buf.implementation, 'lsp implementation')
+        keymap('gk', vim.lsp.buf.signature_help, 'lsp signature_help')
+        keymap('<leader>wa', vim.lsp.buf.add_workspace_folder, 'lsp add_workspace_folder')
+        keymap('<leader>wr', vim.lsp.buf.remove_workspace_folder, 'lsp remove_workspace_folder')
+        keymap('<leader>wl', function()
+            print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
+        end, 'print workspace folders')
+        keymap('<leader>ws', vim.lsp.buf.workspace_symbol, 'lsp workspace_symbol')
+        keymap('gK', vim.lsp.buf.type_definition, 'lsp type_definition')
+        keymap('<leader>R', vim.lsp.buf.rename, 'lsp rename')
+        keymap('<leader>ca', vim.lsp.buf.code_action, 'lsp code_action')
+        keymap('gr', vim.lsp.buf.references, 'lsp references')
+        keymap('<leader>L', vim.diagnostic.open_float, 'show current line diagnostic')
+        keymap('<leader>[', vim.diagnostic.goto_prev, 'go to prev diagnostic')
+        keymap('<leader>]', vim.diagnostic.goto_next, 'go to next diagnostic')
+        keymap('<localleader>F', function()
+            require('conform').format({ lsp_fallback = false })
+        end, 'Conform format')
+        keymap('<localleader>f', function()
+            vim.lsp.buf.code_action({
+                filter = function(a)
+                    return a.kind == 'quickfix' and a.title == 'Fix this prettier/prettier problem'
+                end,
+                apply = true,
+            })
+        end, 'apply prettier fix')
+    end,
+})
 
 M.servers = {
     flow = function()
@@ -224,7 +233,6 @@ function M.setup_lua()
 
     lspconfig.lua_ls.setup({
         cmd = { BIN.bin, '-E', BIN.main },
-        on_attach = M.on_attach,
         settings = {
             Lua = {
                 runtime = {
@@ -322,28 +330,6 @@ function M.setup_eslint_d()
     end
 end
 
-function M.lsp_options(options)
-    local result = {
-        on_attach = M.on_attach,
-        capabilities = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities()),
-        flags = {
-            debounce_text_changes = 150,
-        },
-    }
-
-    for k, v in pairs(options) do
-        if k == 'on_attach' then
-            result[k] = function(client)
-                M.on_attach(client)
-                options[k](client)
-            end
-        else
-            result[k] = v
-        end
-    end
-    return result
-end
-
 function M.setup()
     -- set global diagnostic settings to avoid passing them
     -- to every vim.diagnostic method explicitly
@@ -366,23 +352,29 @@ function M.setup()
                 [vim.diagnostic.severity.HINT] = '◉',
                 [vim.diagnostic.severity.INFO] = '◉',
             },
-        },
-    })
-    -- M.setup_eslint_d()
-    M.setup_lua()
-    require('rust-tools').setup({
-        server = {
-            on_attach = M.on_attach,
+            severity = vim.diagnostic.severity.ERROR,
         },
     })
 
+    -- M.setup_eslint_d()
+    M.setup_lua()
+    require('rust-tools').setup({})
+
+    local capabilities = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities())
     for lsp, opts in pairs(M.servers) do
         if type(opts) == 'function' then
             opts = opts()
         end
 
         if opts ~= nil then
-            lspconfig[lsp].setup(M.lsp_options(opts))
+            local final_options = vim.tbl_deep_extend('force', {
+                capabilities = capabilities,
+                flags = {
+                    debounce_text_changes = 150,
+                },
+            }, opts)
+
+            lspconfig[lsp].setup(final_options)
         end
     end
 end
