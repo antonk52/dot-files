@@ -83,16 +83,6 @@ vim.api.nvim_create_autocmd('LspAttach', {
         local function keymap(from, to, desc)
             vim.keymap.set('n', from, to, { buffer = bufnr or 0, silent = true, desc = desc })
         end
-        local function formatLsp()
-            vim.lsp.buf.format({
-                -- never use tsserver to format files
-                filter = function(c)
-                    return c ~= 'tsserver'
-                end,
-                async = true,
-            })
-        end
-        vim.api.nvim_buf_create_user_command(0, 'FormatLsp', formatLsp, {})
 
         keymap('gD', vim.lsp.buf.declaration, 'lsp declaration')
         keymap('gd', cross_lsp_definition, 'lsp definition')
@@ -100,12 +90,6 @@ vim.api.nvim_create_autocmd('LspAttach', {
         keymap('<leader>t', vim.lsp.buf.hover, 'lsp hover')
         keymap('gi', vim.lsp.buf.implementation, 'lsp implementation')
         keymap('gk', vim.lsp.buf.signature_help, 'lsp signature_help')
-        keymap('<leader>wa', vim.lsp.buf.add_workspace_folder, 'lsp add_workspace_folder')
-        keymap('<leader>wr', vim.lsp.buf.remove_workspace_folder, 'lsp remove_workspace_folder')
-        keymap('<leader>wl', function()
-            print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
-        end, 'print workspace folders')
-        keymap('<leader>ws', vim.lsp.buf.workspace_symbol, 'lsp workspace_symbol')
         keymap('gK', vim.lsp.buf.type_definition, 'lsp type_definition')
         keymap('<leader>R', vim.lsp.buf.rename, 'lsp rename')
         keymap('<leader>ca', vim.lsp.buf.code_action, 'lsp code_action')
@@ -113,17 +97,42 @@ vim.api.nvim_create_autocmd('LspAttach', {
         keymap('<leader>L', vim.diagnostic.open_float, 'show current line diagnostic')
         keymap('<leader>[', vim.diagnostic.goto_prev, 'go to prev diagnostic')
         keymap('<leader>]', vim.diagnostic.goto_next, 'go to next diagnostic')
+        -- formatting
         keymap('<localleader>F', function()
-            require('conform').format({ lsp_fallback = false })
+            require('conform').format({
+                lsp_fallback = vim.tbl_contains(
+                    { 'javascript', 'javascriptreact', 'typescript', 'typescriptreact' },
+                    vim.bo.filetype
+                ),
+            })
         end, 'Conform format')
         keymap('<localleader>f', function()
             vim.lsp.buf.code_action({
                 filter = function(a)
-                    return a.kind == 'quickfix' and a.title == 'Fix this prettier/prettier problem'
+                    vim.schedule(function()
+                        vim.print(a)
+                    end)
+                    return a.kind == 'quickfix' and a.command.command == 'eslint.applySingleFix'
                 end,
                 apply = true,
             })
         end, 'apply prettier fix')
+        vim.api.nvim_buf_create_user_command(0, 'FormatLsp', function()
+            vim.lsp.buf.format({
+                -- never use tsserver to format files
+                filter = function(c)
+                    return c ~= 'tsserver'
+                end,
+                async = true,
+            })
+        end, {})
+        -- unused workspace
+        keymap('<leader>wa', vim.lsp.buf.add_workspace_folder, 'lsp add_workspace_folder')
+        keymap('<leader>wr', vim.lsp.buf.remove_workspace_folder, 'lsp remove_workspace_folder')
+        keymap('<leader>wl', function()
+            print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
+        end, 'print workspace folders')
+        keymap('<leader>ws', vim.lsp.buf.workspace_symbol, 'lsp workspace_symbol')
     end,
 })
 
@@ -269,67 +278,6 @@ function M.setup_lua()
     })
 end
 
-function M.setup_eslint_d()
-    -- requires
-    -- - [x] brew install efm-langserver
-    -- - [x] npm i -g eslint_d
-    if vim.fn.executable('eslint_d') == 1 then
-        local eslint = {
-            lintCommand = 'eslint_d -f unix --stdin --stdin-filename ${INPUT}',
-            lintStdin = true,
-            lintFormats = { '%f:%l:%c: %m' },
-            lintIgnoreExitCode = true,
-            formatCommand = 'eslint_d --fix-to-stdout --stdin --stdin-filename=${INPUT}',
-            formatStdin = true,
-        }
-        local function eslint_config_exists()
-            local eslintrc = vim.fn.glob('.eslintrc*', false, true)
-
-            if not vim.tbl_isempty(eslintrc) then
-                return true
-            end
-
-            if vim.fn.filereadable('package.json') == 1 then
-                if vim.fn.json_decode(vim.fn.readfile('package.json'))['eslintConfig'] then
-                    return true
-                end
-            end
-
-            return false
-        end
-        lspconfig.efm.setup({
-            on_attach = function(client)
-                client.server_capabilities.document_formatting = true
-                client.server_capabilities.goto_definition = false
-            end,
-            root_dir = function()
-                if not eslint_config_exists() then
-                    return nil
-                end
-                return vim.fn.getcwd()
-            end,
-            settings = {
-                languages = {
-                    javascript = { eslint },
-                    javascriptreact = { eslint },
-                    ['javascript.jsx'] = { eslint },
-                    typescript = { eslint },
-                    ['typescript.tsx'] = { eslint },
-                    typescriptreact = { eslint },
-                },
-            },
-            filetypes = {
-                'javascript',
-                'javascriptreact',
-                'javascript.jsx',
-                'typescript',
-                'typescript.tsx',
-                'typescriptreact',
-            },
-        })
-    end
-end
-
 function M.setup()
     -- set global diagnostic settings to avoid passing them
     -- to every vim.diagnostic method explicitly
@@ -356,7 +304,6 @@ function M.setup()
         },
     })
 
-    -- M.setup_eslint_d()
     M.setup_lua()
     require('rust-tools').setup({})
 
