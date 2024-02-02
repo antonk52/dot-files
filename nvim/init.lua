@@ -166,7 +166,7 @@ local plugins = {
     {
         'folke/trouble.nvim',
         opts = {
-            icons = true,
+            icons = false,
             fold_open = 'v', -- icon used for open folds
             fold_closed = '>', -- icon used for closed folds
             indent_lines = false, -- add an indent guide below the fold icons
@@ -177,7 +177,7 @@ local plugins = {
                 hint = 'hint',
                 information = 'info',
             },
-            use_diagnostic_signs = false, -- enabling this will use the signs defined in your lsp client
+            use_diagnostic_signs = true, -- enabling this will use the signs defined in your lsp client
         },
         event = 'VeryLazy',
     },
@@ -189,10 +189,8 @@ local plugins = {
         dependencies = {
             'nvim-treesitter/nvim-treesitter-textobjects',
         },
-        build = function()
-            -- only updates parsers that need an update
-            vim.cmd('TSUpdate')
-        end,
+        -- only updates parsers that need an update
+        build = 'TSUpdate',
         config = function()
             -- if you get "wrong architecture error
             -- open nvim in macos native terminal app and run `:TSInstall`
