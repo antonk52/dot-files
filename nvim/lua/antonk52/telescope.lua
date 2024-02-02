@@ -3,12 +3,11 @@ local builtin = require('telescope.builtin')
 
 local M = {}
 
-local borders = { '─', '│', '─', '│', '┌', '┐', '┘', '└' }
 M.options = {
     borderchars = {
         results = { '─', '│', ' ', '│', '┌', '┐', '│', '│' },
         prompt = { '─', '│', '─', '│', '├', '┤', '┘', '└' },
-        preview = borders,
+        preview = { '─', '│', '─', '│', '┌', '┐', '┘', '└' },
     },
     layout_config = {
         horizontal = {
@@ -22,7 +21,7 @@ function M.action_meta_telescope()
     vim.ui.select(vim.fn.keys(builtin), { prompt = 'select telescope method' }, function(pick)
         if pick then
             -- TODO provide more options for some methods
-            builtin[pick](M.options)
+            builtin[pick]()
         end
     end)
 end
@@ -74,12 +73,12 @@ function M.action_buffer_lines()
     end
 
     require('telescope.pickers')
-        .new(M.options, {
+        .new({}, {
             prompt_title = 'Buffer lines:',
             finder = require('telescope.finders').new_table({
                 results = lines,
             }),
-            sorter = require('telescope.config').values.generic_sorter(M.options),
+            sorter = require('telescope.config').values.generic_sorter(),
             attach_mappings = function(prompt_bufnr)
                 actions.select_default:replace(function()
                     local selection = require('telescope.actions.state').get_selected_entry()
@@ -115,10 +114,10 @@ end
 
 function M.action_smart_vcs_files()
     if is_inside_git_repo() then
-        return require('telescope.builtin').git_files(M.options)
+        return require('telescope.builtin').git_files()
     end
 
-    local opts = {
+    require('telescope.builtin').find_files({
         hidden = true,
         find_command = function()
             local ignore_patterns = get_nongit_ignore_patterns()
@@ -135,9 +134,7 @@ function M.action_smart_vcs_files()
 
             return find_command
         end,
-    }
-
-    require('telescope.builtin').find_files(vim.tbl_extend('keep', opts, M.options))
+    })
 end
 
 function M.dots()
@@ -156,7 +153,7 @@ end
 
 function M.setup()
     require('telescope').setup({
-        defaults = {
+        defaults = vim.tbl_extend('force', {
             mappings = {
                 i = {
                     ['<C-j>'] = actions.move_selection_next,
@@ -164,11 +161,11 @@ function M.setup()
                     ['<esc>'] = actions.close,
                 },
             },
-        },
+        }, M.options),
     })
     vim.keymap.set('n', '<leader>f', M.action_smart_vcs_files)
     vim.keymap.set('n', '<leader>F', function()
-        require('telescope.builtin').find_files(M.options)
+        require('telescope.builtin').find_files()
     end, { desc = 'force show files, explicitly ignoring certain directories' })
     vim.keymap.set('n', '<leader>D', M.dots)
     vim.keymap.set('n', '<leader>b', builtin.buffers)
@@ -187,11 +184,11 @@ function M.setup()
         local make_entry = require('telescope.make_entry')
         local conf = require('telescope.config').values
 
-        local opts = vim.tbl_extend('keep', {
+        local opts = {
             cwd = vim.loop.cwd(),
             __inverted = false,
             __matches = false,
-        }, M.options)
+        }
 
         -- this is the tricky part
         -- live_grep picker uses `make_entry.gen_from_vimgrep` by default
