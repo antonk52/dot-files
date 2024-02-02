@@ -175,6 +175,9 @@ function M.setup()
     vim.keymap.set('n', '<leader>?', builtin.lsp_document_symbols)
     vim.keymap.set('n', '<leader>;', builtin.commands)
     vim.keymap.set('n', '<leader>r', builtin.resume)
+    vim.keymap.set('n', '<leader>g', function()
+        builtin.grep_string({ search = vim.fn.input('Grep: ') })
+    end, {})
 
     -- Repro of Rg command from fzf.vim
     vim.api.nvim_create_user_command('Rg', function(a)
