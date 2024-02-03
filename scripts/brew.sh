@@ -18,7 +18,7 @@ brew install autojump # smart cd
 brew install bat # modern cat
 brew install bottom # top/htop alternative
 brew install dust # like du but more intuitive.
-brew install exa # modern ls
+brew install eza # modern ls
 brew install fd # modern find
 brew install fzf # cli fuzzy finder written in Go
 brew install gh # github cli
