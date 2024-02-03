@@ -1,11 +1,11 @@
 local wezterm = require('wezterm')
 
 return {
-    font = wezterm.font('Fira Code', { weight = 'Regular' }),
+    font = wezterm.font('FiraCode Nerd Font', { weight = 'Regular' }),
     font_rules = {
         {
             font = wezterm.font_with_fallback({
-                family = 'Fira Code',
+                family = 'FiraCode Nerd Font',
             }),
             -- disable italics
             italic = false,
