@@ -173,7 +173,7 @@ function M.render()
         hi_next('StatusLineModified') .. M.modified(),
         hi_next('CursorLineNr') .. ' ' .. M.filename() .. ' ',
         '%<',
-        hi_next('Normal') .. '%=', -- right align
+        hi_next('Normal') .. '  %=', -- space and right align
         hi_next('Comment') .. M.lsp_init(),
         '  ',
         hi_next('Normal'),
@@ -197,7 +197,7 @@ function M.setup()
         pattern = '*',
         desc = 'simplify statusline when leaving window',
         callback = function()
-            vim.wo.statusline = ' %f%=%p%%  %l:%c '
+            vim.wo.statusline = ' %f  %=%p%%  %l:%c '
         end,
     })
     vim.api.nvim_create_autocmd({ 'WinEnter', 'BufEnter' }, {
