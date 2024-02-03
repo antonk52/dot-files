@@ -85,6 +85,8 @@ local function infer_colors()
             vim.fn.has('nvim-0.10') == 1 and vim.api.nvim_get_hl_by_name('Normal', true).background
                 or vim.api.nvim_get_hl(0, { name = 'Normal' }).bg
         ),
+        ctermbg = vim.api.nvim_get_hl(0, { name = 'Normal' }).ctermfg,
+        ctermfg = vim.api.nvim_get_hl(0, { name = 'Normal' }).ctermbg,
         bold = true,
     })
 end

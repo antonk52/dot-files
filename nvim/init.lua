@@ -547,6 +547,7 @@ vim.opt.listchars = {
 
 vim.opt.background = 'dark'
 vim.cmd('color lake')
+vim.opt.termguicolors = vim.env.COLORTERM == 'truecolor'
 
 -- no numbers by default
 vim.opt.number = false
