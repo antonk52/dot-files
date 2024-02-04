@@ -110,16 +110,7 @@ local plugins = {
             require('spectre').setup()
 
             vim.keymap.set('n', '<leader>S', '<cmd>lua require("spectre").open()<CR>', {
-                desc = 'Open Spectre',
-            })
-            vim.keymap.set('n', '<leader>sw', '<cmd>lua require("spectre").open_visual({select_word=true})<CR>', {
-                desc = 'Search current word',
-            })
-            vim.keymap.set('v', '<leader>sw', '<esc><cmd>lua require("spectre").open_visual()<CR>', {
-                desc = 'Search current word',
-            })
-            vim.keymap.set('n', '<leader>sf', '<cmd>lua require("spectre").open_file_search({select_word=true})<CR>', {
-                desc = 'Search on current file',
+                desc = 'Toggle Spectre',
             })
             vim.api.nvim_create_user_command('FindAndReplace', function()
                 require('spectre').open()
@@ -274,12 +265,17 @@ local plugins = {
                 end,
             })
 
-            vim.keymap.set('n', '<leader>{', function()
-                require('barbecue.ui').navigate(-2)
-            end, { desc = 'navigate to previous node' })
-            vim.keymap.set('n', '<leader>}', function()
+            vim.keymap.set('n', '<up>', function()
+                local init_pos = vim.api.nvim_win_get_cursor(0)
                 require('barbecue.ui').navigate(-1)
-            end, { desc = 'navigate to current node' })
+                vim.schedule(function()
+                    local next_pos = vim.api.nvim_win_get_cursor(0)
+                    if init_pos[1] == next_pos[1] and init_pos[2] == next_pos[2] then
+                        -- if the cursor did not move, navigate to the parent node
+                        require('barbecue.ui').navigate(-2)
+                    end
+                end)
+            end, { desc = 'navigate to current node start or parent node' })
         end,
         event = 'VeryLazy',
     },
@@ -625,7 +621,6 @@ require('antonk52.statusline').setup()
 -- preserving a legacy behaviour
 vim.keymap.del('', 'Y')
 
-vim.keymap.set('n', '<leader>o', '<cmd>edit #<cr>', { desc = 'toggle between two last buffers' })
 vim.keymap.set('v', '<leader>c', '"*y', { noremap = false, desc = 'copy to OS clipboard' })
 vim.keymap.set('', '<leader>v', '"*p', { noremap = false, desc = 'paste from OS clipboard' })
 vim.keymap.set('n', 'p', ']p', { desc = 'paste under current indentation level' })
@@ -636,11 +631,11 @@ vim.keymap.set('n', 'N', '<cmd>set hlsearch<cr>n', { desc = 'always have highlig
 
 vim.keymap.set('n', '+', '<C-a>', { desc = 'increment number under cursor' })
 vim.keymap.set('n', '_', '<C-x>', { desc = 'decrement number under cursor' })
+vim.keymap.set('n', '<tab>', 'za', { desc = 'toggle folds' })
 
 -- Useful when you have many splits & the status line gets truncated
-vim.keymap.set('n', '<leader>p', ':echo expand("%")<CR>', {
-    desc = 'print current buffer file path',
-})
+vim.keymap.set('n', '<leader>p', ':echo expand("%")<CR>', { desc = 'print rel buffer path' })
+vim.keymap.set('n', '<leader>P', ':echo expand("%:p")<CR>', { desc = 'print abs buffer path' })
 
 vim.keymap.set('n', '<leader>§', ':syntax sync fromstart<CR>', {
     silent = true,
@@ -688,17 +683,12 @@ vim.keymap.set({ 'n', 'v' }, '<Leader>a', '^', {
 vim.keymap.set('n', '<Leader>e', '$')
 vim.keymap.set('v', '<Leader>e', '$h')
 
-vim.keymap.set('n', '<C-t>', '<cmd>tabedit<CR>', { desc = 'open a new tab' })
-vim.keymap.set('n', '<C-s>', '<cmd>w!<CR>', { desc = 'save file' })
-vim.keymap.set('i', '<C-s>', '<C-o>:w!<CR>', { desc = 'save file' })
+vim.keymap.set('n', '<C-t>', '<cmd>tabedit<CR>', { desc = 'Open a new tab' })
+vim.keymap.set('n', '<leader>o', '<C-t>', { desc = 'Jump to previous tag stack' })
 
 -- to navigate between buffers
 vim.keymap.set('n', '<Left>', '<cmd>prev<CR>')
 vim.keymap.set('n', '<Right>', '<cmd>next<CR>')
-
--- easy escape for insert mode
-vim.keymap.set('i', 'kj', '<esc>')
-vim.keymap.set('i', 'jk', '<esc>')
 
 -- Commands {{{1
 local commands = {
