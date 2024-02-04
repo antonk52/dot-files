@@ -14,7 +14,6 @@ DOTS="$HOME"/dot-files
 [ ! -L "$XDG_CONFIG_HOME"/alacritty.toml ] && ln -s "$DOTS"/alacritty.toml "${XDG_CONFIG_HOME}"/alacritty.toml
 
 [ ! -L "$HOME"/.zshrc ] && ln -s "$DOTS"/.zshrc "$HOME"/.zshrc
-[ ! -L "$HOME"/.amethyst.yml ] && ln -s "$DOTS"/amethyst.yml "$HOME"/.amethyst.yml
 
 echo 'symlinks created'
 

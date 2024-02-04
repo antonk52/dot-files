@@ -51,7 +51,6 @@ fi
 
 # cask apps
 brew install alacritty # terminal
-brew install amethyst # tiling window manager
 brew install karabiner-elements # advanced key mapping
 brew install keycastr # useful for demos
 brew install monitorcontrol # control external monitors brightness from keyboard
@@ -59,16 +58,11 @@ brew install raycast # spotlight but useful
 brew install vlc # media player
 
 if [[ -z "${PERSONAL}" ]]; then
-    brew install docker # docker desktop app
-    brew install firefox
-    brew install gimp
-    brew install loopback # virtual devises to pass audio to obs
-    brew install obs # streaming & screen recording
     brew install telegram # chats
 fi
 
 # fonts
 brew tap homebrew/cask-fonts
-brew install --cask font-fira-code
+brew install font-fira-code
 brew install font-fira-code-nerd-font
 
