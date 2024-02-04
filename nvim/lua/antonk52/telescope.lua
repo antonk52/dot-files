@@ -97,18 +97,15 @@ function M.action_buffer_lines()
             attach_mappings = function(prompt_bufnr)
                 actions.select_default:replace(function()
                     local selection = require('telescope.actions.state').get_selected_entry()
+                    ---@type string
                     local picked_line = selection[1]
                     local searched_for = require('telescope.actions.state').get_current_line()
-                    local first_search_char = string.sub(searched_for, 1, 1)
+                    local first_search_char = searched_for:sub(1, 1)
 
-                    local col = string.find(picked_line, first_search_char)
-                    -- when first char is reversed casing
-                    if col == nil then
-                        local rev_char = first_search_char == string.upper(first_search_char)
-                                and string.lower(first_search_char)
-                            or string.upper(first_search_char)
-                        col = string.find(picked_line, rev_char)
-                    end
+                    local lower_idx = picked_line:find(first_search_char:lower())
+                    local upper_idx = picked_line:find(first_search_char:upper())
+                    local col = math.min(lower_idx or math.huge, upper_idx or math.huge)
+
                     actions.close(prompt_bufnr)
 
                     vim.api.nvim_win_set_cursor(0, {
