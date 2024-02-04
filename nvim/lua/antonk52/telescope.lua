@@ -26,6 +26,21 @@ function M.action_meta_telescope()
     end)
 end
 
+function M.action_git_picker()
+    vim.ui.select(
+        vim.tbl_filter(function(x)
+            return vim.startswith(x, 'git')
+        end, vim.fn.keys(builtin)),
+        { prompt = 'select telescope method' },
+        function(pick)
+            if pick then
+                -- TODO provide more options for some methods
+                builtin[pick]()
+            end
+        end
+    )
+end
+
 local _is_inside_git_repo = nil
 local function is_inside_git_repo()
     if _is_inside_git_repo ~= nil then
@@ -175,7 +190,8 @@ function M.setup()
     vim.keymap.set('n', '<leader>?', builtin.lsp_document_symbols)
     vim.keymap.set('n', '<leader>;', builtin.commands)
     vim.keymap.set('n', '<leader>r', builtin.resume)
-    vim.keymap.set('n', '<leader>g', function()
+    vim.keymap.set('n', '<leader>g', M.action_git_picker, { desc = 'git picker' })
+    vim.keymap.set('n', '<leader>G', function()
         builtin.grep_string({ search = vim.fn.input('Grep: ') })
     end, {})
 
