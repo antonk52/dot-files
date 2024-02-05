@@ -97,11 +97,15 @@ action = "ToggleViMode"
 key = "Escape"
 mode = "Vi|~Search"
 
+[[keyboard.bindings]]
+action = "ToggleSimpleFullscreen"
+key = "F1"
+
 [mouse]
 hide_when_typing = false
 
 [window]
-decorations = "none"
+decorations = "Full"
 dynamic_padding = false
 opacity = 1
 
