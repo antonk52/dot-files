@@ -181,7 +181,7 @@ local plugins = {
             'nvim-treesitter/nvim-treesitter-textobjects',
         },
         -- only updates parsers that need an update
-        build = 'TSUpdate',
+        build = ':TSUpdate',
         config = function()
             -- if you get "wrong architecture error
             -- open nvim in macos native terminal app and run `:TSInstall`
