@@ -732,6 +732,7 @@ local commands = {
     end,
 
     -- fat fingers
+    W = ':w',
     Wq = ':wq',
     Ter = ':ter',
     Sp = ':sp',
