@@ -154,9 +154,9 @@ function M.diagnostics()
     end
 
     local items = {}
-    for k, v in pairs(diagnostics) do
-        if v > 0 then
-            table.insert(items, k:sub(1, 1) .. v)
+    for _, k in ipairs({'error', 'warn'}) do
+        if diagnostics_cache[k] > 0 then
+            table.insert(items, k:sub(1, 1) .. diagnostics_cache[k])
         end
     end
 
