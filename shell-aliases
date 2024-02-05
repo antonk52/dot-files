@@ -165,16 +165,16 @@ alias dict="define"
 function brew_upgrade_outdated() {
     echo "Updating Homebrew..."
     brew update
-  # List outdated packages and use fzf to allow the user to select multiple packages
-  local packages_to_upgrade=$(brew outdated --quiet | fzf --multi --border --prompt "Select packages to upgrade: ")
-  # Check if the user selected any packages
-  if [[ -n "$packages_to_upgrade" ]]; then
-      # Upgrade the selected packages in one command
-      echo "Upgrading selected packages..."
-      brew upgrade $packages_to_upgrade
-  else
-      echo "No packages selected for upgrade."
-  fi
+    # List outdated packages and use fzf to allow the user to select multiple packages
+    local packages_to_upgrade=$(brew outdated --quiet | fzf --multi --border --prompt "Select packages to upgrade: " | awk '{printf "%s ", $1}')
+    # Check if the user selected any packages
+    if [[ -n "$packages_to_upgrade" ]]; then
+        # Upgrade the selected packages in one command
+        echo "Upgrading selected packages: $packages_to_upgrade"
+        eval brew upgrade --quiet "$packages_to_upgrade"
+    else
+        echo "No packages selected for upgrade."
+    fi
 }
 alias bu="brew_upgrade_outdated"
-alias bua="brew update --all && brew upgrade --all && brew cleanup --quiet"
+alias bua="brew update --all && brew upgrade && brew cleanup --quiet"
