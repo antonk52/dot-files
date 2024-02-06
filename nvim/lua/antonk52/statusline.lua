@@ -154,7 +154,7 @@ function M.diagnostics()
     end
 
     local items = {}
-    for _, k in ipairs({'error', 'warn'}) do
+    for _, k in ipairs({ 'error', 'warn' }) do
         if diagnostics_cache[k] > 0 then
             table.insert(items, k:sub(1, 1) .. diagnostics_cache[k])
         end
@@ -206,6 +206,8 @@ function M.setup()
         pattern = '*',
         desc = 'restore statusline when entering window',
         callback = function()
+            M.refresh_diagnostics()
+            M.refresh_lsp_status()
             vim.opt.statusline = "%!v:lua.require'antonk52.statusline'.render()"
         end,
     })
@@ -222,7 +224,7 @@ function M.setup()
 
                 throttle_timer = vim.defer_fn(function()
                     throttle_timer = nil
-                    require('antonk52.statusline').refresh_lsp_status()
+                    M.refresh_lsp_status()
                     vim.cmd.redrawstatus()
                 end, 80)
             end,
