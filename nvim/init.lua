@@ -524,7 +524,6 @@ vim.g.loaded_perl_provider = 0
 -- Defaults {{{1
 -- theme
 vim.opt.background = 'dark'
-vim.opt.termguicolors = true
 
 -- highlight current cursor line
 vim.opt.cursorline = true
@@ -543,7 +542,12 @@ vim.opt.listchars = {
 
 vim.opt.background = 'dark'
 vim.cmd('color lake')
-vim.opt.termguicolors = vim.env.COLORTERM == 'truecolor'
+vim.opt.termguicolors = vim.env.__CFBundleIdentifier ~= 'com.apple.Terminal'
+
+-- iterate from 0 to 255
+for i = 0, 255 do
+    vim.cmd('hi! CtermColor' .. i .. ' ctermfg=' .. i .. ' ctermbg=' .. i)
+end
 
 -- no numbers by default
 vim.opt.number = false
@@ -730,6 +734,8 @@ local commands = {
     TestAttach = function()
         require('antonk52.test_js').attach_to_buffer()
     end,
+
+    NT = ':set notermguicolors<cr>',
 
     -- fat fingers
     W = ':w',

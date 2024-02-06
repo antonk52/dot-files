@@ -30,6 +30,7 @@ fi
 
 # global node modules
 export PATH="$HOME"/.npm-global/bin:$PATH
+export PATH=/usr/local/bin:$PATH
 # cargo crates
 export PATH="$HOME"/.cargo/bin:"$HOME"/.local/share/cargo/bin:$PATH
 # pip packages
