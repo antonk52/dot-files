@@ -715,6 +715,25 @@ local commands = {
         require('antonk52.notes').setup()
     end,
 
+    ListLSPSupportedCommands = function()
+        for _, client in ipairs(vim.lsp.get_active_clients()) do
+            print('LSP client:', client.name)
+            -- Check if the server supports workspace/executeCommand, which is often how commands are exposed
+            if client.server_capabilities.executeCommandProvider then
+                print('Supported commands:')
+                -- If the server provides specific commands, list them
+                if client.server_capabilities.executeCommandProvider.commands then
+                    for _, cmd in ipairs(client.server_capabilities.executeCommandProvider.commands) do
+                        print('-', cmd)
+                    end
+                else
+                    print('This LSP server supports commands, but does not list specific commands.')
+                end
+            else
+                print('This LSP server does not support commands.')
+            end
+        end
+    end,
     ColorDark = function()
         vim.cmd('colorscheme lake')
         -- TODO create an issue for miniCursorWord to supply a highlight group to link to
