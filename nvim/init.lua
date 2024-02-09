@@ -104,7 +104,9 @@ local plugins = {
     {
         'ggandor/leap.nvim', -- easy motion like
         config = function()
-            require('leap').create_default_mappings()
+            vim.keymap.set({ 'n', 'x', 'o' }, '<leader>s', function()
+                require('leap').leap({ target_windows = { vim.api.nvim_get_current_win() } })
+            end, { desc = 'Bi-directional search with leap.nvim' })
         end,
     },
     {
