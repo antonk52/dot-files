@@ -18,6 +18,7 @@
   "gitignore-grabber.nvim": { "branch": "main", "commit": "365c1a2255f1badf5aa8a963a07f869a81ab6575" },
   "lake.nvim": { "branch": "main", "commit": "557f44fbe911b171dc996b6541324343487e154f" },
   "lazy.nvim": { "branch": "main", "commit": "aedcd79811d491b60d0a6577a9c1701063c2a609" },
+  "leap.nvim": { "branch": "main", "commit": "46e9b1a1d7438ac72794b0857b20cad4390b827c" },
   "markdowny.nvim": { "branch": "main", "commit": "083782f05e67cc08c6378affec9f55a913ac55f4" },
   "mini.nvim": { "branch": "main", "commit": "40086c0a646100c766e8e05cd6e7d75bb1ca37de" },
   "neodev.nvim": { "branch": "main", "commit": "7cb4f7f29c6bf6f1d21a37f6dd6d12ba64266b09" },

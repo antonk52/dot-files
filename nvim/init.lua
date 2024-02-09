@@ -102,6 +102,12 @@ local plugins = {
         event = 'VeryLazy',
     },
     {
+        'ggandor/leap.nvim', -- easy motion like
+        config = function()
+            require('leap').create_default_mappings()
+        end,
+    },
+    {
         'nvim-pack/nvim-spectre', -- global search and replace
         dependencies = {
             'nvim-lua/plenary.nvim',
