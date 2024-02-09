@@ -152,17 +152,21 @@ function M.diagnostics()
         end
         diagnostics_cache = diagnostics
     end
+    local hi = {
+        error = 'DiagnosticError',
+        warn = 'DiagnosticWarn',
+    }
 
     local items = {}
     for _, k in ipairs({ 'error', 'warn' }) do
         if diagnostics_cache[k] > 0 then
-            table.insert(items, k:sub(1, 1) .. diagnostics_cache[k])
+            table.insert(items, hi_next(hi[k]) .. k:sub(1, 1) .. diagnostics_cache[k])
         end
     end
 
     local result = table.concat(items, ' ')
 
-    return #result > 0 and result .. '  ' or ''
+    return #result > 0 and result .. hi_next('Normal') .. '  ' or ''
 end
 function M.refresh_diagnostics()
     diagnostics_cache = nil
