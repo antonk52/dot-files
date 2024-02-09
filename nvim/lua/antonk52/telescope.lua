@@ -80,43 +80,61 @@ end
 -- similar to `telescope.builtin.current_buffer_fuzzy_find`
 -- but does not use treesitter for highlighting
 -- jumps to the first char from the search (similar to default `/`)
+
+-- once this PR gets merged
+-- https://github.com/nvim-telescope/telescope.nvim/pull/2909
+-- this should be replaced with
+-- require('telescope.builtin').current_buffer_fuzzy_find({
+--   skip_empty_lines = true,
+--   results_ts_highlight = false, -- no highlighting for results
+-- })
 function M.action_buffer_lines()
-    local lines = vim.api.nvim_buf_get_lines(0, 1, -1, true)
-    local line_to_number_dict = {}
-    for i, l in ipairs(lines) do
-        line_to_number_dict[l] = i
+    local filename = vim.fn.expand(vim.api.nvim_buf_get_name(0))
+    local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
+    local lines_with_numbers = {}
+    for lnum, line in ipairs(lines) do
+        table.insert(lines_with_numbers, {
+            lnum = lnum,
+            bufnr = 0,
+            filename = filename,
+            text = line,
+        })
     end
 
+    local column = 0
+    local action_set = require('telescope.actions.set')
+    local action_state = require('telescope.actions.state')
     require('telescope.pickers')
         .new({}, {
             prompt_title = 'Buffer lines:',
             finder = require('telescope.finders').new_table({
-                results = lines,
+                results = lines_with_numbers,
+                entry_maker = require('telescope.make_entry').gen_from_buffer_lines({}),
             }),
             sorter = require('telescope.config').values.generic_sorter(),
-            attach_mappings = function(prompt_bufnr)
-                actions.select_default:replace(function()
-                    local selection = require('telescope.actions.state').get_selected_entry()
-                    ---@type string
-                    local picked_line = selection[1]
-                    local searched_for = require('telescope.actions.state').get_current_line()
-                    local first_search_char = searched_for:sub(1, 1)
+            attach_mappings = function()
+                action_set.select:enhance({
+                    pre = function(bufnr)
+                        local selection = action_state.get_selected_entry()
+                        if not selection then
+                            return
+                        end
+                        local current_picker = action_state.get_current_picker(bufnr)
+                        local searched_for = action_state.get_current_line()
+                        local highlighted = current_picker.sorter:highlighter(searched_for, selection.ordinal)
+                        column = highlighted[1]
+                    end,
+                    post = function()
+                        local selection = action_state.get_selected_entry()
+                        if not selection then
+                            return
+                        end
 
-                    local lower_idx = picked_line:find(first_search_char:lower())
-                    local upper_idx = picked_line:find(first_search_char:upper())
-                    local col = math.min(lower_idx or math.huge, upper_idx or math.huge)
-
-                    actions.close(prompt_bufnr)
-
-                    vim.api.nvim_win_set_cursor(0, {
-                        -- line number
-                        line_to_number_dict[picked_line] + 1,
-                        -- column number
-                        col,
-                    })
-                    -- center line on the screen
-                    vim.api.nvim_feedkeys('zz', 'n', false)
-                end)
+                        vim.api.nvim_win_set_cursor(0, { selection.lnum, column or 0 })
+                        -- center line on the screen
+                        vim.api.nvim_feedkeys('zz', 'n', false)
+                    end,
+                })
 
                 return true
             end,
