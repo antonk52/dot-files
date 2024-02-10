@@ -183,7 +183,8 @@ end
 
 function M.git_diff(opts)
     opts = opts or {}
-    local output = vim.fn.systemlist(opts.cmd or { 'git', 'diff' })
+    opts.cmd = opts.cmd or { 'git', 'diff' }
+    local output = vim.fn.systemlist(opts.cmd)
     local results = {}
     local filename = nil
     local linenumber = nil
@@ -221,6 +222,14 @@ function M.git_diff(opts)
     -- Add the last hunk to the table
     if hunk[1] ~= nil then
         table.insert(results, { filename = filename, lnum = linenumber, raw_lines = hunk })
+    end
+
+    -- in hg I typically have session not from the repo root
+    if opts.cmd[1] == 'hg' then
+        local hg_root = vim.fn.system({ 'hg', 'root' })
+        vim.tbl_map(function(entry)
+            entry.filename = string.sub(hg_root .. '/' .. entry.filename, #(vim.loop.cwd() or vim.fn.getcwd()) + 3)
+        end, results)
     end
 
     local diff_previewer = require('telescope.previewers').new_buffer_previewer({
