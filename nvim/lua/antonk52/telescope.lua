@@ -181,6 +181,78 @@ function M.dots()
     })
 end
 
+function M.git_diff(opts)
+    opts = opts or {}
+    local output = vim.fn.systemlist(opts.cmd or { 'git', 'diff' })
+    local results = {}
+    local filename = nil
+    local linenumber = nil
+    local hunk = {}
+
+    for _, line in ipairs(output) do
+        -- new file
+        if line:sub(1, 4) == 'diff' then
+            -- Start of a new hunk
+            if hunk[1] ~= nil then
+                table.insert(results, { filename = filename, lnum = linenumber, raw_lines = hunk })
+            end
+
+            local _, filepath_, _ = line:match('^diff (.*) a/(.*) b/(.*)$')
+
+            filename = filepath_
+            linenumber = nil
+
+            hunk = {}
+        elseif line:sub(1, 1) == '@' then
+            if filename ~= nil and linenumber ~= nil and #hunk > 0 then
+                table.insert(results, { filename = filename, lnum = linenumber, raw_lines = hunk })
+                hunk = {}
+            end
+            -- Hunk header
+            -- @example "@@ -157,20 +157,6 @@ some content"
+            local _, _, c, _ = string.match(line, '@@ %-(.*),(.*) %+(.*),(.*) @@')
+            linenumber = tonumber(c)
+            hunk = {}
+            table.insert(hunk, line)
+        else
+            table.insert(hunk, line)
+        end
+    end
+    -- Add the last hunk to the table
+    if hunk[1] ~= nil then
+        table.insert(results, { filename = filename, lnum = linenumber, raw_lines = hunk })
+    end
+
+    local diff_previewer = require('telescope.previewers').new_buffer_previewer({
+        define_preview = function(self, entry, _)
+            -- This function is called to populate the preview buffer
+            -- Use `vim.api.nvim_buf_set_lines` to set the content of the preview buffer
+            local lines = entry.raw_lines or { 'empty' }
+            vim.api.nvim_buf_set_lines(self.state.bufnr, 0, -1, false, lines)
+            local putils = require('telescope.previewers.utils')
+            putils.regex_highlighter(self.state.bufnr, 'diff')
+        end,
+    })
+
+    require('telescope.pickers')
+        .new({}, {
+            prompt_title = 'Git Diff Hunks',
+            finder = require('telescope.finders').new_table({
+                results = results,
+                entry_maker = function(entry)
+                    entry.value = entry.filename
+                    entry.ordinal = entry.filename .. ':' .. entry.lnum
+                    entry.display = entry.filename .. ':' .. entry.lnum
+                    entry.lnum = entry.lnum
+                    return entry
+                end,
+            }),
+            previewer = diff_previewer,
+            sorter = require('telescope.config').values.file_sorter({}),
+        })
+        :find()
+end
+
 function M.setup()
     require('telescope').setup({
         defaults = vim.tbl_extend('force', {
@@ -269,6 +341,12 @@ function M.setup()
     end, { nargs = '+' })
     vim.api.nvim_create_user_command('TelescopeLiveGrep', 'Telescope live_grep', {})
     vim.api.nvim_create_user_command('TelescopeResume', 'Telescope resume', {})
+    vim.api.nvim_create_user_command('TelescopeGitDiff', function()
+        M.git_diff()
+    end, { desc = 'git hunk picker' })
+    vim.api.nvim_create_user_command('TelescopeHgDiff', function()
+        M.git_diff({ cmd = { 'hg', 'diff' } })
+    end, { desc = 'hg hunk picker' })
 end
 
 return M
