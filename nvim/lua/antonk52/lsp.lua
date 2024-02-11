@@ -279,6 +279,7 @@ function M.setup_lua()
 end
 
 function M.setup()
+    -- vim.lsp.log.set_level(vim.lsp.log.DEBUG)
     -- set global diagnostic settings to avoid passing them
     -- to every vim.diagnostic method explicitly
     vim.diagnostic.config({
@@ -302,6 +303,7 @@ function M.setup()
             },
             severity = vim.diagnostic.severity.ERROR,
         },
+        severity_sort = true, -- show errors first
     })
 
     M.setup_lua()
