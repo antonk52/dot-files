@@ -77,7 +77,6 @@ vim.api.nvim_create_autocmd('LspAttach', {
         if client.server_capabilities.definitionProvider then
             vim.bo[bufnr].tagfunc = 'v:lua.vim.lsp.tagfunc'
         end
-        require('twoslash-queries').attach(client, bufnr)
 
         -- Mappings.
         local function keymap(from, to, desc)
@@ -147,11 +146,12 @@ M.servers = {
         end
     end,
     tsserver = {
-        on_attach = function(client)
+        on_attach = function(client, bufnr)
             -- force disable typescript formatting
             client.server_capabilities.document_formatting = false
             -- disable highlighting hints from tsserver
             client.server_capabilities.semanticTokensProvider = nil
+            require('twoslash-queries').attach(client, bufnr)
         end,
     },
 
