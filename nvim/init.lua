@@ -445,6 +445,7 @@ local plugins = {
                 vim.api.nvim_set_hl(0, '@text.todo', { fg = c.black })
                 vim.api.nvim_set_hl(0, '@text.strike', { link = 'Comment' })
                 vim.api.nvim_set_hl(0, 'CursorLine', { bg = t.scale.gray[2] })
+                vim.api.nvim_set_hl(0, 'StatusLineNC', { fg = c.black, bg = t.scale.gray[2] })
                 vim.api.nvim_set_hl(0, 'Todo', { bg = c.red })
                 vim.api.nvim_set_hl(0, 'DiagnosticHint', { fg = t.scale.gray[5] })
                 vim.api.nvim_set_hl(0, 'Directory', { fg = c.blue, bold = true })

@@ -74,19 +74,12 @@ function M.lsp_init()
 end
 
 local function infer_colors()
+    local norm = vim.api.nvim_get_hl(0, { name = 'Normal' })
     vim.api.nvim_set_hl(0, 'StatusLineModified', {
-        bg = string.format(
-            '#%06x',
-            vim.fn.has('nvim-0.10') == 1 and vim.api.nvim_get_hl_by_name('MoreMsg', true).foreground
-                or vim.api.nvim_get_hl(0, { name = 'MoreMsg' }).fg
-        ),
-        fg = string.format(
-            '#%06x',
-            vim.fn.has('nvim-0.10') == 1 and vim.api.nvim_get_hl_by_name('Normal', true).background
-                or vim.api.nvim_get_hl(0, { name = 'Normal' }).bg
-        ),
-        ctermbg = vim.api.nvim_get_hl(0, { name = 'Normal' }).ctermfg,
-        ctermfg = vim.api.nvim_get_hl(0, { name = 'Normal' }).ctermbg,
+        bg = string.format('#%06x', vim.api.nvim_get_hl(0, { name = 'MoreMsg' }).fg),
+        fg = string.format('#%06x', norm.bg),
+        ctermbg = norm.ctermfg,
+        ctermfg = norm.ctermbg,
         bold = true,
     })
 end
