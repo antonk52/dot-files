@@ -876,10 +876,10 @@ vim.api.nvim_create_user_command('Mappings', function(x)
     vim.api.nvim_buf_set_lines(buf, 0, -1, false, lines)
 
     -- Set buffer options to make it look nicer and read-only
-    vim.api.nvim_buf_set_option(buf, 'buftype', 'nofile')
-    vim.api.nvim_buf_set_option(buf, 'bufhidden', 'hide')
-    vim.api.nvim_buf_set_option(buf, 'swapfile', false)
-    vim.api.nvim_win_set_option(0, 'cursorline', false)
+    vim.api.nvim_set_option_value('buftype', 'nofile', { buf = buf })
+    vim.api.nvim_set_option_value('bufhidden', 'hide', { buf = buf })
+    vim.api.nvim_set_option_value('swapfile', false, { buf = buf })
+    vim.api.nvim_set_option_value('cursorline', false, { win = 0 })
     vim.api.nvim_set_current_buf(buf)
 
     vim.api.nvim_set_hl(0, 'MyMapsUsed', { bg = 'NONE', fg = 'Yellow', bold = true })
@@ -941,7 +941,7 @@ vim.api.nvim_create_autocmd('FileType', {
         if vim.bo.filetype == 'markdown' then
             vim.wo.foldmethod = 'expr'
             -- use treesitter for folding
-            vim.wo.foldexpr = 'nvim_treesitter#foldexpr()'
+            vim.wo.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
         else
             vim.wo.foldmethod = 'indent'
         end

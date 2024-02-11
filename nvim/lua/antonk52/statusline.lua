@@ -134,20 +134,28 @@ function M.diagnostics()
 
     if not diagnostics then
         diagnostics = { error = 0, warn = 0, info = 0, hint = 0 }
-        local all_diagnostics = vim.diagnostic.get(0)
+        if has_nvim_0_10_x then
+            local diag_count = vim.diagnostic.count(0)
+            diagnostics.error = diag_count[s.ERROR] or 0
+            diagnostics.warn = diag_count[s.WARN] or 0
+            diagnostics.info = diag_count[s.INFO] or 0
+            diagnostics.hint = diag_count[s.HINT] or 0
+        else
+            local all_diagnostics = vim.diagnostic.get(0)
 
-        for _, v in ipairs(all_diagnostics) do
-            if v.severity == s.ERROR then
-                diagnostics.error = diagnostics.error + 1
-            end
-            if v.severity == s.WARN then
-                diagnostics.warn = diagnostics.warn + 1
-            end
-            if v.severity == s.INFO then
-                diagnostics.info = diagnostics.info + 1
-            end
-            if v.severity == s.HINT then
-                diagnostics.hint = diagnostics.hint + 1
+            for _, v in ipairs(all_diagnostics) do
+                if v.severity == s.ERROR then
+                    diagnostics.error = diagnostics.error + 1
+                end
+                if v.severity == s.WARN then
+                    diagnostics.warn = diagnostics.warn + 1
+                end
+                if v.severity == s.INFO then
+                    diagnostics.info = diagnostics.info + 1
+                end
+                if v.severity == s.HINT then
+                    diagnostics.hint = diagnostics.hint + 1
+                end
             end
         end
         diagnostics_cache = diagnostics
