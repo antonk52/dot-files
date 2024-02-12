@@ -224,6 +224,25 @@ function M.git_diff(opts)
         table.insert(results, { filename = filename, lnum = linenumber, raw_lines = hunk })
     end
 
+    local function get_diff_line_idx(lines)
+        for i, line in ipairs(lines) do
+            if vim.startswith(line, '-') or vim.startswith(line, '+') then
+                return i
+            end
+        end
+        return -1
+    end
+
+    for _, v in ipairs(results) do
+        local diff_line_idx = get_diff_line_idx(v.raw_lines)
+        diff_line_idx = math.max(
+            -- first line is header, next one is already handled
+            diff_line_idx - 2,
+            0
+        )
+        v.lnum = v.lnum + diff_line_idx
+    end
+
     -- in hg I typically have session not from the repo root
     if opts.cmd[1] == 'hg' then
         local hg_root = vim.fn.system({ 'hg', 'root' })
@@ -242,6 +261,10 @@ function M.git_diff(opts)
             putils.regex_highlighter(self.state.bufnr, 'diff')
         end,
     })
+
+    if #results == 0 then
+        return vim.notify('No hunks', vim.log.levels.WARN)
+    end
 
     require('telescope.pickers')
         .new({}, {
