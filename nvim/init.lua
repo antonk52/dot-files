@@ -146,12 +146,6 @@ local plugins = {
     },
     'antonk52/amake.nvim',
     {
-        'akinsho/toggleterm.nvim',
-        version = '*',
-        opts = { open_mapping = '<localleader>t', direction = 'tab' },
-        event = 'VeryLazy',
-    },
-    {
         'antonk52/npm_scripts.nvim',
         opts = {},
         config = function()
