@@ -39,6 +39,17 @@ local plugins = {
     {
         'stevearc/conform.nvim',
         opts = {
+            format_on_save = function()
+                if
+                    vim.startswith(vim.fn.getcwd() or vim.loop.cwd(), '/Users/antonk52/dot-files')
+                    or vim.tbl_contains(
+                        { 'typescript', 'typescriptreact', 'javascript', 'javascriptreact', 'json' },
+                        vim.bo.filetype
+                    )
+                then
+                    return { timeout_ms = 500, lsp_fallback = true }
+                end
+            end,
             formatters_by_ft = {
                 lua = { 'stylua' },
                 -- Use a sub-list to run only the first available formatter
@@ -710,6 +721,9 @@ local commands = {
     end,
     NotesMode = function()
         require('antonk52.notes').setup()
+    end,
+    NoteToday = function()
+        require('antonk52.notes').note_week_now()
     end,
 
     ListLSPSupportedCommands = function()

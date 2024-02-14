@@ -298,6 +298,7 @@ function M.setup()
         }, M.options),
     })
     vim.keymap.set('n', '<leader>f', M.action_smart_vcs_files)
+    vim.keymap.set('n', '<D-p>', M.action_smart_vcs_files)
     vim.keymap.set('n', '<leader>F', function()
         require('telescope.builtin').find_files()
     end, { desc = 'force show files, explicitly ignoring certain directories' })

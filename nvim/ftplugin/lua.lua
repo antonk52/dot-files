@@ -13,13 +13,4 @@ if vim.fn.executable('stylua') == 1 then
         bang = true,
         nargs = 0,
     })
-    if vim.startswith(vim.fn.getcwd() or vim.loop.cwd(), '/Users/antonk52/dot-files') then
-        vim.api.nvim_create_autocmd('BufWritePre', {
-            pattern = '*.lua',
-            callback = function()
-                require('conform').format({ lsp_fallback = false })
-            end,
-            desc = 'auto format lua files in dot files',
-        })
-    end
 end
