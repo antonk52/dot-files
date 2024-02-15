@@ -1003,12 +1003,7 @@ vim.api.nvim_create_autocmd('BufReadPost', {
                     return
                 end
                 local indent_level = vim.fn.indent(lnum)
-                if indent_level == 4 then
-                    vim.bo.expandtab = true
-                    vim.bo.shiftwidth = indent_level
-                    vim.bo.tabstop = indent_level
-                    return
-                elseif indent_level == 2 then
+                if indent_level == 4 or indent_level == 2 then
                     vim.bo.expandtab = true
                     vim.bo.shiftwidth = indent_level
                     vim.bo.tabstop = indent_level
