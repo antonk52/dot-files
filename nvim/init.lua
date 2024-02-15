@@ -43,7 +43,7 @@ local plugins = {
                 if
                     vim.startswith(vim.fn.getcwd() or vim.loop.cwd(), '/Users/antonk52/dot-files')
                     or vim.tbl_contains(
-                        { 'typescript', 'typescriptreact', 'javascript', 'javascriptreact', 'json' },
+                        { 'typescript', 'typescriptreact', 'javascript', 'javascriptreact' },
                         vim.bo.filetype
                     )
                 then
@@ -984,6 +984,40 @@ vim.api.nvim_create_autocmd('BufReadPost', {
 vim.api.nvim_create_autocmd('OptionSet', {
     pattern = { 'tabstop', 'shiftwidth' },
     callback = update_listchars,
+})
+-- update indent levels
+vim.api.nvim_create_autocmd('BufReadPost', {
+    pattern = '*',
+    callback = function()
+        local lines = vim.api.nvim_buf_get_lines(0, 0, 100, false)
+        local tab = '\t'
+
+        -- check if there are indented lines
+        -- and set listchars accordingly
+        for lnum, line in ipairs(lines) do
+            local first_char = line:sub(1, 1)
+            if first_char == ' ' or first_char == tab then
+                if first_char == tab then
+                    -- do not use spaces in this buffer
+                    vim.bo.expandtab = false
+                    return
+                end
+                local indent_level = vim.fn.indent(lnum)
+                if indent_level == 4 then
+                    vim.bo.expandtab = true
+                    vim.bo.shiftwidth = indent_level
+                    vim.bo.tabstop = indent_level
+                    return
+                elseif indent_level == 2 then
+                    vim.bo.expandtab = true
+                    vim.bo.shiftwidth = indent_level
+                    vim.bo.tabstop = indent_level
+                    return
+                end
+            end
+        end
+        -- or if no indented lines are found leave the defaults
+    end,
 })
 
 -- load local init.lua {{{1
