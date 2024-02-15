@@ -116,7 +116,6 @@ function M.setup()
         },
         sources = {
             { name = 'luasnip', keyword_length = 1 },
-            { name = 'emoji', insert = true },
             { name = 'nvim_lsp' },
             { name = 'nvim_lua' },
             { name = 'path' },
