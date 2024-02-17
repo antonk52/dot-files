@@ -115,6 +115,8 @@ local plugins = {
     {
         'ggandor/leap.nvim', -- easy motion like
         config = function()
+            require('leap').opts.labels = 'asdfghjklqwertyuiopzxcvbnm'
+            require('leap').opts.safe_labels = 'asdfghjklqwertyuiopzxcvbnm'
             vim.keymap.set({ 'n', 'x', 'o' }, '<leader>s', function()
                 require('leap').leap({ target_windows = { vim.api.nvim_get_current_win() } })
             end, { desc = 'Bi-directional search with leap.nvim' })
@@ -127,10 +129,6 @@ local plugins = {
         },
         config = function()
             require('spectre').setup()
-
-            vim.keymap.set('n', '<leader>S', '<cmd>lua require("spectre").open()<CR>', {
-                desc = 'Toggle Spectre',
-            })
             vim.api.nvim_create_user_command('FindAndReplace', function()
                 require('spectre').open()
             end, { desc = 'Open Spectre' })
