@@ -37,6 +37,7 @@
     pr = "!f() { open \"$(git repourl)/compare/$(git branch --show-current)\"; }; f"
     c = commit
     cm = commit -m
+    uncommit = reset HEAD~1
     amend = commit --amend --no-edit
     reword = commit --amend --only -v --
     clonesubmodules = submodule update --init --recursive
