@@ -43,6 +43,14 @@ if command -v fd &> /dev/null; then
 fi
 # completions {{{1
 
+# see https://gist.github.com/ctechols/ca1035271ad134841284
+autoload -Uz compinit;
+if [[ -n ${ZDOTDIR}/.zcompdump(#qN.mh+24) ]]; then
+    compinit;
+else
+    compinit -C;
+fi;
+
 npm_completions="$DOT_FILES/scripts/npm-completions.zsh"
 
 [ ! -f "$npm_completions" ] && npm completion >> "$npm_completions";
@@ -60,7 +68,6 @@ if command -v docker &> /dev/null; then
         ln -s "$docker_etc/docker-machine.zsh-completion" "$zsh_site_functions_path/_docker-machine"
         ln -s "$docker_etc/docker-compose.zsh-completion" "$zsh_site_functions_path/_docker-compose"
     fi
-    autoload -Uz compinit; compinit
 fi
 
 if command -v yarn &> /dev/null && command -v compdef &> /dev/null; then
