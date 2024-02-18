@@ -1,5 +1,4 @@
 local lspconfig = require('lspconfig')
-local lspconfig_util = require('lspconfig.util')
 
 local M = {}
 
@@ -182,14 +181,6 @@ M.servers = {
             -- force enable formatting
             client.server_capabilities.document_formatting = true
         end,
-        root_dir = lspconfig_util.root_pattern(
-            '.eslintrc',
-            '.eslintrc.js',
-            '.eslintrc.cjs',
-            '.eslintrc.yaml',
-            '.eslintrc.yml',
-            '.eslintrc.json'
-        ),
     },
 
     marksman = {},
