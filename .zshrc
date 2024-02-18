@@ -63,7 +63,7 @@ if command -v docker &> /dev/null; then
     autoload -Uz compinit; compinit
 fi
 
-if command -v compdef &> /dev/null; then
+if command -v yarn &> /dev/null && command -v compdef &> /dev/null; then
     source "$DOT_FILES/dependencies/zsh-yarn-completions/zsh-yarn-completions.plugin.zsh"
 fi
 
