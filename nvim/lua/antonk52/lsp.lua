@@ -152,6 +152,13 @@ M.servers = {
             client.server_capabilities.semanticTokensProvider = nil
             require('twoslash-queries').attach(client, bufnr)
         end,
+        settings = {
+            completions = {
+                completeFunctionCalls = true,
+            },
+            includeCompletionsWithSnippetText = true,
+            includeCompletionsForImportStatements = true,
+        },
     },
 
     hhvm = {},
@@ -301,6 +308,7 @@ function M.setup()
     require('rust-tools').setup({})
 
     local capabilities = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities())
+    capabilities.textDocument.completion.completionItem.snippetSupport = true
     for lsp, opts in pairs(M.servers) do
         if type(opts) == 'function' then
             opts = opts()
