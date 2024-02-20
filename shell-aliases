@@ -97,8 +97,7 @@ function notes()
   YEAR="$(date '+%Y')"
   MONTH="$(date '+%m')"
   WEEK="$(date '+%W')"
-  DIR_PATH="$NOTES_PATH"/"$YEAR"/"$MONTH"
-  FILE_PATH="$DIR_PATH"/week_"$WEEK".md
+  FILE_PATH="$NOTES_PATH"/"$YEAR"/"$MONTH".md
 
   if [ ! -d "$DIR_PATH" ]; then
       mkdir -p "$DIR_PATH"
@@ -112,14 +111,7 @@ function notes()
 
   old_pwd=$(pwd)
 
-  # cd into notes before launching nvim
-  # this ensures that only one buffer will be opened
-  cd $NOTES_PATH
-
-  eval NOTES_PATH=$NOTES_PATH $EDITOR "$FILE_PATH" -c "NotesMode"
-
-  # restore pwd
-  cd $old_pwd
+  eval PWD=$NOTES_PATH $EDITOR "$FILE_PATH" -c "NotesMode"
 }
 
 alias colorlight="~/dot-files/scripts/base16-github.sh"

@@ -718,9 +718,10 @@ local commands = {
     end,
     NotesMode = function()
         require('antonk52.notes').setup()
+        require('antonk52.notes').note_month_now()
     end,
     NoteToday = function()
-        require('antonk52.notes').note_week_now()
+        require('antonk52.notes').note_month_now()
     end,
 
     ListLSPSupportedCommands = function()

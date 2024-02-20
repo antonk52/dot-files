@@ -4,7 +4,7 @@ function M.source_rus_keymap()
     local filename = 'keymap/russian-jcukenmac.vim'
     local rus_keymap = vim.trim(vim.fn.globpath(vim.o.rtp, filename))
     if vim.fn.filereadable(rus_keymap) then
-        vim.cmd('source ' .. rus_keymap)
+        vim.cmd.source(rus_keymap)
         print('Russian keymap sourced')
     else
         print('Cannot locate Russian keymap file named "' .. filename .. '"')
@@ -38,7 +38,7 @@ function M.goto_today()
 end
 
 function M.setup()
-    vim.cmd('cd ' .. vim.fn.expand(vim.env.NOTES_PATH))
+    vim.cmd.cd(vim.fn.expand(vim.env.NOTES_PATH))
     M.source_rus_keymap()
     vim.opt.shiftwidth = 2
 
@@ -49,7 +49,7 @@ function M.setup()
 
     vim.api.nvim_create_user_command('NoteNext', M.note_next, {})
     vim.api.nvim_create_user_command('NotePrev', M.note_prev, {})
-    vim.api.nvim_create_user_command('NoteWeek', M.note_week_now, {})
+    vim.api.nvim_create_user_command('NoteMonth', M.note_month_now, {})
 
     local function set_goto_mapping()
         vim.keymap.set('n', '<leader>t', M.goto_today, { buffer = 0 })
@@ -116,7 +116,7 @@ function M.note_prev()
     if prev_note == nil then
         vim.notify('prev note does not exist', vim.log.levels.ERROR)
     else
-        vim.cmd('edit ' .. prev_note)
+        vim.cmd.edit(prev_note)
     end
 end
 
@@ -129,13 +129,13 @@ function M.note_next()
     if next_note == nil then
         vim.notify('next note does not exist', vim.log.levels.ERROR)
     else
-        vim.cmd('edit ' .. next_note)
+        vim.cmd.edit(next_note)
     end
 end
 
-function M.note_week_now()
-    local week_num = os.date('%Y/%m/week_%V')
-    vim.cmd('edit ' .. week_num .. '.md')
+function M.note_month_now()
+    local month_path = os.date('%Y/%m')
+    vim.cmd.edit(month_path .. '.md')
 end
 
 return M
