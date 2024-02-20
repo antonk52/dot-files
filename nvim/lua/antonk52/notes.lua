@@ -11,32 +11,6 @@ function M.source_rus_keymap()
     end
 end
 
-function M.goto_today()
-    local date_str = os.date()
-    if type(date_str) ~= 'string' then
-        return
-    end
-    -- date_str "Wed 11 Jan 11:03:21 2023"
-    local week_day = vim.split(date_str, ' ', {})[1]
-
-    local buffer_lines = vim.api.nvim_buf_get_lines(0, 1, -1, true)
-
-    local needle = '## ' .. week_day
-    for i, l in ipairs(buffer_lines) do
-        if vim.startswith(l, needle) then
-            vim.api.nvim_win_set_cursor(
-                0,
-                -- move to content, not heading
-                { i + 3, 0 }
-            )
-            vim.api.nvim_feedkeys('zz', 'n', false)
-            return nil
-        end
-    end
-
-    vim.notify('No "' .. needle .. '" is found in the current buffer')
-end
-
 function M.setup()
     vim.cmd.cd(vim.fn.expand(vim.env.NOTES_PATH))
     M.source_rus_keymap()
@@ -51,11 +25,6 @@ function M.setup()
     vim.api.nvim_create_user_command('NotePrev', M.note_prev, {})
     vim.api.nvim_create_user_command('NoteMonth', M.note_month_now, {})
 
-    local function set_goto_mapping()
-        vim.keymap.set('n', '<leader>t', M.goto_today, { buffer = 0 })
-    end
-
-    set_goto_mapping()
     vim.opt_local.concealcursor = 'n'
     vim.opt_local.listchars = {
         leadmultispace = '│ ',
@@ -63,11 +32,6 @@ function M.setup()
         trail = '∙',
     }
 
-    vim.api.nvim_create_autocmd('FileType', {
-        desc = 'set notes specific keymappings',
-        pattern = 'markdown',
-        callback = set_goto_mapping,
-    })
     vim.api.nvim_create_autocmd('BufWritePre', {
         desc = 'Create missing directories when writing a buffer',
         pattern = '*',
