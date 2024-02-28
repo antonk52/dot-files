@@ -25,6 +25,7 @@ function M.action_meta_telescope()
         end
     end)
 end
+
 function M.action_git_picker()
     vim.ui.select(
         vim.tbl_filter(function(x)
@@ -177,7 +178,7 @@ function M.git_diff(opts)
     for _, v in ipairs(results) do
         local diff_line_idx = get_diff_line_idx(v.raw_lines)
         diff_line_idx = math.max(
-            -- first line is header, next one is already handled
+        -- first line is header, next one is already handled
             diff_line_idx - 2,
             0
         )
@@ -315,15 +316,22 @@ function M.setup()
     end, { nargs = '+' })
     vim.api.nvim_create_user_command('TelescopeLiveGrep', 'Telescope live_grep', {})
     vim.api.nvim_create_user_command('TelescopeResume', 'Telescope resume', {})
-    vim.api.nvim_create_user_command('TelescopeGitDiff', function()
-        M.git_diff()
-    end, { desc = 'git hunk picker' })
-    vim.api.nvim_create_user_command('TelescopeGitDiffIgnoreAllSpace', function()
-        M.git_diff({ cmd = { 'git', 'diff', '--ignore-all-space' } })
-    end, { desc = 'git hunk picker' })
-    vim.api.nvim_create_user_command('TelescopeHgDiff', function()
-        M.git_diff({ cmd = { 'hg', 'diff' } })
-    end, { desc = 'hg hunk picker' })
+    if is_inside_git_repo() then
+        vim.api.nvim_create_user_command('TelescopeGitDiff', function()
+            M.git_diff()
+        end, { desc = 'git hunk picker' })
+        vim.api.nvim_create_user_command('TelescopeGitDiffIgnoreAllSpace', function()
+            M.git_diff({ cmd = { 'git', 'diff', '--ignore-all-space' } })
+        end, { desc = 'git hunk picker' })
+    end
+    if vim.env.WORK ~= nil then
+        vim.api.nvim_create_user_command('TelescopeHgDiff', function()
+            M.git_diff({ cmd = { 'hg', 'diff' } })
+        end, { desc = 'hg hunk picker' })
+        vim.api.nvim_create_user_command('TelescopeHgDiffIgnoreAllSpace', function()
+            M.git_diff({ cmd = { 'hg', 'diff', '--ignore-all-space' } })
+        end, { desc = 'hg hunk picker' })
+    end
 end
 
 return M
