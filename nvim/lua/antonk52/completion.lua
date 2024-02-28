@@ -118,6 +118,7 @@ function M.setup()
             { name = 'luasnip', keyword_length = 1 },
             { name = 'nvim_lsp' },
             { name = 'nvim_lua' },
+            { name = 'nvim_lsp_signature_help' },
             { name = 'path' },
             { name = 'buffer', keyword_length = 3 },
         },
