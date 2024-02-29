@@ -185,22 +185,6 @@ M.default_snippets = {
                 'end',
             })
         ),
-        parse_snippet(
-            'for',
-            M.lines({
-                'for ${1:k}, ${2:v} in pairs(${3:table}) do',
-                '    $0',
-                'end',
-            })
-        ),
-        parse_snippet(
-            'fori',
-            M.lines({
-                'for ${1:i}, ${2:v} in ipairs(${3:table}) do',
-                '    $0',
-                'end',
-            })
-        ),
     },
     markdown = {
         parse_snippet(
