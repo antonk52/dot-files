@@ -178,7 +178,7 @@ function M.git_diff(opts)
     for _, v in ipairs(results) do
         local diff_line_idx = get_diff_line_idx(v.raw_lines)
         diff_line_idx = math.max(
-        -- first line is header, next one is already handled
+            -- first line is header, next one is already handled
             diff_line_idx - 2,
             0
         )
