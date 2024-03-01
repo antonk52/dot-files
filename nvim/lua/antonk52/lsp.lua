@@ -56,7 +56,6 @@ local function cross_lsp_definition()
         end
     end
 
-
     for _, client in ipairs(all_clients) do
         if client.supports_method('textDocument/definition') then
             client.request('textDocument/definition', req_params, make_cb(client))
