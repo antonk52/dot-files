@@ -77,6 +77,8 @@ function M.setup()
         end,
         ['<C-k>'] = cmp.mapping.scroll_docs(-4),
         ['<C-j>'] = cmp.mapping.scroll_docs(4),
+        ['<C-n>'] = cmp.mapping.select_next_item(),
+        ['<C-p>'] = cmp.mapping.select_prev_item(),
         ['<Up>'] = function(fallback)
             if cmp.visible() then
                 cmp.select_prev_item()
