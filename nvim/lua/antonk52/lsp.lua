@@ -93,8 +93,10 @@ vim.api.nvim_create_autocmd('LspAttach', {
         keymap('<leader>ca', vim.lsp.buf.code_action, 'lsp code_action')
         keymap('gr', vim.lsp.buf.references, 'lsp references')
         keymap('<leader>L', vim.diagnostic.open_float, 'show current line diagnostic')
-        keymap('<leader>[', vim.diagnostic.goto_prev, 'go to prev diagnostic')
-        keymap('<leader>]', vim.diagnostic.goto_next, 'go to next diagnostic')
+        keymap('<leader>[', '<cmd>echo "Deprecated, use `[d` instead"<cr>')
+        keymap('<leader>]', '<cmd>echo "Deprecated, use `]d` instead"<cr>')
+        keymap('[d', vim.diagnostic.goto_prev, 'go to prev diagnostic')
+        keymap(']d', vim.diagnostic.goto_next, 'go to next diagnostic')
         -- formatting
         keymap('<localleader>F', function()
             require('conform').format({
