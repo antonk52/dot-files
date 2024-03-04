@@ -25,7 +25,9 @@ function M.setup()
     vim.api.nvim_create_user_command('NotePrev', M.note_prev, {})
     vim.api.nvim_create_user_command('NoteMonth', M.note_month_now, {})
 
-    vim.opt_local.concealcursor = 'n'
+    vim.opt.wrap = false
+    vim.opt.conceallevel = 2
+    vim.opt.concealcursor = 'i'
     vim.opt_local.listchars = {
         leadmultispace = '│ ',
         tab = '▸ ',
