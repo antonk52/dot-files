@@ -27,7 +27,7 @@ function M.setup()
 
     vim.opt.wrap = false
     vim.opt.conceallevel = 2
-    vim.opt.concealcursor = 'i'
+    vim.opt.concealcursor = '' -- current line unconcealed in normal and insert mode
     vim.opt_local.listchars = {
         leadmultispace = '│ ',
         tab = '▸ ',
