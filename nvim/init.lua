@@ -41,7 +41,7 @@ local plugins = {
         config = function()
             local current_buf_dir = vim.fn.expand('%:p:h')
             local biome_root_markers = vim.fs.find(
-                { 'biome.json' },
+                { 'biome.json', 'biome.jsonc' },
                 { upward = true, type = 'file', stop = vim.fs.dirname(vim.env.HOME), limit = 1, path = current_buf_dir }
             )
             local js_formatters = { #biome_root_markers > 0 and 'biome' or 'prettier' }
