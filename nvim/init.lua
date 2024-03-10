@@ -38,27 +38,36 @@ local plugins = {
     },
     {
         'stevearc/conform.nvim',
-        opts = {
-            format_on_save = function()
-                if
-                    vim.startswith(vim.fn.getcwd() or vim.loop.cwd(), '/Users/antonk52/dot-files')
-                    or vim.tbl_contains(
-                        { 'typescript', 'typescriptreact', 'javascript', 'javascriptreact' },
-                        vim.bo.filetype
-                    )
-                then
-                    return { timeout_ms = 500, lsp_fallback = true }
-                end
-            end,
-            formatters_by_ft = {
-                lua = { 'stylua' },
-                -- Use a sub-list to run only the first available formatter
-                javascript = { { 'prettier' } },
-                javascriptreact = { { 'prettier' } },
-                typescript = { { 'prettier' } },
-                typescriptreact = { { 'prettier' } },
-            },
-        },
+        config = function()
+            local current_buf_dir = vim.fn.expand('%:p:h')
+            local biome_root_markers = vim.fs.find(
+                { 'biome.json' },
+                { upward = true, type = 'file', stop = vim.fs.dirname(vim.env.HOME), limit = 1, path = current_buf_dir }
+            )
+            local js_formatters = { #biome_root_markers > 0 and 'biome' or 'prettier' }
+
+            require('conform').setup({
+                format_on_save = function()
+                    if
+                        vim.startswith(vim.fn.getcwd() or vim.loop.cwd(), '/Users/antonk52/dot-files')
+                        or vim.tbl_contains(
+                            { 'typescript', 'typescriptreact', 'javascript', 'javascriptreact' },
+                            vim.bo.filetype
+                        )
+                    then
+                        return { timeout_ms = 500, lsp_fallback = true }
+                    end
+                end,
+                formatters_by_ft = {
+                    lua = { 'stylua' },
+                    -- Use a sub-list to run only the first available formatter
+                    javascript = { js_formatters },
+                    javascriptreact = { js_formatters },
+                    typescript = { js_formatters },
+                    typescriptreact = { js_formatters },
+                },
+            })
+        end,
     },
     {
         'antonk52/markdowny.nvim',

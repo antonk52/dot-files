@@ -185,6 +185,7 @@ M.servers = {
         },
     },
 
+    biome = {},
     eslint = {
         on_attach = function(client)
             -- force enable formatting
