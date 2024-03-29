@@ -55,7 +55,7 @@ local plugins = {
                             vim.bo.filetype
                         )
                     then
-                        return { timeout_ms = 500, lsp_fallback = true }
+                        return { timeout_ms = 5000, lsp_fallback = true }
                     end
                 end,
                 formatters_by_ft = {
@@ -65,6 +65,7 @@ local plugins = {
                     javascriptreact = { js_formatters },
                     typescript = { js_formatters },
                     typescriptreact = { js_formatters },
+                    json = { js_formatters },
                 },
             })
         end,
@@ -167,11 +168,10 @@ local plugins = {
         'antonk52/npm_scripts.nvim',
         opts = {},
         config = function()
-            local run = function()
-                require('antonk52.npm_scripts').run()
-            end
-            vim.keymap.set('n', '<leader>N', run, { desc = 'Run npm script' })
-            vim.api.nvim_create_user_command('NpmScript', run, {})
+            require('npm_scripts').setup({})
+            local cmd = '<cmd>lua require("npm_scripts").run_from_all()<cr>'
+            vim.keymap.set('n', '<leader>N', cmd, { desc = 'Run npm script' })
+            vim.api.nvim_create_user_command('NpmScript', cmd, {})
         end,
     },
     {
