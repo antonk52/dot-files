@@ -170,3 +170,4 @@ function brew_upgrade_outdated() {
 }
 alias bu="brew_upgrade_outdated"
 alias bua="brew update --all && brew upgrade && brew cleanup --quiet"
+alias docker_stop_all="docker stop $(docker ps -q)"
