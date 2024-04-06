@@ -72,7 +72,7 @@ local function callTSC(opts)
     local start_ms = vim.loop.now()
 
     local job = Job:new({
-        command = 'npx',
+        command = vim.fn.executable('bunx') == 1 and 'bunx' or 'npx',
         args = { 'tsc', '--noEmit', '--pretty', 'false' },
         cwd = opts.cwd or project_cwd,
         on_stdout = function(_, data)
@@ -104,7 +104,11 @@ local function callTSC(opts)
         on_exit = function(_, return_val)
             vim.schedule(function()
                 if return_val == 0 then
-                    vim.notify('No errors', vim.log.levels.INFO, { title = 'tsc' })
+                    vim.notify(
+                        'No errors (' .. (vim.loop.now() - start_ms) .. 'ms)',
+                        vim.log.levels.INFO,
+                        { title = 'tsc' }
+                    )
                 else
                     vim.notify(
                         'Tsc exited with errors. ' .. (vim.loop.now() - start_ms) .. 'ms',
