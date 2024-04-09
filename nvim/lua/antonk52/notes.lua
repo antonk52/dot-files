@@ -5,9 +5,8 @@ function M.source_rus_keymap()
     local rus_keymap = vim.trim(vim.fn.globpath(vim.o.rtp, filename))
     if vim.fn.filereadable(rus_keymap) then
         vim.cmd.source(rus_keymap)
-        print('Russian keymap sourced')
     else
-        print('Cannot locate Russian keymap file named "' .. filename .. '"')
+        print('Cannot locate Russian keymap file named "' .. filename .. '" in runtime path')
     end
 end
 
@@ -24,6 +23,15 @@ function M.setup()
     vim.api.nvim_create_user_command('NoteNext', M.note_next, {})
     vim.api.nvim_create_user_command('NotePrev', M.note_prev, {})
     vim.api.nvim_create_user_command('NoteMonth', M.note_month_now, {})
+    vim.api.nvim_create_user_command('ToggleRusKeymap', function()
+        if vim.o.keymap == 'russian-jcukenmac' then
+            vim.opt.keymap = ''
+        else
+            vim.opt.keymap = 'russian-jcukenmac'
+        end
+
+        vim.notify('Toggle back in insert mode CTRL+SHIFT+6')
+    end, {})
 
     vim.opt.wrap = false
     vim.opt.conceallevel = 2

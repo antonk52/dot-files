@@ -17,7 +17,7 @@
   "github-nvim-theme": { "branch": "main", "commit": "d92e1143e5aaa0d7df28a26dd8ee2102df2cadd8" },
   "gitignore-grabber.nvim": { "branch": "main", "commit": "365c1a2255f1badf5aa8a963a07f869a81ab6575" },
   "lake.nvim": { "branch": "main", "commit": "b2f314bf9fa793dc3071371cf029a3c978dee9b1" },
-  "lazy.nvim": { "branch": "main", "commit": "31ddbea7c10b6920c9077b66c97951ca8682d5c8" },
+  "lazy.nvim": { "branch": "main", "commit": "bef521ac89c8d423f9d092e37b58e8af0c099309" },
   "leap.nvim": { "branch": "main", "commit": "3fc5e8344eac8a306baca09634fd613d1aa2c388" },
   "markdowny.nvim": { "branch": "main", "commit": "9881051876f26998635d436f21de1b2b37c52e6d" },
   "mini.nvim": { "branch": "main", "commit": "d0b297ab233a57bed00ab69bd66135dee111967f" },
