@@ -260,27 +260,28 @@ local plugins = {
             'SmiteshP/nvim-navic',
         },
         config = function()
+            local function theme()
+                return {
+                    -- for some reason linking to hl group
+                    -- makes colored items loose their color
+                    normal = { bg = vim.api.nvim_get_hl(0, { name = 'ColorColumn' }).bg },
+                    dirname = { fg = vim.api.nvim_get_hl(0, { name = 'Normal' }).fg, bold = true },
+                    separator = { fg = vim.api.nvim_get_hl(0, { name = 'Normal' }).fg },
+                }
+            end
             require('barbecue').setup({
                 symbols = {
                     separator = '/',
                 },
                 exclude_filetypes = { 'netrw', 'toggleterm', 'dirvish', 'hgssl', 'hghistory', 'hgcommit' },
-                theme = {
-                    -- for some reason linking to hl group
-                    -- makes colored items loose their color
-                    normal = { bg = vim.api.nvim_get_hl(0, { name = 'ColorColumn' }).bg },
-                },
+                theme = theme(),
             })
 
             vim.api.nvim_create_autocmd('ColorScheme', {
                 pattern = '*',
                 callback = function()
                     require('barbecue').setup({
-                        theme = {
-                            -- for some reason linking to hl group
-                            -- makes colored items loose their color
-                            normal = { bg = vim.api.nvim_get_hl(0, { name = 'ColorColumn' }).bg },
-                        },
+                        theme = theme(),
                     })
                 end,
             })
