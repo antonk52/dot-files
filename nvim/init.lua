@@ -565,7 +565,7 @@ vim.opt.guicursor = 'i-ci-ve:hor24'
 -- Show “invisible” characters
 vim.opt.list = true
 vim.opt.listchars = {
-    tab = '▸ ',
+    tab = '∙ ',
     trail = '∙',
     multispace = '∙',
     leadmultispace = '│   ',
@@ -933,7 +933,7 @@ vim.api.nvim_create_autocmd('TermOpen', {
         -- do not map esc for `fzf` terminals
         if vim.bo.filetype ~= 'fzf' then
             -- use Esc to go into normal mode in terminal
-            vim.keymap.set('t', '<Esc>', '<c-\\><c-n>')
+            vim.keymap.set('t', '<esc><esc>', '<c-\\><c-n>')
         end
         -- immediate enter terminal
         vim.cmd('startinsert')
