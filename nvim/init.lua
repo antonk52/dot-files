@@ -21,7 +21,7 @@ vim.opt.rtp:prepend(lazypath)
 local plugins = {
     {
         'neovim/nvim-lspconfig', -- types & linting
-        cond = vim.env.LSP ~= '0',
+        cond = vim.env.LSP ~= '0' and not vim.g.vscod,
         dependencies = {
             'b0o/schemastore.nvim', -- json schemas for json lsp
             'simrat39/rust-tools.nvim',
@@ -86,6 +86,7 @@ local plugins = {
     },
     {
         'hrsh7th/nvim-cmp',
+        enable = not vim.g.vscode,
         dependencies = {
             'hrsh7th/cmp-buffer',
             'hrsh7th/cmp-path',
@@ -147,6 +148,7 @@ local plugins = {
     },
     {
         'stevearc/dressing.nvim',
+        enable = not vim.g.vscode,
         opts = {
             input = {
                 border = 'single',
@@ -166,6 +168,7 @@ local plugins = {
     'antonk52/amake.nvim',
     {
         'antonk52/npm_scripts.nvim',
+        enable = not vim.g.vscode,
         opts = {},
         config = function()
             require('npm_scripts').setup({})
@@ -176,6 +179,7 @@ local plugins = {
     },
     {
         'folke/trouble.nvim',
+        enable = not vim.g.vscode,
         opts = {
             icons = false,
             fold_open = 'v', -- icon used for open folds
@@ -196,7 +200,7 @@ local plugins = {
     'antonk52/gitignore-grabber.nvim',
     {
         'nvim-treesitter/nvim-treesitter',
-        cond = vim.env.TREESITTER ~= '0',
+        cond = vim.env.TREESITTER ~= '0' and not vim.g.vscode,
         dependencies = {
             'nvim-treesitter/nvim-treesitter-textobjects',
         },
@@ -243,6 +247,7 @@ local plugins = {
     },
     {
         'nvim-telescope/telescope.nvim',
+        enable = not vim.g.vscode,
         dependencies = {
             'nvim-lua/plenary.nvim',
         },
@@ -255,6 +260,7 @@ local plugins = {
         -- after updating to nvim 0.10
         'utilyre/barbecue.nvim',
         name = 'barbecue',
+        enable = not vim.g.vscode,
         version = '*',
         dependencies = {
             'SmiteshP/nvim-navic',
@@ -666,7 +672,12 @@ vim.keymap.set('n', 'N', '<cmd>set hlsearch<cr>N', { desc = 'always have highlig
 
 vim.keymap.set('n', '+', '<C-a>', { desc = 'increment number under cursor' })
 vim.keymap.set('n', '_', '<C-x>', { desc = 'decrement number under cursor' })
-vim.keymap.set('n', '<tab>', 'za', { desc = 'toggle folds' })
+vim.keymap.set(
+    'n',
+    '<tab>',
+    vim.g.vscode and ':call VSCodeNotify("editor.toggleFold")<cr>' or 'za',
+    { desc = 'toggle folds' }
+)
 
 -- Useful when you have many splits & the status line gets truncated
 vim.keymap.set('n', '<leader>p', ':echo expand("%")<CR>', { desc = 'print rel buffer path' })
@@ -682,16 +693,16 @@ vim.keymap.set('v', '<', '<gv')
 vim.keymap.set('v', '>', '>gv')
 
 -- ctrl j/k/l/h shortcuts to navigate between splits
-vim.keymap.set('n', '<C-J>', function()
+vim.keymap.set('n', '<C-J>', vim.g.vscode and ':call VSCodeNotify("workbench.action.navigateDown")<cr>' or function()
     require('antonk52.layout').navigate('down')
 end)
-vim.keymap.set('n', '<C-K>', function()
+vim.keymap.set('n', '<C-K>', vim.g.vscode and ':call VSCodeNotify("workbench.action.navigateUp")<cr>' or function()
     require('antonk52.layout').navigate('up')
 end)
-vim.keymap.set('n', '<C-L>', function()
+vim.keymap.set('n', '<C-L>', vim.g.vscode and ':call VSCodeNotify("workbench.action.navigateRight")<cr>' or function()
     require('antonk52.layout').navigate('right')
 end)
-vim.keymap.set('n', '<C-H>', function()
+vim.keymap.set('n', '<C-H>', vim.g.vscode and ':call VSCodeNotify("workbench.action.navigateLeft")<cr>' or function()
     require('antonk52.layout').navigate('left')
 end)
 
@@ -1035,6 +1046,6 @@ vim.api.nvim_create_autocmd('BufReadPost', {
 
 -- load local init.lua {{{1
 local local_init_lua = vim.fn.expand('~/.config/local_init.lua')
-if vim.fn.filereadable(local_init_lua) == 1 then
+if vim.fn.filereadable(local_init_lua) == 1 and not vim.g.vscode then
     vim.cmd('luafile ' .. local_init_lua)
 end

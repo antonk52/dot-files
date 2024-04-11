@@ -283,6 +283,9 @@ function M.setup_lua()
 end
 
 function M.setup()
+    if vim.g.vscode then
+        return
+    end
     -- vim.lsp.log.set_level(vim.lsp.log.DEBUG)
     -- set global diagnostic settings to avoid passing them
     -- to every vim.diagnostic method explicitly

@@ -73,22 +73,24 @@ function M.lsp_init()
     end
 end
 
-local function infer_colors()
-    local norm = vim.api.nvim_get_hl(0, { name = 'Normal' })
-    vim.api.nvim_set_hl(0, 'StatusLineModified', {
-        bg = string.format('#%06x', vim.api.nvim_get_hl(0, { name = 'MoreMsg' }).fg),
-        fg = string.format('#%06x', norm.bg),
-        ctermbg = norm.ctermfg,
-        ctermfg = norm.ctermbg,
-        bold = true,
+if not vim.g.vscode then
+    local function infer_colors()
+        local norm = vim.api.nvim_get_hl(0, { name = 'Normal' })
+        vim.api.nvim_set_hl(0, 'StatusLineModified', {
+            bg = string.format('#%06x', vim.api.nvim_get_hl(0, { name = 'MoreMsg' }).fg),
+            fg = string.format('#%06x', norm.bg),
+            ctermbg = norm.ctermfg,
+            ctermfg = norm.ctermbg,
+            bold = true,
+        })
+    end
+    infer_colors()
+
+    vim.api.nvim_create_autocmd('ColorScheme', {
+        pattern = '*',
+        callback = infer_colors,
     })
 end
-infer_colors()
-
-vim.api.nvim_create_autocmd('ColorScheme', {
-    pattern = '*',
-    callback = infer_colors,
-})
 
 function M.modified()
     return vim.bo.modified and ' * ' or '   '
@@ -200,6 +202,9 @@ function M.refresh_lsp_status()
 end
 
 function M.setup()
+    if vim.g.vscode then
+        return
+    end
     vim.api.nvim_create_autocmd({ 'WinLeave', 'BufLeave' }, {
         pattern = '*',
         desc = 'simplify statusline when leaving window',
