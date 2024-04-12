@@ -667,6 +667,30 @@ vim.g.netrw_nogx = 1
 
 require('antonk52.statusline').setup()
 
+if vim.g.vscode then
+    local c = function(action)
+        return function()
+            require('vscode-neovim').call(action)
+        end
+    end
+    vim.keymap.set('n', 'gd', function()
+        require('vscode-neovim').call(
+            vim.v.count and 'typescript.goToSourceDefinition' or 'editor.action.revealDefinition'
+        )
+    end, {})
+    vim.keymap.set('n', 'gD', c('editor.action.goToDeclaration'), {})
+    vim.keymap.set('n', 'gi', c('editor.action.goToImplementation'), {})
+    vim.keymap.set('n', 'gr', c('editor.action.goToReferences'), {})
+    vim.keymap.set('n', '<leader>R', c('editor.action.rename'), {})
+    vim.keymap.set('n', '<leader>t', c('editor.action.showHover'), {})
+    vim.keymap.set('n', 'K', c('editor.action.showHover'), {})
+    vim.keymap.set('n', '-', c('workbench.files.action.showActiveFileInExplorer'), {})
+    vim.keymap.set('n', '<C-b>', c('workbench.action.showAllEditorsByMostRecentlyUsed'), {})
+    vim.keymap.set('n', ']d', c('editor.action.marker.next'), {})
+    vim.keymap.set('n', '[d', c('editor.action.marker.prev'), {})
+    vim.keymap.set('n', 'gp', c('workbench.panel.markers.view.focus'), {})
+end
+
 -- nvim 0.6 maps Y to yank till the end of the line,
 -- preserving a legacy behaviour
 vim.keymap.del('', 'Y')
