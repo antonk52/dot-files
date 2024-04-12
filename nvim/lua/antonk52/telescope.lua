@@ -17,30 +17,6 @@ M.options = {
     disable_devicons = true,
 }
 
-function M.action_meta_telescope()
-    vim.ui.select(vim.fn.keys(builtin), { prompt = 'select telescope method' }, function(pick)
-        if pick then
-            -- TODO provide more options for some methods
-            builtin[pick]()
-        end
-    end)
-end
-
-function M.action_git_picker()
-    vim.ui.select(
-        vim.tbl_filter(function(x)
-            return vim.startswith(x, 'git')
-        end, vim.fn.keys(builtin)),
-        { prompt = 'select telescope method' },
-        function(pick)
-            if pick then
-                -- TODO provide more options for some methods
-                builtin[pick]()
-            end
-        end
-    )
-end
-
 local _is_inside_git_repo = nil
 local function is_inside_git_repo()
     if _is_inside_git_repo ~= nil then
@@ -93,11 +69,7 @@ function M.action_smart_vcs_files()
         hidden = true,
         find_command = function()
             local ignore_patterns = get_nongit_ignore_patterns()
-            local find_command = {
-                'fd',
-                '--type',
-                'file',
-            }
+            local find_command = { 'fd', '--type', 'file' }
             for _, p in ipairs(ignore_patterns) do
                 table.insert(find_command, '-E')
                 table.insert(find_command, p)
@@ -242,80 +214,38 @@ function M.setup()
     vim.keymap.set('n', '<leader>f', M.action_smart_vcs_files)
     vim.keymap.set('n', '<D-p>', M.action_smart_vcs_files)
     vim.keymap.set('n', '<leader>F', function()
-        require('telescope.builtin').find_files()
-    end, { desc = 'force show files, explicitly ignoring certain directories' })
+        require('telescope.builtin').find_files({ hidden = true, no_ignore = true })
+    end, { desc = 'force show files igncluding ignored by .gitignore' })
     vim.keymap.set('n', '<leader>D', M.dots)
     vim.keymap.set('n', '<leader>b', builtin.buffers)
-    vim.keymap.set('n', '<leader>T', M.action_meta_telescope)
+    vim.keymap.set('n', '<leader>T', '<cmd>Telescope<cr>', { desc = 'All telescope builtin pickers' })
     vim.keymap.set('n', '<leader>/', M.action_buffer_lines)
-    vim.keymap.set('n', '<C-f>', M.action_buffer_lines)
     vim.keymap.set('n', '<leader>?', builtin.lsp_document_symbols)
     vim.keymap.set('n', '<leader>;', builtin.commands)
     vim.keymap.set('n', '<leader>r', builtin.resume)
-    vim.keymap.set('n', '<leader>g', M.action_git_picker, { desc = 'git picker' })
-    vim.keymap.set('n', '<leader>G', function()
-        builtin.grep_string({ search = vim.fn.input('Grep: ') })
-    end, {})
 
     -- Repro of Rg command from fzf.vim
     vim.api.nvim_create_user_command('Rg', function(a)
-        local pickers = require('telescope.pickers')
-        local finders = require('telescope.finders')
-        local previewers = require('telescope.previewers')
-        local make_entry = require('telescope.make_entry')
-        local conf = require('telescope.config').values
-
-        local opts = {
-            cwd = vim.loop.cwd(),
-            __inverted = false,
-            __matches = false,
-        }
-
-        -- this is the tricky part
-        -- live_grep picker uses `make_entry.gen_from_vimgrep` by default
-        -- while `new_oneshot_job` uses `make_entry.gen_from_string` entry maker
-        opts.entry_maker = make_entry.gen_from_vimgrep(opts)
-
-        local command = (function()
-            local cmd = {
-                'rg',
-                '--color=never',
-                '--no-heading',
-                '--with-filename',
-                '--line-number',
-                '--column',
-                '--smart-case',
-            }
-
-            if not is_inside_git_repo() then
-                local ignore_patterns = get_nongit_ignore_patterns()
-                for _, p in ipairs(ignore_patterns) do
-                    table.insert(cmd, '--iglob')
-                    table.insert(cmd, '!' .. p)
+        builtin.grep_string({
+            -- raw string, concatenated multiple args
+            search = a.args,
+            -- when working in a mercurial repo, rg ignores .gitignore files
+            -- here we manually parse and supply what should be ignored
+            additional_args = function()
+                local cli_args = {}
+                if not is_inside_git_repo() then
+                    local ignore_patterns = get_nongit_ignore_patterns()
+                    for _, p in ipairs(ignore_patterns) do
+                        table.insert(cli_args, '--iglob')
+                        table.insert(cli_args, '!' .. p)
+                    end
                 end
-            end
+                return cli_args
+            end,
+        })
+    end, { nargs = '+', desc = 'Searches exactly for the given string (including spaces)' })
 
-            -- signals to rg that no more flags will be provided
-            table.insert(cmd, '--')
-
-            for _, v in ipairs(a.fargs) do
-                table.insert(cmd, v)
-            end
-
-            return cmd
-        end)()
-
-        pickers
-            .new(opts, {
-                prompt_title = #a.fargs > 1 and string.format('RG in "%s"', a.fargs[2]) or 'RG',
-                finder = finders.new_oneshot_job(command, opts),
-                previewer = previewers.vim_buffer_vimgrep.new(opts),
-                sorter = conf.generic_sorter(opts),
-            })
-            :find()
-    end, { nargs = '+' })
     vim.api.nvim_create_user_command('TelescopeLiveGrep', 'Telescope live_grep', {})
-    vim.api.nvim_create_user_command('TelescopeResume', 'Telescope resume', {})
     if is_inside_git_repo() then
         vim.api.nvim_create_user_command('TelescopeGitDiff', function()
             M.git_diff()
