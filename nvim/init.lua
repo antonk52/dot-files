@@ -21,7 +21,6 @@ vim.opt.rtp:prepend(lazypath)
 local plugins = {
     {
         'neovim/nvim-lspconfig', -- types & linting
-        enabled = vim.env.LSP ~= '0',
         dependencies = {
             'b0o/schemastore.nvim', -- json schemas for json lsp
             'simrat39/rust-tools.nvim',
@@ -200,7 +199,6 @@ local plugins = {
     'antonk52/gitignore-grabber.nvim',
     {
         'nvim-treesitter/nvim-treesitter',
-        enabled = vim.env.TREESITTER ~= '0',
         dependencies = {
             'nvim-treesitter/nvim-treesitter-textobjects',
         },
@@ -257,17 +255,10 @@ local plugins = {
                             ['@function.outer'] = 'V', -- linewise
                             ['@class.outer'] = '<c-v>', -- blockwise
                         },
-                        include_surrounding_whitespace = true,
+                        include_surrounding_whitespace = false,
                     },
                 },
-                context_commentstring = {
-                    enable = true,
-                },
             })
-
-            vim.api.nvim_create_user_command('TSForseReinstallParses', function()
-                require('antonk52.treesitter').force_reinstall_parsers()
-            end, { desc = 'Force reinstall parsers' })
         end,
     },
     {
@@ -283,7 +274,6 @@ local plugins = {
         -- TODO: replace with 'Bekaboo/dropbar.nvim',
         -- after updating to nvim 0.10
         'utilyre/barbecue.nvim',
-        name = 'barbecue',
         version = '*',
         dependencies = {
             'SmiteshP/nvim-navic',
@@ -374,16 +364,7 @@ local plugins = {
             require('mini.cursorword').setup({ delay = 300 })
             vim.cmd('hi! link MiniCursorWord Visual')
             vim.cmd('hi! link MiniCursorWordCurrent CursorLine')
-            require('mini.splitjoin').setup({
-                mappings = {
-                    toggle = '',
-                    split = '',
-                    join = '',
-                },
-            })
-            vim.api.nvim_create_user_command('SplitJoin', require('mini.splitjoin').toggle, {
-                bang = true,
-            })
+            require('mini.splitjoin').setup() -- gS to toggle listy things
             require('mini.hipatterns').setup({
                 highlighters = {
                     fixme = { pattern = '%f[%w]()FIXME()%f[%W]', group = 'DiagnosticError' },
@@ -507,10 +488,16 @@ local plugins = {
 
 local lazy_options = {
     root = PLUGINS_LOCATION,
-    lockfile = vim.fn.expand('~/dot-files/nvim') .. '/lazy-lock.json',
-    install = {
-        -- colorscheme = { 'lake' },
+    defaults = {
+        cond = function(plugin)
+            -- only enable leap plugin in vscode
+            if vim.g.vscode then
+                return type(plugin) == 'table' and plugin[1] == 'ggandor/leap.nvim'
+            end
+            return true
+        end,
     },
+    lockfile = vim.fn.expand('~/dot-files/nvim') .. '/lazy-lock.json',
     performance = {
         rtp = {
             disabled_plugins = {
@@ -544,14 +531,6 @@ if vim.env.WORK_PLUGIN_PATH ~= nil then
         name = vim.env.WORK_PLUGIN_PATH,
     })
 end
-
--- only enable leap plugin in vscode
-plugins = vim.tbl_filter(function(plugin)
-    if vim.g.vscode then
-        return type(plugin) == 'table' and plugin[1] == 'ggandor/leap.nvim'
-    end
-    return true
-end, plugins)
 
 require('lazy').setup(plugins, lazy_options)
 
