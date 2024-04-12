@@ -89,7 +89,7 @@ function M.setup()
             format = function(entry, vim_item)
                 local name_map = {
                     nvim_lsp = 'lsp',
-                    snippets_nvim = 'snp',
+                    luasnip = 'snp',
                     buffer = 'buf',
                 }
                 if entry.source then
