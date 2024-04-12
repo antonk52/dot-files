@@ -87,11 +87,6 @@ function M.dots()
         shorten_path = false,
         cwd = '~/dot-files/',
         hidden = true,
-
-        layout_strategy = 'horizontal',
-        layout_config = {
-            preview_width = 0.4,
-        },
     })
 end
 
@@ -216,13 +211,13 @@ function M.setup()
     vim.keymap.set('n', '<leader>F', function()
         require('telescope.builtin').find_files({ hidden = true, no_ignore = true })
     end, { desc = 'force show files igncluding ignored by .gitignore' })
-    vim.keymap.set('n', '<leader>D', M.dots)
-    vim.keymap.set('n', '<leader>b', builtin.buffers)
+    vim.keymap.set('n', '<leader>D', M.dots, { desc = 'Dot files file picker' })
+    vim.keymap.set('n', '<leader>b', '<cmd>Telescope buffers<cr>', { desc = 'Buffer picker' })
     vim.keymap.set('n', '<leader>T', '<cmd>Telescope<cr>', { desc = 'All telescope builtin pickers' })
     vim.keymap.set('n', '<leader>/', M.action_buffer_lines)
-    vim.keymap.set('n', '<leader>?', builtin.lsp_document_symbols)
-    vim.keymap.set('n', '<leader>;', builtin.commands)
-    vim.keymap.set('n', '<leader>r', builtin.resume)
+    vim.keymap.set('n', '<leader>?', '<cmd>Telescope lsp_document_symbols<cr>', { desc = 'Document symbols' })
+    vim.keymap.set('n', '<leader>;', '<cmd>Telescope commands<cr>', { desc = 'Command picker' })
+    vim.keymap.set('n', '<leader>r', '<cmd>Telescope resume<cr>', { desc = 'Resume picker' })
 
     -- Repro of Rg command from fzf.vim
     vim.api.nvim_create_user_command('Rg', function(a)
