@@ -69,6 +69,9 @@ local plugins = {
                     json = { js_formatters },
                 },
             })
+            vim.api.nvim_create_user_command('Format', function()
+                require('conform').format()
+            end, {})
         end,
     },
     {
