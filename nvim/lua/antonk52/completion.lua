@@ -25,7 +25,7 @@ end
 
 function M.setup()
     local luasnip = require('luasnip')
-    local mapping = {
+    local mapping = cmp.mapping.preset.insert({
         ['<Tab>'] = function(fallback)
             if AI.is_visible() then
                 AI.accept()
@@ -57,7 +57,6 @@ function M.setup()
                 fallback()
             end
         end,
-        ['<C-y>'] = cmp.mapping.confirm(),
         ['<CR>'] = cmp.mapping.confirm(),
         -- U for Undo
         ['<C-u>'] = function(fallback)
@@ -77,23 +76,7 @@ function M.setup()
         end,
         ['<C-k>'] = cmp.mapping.scroll_docs(-4),
         ['<C-j>'] = cmp.mapping.scroll_docs(4),
-        ['<C-n>'] = cmp.mapping.select_next_item(),
-        ['<C-p>'] = cmp.mapping.select_prev_item(),
-        ['<Up>'] = function(fallback)
-            if cmp.visible() then
-                cmp.select_prev_item()
-            else
-                fallback()
-            end
-        end,
-        ['<Down>'] = function(fallback)
-            if cmp.visible() then
-                cmp.select_next_item()
-            else
-                fallback()
-            end
-        end,
-    }
+    })
 
     cmp.setup({
         snippet = {
@@ -137,11 +120,10 @@ function M.setup()
     -- completion for commands
     cmp.setup.cmdline(':', {
         mapping = cmp.mapping.preset.cmdline(),
-        sources = cmp.config.sources({
+        sources = {
             { name = 'path' },
-        }, {
             { name = 'cmdline' },
-        }),
+        },
     })
 end
 
