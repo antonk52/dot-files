@@ -773,9 +773,6 @@ vim.keymap.set('n', '<Right>', '<cmd>next<CR>')
 local commands = {
     ToggleNumbers = 'set number! relativenumber!',
     ToggleTermColors = 'set termguicolors!',
-    Reroot = function()
-        require('antonk52.root').reroot()
-    end,
 
     SourceRussianMacKeymap = function()
         require('antonk52.notes').source_rus_keymap()
