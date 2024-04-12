@@ -110,7 +110,7 @@ function M.setup()
                     buffer = 'buf',
                 }
                 if entry.source then
-                    local name = name_map[entry.source.name] and name_map[entry.source.name] or entry.source.name
+                    local name = name_map[entry.source.name] or entry.source.name
                     vim_item.menu = '[' .. name .. ']'
                 end
                 return vim_item
@@ -123,13 +123,6 @@ function M.setup()
             { name = 'nvim_lsp_signature_help' },
             { name = 'path' },
             { name = 'buffer', keyword_length = 3 },
-        },
-        sorting = {
-            comparators = {
-                cmp.config.compare.offset,
-                cmp.config.compare.exact,
-                cmp.config.compare.score,
-            },
         },
     })
 
