@@ -210,7 +210,32 @@ local plugins = {
             -- if you get "wrong architecture error
             -- open nvim in macos native terminal app and run `:TSInstall`
             require('nvim-treesitter.configs').setup({
-                ensure_installed = require('antonk52.treesitter').used_parsers,
+                ensure_installed = {
+                    'bash',
+                    'c',
+                    'cpp',
+                    'css',
+                    'graphql',
+                    'html',
+                    'javascript',
+                    'jsdoc',
+                    'json',
+                    'jsonc',
+                    'lua',
+                    'luadoc',
+                    'markdown',
+                    'markdown_inline',
+                    'php',
+                    'python',
+                    'rust',
+                    'scss',
+                    'toml',
+                    'tsx',
+                    'typescript',
+                    'vim',
+                    'vimdoc',
+                    'yaml',
+                },
                 highlight = { enable = true },
                 indent = { enable = true },
                 textobjects = {
