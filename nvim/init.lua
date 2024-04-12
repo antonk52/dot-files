@@ -21,7 +21,7 @@ vim.opt.rtp:prepend(lazypath)
 local plugins = {
     {
         'neovim/nvim-lspconfig', -- types & linting
-        enabled = vim.env.LSP ~= '0' and not vim.g.vscod,
+        enabled = vim.env.LSP ~= '0',
         dependencies = {
             'b0o/schemastore.nvim', -- json schemas for json lsp
             'simrat39/rust-tools.nvim',
@@ -38,7 +38,7 @@ local plugins = {
     },
     {
         'stevearc/conform.nvim',
-        enabled = not vim.g.vscode,
+        event = 'VeryLazy',
         config = function()
             local current_buf_dir = vim.fn.expand('%:p:h')
             local biome_root_markers = vim.fs.find(
@@ -80,7 +80,6 @@ local plugins = {
     },
     {
         'L3MON4D3/LuaSnip',
-        enabled = not vim.g.vscode,
         tag = 'v2.0.0',
         config = function()
             require('antonk52.snippets').setup()
@@ -91,7 +90,6 @@ local plugins = {
     },
     {
         'hrsh7th/nvim-cmp',
-        enabled = not vim.g.vscode,
         dependencies = {
             'hrsh7th/cmp-buffer',
             'hrsh7th/cmp-path',
@@ -140,7 +138,6 @@ local plugins = {
     },
     {
         'nvim-pack/nvim-spectre', -- global search and replace
-        enabled = not vim.g.vscode,
         dependencies = {
             'nvim-lua/plenary.nvim',
         },
@@ -154,7 +151,6 @@ local plugins = {
     },
     {
         'stevearc/dressing.nvim',
-        enabled = not vim.g.vscode,
         opts = {
             input = {
                 border = 'single',
@@ -174,7 +170,6 @@ local plugins = {
     'antonk52/amake.nvim',
     {
         'antonk52/npm_scripts.nvim',
-        enabled = not vim.g.vscode,
         opts = {},
         config = function()
             require('npm_scripts').setup({})
@@ -185,7 +180,6 @@ local plugins = {
     },
     {
         'folke/trouble.nvim',
-        enabled = not vim.g.vscode,
         opts = {
             icons = false,
             fold_open = 'v', -- icon used for open folds
@@ -206,7 +200,7 @@ local plugins = {
     'antonk52/gitignore-grabber.nvim',
     {
         'nvim-treesitter/nvim-treesitter',
-        enabled = vim.env.TREESITTER ~= '0' and not vim.g.vscode,
+        enabled = vim.env.TREESITTER ~= '0',
         dependencies = {
             'nvim-treesitter/nvim-treesitter-textobjects',
         },
@@ -253,7 +247,6 @@ local plugins = {
     },
     {
         'nvim-telescope/telescope.nvim',
-        enabled = not vim.g.vscode,
         dependencies = {
             'nvim-lua/plenary.nvim',
         },
@@ -266,7 +259,6 @@ local plugins = {
         -- after updating to nvim 0.10
         'utilyre/barbecue.nvim',
         name = 'barbecue',
-        enabled = not vim.g.vscode,
         version = '*',
         dependencies = {
             'SmiteshP/nvim-navic',
@@ -314,7 +306,6 @@ local plugins = {
     },
     {
         'dinhhuy258/git.nvim',
-        enabled = not vim.g.vscode,
         config = function()
             require('git').setup({
                 default_mappings = false,
@@ -330,14 +321,12 @@ local plugins = {
     },
     {
         'JoosepAlviste/nvim-ts-context-commentstring',
-        enabled = not vim.g.vscode,
         init = function()
             vim.g.skip_ts_context_commentstring_module = true
         end,
     },
     {
         'echasnovski/mini.nvim',
-        enabled = not vim.g.vscode,
         dependencies = {
             'JoosepAlviste/nvim-ts-context-commentstring',
         },
@@ -401,7 +390,6 @@ local plugins = {
     },
     {
         'justinmk/vim-dirvish', -- project file viewer
-        enabled = not vim.g.vscode,
         config = function()
             vim.g.dirvish_relative_paths = 1
             -- folders on top
@@ -412,7 +400,6 @@ local plugins = {
     -- {'iamcco/markdown-preview.nvim',  build = 'cd app & yarn install', ft = { 'markdown', 'mdx' } },
     {
         'NvChad/nvim-colorizer.lua', -- hex/rgb color highlight preview
-        enabled = not vim.g.vscode,
         init = function()
             -- to avoid default user commands
             vim.g.loaded_colorizer = 1
@@ -431,7 +418,6 @@ local plugins = {
     'antonk52/lake.nvim',
     {
         'projekt0n/github-nvim-theme',
-        enabled = not vim.g.vscode,
         event = 'VeryLazy',
         config = function()
             require('github-theme').setup({
@@ -527,12 +513,20 @@ local lazy_options = {
 }
 
 -- Dayjob specific {{{2
-if vim.env.WORK_PLUGIN_PATH ~= nil and not vim.g.vscode then
+if vim.env.WORK_PLUGIN_PATH ~= nil then
     table.insert(plugins, {
         dir = vim.fn.expand(vim.env.WORK_PLUGIN_PATH),
         name = vim.env.WORK_PLUGIN_PATH,
     })
 end
+
+-- only enable leap plugin in vscode
+plugins = vim.tbl_filter(function(plugin)
+    if vim.g.vscode then
+        return type(plugin) == 'table' and plugin[1] == 'ggandor/leap.nvim'
+    end
+    return true
+end, plugins)
 
 require('lazy').setup(plugins, lazy_options)
 
@@ -589,13 +583,15 @@ vim.opt.listchars = {
     leadmultispace = '│   ',
 }
 
-vim.opt.background = 'dark'
-vim.cmd('color lake')
-vim.opt.termguicolors = vim.env.__CFBundleIdentifier ~= 'com.apple.Terminal'
+if not vim.g.vscode then
+    vim.opt.background = 'dark'
+    vim.cmd('color lake')
+    vim.opt.termguicolors = vim.env.__CFBundleIdentifier ~= 'com.apple.Terminal'
 
--- iterate from 0 to 255
-for i = 0, 255 do
-    vim.cmd('hi! CtermColor' .. i .. ' ctermfg=' .. i .. ' ctermbg=' .. i)
+    -- iterate from 0 to 255
+    for i = 0, 255 do
+        vim.cmd('hi! CtermColor' .. i .. ' ctermfg=' .. i .. ' ctermbg=' .. i)
+    end
 end
 
 -- no numbers by default
