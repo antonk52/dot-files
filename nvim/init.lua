@@ -39,10 +39,10 @@ local plugins = {
         'stevearc/conform.nvim',
         event = 'VeryLazy',
         config = function()
-            local current_buf_dir = vim.fn.expand('%:p:h')
+            local current_buf = vim.api.nvim_buf_get_name(0)
             local biome_root_markers = vim.fs.find(
                 { 'biome.json', 'biome.jsonc' },
-                { upward = true, type = 'file', stop = vim.fs.dirname(vim.env.HOME), limit = 1, path = current_buf_dir }
+                { upward = true, type = 'file', stop = vim.fs.dirname(vim.env.HOME), limit = 1, path = current_buf }
             )
             local js_formatters = { #biome_root_markers > 0 and 'biome' or 'prettier' }
 

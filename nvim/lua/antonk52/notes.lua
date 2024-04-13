@@ -46,13 +46,8 @@ function M.setup()
         desc = 'Create missing directories when writing a buffer',
         pattern = '*',
         callback = function()
-            local filepath = vim.fn.expand('%')
-            local path_parts = vim.split(filepath, '/', {})
-            table.remove(path_parts, #path_parts)
-            local dirname = table.concat(path_parts, '/')
-            if vim.fn.isdirectory(dirname) == 1 then
-                return
-            else
+            local dirname = vim.fs.dirname(vim.api.nvim_buf_get_name(0))
+            if vim.fn.isdirectory(dirname) ~= 1 then
                 vim.fn.mkdir(dirname, 'p')
             end
         end,

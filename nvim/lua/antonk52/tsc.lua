@@ -4,8 +4,9 @@ local M = {}
 local TSC_ROOT_FILES = { 'tsconfig.json', 'jsconfig.json', 'package.json' }
 
 -- from buffer to root
+---@return string|nil
 local function lookupTSConfigDir()
-    local current_buf_dir = vim.fn.expand('%:p:h')
+    local current_buf_dir = vim.fs.dirname(vim.api.nvim_buf_get_name(0))
 
     local root_markers = vim.fs.find(
         TSC_ROOT_FILES,
@@ -13,46 +14,31 @@ local function lookupTSConfigDir()
     )
     if #root_markers > 0 then
         return vim.fs.dirname(root_markers[1])
-    else
-        return nil
     end
 end
 
--- from root to buffer
+-- from cwd to buffer dir
+---@return string|nil
 local function lookdownTSConfigDir()
-    local dirs_from_buf = {}
+    local dirs_from_cwd_to_buf = {}
     local stop_dir = vim.loop.cwd()
-    -- :p absolute path
-    -- :h head (last path component removed)
-    local current_dir = vim.fn.expand('%:p:h')
-    while current_dir ~= stop_dir do
-        table.insert(dirs_from_buf, current_dir)
-        current_dir = vim.fn.fnamemodify(current_dir, ':h')
-    end
-    if current_dir == stop_dir then
-        table.insert(dirs_from_buf, current_dir)
-    end
-    -- revert dirs table
-    local i = #dirs_from_buf
-    local dirs_from_stop_dir = {}
-    while i > 0 do
-        table.insert(dirs_from_stop_dir, dirs_from_buf[i])
-        i = i - 1
+
+    for dir in vim.fs.parents(vim.api.nvim_buf_get_name(0)) do
+        -- insert dir to the beginning of the table
+        table.insert(dirs_from_cwd_to_buf, 1, dir)
+        if dir == stop_dir then
+            break
+        end
     end
 
-    i = 1
-    current_dir = dirs_from_stop_dir[i]
-    while current_dir ~= nil do
+    for _, current_dir in ipairs(dirs_from_cwd_to_buf) do
         for _, file in ipairs(TSC_ROOT_FILES) do
             local filepath = current_dir .. '/' .. file
             if vim.fn.filereadable(filepath) == 1 then
                 return current_dir
             end
         end
-
-        current_dir = dirs_from_stop_dir[i + 1]
     end
-    return nil
 end
 
 local function callTSC(opts)
