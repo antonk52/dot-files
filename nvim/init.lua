@@ -489,13 +489,10 @@ local plugins = {
 local lazy_options = {
     root = PLUGINS_LOCATION,
     defaults = {
-        cond = function(plugin)
-            -- only enable leap plugin in vscode
-            if vim.g.vscode then
-                return type(plugin) == 'table' and plugin[1] == 'ggandor/leap.nvim'
-            end
-            return true
-        end,
+        -- only enable leap plugin in vscode
+        cond = vim.g.vscode and function(plugin)
+            return type(plugin) == 'table' and plugin[1] == 'ggandor/leap.nvim'
+        end or nil,
     },
     lockfile = vim.fn.expand('~/dot-files/nvim') .. '/lazy-lock.json',
     performance = {
