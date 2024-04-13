@@ -18,20 +18,20 @@ local function get_test_runner_bin()
     local files = { 'node_modules/.bin/vitest', 'node_modules/.bin/jest' }
     local stop_dir = vim.env.HOME
 
-    local current_dir = vim.fn.expand('%:p:h')
-    while current_dir ~= stop_dir do
+    for current_dir in vim.fs.parents(vim.api.nvim_buf_get_name(0)) do
         for _, file in ipairs(files) do
             local test_runner = current_dir .. '/' .. file
             if vim.fn.filereadable(test_runner) == 1 then
-                local name = vim.fn.fnamemodify(test_runner, ':t')
                 return {
-                    name = name,
+                    name = vim.fs.basename(test_runner),
                     bin = test_runner,
                     root = current_dir,
                 }
             end
         end
-        current_dir = vim.fn.fnamemodify(current_dir, ':h')
+        if current_dir == stop_dir then
+            break
+        end
     end
 
     return nil
@@ -118,7 +118,7 @@ local function run_vitest(bufnr, bin, cwd, env)
     local stdout = ''
     job:new({
         command = bin,
-        args = { '--run', '--reporter=json', vim.fn.expand('%:p') },
+        args = { '--run', '--reporter=json', vim.api.nvim_buf_get_name(0) },
         cwd = cwd,
         env = env,
         on_stdout = function(_, data)
@@ -143,7 +143,7 @@ local function run_jest(bufnr, bin, cwd, env)
     local start = vim.loop.now()
     job:new({
         command = bin,
-        args = { '--json', '--outputFile=' .. tmp_file, '--testLocationInResults', vim.fn.expand('%:p') },
+        args = { '--json', '--outputFile=' .. tmp_file, '--testLocationInResults', vim.api.nvim_buf_get_name(0) },
         cwd = cwd,
         env = env or {},
         -- plenary does not call on_stdout when jest outputs single line json in stdout,

@@ -97,11 +97,11 @@ function M.modified()
 end
 
 function M.filename()
-    local expanded = vim.fn.substitute(vim.fn.expand('%:f'), vim.fn.getcwd() .. '/', '', '')
+    local expanded = vim.api.nvim_buf_get_name(0):sub(2 + #(vim.loop.cwd() or vim.fn.cwd()))
     local filename_str = expanded == '' and '[No Name]' or expanded
     -- substitute other status line sections
     local win_size = vim.fn.winwidth(0) - 28
-    return win_size <= vim.fn.len(filename_str) and vim.fn.pathshorten(filename_str) or filename_str
+    return win_size <= #filename_str and vim.fn.pathshorten(filename_str) or filename_str
 end
 local filetype_map = {
     ['typescript'] = 'ts',
