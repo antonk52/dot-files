@@ -2,8 +2,6 @@ local M = {}
 
 local luasnip = require('luasnip')
 local parse_snippet = luasnip.parser.parse_snippet
-local fmt = require('luasnip.extras.fmt').fmt
-local rep = require('luasnip.extras').rep
 local l = require('luasnip.extras').lambda
 local s = luasnip.snippet
 local t = luasnip.text_node
@@ -54,13 +52,9 @@ local javascript_snippets = {
         })
     ),
 
-    parse_snippet('con', 'console.log($0)'),
-
     parse_snippet('iif', '/* istanbul ignore file */'),
 
     parse_snippet('iin', '/* istanbul ignore next */'),
-
-    parse_snippet('ednl', 'eslint-disable-next-line ${1:rule-name}'),
 
     parse_snippet('fi', "\\$FlowIgnore<'${1:why do you ignore?}'>"),
 
@@ -154,37 +148,7 @@ M.default_snippets = {
         ),
     },
     lua = {
-        parse_snippet('l', 'local ${1:name} = ${2:value}'),
-        s('req', fmt("local {} = require('{}')", { luasnip.insert_node(1, 'package'), rep(1) })),
         parse_snippet('fun', 'function($1) $0 end'),
-        parse_snippet('lfun', 'local function $1($2) $0 end'),
-        parse_snippet(
-            'while',
-            M.lines({
-                'while(${1:condition}) do',
-                '    $0',
-                'end',
-            })
-        ),
-        parse_snippet('loc', 'local $1 = $0'),
-        parse_snippet(
-            'if',
-            M.lines({
-                'if ${1:condition} then',
-                '    $0',
-                'end',
-            })
-        ),
-        parse_snippet(
-            'ifel',
-            M.lines({
-                'if ${1:condition} then',
-                '    $2',
-                'else',
-                '    $0',
-                'end',
-            })
-        ),
     },
     markdown = {
         parse_snippet(
@@ -196,8 +160,6 @@ M.default_snippets = {
                 '| Content Cell  | Content Cell  |',
             })
         ),
-
-        parse_snippet('link', [[[${1:text}]($0)]]),
 
         parse_snippet('img', [[![${1:alt}]($0)]]),
 
@@ -218,65 +180,6 @@ M.default_snippets = {
                 '- [ ] $0',
             })
         ),
-
-        parse_snippet(
-            'wtodo',
-            M.lines({
-                '## Monday TODO',
-                '',
-                '- [ ] $0',
-                '',
-                '## Tuesday TODO',
-                '',
-                '- [ ] item',
-                '',
-                '## Wednesday TODO',
-                '',
-                '- [ ] item',
-                '',
-                '## Thursday TODO',
-                '',
-                '- [ ] item',
-                '',
-                '## Friday TODO',
-                '',
-                '- [ ] item',
-                '',
-            })
-        ),
-
-        parse_snippet(
-            'tags',
-            M.lines({
-                '---',
-                'tags: [${1:tag_name}]',
-                '---',
-                '',
-                '$0',
-            })
-        ),
-
-        parse_snippet(
-            'fm',
-            M.lines({
-                '---',
-                '${1:front_matter}',
-                '---',
-                '',
-                '$0',
-            })
-        ),
-
-        parse_snippet('b', [[**$0**]]),
-        parse_snippet('i', [[_$0_]]),
-        parse_snippet('cross', [[~~$0~~]]),
-    },
-    vim = {
-        parse_snippet('fun', [[fun! ${1:Function_name}($2)\n    $0\nendf]]),
-
-        parse_snippet('if', [[if ${1:condition}\n    $0\nendif]]),
-
-        parse_snippet('autocmd', [[autocmd ${1:Event} ${2:pattern} ${3:++once} ${4:++nested} ${5:YOUR_COMMAND_HERE}]]),
     },
     ['javascript'] = javascript_snippets,
     ['javascript.jsx'] = javascript_snippets,
@@ -286,37 +189,11 @@ M.default_snippets = {
     ['typescriptreact'] = javascript_snippets,
 }
 
-function M.expand_or_jump()
-    if luasnip.expand_or_jumpable() then
-        luasnip.expand_or_jump()
-    end
-end
-
-function M.jump_back()
-    if luasnip.jumpable(-1) then
-        luasnip.jump(-1)
-    end
-end
-
-function M.toggle_choice()
-    if luasnip.choice_active() then
-        luasnip.change_choice(1)
-    end
-end
-
 function M.setup()
-    vim.api.nvim_create_user_command(
-        'SnippetsSource',
-        'source ~/.config/nvim/lua/antonk52/snippets.lua | lua require("antonk52.snippets").setup()',
-        { bang = true }
-    )
-
     -- load initial snippets
     for ft, snippets in pairs(M.default_snippets) do
         luasnip.add_snippets(ft, snippets)
     end
-
-    vim.api.nvim_create_user_command('EditSnippets', 'edit ~/.config/nvim/lua/antonk52/snippets.lua', { bang = true })
 end
 
 return M
