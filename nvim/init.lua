@@ -739,11 +739,11 @@ vim.keymap.set('n', '<C-H>', vim.g.vscode and ':call VSCodeNotify("workbench.act
     require('antonk52.layout').navigate('left')
 end)
 
--- leader j/k/l/h resize active split by 5
-vim.keymap.set('n', '<leader>j', '<C-W>5-')
-vim.keymap.set('n', '<leader>k', '<C-W>5+')
-vim.keymap.set('n', '<leader>l', '<C-W>5>')
-vim.keymap.set('n', '<leader>h', '<C-W>5<')
+-- ctrl + shift + j/k/l/h resize active split by 5
+vim.keymap.set('n', '<C-S-j>', '<C-W>5-')
+vim.keymap.set('n', '<C-S-k>', '<C-W>5+')
+vim.keymap.set('n', '<C-S-l>', '<C-W>5>')
+vim.keymap.set('n', '<C-S-h>', '<C-W>5<')
 
 vim.keymap.set('n', '<Leader>=', function()
     require('antonk52.layout').zoom_split()
