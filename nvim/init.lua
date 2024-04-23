@@ -166,7 +166,6 @@ local plugins = {
             },
         },
     },
-    'antonk52/amake.nvim',
     {
         'antonk52/npm_scripts.nvim',
         opts = {},
