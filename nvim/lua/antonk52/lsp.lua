@@ -311,7 +311,6 @@ function M.setup()
     })
 
     M.setup_lua()
-    require('rust-tools').setup({})
 
     local capabilities = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities())
     capabilities.textDocument.completion.completionItem.snippetSupport = true

@@ -23,7 +23,6 @@ local plugins = {
         'neovim/nvim-lspconfig', -- types & linting
         dependencies = {
             'b0o/schemastore.nvim', -- json schemas for json lsp
-            'simrat39/rust-tools.nvim',
             'folke/neodev.nvim', -- vim api signature help and docs
         },
         config = function()
@@ -49,7 +48,10 @@ local plugins = {
             require('conform').setup({
                 format_on_save = function()
                     if
-                        vim.startswith(vim.fn.getcwd() or vim.loop.cwd(), '/Users/antonk52/dot-files')
+                        (
+                            vim.fs.basename(vim.api.nvim_buf_get_name(0)) ~= 'lazy-lock.json'
+                            and vim.startswith(vim.fn.getcwd() or vim.loop.cwd(), '/Users/antonk52/dot-files')
+                        )
                         or vim.tbl_contains(
                             { 'typescript', 'typescriptreact', 'javascript', 'javascriptreact' },
                             vim.bo.filetype
@@ -223,8 +225,6 @@ local plugins = {
                     'markdown',
                     'markdown_inline',
                     'php',
-                    'python',
-                    'rust',
                     'scss',
                     'toml',
                     'tsx',
