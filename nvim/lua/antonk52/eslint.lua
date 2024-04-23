@@ -31,8 +31,7 @@ function M.run()
             local lines = vim.split(data, '\n', true)
             for _, line in ipairs(lines) do
                 if line ~= '' then
-                    ---@example
-                    -- /Users/foo/bar/baz/filename.ts:15:7: 'foo' is assigned a value but never used. [Error/@typescript-eslint/no-unused-vars]
+                    -- /foo/bar/filename.ts:15:7: any-message-text [Error/rule/name]
                     local filename, line_number, col, message, kind = line:match('(%g+):(%d+):(%d+): (.*) %[(%g).*%]')
                     if filename ~= nil then
                         table.insert(errors, {
@@ -48,7 +47,6 @@ function M.run()
         end,
         on_stderr = function(_, data)
             vim.schedule(function()
-                vim.notify('eslint exited with error', vim.log.levels.ERROR, { title = 'eslint' })
                 vim.notify(vim.inspect(data), vim.log.levels.ERROR, { title = 'eslint' })
             end)
         end,
