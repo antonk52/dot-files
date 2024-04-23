@@ -823,6 +823,12 @@ local commands = {
         end,
         { desc = 'Run tsc next the blosest package.json/tsconfig/jsconfig to cwd' },
     },
+    Eslint = {
+        function()
+            require('antonk52.eslint').run()
+        end,
+        { desc = 'Run eslint from the closest eslint config to current buffer' },
+    },
 
     TestRun = function()
         require('antonk52.test_js').run_buffer()
