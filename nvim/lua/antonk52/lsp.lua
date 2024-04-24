@@ -211,7 +211,8 @@ function M.setup_lua()
         else
             return print('Unsupported system for sumneko')
         end
-        local base = vim.fn.expand('~/.local/share/nvim/lsp_servers/sumneko_lua/extension/server/bin/' .. system_name)
+        local base =
+            vim.fs.normalize('~/.local/share/nvim/lsp_servers/sumneko_lua/extension/server/bin/' .. system_name)
         local LUA_LSP_BIN = base .. '/lua-language-server'
         local LUA_LSP_MAIN = base .. '/main.lua'
 
@@ -223,8 +224,8 @@ function M.setup_lua()
 
     local prefix = '~/homebrew/Cellar/lua-language-server/*/libexec/bin/'
     local LOCAL_BIN = {
-        bin = vim.fn.expand(prefix .. 'lua-language-server'),
-        main = vim.fn.expand(prefix .. 'main.lua'),
+        bin = vim.fs.normalize(prefix .. 'lua-language-server'),
+        main = vim.fs.normalize(prefix .. 'main.lua'),
     }
 
     local BIN = (GLOBAL_BIN and vim.fn.filereadable(GLOBAL_BIN.bin) == 1) and GLOBAL_BIN or LOCAL_BIN

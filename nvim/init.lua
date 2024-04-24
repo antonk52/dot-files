@@ -3,7 +3,7 @@ vim.g.mapleader = ' '
 vim.g.maplocalleader = ','
 
 -- Bootstrap lazy.nvim plugin manager {{{1
-local PLUGINS_LOCATION = vim.fn.expand('~/dot-files/nvim/plugged')
+local PLUGINS_LOCATION = vim.fs.normalize('~/dot-files/nvim/plugged')
 local lazypath = PLUGINS_LOCATION .. '/lazy.nvim'
 if not vim.loop.fs_stat(lazypath) then
     vim.fn.system({
@@ -493,7 +493,7 @@ local lazy_options = {
             return type(plugin) == 'table' and plugin[1] == 'ggandor/leap.nvim'
         end or nil,
     },
-    lockfile = vim.fn.expand('~/dot-files/nvim') .. '/lazy-lock.json',
+    lockfile = vim.fs.normalize('~/dot-files/nvim') .. '/lazy-lock.json',
     performance = {
         rtp = {
             disabled_plugins = {
@@ -1036,7 +1036,7 @@ if not vim.g.vscode then
 end
 
 -- load local init.lua {{{1
-local local_init_lua = vim.fn.expand('~/.config/local_init.lua')
+local local_init_lua = vim.fs.normalize('~/.config/local_init.lua')
 if vim.fn.filereadable(local_init_lua) == 1 and not vim.g.vscode then
     vim.cmd('luafile ' .. local_init_lua)
 end
