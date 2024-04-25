@@ -516,7 +516,7 @@ local lazy_options = {
         },
     },
     ui = {
-        size = { width = 160, height = 0.95 },
+        size = { width = 142, height = 0.95 },
     },
 }
 
