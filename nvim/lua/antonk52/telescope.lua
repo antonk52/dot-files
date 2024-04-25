@@ -229,7 +229,7 @@ function M.setup()
         builtin.commands({
             layout_config = {
                 horizontal = {
-                    width = 160,
+                    width = 120,
                 },
             },
             entry_maker = function(entry)
