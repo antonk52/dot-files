@@ -160,7 +160,7 @@ local plugins = {
                 backend = { 'telescope' },
                 telescope = {
                     layout_config = {
-                        width = 0.6,
+                        width = 160,
                         height = 0.8,
                         preview_width = 0.6,
                     },
@@ -516,7 +516,7 @@ local lazy_options = {
         },
     },
     ui = {
-        size = { width = 0.95, height = 0.95 },
+        size = { width = 160, height = 0.95 },
     },
 }
 

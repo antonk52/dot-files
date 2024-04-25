@@ -214,7 +214,42 @@ function M.setup()
     vim.keymap.set('n', '<leader>T', '<cmd>Telescope<cr>', { desc = 'All telescope builtin pickers' })
     vim.keymap.set('n', '<leader>/', M.action_buffer_lines)
     vim.keymap.set('n', '<leader>?', '<cmd>Telescope lsp_document_symbols<cr>', { desc = 'Document symbols' })
-    vim.keymap.set('n', '<leader>;', '<cmd>Telescope commands<cr>', { desc = 'Command picker' })
+    -- like `Telescope commands but stips unused bang and nargs`
+    vim.keymap.set('n', '<leader>;', function()
+        local entry_display = require('telescope.pickers.entry_display')
+        local make_entry = require('telescope.make_entry')
+        local displayer = entry_display.create({
+            separator = '▏',
+            items = {
+                { width = 32 },
+                { width = 15 },
+                { remaining = true },
+            },
+        })
+        builtin.commands({
+            layout_config = {
+                horizontal = {
+                    width = 160,
+                },
+            },
+            entry_maker = function(entry)
+                return make_entry.set_default_entry_mt({
+                    name = entry.name,
+                    complete = entry.complete,
+                    definition = entry.definition,
+                    value = entry,
+                    ordinal = entry.name,
+                    display = function(e)
+                        return displayer({
+                            { e.name, 'TelescopeResultsIdentifier' },
+                            e.complete or '',
+                            e.definition:gsub('\n', ' '),
+                        })
+                    end,
+                })
+            end,
+        })
+    end, { desc = 'Command picker' })
     vim.keymap.set('n', '<leader>r', '<cmd>Telescope resume<cr>', { desc = 'Resume picker' })
 
     -- Repro of Rg command from fzf.vim
