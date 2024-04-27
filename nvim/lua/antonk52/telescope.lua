@@ -1,6 +1,3 @@
-local actions = require('telescope.actions')
-local builtin = require('telescope.builtin')
-
 local M = {}
 
 M.options = {
@@ -29,8 +26,7 @@ local function is_inside_git_repo()
 end
 ---@return string[]
 local function get_nongit_ignore_patterns()
-    local cwd = vim.loop.cwd() or vim.fn.getcwd()
-    local gitignore_path = cwd .. '/.gitignore'
+    local gitignore_path = vim.fs.joinpath(vim.loop.cwd() or vim.fn.getcwd(), '.gitignore')
     -- we are not in a git repository, but we have .gitignore(mercurial)
     if vim.fn.filereadable(gitignore_path) == 1 then
         local ignore_lines = vim.fn.readfile(gitignore_path)
@@ -154,9 +150,10 @@ function M.git_diff(opts)
 
     -- in hg I typically have session not from the repo root
     if opts.cmd[1] == 'hg' then
-        local hg_root = vim.fn.system({ 'hg', 'root' })
+        local hg_root = vim.trim(vim.fn.system({ 'hg', 'root' }))
         vim.tbl_map(function(entry)
-            entry.filename = string.sub(hg_root .. '/' .. entry.filename, #(vim.loop.cwd() or vim.fn.getcwd()) + 3)
+            -- result filepath contains path from cwd
+            entry.filename = string.sub(hg_root .. '/' .. entry.filename, #(vim.loop.cwd() or vim.fn.getcwd()) + 2)
         end, results)
     end
 
@@ -199,7 +196,7 @@ function M.setup()
         defaults = vim.tbl_extend('force', {
             mappings = {
                 i = {
-                    ['<esc>'] = actions.close,
+                    ['<esc>'] = require('telescope.actions').close,
                 },
             },
         }, M.options),
@@ -226,7 +223,7 @@ function M.setup()
                 { remaining = true },
             },
         })
-        builtin.commands({
+        require('telescope.builtin').commands({
             layout_config = {
                 horizontal = {
                     width = 120,
@@ -254,7 +251,7 @@ function M.setup()
 
     -- Repro of Rg command from fzf.vim
     vim.api.nvim_create_user_command('Rg', function(a)
-        builtin.grep_string({
+        require('telescope.builtin').grep_string({
             -- raw string, concatenated multiple args
             search = a.args,
             -- when working in a mercurial repo, rg ignores .gitignore files

@@ -4,73 +4,40 @@ local hi_next = function(group)
     return '%#' .. group .. '#'
 end
 
--- lsp servers can send progress events after changes to buffers
--- I only want to see the initial loading progress
-local loaded_lsp = {}
-
 local lsp_status_cache = nil
-
 function M.lsp_init()
-    if has_nvim_0_10_x then
-        local statuses = lsp_status_cache
-        if not statuses then
-            statuses = {}
-            for _, client in ipairs(vim.lsp.get_active_clients()) do
-                for progress in client.progress do
-                    local msg = progress.value
-                    if type(msg) == 'table' and msg.kind ~= 'end' then
-                        local percentage = ''
-                        if msg.percentage then
-                            percentage = string.format('%2d', msg.percentage) .. '%% '
-                        end
-                        local title = msg.title or ''
-                        local message = msg.message or ''
-                        statuses[client.name] = percentage .. title .. ' ' .. message
-                    else
-                        statuses[client.name] = nil
-                    end
-                end
-            end
-
-            lsp_status_cache = statuses
-        end
-
-        local items = {}
-        for k, v in pairs(statuses) do
-            table.insert(items, k .. ': ' .. v)
-        end
-
-        return table.concat(items, ' │ ')
-    else
-        -- nvim 0.9 or older
-        local msgs = vim.lsp.util.get_progress_messages()
-        -- {[lsp_name]: status_str} to remove duplicated messages from the same lsp
-        local status_dict = {}
-        for _, v in ipairs(msgs) do
-            local name = v.name or 'UNKNOWN'
-            if v.done then
-                if not loaded_lsp[name] then
-                    status_dict[name] = '✓'
-                    vim.defer_fn(function()
-                        loaded_lsp[name] = true
-                    end, 3000)
-                end
-            else
-                local percentage = ''
-                if v.percentage then
-                    percentage = string.format('%2d', v.percentage) .. '%% '
-                end
-                local title = v.title or ''
-                local message = v.message or ''
-                status_dict[name] = percentage .. title .. ' ' .. message
-            end
-        end
-        local result = {}
-        for k, v in pairs(status_dict) do
-            table.insert(result, k .. ':' .. v)
-        end
-        return table.concat(result, ' │ ')
+    if not has_nvim_0_10_x then
+        return ''
     end
+    local statuses = lsp_status_cache
+    if not statuses then
+        statuses = {}
+        for _, client in ipairs(vim.lsp.get_active_clients()) do
+            for progress in client.progress do
+                local msg = progress.value
+                if type(msg) == 'table' and msg.kind ~= 'end' then
+                    local percentage = ''
+                    if msg.percentage then
+                        percentage = string.format('%2d', msg.percentage) .. '%% '
+                    end
+                    local title = msg.title or ''
+                    local message = msg.message or ''
+                    statuses[client.name] = percentage .. title .. ' ' .. message
+                else
+                    statuses[client.name] = nil
+                end
+            end
+        end
+
+        lsp_status_cache = statuses
+    end
+
+    local items = {}
+    for k, v in pairs(statuses) do
+        table.insert(items, k .. ': ' .. v)
+    end
+
+    return table.concat(items, ' │ ')
 end
 
 if not vim.g.vscode then
@@ -124,36 +91,19 @@ end
 
 local diagnostics_cache = { error = 0, warn = 0, info = 0, hint = 0 }
 function M.diagnostics()
+    if not has_nvim_0_10_x then
+        return ''
+    end
     local s = vim.diagnostic.severity
-    local diagnostics = diagnostics_cache
 
-    if not diagnostics then
-        diagnostics = { error = 0, warn = 0, info = 0, hint = 0 }
-        if has_nvim_0_10_x then
-            local diag_count = vim.diagnostic.count(0)
-            diagnostics.error = diag_count[s.ERROR] or 0
-            diagnostics.warn = diag_count[s.WARN] or 0
-            diagnostics.info = diag_count[s.INFO] or 0
-            diagnostics.hint = diag_count[s.HINT] or 0
-        else
-            local all_diagnostics = vim.diagnostic.get(0)
-
-            for _, v in ipairs(all_diagnostics) do
-                if v.severity == s.ERROR then
-                    diagnostics.error = diagnostics.error + 1
-                end
-                if v.severity == s.WARN then
-                    diagnostics.warn = diagnostics.warn + 1
-                end
-                if v.severity == s.INFO then
-                    diagnostics.info = diagnostics.info + 1
-                end
-                if v.severity == s.HINT then
-                    diagnostics.hint = diagnostics.hint + 1
-                end
-            end
-        end
-        diagnostics_cache = diagnostics
+    if not diagnostics_cache then
+        local diag_count = vim.diagnostic.count(0)
+        diagnostics_cache = {
+            error = diag_count[s.ERROR] or 0,
+            warn = diag_count[s.WARN] or 0,
+            info = diag_count[s.INFO] or 0,
+            hint = diag_count[s.HINT] or 0,
+        }
     end
     local hi = {
         error = 'DiagnosticError',
@@ -239,8 +189,6 @@ function M.setup()
                 end, 80)
             end,
         })
-    else
-        vim.cmd('autocmd User LspProgressUpdate redrawstatus')
     end
     -- refresh statusline on DiagnosticChanged
     vim.api.nvim_create_autocmd('DiagnosticChanged', {

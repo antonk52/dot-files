@@ -15,26 +15,19 @@ local function find_line_with_text_in_buffer(lines, needle)
 end
 
 local function get_test_runner_bin()
-    local files = { 'node_modules/.bin/vitest', 'node_modules/.bin/jest' }
-    local stop_dir = vim.env.HOME
+    local res = vim.fs.find({ 'node_modules/.bin/vitest', 'node_modules/.bin/jest' }, {
+        upward = true,
+        stop = vim.loop.os_homedir() or vim.env.HOME,
+        path = vim.fs.dirname(vim.api.nvim_buf_get_name(0)),
+    })
 
-    for current_dir in vim.fs.parents(vim.api.nvim_buf_get_name(0)) do
-        for _, file in ipairs(files) do
-            local test_runner = current_dir .. '/' .. file
-            if vim.fn.filereadable(test_runner) == 1 then
-                return {
-                    name = vim.fs.basename(test_runner),
-                    bin = test_runner,
-                    root = current_dir,
-                }
-            end
-        end
-        if current_dir == stop_dir then
-            break
-        end
+    if res[1] then
+        return {
+            name = vim.fs.basename(res[1]),
+            bin = res[1],
+            root = vim.fs.dirname(vim.fs.dirname(vim.fs.dirname(res[1]))),
+        }
     end
-
-    return nil
 end
 
 local function mark_parsed_json_output(bufnr, parsed_output)
