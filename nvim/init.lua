@@ -136,6 +136,7 @@ local plugins = {
                 require('leap').leap({ target_windows = { vim.api.nvim_get_current_win() } })
             end, { desc = 'Bi-directional search with leap.nvim' })
         end,
+        event = 'VeryLazy',
     },
     {
         'nvim-pack/nvim-spectre', -- global search and replace
@@ -177,6 +178,7 @@ local plugins = {
             vim.keymap.set('n', '<leader>N', cmd, { desc = 'Run npm script' })
             vim.api.nvim_create_user_command('NpmScript', cmd, {})
         end,
+        event = 'VeryLazy',
     },
     {
         'folke/trouble.nvim',
@@ -185,13 +187,6 @@ local plugins = {
             fold_open = 'v', -- icon used for open folds
             fold_closed = '>', -- icon used for closed folds
             indent_lines = false, -- add an indent guide below the fold icons
-            signs = {
-                -- icons / text used for a diagnostic
-                error = 'error',
-                warning = 'warn',
-                hint = 'hint',
-                information = 'info',
-            },
             use_diagnostic_signs = true, -- enabling this will use the signs defined in your lsp client
         },
         event = 'VeryLazy',
@@ -345,33 +340,35 @@ local plugins = {
             'JoosepAlviste/nvim-ts-context-commentstring',
         },
         config = function()
-            require('mini.bracketed').setup()
-            require('mini.comment').setup({
-                options = {
-                    custom_commentstring = function()
-                        return require('ts_context_commentstring.internal').calculate_commentstring({})
-                            or vim.bo.commentstring
-                    end,
-                },
-                mappings = {
-                    comment = '<C-_>',
-                    comment_line = '<C-_>',
-                    comment_visual = '<C-_>',
-                },
-            })
-            require('mini.pairs').setup() -- autoclose ([{
-            require('mini.cursorword').setup({ delay = 300 })
-            vim.cmd('hi! link MiniCursorWord Visual')
-            vim.cmd('hi! link MiniCursorWordCurrent CursorLine')
-            require('mini.splitjoin').setup() -- gS to toggle listy things
-            require('mini.hipatterns').setup({
-                highlighters = {
-                    fixme = { pattern = '%f[%w]()FIXME()%f[%W]', group = 'DiagnosticError' },
-                    todo = { pattern = '%f[%w]()TODO()%f[%W]', group = 'DiagnosticWarn' },
-                    note = { pattern = '%f[%w]()NOTE()%f[%W]', group = 'DiagnosticInfo' },
-                    info = { pattern = '%f[%w]()INFO()%f[%W]', group = 'DiagnosticInfo' },
-                },
-            })
+            if not vim.g.vscode then
+                require('mini.bracketed').setup()
+                require('mini.comment').setup({
+                    options = {
+                        custom_commentstring = function()
+                            return require('ts_context_commentstring.internal').calculate_commentstring({})
+                                or vim.bo.commentstring
+                        end,
+                    },
+                    mappings = {
+                        comment = '<C-_>',
+                        comment_line = '<C-_>',
+                        comment_visual = '<C-_>',
+                    },
+                })
+                require('mini.pairs').setup() -- autoclose ([{
+                require('mini.cursorword').setup({ delay = 300 })
+                vim.cmd('hi! link MiniCursorWord Visual')
+                vim.cmd('hi! link MiniCursorWordCurrent CursorLine')
+                require('mini.splitjoin').setup() -- gS to toggle listy things
+                require('mini.hipatterns').setup({
+                    highlighters = {
+                        fixme = { pattern = '%f[%w]()FIXME()%f[%W]', group = 'DiagnosticError' },
+                        todo = { pattern = '%f[%w]()TODO()%f[%W]', group = 'DiagnosticWarn' },
+                        note = { pattern = '%f[%w]()NOTE()%f[%W]', group = 'DiagnosticInfo' },
+                        info = { pattern = '%f[%w]()INFO()%f[%W]', group = 'DiagnosticInfo' },
+                    },
+                })
+            end
             require('mini.surround').setup({
                 mappings = {
                     add = 'ys',
@@ -490,7 +487,8 @@ local lazy_options = {
     defaults = {
         -- only enable leap plugin in vscode
         cond = vim.g.vscode and function(plugin)
-            return type(plugin) == 'table' and plugin[1] == 'ggandor/leap.nvim'
+            return type(plugin) == 'table'
+                and (plugin[1] == 'ggandor/leap.nvim' or plugin[1] == 'echasnovski/mini.nvim')
         end or nil,
     },
     lockfile = vim.fs.normalize('~/dot-files/nvim') .. '/lazy-lock.json',
