@@ -174,3 +174,18 @@ alias bua="brew update --all && brew upgrade && brew cleanup --quiet"
 function docker_stop_all() {
     docker stop $(docker ps -q)
 }
+
+function get_nvim_nightly() {
+    local old_pwd=$(pwd)
+    cd ~/Downloads
+    # clean up if it exists already
+    rm -rf ./nvim-macos-arm64.tar.gz ./nvim-macos-arm64
+    # download tar with build
+    wget --quiet https://github.com/neovim/neovim/releases/download/nightly/nvim-macos-arm64.tar.gz && echo "- Downloaded"
+    # to avoid "unknown developer" warning
+    xattr -c ./nvim-macos-arm64.tar.gz > /dev/null 2>&1 && echo "- Removed attributes"
+    # extract
+    tar xzvf nvim-macos-arm64.tar.gz > /dev/null 2>&1 && echo "- Extracted"
+    ~/Downloads/nvim-macos-arm64/bin/nvim --version
+    cd $old_pwd
+}
