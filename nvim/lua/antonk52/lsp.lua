@@ -84,28 +84,25 @@ vim.api.nvim_create_autocmd('LspAttach', {
 
         keymap('gD', vim.lsp.buf.declaration, 'lsp declaration')
         keymap('gd', cross_lsp_definition, 'lsp definition')
+        -- TODO remove post 0.10 update
         keymap('K', vim.lsp.buf.hover, 'lsp hover')
         keymap('<leader>t', vim.lsp.buf.hover, 'lsp hover')
         keymap('gi', vim.lsp.buf.implementation, 'lsp implementation')
         keymap('gk', vim.lsp.buf.signature_help, 'lsp signature_help')
         keymap('gK', vim.lsp.buf.type_definition, 'lsp type_definition')
-        keymap('<leader>R', vim.lsp.buf.rename, 'lsp rename')
-        keymap('<leader>ca', vim.lsp.buf.code_action, 'lsp code_action')
+        keymap('<leader>R', ':echo "deprecated, use `crn` instead"<cr>', 'lsp rename')
+        -- TODO remove post 0.10 update
+        keymap('crn', vim.lsp.buf.rename, 'lsp rename')
+        keymap('<leader>ca', ':echo "deprecated, use `crr` instead"<cr>', 'lsp code_action')
+        -- TODO remove post 0.10 update
+        keymap('crr', vim.lsp.buf.code_action, 'lsp code_action')
+        -- TODO remove post 0.10 update
         keymap('gr', vim.lsp.buf.references, 'lsp references')
         keymap('<leader>L', vim.diagnostic.open_float, 'show current line diagnostic')
+        -- TODO remove post 0.10 update
         keymap('[d', vim.diagnostic.goto_prev, 'go to prev diagnostic')
+        -- TODO remove post 0.10 update
         keymap(']d', vim.diagnostic.goto_next, 'go to next diagnostic')
-        keymap('<localleader>f', function()
-            vim.lsp.buf.code_action({
-                filter = function(a)
-                    vim.schedule(function()
-                        vim.print(a)
-                    end)
-                    return a.kind == 'quickfix' and a.command.command == 'eslint.applySingleFix'
-                end,
-                apply = true,
-            })
-        end, 'apply prettier fix')
         vim.api.nvim_buf_create_user_command(0, 'FormatLsp', function()
             vim.lsp.buf.format({
                 -- never use tsserver to format files
@@ -213,8 +210,8 @@ function M.setup_lua()
 
     local prefix = '~/homebrew/Cellar/lua-language-server/*/libexec/bin/'
     local LOCAL_BIN = {
-        bin = vim.fs.normalize(prefix .. 'lua-language-server'),
-        main = vim.fs.normalize(prefix .. 'main.lua'),
+        bin = vim.fn.expand(prefix .. 'lua-language-server'),
+        main = vim.fn.expand(prefix .. 'main.lua'),
     }
 
     local BIN = (GLOBAL_BIN and vim.fn.filereadable(GLOBAL_BIN.bin) == 1) and GLOBAL_BIN or LOCAL_BIN
