@@ -186,6 +186,8 @@ function get_nvim_nightly() {
     xattr -c ./nvim-macos-arm64.tar.gz > /dev/null 2>&1 && echo "- Removed attributes"
     # extract
     tar xzvf nvim-macos-arm64.tar.gz > /dev/null 2>&1 && echo "- Extracted"
-    ~/Downloads/nvim-macos-arm64/bin/nvim --version
+    ~/Downloads/nvim-macos-arm64/bin/nvim --version | grep 'NVIM v'
+    # print archive date
+    echo "Build from: $(ls -l ~/Downloads/nvim-macos-arm64.tar.gz | awk '{print $6, $7, $8}')"
     cd $old_pwd
 }
