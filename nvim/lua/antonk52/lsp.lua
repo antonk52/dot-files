@@ -284,6 +284,7 @@ function M.setup()
             header = 'Line diagnostics:',
             prefix = ' ',
             scope = 'line',
+            border = 'single',
         },
         signs = {
             text = {
