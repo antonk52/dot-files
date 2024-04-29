@@ -420,7 +420,6 @@ local plugins = {
     'antonk52/lake.nvim',
     {
         'projekt0n/github-nvim-theme',
-        event = 'VeryLazy',
         config = function()
             require('github-theme').setup({
                 options = {
@@ -479,6 +478,7 @@ local plugins = {
                 vim.api.nvim_set_hl(0, 'Directory', { fg = c.blue, bold = true })
             end, {})
         end,
+        cmd = 'ColorLight',
     },
 }
 
