@@ -3,20 +3,6 @@ local Job = require('plenary.job')
 local M = {}
 local TSC_ROOT_FILES = { 'tsconfig.json', 'jsconfig.json', 'package.json' }
 
--- from buffer to root
----@return string|nil
-local function lookupTSConfigDir()
-    local current_buf_dir = vim.fs.dirname(vim.api.nvim_buf_get_name(0))
-
-    local root_markers = vim.fs.find(
-        TSC_ROOT_FILES,
-        { upward = true, type = 'file', stop = vim.fs.dirname(vim.env.HOME), limit = 1, path = current_buf_dir }
-    )
-    if #root_markers > 0 then
-        return vim.fs.dirname(root_markers[1])
-    end
-end
-
 -- from cwd to buffer dir
 ---@return string|nil
 local function lookdownTSConfigDir()
@@ -110,9 +96,10 @@ local function callTSC(opts)
     job:start()
 end
 
+-- from buffer to root
 function M.run_local()
     callTSC({
-        cwd = lookupTSConfigDir(),
+        cwd = vim.fs.root(0, TSC_ROOT_FILES),
     })
 end
 
