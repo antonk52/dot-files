@@ -523,6 +523,14 @@ if vim.env.WORK_PLUGIN_PATH ~= nil then
     table.insert(plugins, {
         dir = vim.fn.expand(vim.env.WORK_PLUGIN_PATH),
         name = vim.env.WORK_PLUGIN_PATH,
+        config = function()
+            local local_init_lua = vim.fs.normalize('~/.config/local_init.lua')
+            if vim.fn.filereadable(local_init_lua) == 1 and not vim.g.vscode then
+                vim.cmd.luafile(local_init_lua)
+            else
+                vim.notify('No ~/.config/local_init.lua', vim.log.levels.ERROR)
+            end
+        end,
     })
 end
 
@@ -1031,10 +1039,4 @@ vim.api.nvim_create_autocmd('BufReadPost', {
 
 if not vim.g.vscode then
     require('antonk52.indent_lines').setup()
-end
-
--- load local init.lua {{{1
-local local_init_lua = vim.fs.normalize('~/.config/local_init.lua')
-if vim.fn.filereadable(local_init_lua) == 1 and not vim.g.vscode then
-    vim.cmd('luafile ' .. local_init_lua)
 end
