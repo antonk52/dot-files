@@ -9,9 +9,8 @@ function M.lsp_init()
     if not has_nvim_0_10_x then
         return ''
     end
-    local statuses = lsp_status_cache
-    if not statuses then
-        statuses = {}
+    if not lsp_status_cache then
+        lsp_status_cache = {}
         for _, client in ipairs(vim.lsp.get_active_clients()) do
             for progress in client.progress do
                 local msg = progress.value
@@ -22,18 +21,16 @@ function M.lsp_init()
                     end
                     local title = msg.title or ''
                     local message = msg.message or ''
-                    statuses[client.name] = percentage .. title .. ' ' .. message
+                    lsp_status_cache[client.name] = percentage .. title .. ' ' .. message
                 else
-                    statuses[client.name] = nil
+                    lsp_status_cache[client.name] = nil
                 end
             end
         end
-
-        lsp_status_cache = statuses
     end
 
     local items = {}
-    for k, v in pairs(statuses) do
+    for k, v in pairs(lsp_status_cache) do
         table.insert(items, k .. ': ' .. v)
     end
 
@@ -90,36 +87,31 @@ function M.filetype()
 end
 
 local diagnostics_cache = { error = 0, warn = 0, info = 0, hint = 0 }
+local s = vim.diagnostic.severity
+local hi = {
+    [s.ERROR] = { hi = 'DiagnosticError', char = 'e' },
+    [s.WARN] = { hi = 'DiagnosticWarn', char = 'w' },
+    [s.HINT] = { hi = 'DiagnosticHint', char = 'h' },
+    [s.INFO] = { hi = 'DiagnosticInfo', char = 'i' },
+}
 function M.diagnostics()
     if not has_nvim_0_10_x then
         return ''
     end
-    local s = vim.diagnostic.severity
+    diagnostics_cache = diagnostics_cache or vim.diagnostic.count(0)
 
-    if not diagnostics_cache then
-        local diag_count = vim.diagnostic.count(0)
-        diagnostics_cache = {
-            error = diag_count[s.ERROR] or 0,
-            warn = diag_count[s.WARN] or 0,
-            info = diag_count[s.INFO] or 0,
-            hint = diag_count[s.HINT] or 0,
-        }
+    if #diagnostics_cache == 0 then
+        return ''
     end
-    local hi = {
-        error = 'DiagnosticError',
-        warn = 'DiagnosticWarn',
-    }
 
     local items = {}
-    for _, k in ipairs({ 'error', 'warn' }) do
-        if diagnostics_cache[k] > 0 then
-            table.insert(items, hi_next(hi[k]) .. k:sub(1, 1) .. diagnostics_cache[k])
+    for _, k in ipairs({ s.ERROR, s.WARN, s.HINT, s.INFO }) do
+        if diagnostics_cache[k] and diagnostics_cache[k] > 0 then
+            table.insert(items, hi_next(hi[k].hi) .. hi[k].char .. diagnostics_cache[k])
         end
     end
 
-    local result = table.concat(items, ' ')
-
-    return #result > 0 and result .. hi_next('Normal') .. '  ' or ''
+    return table.concat(items, ' ') .. hi_next('Normal') .. '  '
 end
 function M.refresh_diagnostics()
     diagnostics_cache = nil
