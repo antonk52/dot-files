@@ -130,14 +130,6 @@ local javascript_snippets = {
 
 M.default_snippets = {
     all = {
-        parse_snippet('todo', 'TODO(antonk52): '),
-        s(
-            'date',
-            luasnip.function_node(function()
-                return os.date()
-            end)
-        ),
-        parse_snippet('uname', vim.loop.os_uname().sysname),
         parse_snippet('shebang', '#!/bin sh'),
         -- use `function_node` to evaluate lua for snippet body
         luasnip.snippet(
