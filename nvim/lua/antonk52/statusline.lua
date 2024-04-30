@@ -117,6 +117,23 @@ function M.refresh_diagnostics()
     diagnostics_cache = nil
 end
 
+local extras = {}
+
+---@param fn function returns {text: string, hi?: string | 'Normal'}
+function M.add_extra(fn)
+    table.insert(extras, fn)
+end
+
+local function print_extras()
+    local res = {}
+    for _, fn in ipairs(extras) do
+        local v = fn()
+        table.insert(res, hi_next(v.hi or 'Normal') .. v.text .. hi_next('Normal') .. '  ')
+    end
+
+    return table.concat(res, '')
+end
+
 function M.render()
     local elements = vim.tbl_filter(function(v)
         return #v > 0
@@ -128,6 +145,7 @@ function M.render()
         hi_next('Comment') .. M.lsp_init(),
         '  ',
         hi_next('Normal'),
+        print_extras(),
         M.diagnostics(),
         M.filetype(),
         '  ',
