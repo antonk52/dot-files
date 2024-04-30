@@ -681,8 +681,12 @@ if vim.g.vscode then
     vim.keymap.set('n', 'gd', function()
         local filepath = vim.api.nvim_buf_get_name(0)
         local is_www_js = string.match(filepath, '/www/') and vim.endswith(filepath, '.js')
+        local is_ts_or_js = vim.endswith(filepath, '.js')
+            or vim.endswith(filepath, '.ts')
+            or vim.endswith(filepath, '.tsx')
         require('vscode-neovim').call(
-            (vim.v.count and not is_www_js) and 'typescript.goToSourceDefinition' or 'editor.action.revealDefinition'
+            (vim.v.count and not is_www_js and is_ts_or_js) and 'typescript.goToSourceDefinition'
+                or 'editor.action.revealDefinition'
         )
     end, {})
     vim.keymap.set('n', 'gD', c('editor.action.goToDeclaration'), {})
