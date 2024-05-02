@@ -1,11 +1,11 @@
 lint:
-	@selene ./nvim ./wezterm
+	@selene ./nvim
 
 format:
-	@stylua ./nvim ./wezterm
+	@stylua ./nvim
 
 format-check:
-	@stylua --check ./nvim ./wezterm
+	@stylua --check ./nvim
 
 git-hooks:
 	@ln -s ../../.githooks/pre-commit .git/hooks/pre-commit
