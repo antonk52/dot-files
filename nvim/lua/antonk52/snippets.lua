@@ -1,36 +1,17 @@
+local cmp = require('cmp')
 local M = {}
 
-local luasnip = require('luasnip')
-local parse_snippet = luasnip.parser.parse_snippet
-local l = require('luasnip.extras').lambda
-local s = luasnip.snippet
-local t = luasnip.text_node
-local i = luasnip.insert_node
+local snippet = function(a, b)
+    return { a, b }
+end
 
 function M.lines(tbl)
     return table.concat(tbl, '\n')
 end
 
-luasnip.config.set_config({
-    history = true,
-    updateevents = 'TextChanged,TextChangedI',
-})
-
-local function is_js_test_file()
-    local file = vim.fn.expand('%')
-    if file == '' then
-        return false
-    end
-
-    local test_file = vim.fn.match(file, '\\(_spec\\|spec\\|Spec\\|-test\\|test\\)\\.\\(js\\|jsx\\|ts\\|tsx\\)$') ~= -1
-    local indirect_test_file = vim.fn.match(file, '\\v/\\(__tests__\\|test\\)/.+\\.(js|jsx|ts|tsx)$') ~= -1
-
-    return test_file or indirect_test_file
-end
-
 local javascript_snippets = {
-    parse_snippet('shebang', '#!/usr/bin/env node'),
-    parse_snippet(
+    snippet('shebang', '#!/usr/bin/env node'),
+    snippet(
         'fun',
         M.lines({
             'function ${1:function_name}(${2:arg}) {',
@@ -38,7 +19,7 @@ local javascript_snippets = {
             '}',
         })
     ),
-    parse_snippet(
+    snippet(
         'switch',
         M.lines({
             'switch (${1:condition}) {',
@@ -52,98 +33,36 @@ local javascript_snippets = {
         })
     ),
 
-    parse_snippet('iif', '/* istanbul ignore file */'),
+    snippet('iif', '/* istanbul ignore file */'),
 
-    parse_snippet('iin', '/* istanbul ignore next */'),
+    snippet('iin', '/* istanbul ignore next */'),
 
-    parse_snippet('fi', "\\$FlowIgnore<'${1:why do you ignore?}'>"),
+    snippet('fi', "\\$FlowIgnore<'${1:why do you ignore?}'>"),
 
-    parse_snippet('ffm', "\\$FlowFixMe<'${1:what is broken?}'>"),
+    snippet('ffm', "\\$FlowFixMe<'${1:what is broken?}'>"),
 
-    parse_snippet('ee', "\\$ExpectError<'${1:why is it expected?}'>"),
+    snippet('ee', "\\$ExpectError<'${1:why is it expected?}'>"),
 
-    parse_snippet('import', "import ${0:thing} from '${1:package}';"),
-    parse_snippet('imp', "import ${0:thing} from '${1:package}';"),
-
-    s('useState', {
-        t('const ['),
-        i(1, 'state'),
-        t(', set'),
-        -- capitalize first char
-        l(
-            l._1:gsub('^.', function(c)
-                return c:upper()
-            end),
-            1
-        ),
-        t('] = useState('),
-        i(3, 'defaultValue'),
-        t(');'),
-    }),
-
-    parse_snippet(
-        'useEffect',
-        M.lines({
-            'useEffect(() => {',
-            '    ${1:logic}',
-            '}, [${2:leave_empty_for_componentDidMount}]);',
-        })
-    ),
-
-    parse_snippet(
-        'useCallback',
-        M.lines({
-            'useCallback(() => {',
-            '    ${1:logic}',
-            '}, [${2:dependencies}]);',
-        })
-    ),
-
-    parse_snippet(
-        { trig = 'desc', condition = is_js_test_file, show_condition = is_js_test_file },
-        M.lines({
-            "describe('${1:what are we testing}', () => {",
-            '    $0',
-            '});',
-        })
-    ),
-    parse_snippet(
-        { trig = 'it', condition = is_js_test_file, show_condition = is_js_test_file },
-        M.lines({
-            "it('${1:what to test}', () => {",
-            '    const result = ${2:funcName}(${3:args});',
-            "    const expected = ${4:'what do we expect?'};",
-            '',
-            '    expect(result).toEqual(expected);',
-            '});',
-        })
-    ),
-    parse_snippet(
-        { trig = 'mock', condition = is_js_test_file, show_condition = is_js_test_file },
-        M.lines({
-            "jest.mock('${1:file/path/to/mock}', () => ({",
-            '    ${2:exportedFunc}: jest.fn($0),',
-            '}));',
-        })
-    ),
+    snippet('import', "import ${0:thing} from '${1:package}';"),
+    snippet('imp', "import ${0:thing} from '${1:package}';"),
 }
 
 M.default_snippets = {
     all = {
-        parse_snippet('shebang', '#!/bin sh'),
-        -- use `function_node` to evaluate lua for snippet body
-        luasnip.snippet(
-            'epoch',
-            luasnip.function_node(function()
-                return os.time() .. ''
-            end)
-        ),
+        snippet('shebang', '#!/bin sh'),
     },
     lua = {
-        parse_snippet('fun', 'function($1) $0 end'),
+        snippet(
+            'fun',
+            M.lines({
+                'function($1)',
+                '  $0',
+                'end',
+            })
+        ),
     },
     markdown = {
-        parse_snippet(
+        snippet(
             'table',
             M.lines({
                 '| First Header  | Second Header |',
@@ -152,24 +71,13 @@ M.default_snippets = {
                 '| Content Cell  | Content Cell  |',
             })
         ),
-
-        parse_snippet('img', [[![${1:alt}]($0)]]),
-
-        parse_snippet(
+        snippet('img', [[![${1:alt}]($0)]]),
+        snippet(
             'details',
             M.lines({
                 '<details><summary>${1:tldr}</summmary>',
                 '$0',
                 '</details>',
-            })
-        ),
-
-        parse_snippet(
-            'todo',
-            M.lines({
-                '## TODO',
-                '',
-                '- [ ] $0',
             })
         ),
     },
@@ -181,11 +89,83 @@ M.default_snippets = {
     ['typescriptreact'] = javascript_snippets,
 }
 
-function M.setup()
-    -- load initial snippets
-    for ft, snippets in pairs(M.default_snippets) do
-        luasnip.add_snippets(ft, snippets)
+local function get_buf_snips()
+    local ft = vim.bo.filetype
+    local snips = { M.default_snippets.all[1] }
+
+    if ft and M.default_snippets[ft] then
+        for _, s in ipairs(M.default_snippets[ft]) do
+            table.insert(snips, s)
+        end
     end
+
+    return snips
+end
+
+-- cmp source for snippets to show up in completion menu
+function M.register_source()
+    local cmp_source = {}
+    cmp_source.new = function()
+        local self = setmetatable({ cache = {} }, { __index = cmp_source })
+        return self
+    end
+    cmp_source.complete = function(self, _, callback)
+        local bufnr = vim.api.nvim_get_current_buf()
+        if not self.cache[bufnr] then
+            local completion_items = vim.tbl_map(function(s)
+                return {
+                    word = s[1],
+                    label = s[1],
+                    kind = cmp.lsp.CompletionItemKind.Snippet,
+                }
+            end, get_buf_snips())
+
+            self.cache[bufnr] = completion_items
+            callback(completion_items)
+        end
+
+        callback(self.cache[bufnr])
+    end
+
+    function cmp_source:execute(completion_item, callback)
+        M.expand()
+        callback(completion_item)
+    end
+    require('cmp').register_source('snip', cmp_source.new())
+end
+
+----------------------------------------------------
+-- Helper functions to exapnd a snippet under cursor
+----------------------------------------------------
+function M.get_snippet()
+    local line, col = unpack(vim.api.nvim_win_get_cursor(0))
+    local cur_line = vim.api.nvim_buf_get_lines(0, line - 1, line, true)
+    local line_pre_cursor = cur_line[1]:sub(1, col)
+
+    for _, s in ipairs(get_buf_snips()) do
+        if vim.endswith(line_pre_cursor, s[1]) then
+            return s[1], s[2], line, col
+        end
+    end
+
+    return nil
+end
+
+function M.expandable()
+    return M.get_snippet() ~= nil
+end
+
+function M.expand()
+    local trigger, body, line, col = M.get_snippet()
+    if not trigger or not line or not col then
+        return false
+    end
+    -- remove trigger
+    vim.api.nvim_buf_set_text(0, line - 1, col - #trigger, line - 1, col, {})
+    vim.api.nvim_win_set_cursor(0, { line, col - #trigger })
+
+    vim.snippet.expand(body)
+    return true
 end
 
 return M

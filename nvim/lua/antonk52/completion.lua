@@ -24,7 +24,7 @@ function M.update_ai_completion(opts)
 end
 
 function M.setup()
-    local luasnip = require('luasnip')
+    require('antonk52.snippets').register_source()
     local mapping = cmp.mapping.preset.insert({
         ['<Tab>'] = function(fallback)
             if AI.is_visible() then
@@ -58,21 +58,22 @@ function M.setup()
             end
         end,
         ['<CR>'] = cmp.mapping.confirm(),
-        -- U for Undo
-        ['<C-u>'] = function(fallback)
-            if not luasnip.jump(-1) then
-                fallback()
-            end
-        end,
+        ['<C-y>'] = cmp.mapping.confirm({ select = true }),
         -- O for Open
         ['<C-o>'] = function(fallback)
-            if luasnip.expand_or_jumpable() then
-                luasnip.expand_or_jump()
+            if require('antonk52.snippets').expand() then
+                return
             elseif cmp.visible() then
-                cmp.confirm()
+                cmp.confirm({ select = true })
             else
                 fallback()
             end
+        end,
+        ['<C-h>'] = function()
+            vim.snippet.jump(-1)
+        end,
+        ['<C-l>'] = function()
+            vim.snippet.jump(1)
         end,
         ['<C-k>'] = cmp.mapping.scroll_docs(-4),
         ['<C-j>'] = cmp.mapping.scroll_docs(4),
@@ -81,7 +82,7 @@ function M.setup()
     cmp.setup({
         snippet = {
             expand = function(arg)
-                luasnip.lsp_expand(arg.body)
+                vim.snippet.expand(arg.body)
             end,
         },
         mapping = mapping,
@@ -100,7 +101,7 @@ function M.setup()
             end,
         },
         sources = {
-            { name = 'luasnip', keyword_length = 1 },
+            { name = 'snip', keyword_length = 2 },
             { name = 'nvim_lsp' },
             { name = 'nvim_lua' },
             { name = 'nvim_lsp_signature_help' },

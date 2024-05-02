@@ -80,16 +80,6 @@ local plugins = {
         opts = { filetypes = { 'markdown', 'hgcommit', 'gitcommit' } },
     },
     {
-        'L3MON4D3/LuaSnip',
-        tag = 'v2.0.0',
-        config = function()
-            require('antonk52.snippets').setup()
-            vim.api.nvim_del_user_command('LuaSnipUnlinkCurrent')
-            vim.api.nvim_del_user_command('LuaSnipListAvailable')
-        end,
-        event = 'VeryLazy',
-    },
-    {
         'hrsh7th/nvim-cmp',
         dependencies = {
             'hrsh7th/cmp-buffer',
@@ -98,8 +88,6 @@ local plugins = {
             'hrsh7th/cmp-nvim-lsp',
             'hrsh7th/cmp-nvim-lua',
             'hrsh7th/cmp-nvim-lsp-signature-help',
-            'saadparwaiz1/cmp_luasnip',
-            'L3MON4D3/LuaSnip',
             'zbirenbaum/copilot.lua',
         },
         config = function()
