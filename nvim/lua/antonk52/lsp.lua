@@ -29,7 +29,7 @@ local function cross_lsp_definition()
                     if v.response.uri or v.response.targetUri then
                         table.insert(flatten_responses, v.response)
                         table.insert(flatten_responses_encoding, v.encoding)
-                    elseif vim.tbl_islist(v.response) then
+                    elseif vim.islist(v.response) then
                         for _, v2 in ipairs(v.response) do
                             table.insert(flatten_responses, v2)
                             table.insert(flatten_responses_encoding, v.encoding)
@@ -42,7 +42,7 @@ local function cross_lsp_definition()
                 end
 
                 -- if there is only one response, jump to it
-                if #flatten_responses == 1 and not vim.tbl_islist(flatten_responses[1]) then
+                if #flatten_responses == 1 and not vim.islist(flatten_responses[1]) then
                     return util.jump_to_location(flatten_responses[1], flatten_responses_encoding[1])
                 end
 
@@ -242,6 +242,7 @@ function M.setup_lua()
                 diagnostics = {
                     -- Get the language server to recognize the `vim` global
                     globals = { 'vim' },
+                    unusedLocalExclude = { '_*' },
                     disable = {
                         'missing-fields',
                         'duplicate-set-field',
@@ -253,6 +254,7 @@ function M.setup_lua()
                     -- Make the server aware of Neovim runtime files
                     library = vim.api.nvim_get_runtime_file('', true),
                     maxPreload = 10000,
+                    checkThirdParty = 'Disable',
                 },
                 -- Do not send telemetry data containing a randomized but unique identifier
                 telemetry = {

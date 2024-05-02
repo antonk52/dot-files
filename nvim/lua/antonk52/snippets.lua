@@ -94,9 +94,7 @@ local function get_buf_snips()
     local snips = { M.default_snippets.all[1] }
 
     if ft and M.default_snippets[ft] then
-        for _, s in ipairs(M.default_snippets[ft]) do
-            table.insert(snips, s)
-        end
+        vim.list_extend(snips, M.default_snippets[ft])
     end
 
     return snips

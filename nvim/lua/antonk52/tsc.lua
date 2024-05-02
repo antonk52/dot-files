@@ -48,10 +48,9 @@ local function callTSC(opts)
         args = { 'tsc', '--noEmit', '--pretty', 'false' },
         cwd = opts.cwd or project_cwd,
         on_stdout = function(_, data)
-            local lines = vim.split(data, '\n', true)
+            local lines = vim.split(data, '\n')
             for _, line in ipairs(lines) do
                 if line ~= '' then
-                    ---@diagnostic disable-next-line: unused-local
                     local filename, line_number, col, _err, code, message =
                         line:match('(%g+)%((%d+),(%d+)%): (%a+) (%g+): (.+)')
                     if filename ~= nil then
