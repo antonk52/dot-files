@@ -28,7 +28,7 @@ function M.run()
         args = { 'eslint', '.', '--ext=.ts,.tsx,.js,.jsx', '--format=unix' },
         cwd = lookupEslintConfig() or vim.loop.cwd() or vim.fn.getcwd(),
         on_stdout = function(_, data)
-            local lines = vim.split(data, '\n', true)
+            local lines = vim.split(data, '\n')
             for _, line in ipairs(lines) do
                 if line ~= '' then
                     -- /foo/bar/filename.ts:15:7: any-message-text [Error/rule/name]

@@ -36,7 +36,7 @@ local plugins = {
     },
     {
         'stevearc/conform.nvim',
-        event = 'VeryLazy',
+        ft = { 'lua', 'json', 'javascript', 'javascriptreact', 'typescript', 'typescriptreact' },
         config = function()
             local current_buf = vim.api.nvim_buf_get_name(0)
             local biome_root_markers = vim.fs.find(
@@ -77,6 +77,7 @@ local plugins = {
     },
     {
         'antonk52/markdowny.nvim',
+        ft = { 'markdown', 'hgcommit', 'gitcommit' },
         opts = { filetypes = { 'markdown', 'hgcommit', 'gitcommit' } },
     },
     {
@@ -160,13 +161,7 @@ local plugins = {
     {
         'antonk52/npm_scripts.nvim',
         opts = {},
-        config = function()
-            require('npm_scripts').setup({})
-            local cmd = '<cmd>lua require("npm_scripts").run_from_all()<cr>'
-            vim.keymap.set('n', '<leader>N', cmd, { desc = 'Run npm script' })
-            vim.api.nvim_create_user_command('NpmScript', cmd, {})
-        end,
-        event = 'VeryLazy',
+        keys = { '<leader>N', '<cmd>lua require("npm_scripts").run_from_all()<cr>', desc = 'Run npm script' },
     },
     {
         'folke/trouble.nvim',
@@ -177,10 +172,10 @@ local plugins = {
             indent_lines = false, -- add an indent guide below the fold icons
             use_diagnostic_signs = true, -- enabling this will use the signs defined in your lsp client
         },
-        event = 'VeryLazy',
+        cmd = 'Trouble',
     },
-    { 'marilari88/twoslash-queries.nvim' },
-    'antonk52/gitignore-grabber.nvim',
+    { 'marilari88/twoslash-queries.nvim', ft = { 'javasciprt', 'javascriptreact', 'typescript', 'typescriptreact' } },
+    { 'antonk52/gitignore-grabber.nvim', cmd = 'Gitignore' },
     {
         'nvim-treesitter/nvim-treesitter',
         dependencies = {
