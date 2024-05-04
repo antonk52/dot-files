@@ -216,8 +216,6 @@ local plugins = {
                 textobjects = {
                     select = {
                         enable = true,
-                        -- Automatically jump forward to textobj, similar to targets.vim
-                        lookahead = true,
                         keymaps = {
                             ['af'] = '@function.outer',
                             ['if'] = '@function.inner',
@@ -226,13 +224,6 @@ local plugins = {
                             ['ab'] = '@block.outer',
                             ['ib'] = '@block.inner',
                         },
-                        -- mapping query_strings to modes.
-                        selection_modes = {
-                            ['@parameter.outer'] = 'v', -- charwise
-                            ['@function.outer'] = 'V', -- linewise
-                            ['@class.outer'] = '<c-v>', -- blockwise
-                        },
-                        include_surrounding_whitespace = false,
                     },
                 },
             })
