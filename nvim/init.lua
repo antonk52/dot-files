@@ -465,7 +465,7 @@ local lazy_options = {
                 and (plugin[1] == 'ggandor/leap.nvim' or plugin[1] == 'echasnovski/mini.nvim')
         end or nil,
     },
-    lockfile = vim.fs.normalize('~/dot-files/nvim') .. '/lazy-lock.json',
+    lockfile = vim.fs.normalize('~/dot-files/nvim/lazy-lock.json'),
     performance = {
         rtp = {
             disabled_plugins = {
@@ -684,7 +684,7 @@ vim.keymap.set('v', '<leader>c', '"*y', { noremap = false, desc = 'copy to OS cl
 vim.keymap.set('', '<leader>v', '"*p', { noremap = false, desc = 'paste from OS clipboard' })
 vim.keymap.set('n', 'p', ']p', { desc = 'paste under current indentation level' })
 vim.keymap.set('n', '<leader>z', 'za', { desc = 'toggle folds' })
-vim.keymap.set('n', '<esc>', ':set nohlsearch<cr><esc>', { desc = 'toggle highlight for last search' })
+vim.keymap.set('n', '<esc>', ':set nohlsearch<cr><esc>', { silent = true, desc = 'toggle highlight for last search' })
 vim.keymap.set('n', 'n', '<cmd>set hlsearch<cr>n', { desc = 'always have highlighted search results when navigating' })
 vim.keymap.set('n', 'N', '<cmd>set hlsearch<cr>N', { desc = 'always have highlighted search results when navigating' })
 
@@ -842,7 +842,9 @@ end
 
 vim.api.nvim_create_user_command('Mappings', function(x)
     local prefix = x.args
-    if prefix == '<leader>' then
+    if prefix == '' then
+        return vim.notify('Provide on keymap prefix, example "<leader>"', vim.log.levels.ERROR)
+    elseif prefix == '<leader>' then
         prefix = vim.g.mapleader
     elseif prefix == '<localleader>' then
         prefix = vim.g.maplocalleader
@@ -871,8 +873,8 @@ vim.api.nvim_create_user_command('Mappings', function(x)
 
     -- QWERTY keyboard layout
     local keys = {
-        { 'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', '[', ']' },
-        { 'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', ';', "'", '\\' },
+        { 'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', '[', ']', '\\' },
+        { 'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', ';', "'" },
         { 'z', 'x', 'c', 'v', 'b', 'n', 'm', ',', '.', '/' },
     }
 
@@ -946,7 +948,7 @@ vim.api.nvim_create_user_command('Mappings', function(x)
         vim.api.nvim_buf_add_highlight(buf, -1, 'MyMapsUsed', pos[1] - 1, pos[2], pos[2] + 1)
     end
     vim.api.nvim_buf_add_highlight(buf, -1, 'MyMapsUsed', 1, 1, 2)
-end, { nargs = 1 })
+end, { nargs = '?' })
 
 -- plugin manager
 -- easier to see all options at a glance
