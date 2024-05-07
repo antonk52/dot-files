@@ -90,13 +90,8 @@ vim.api.nvim_create_autocmd('LspAttach', {
         keymap('gi', vim.lsp.buf.implementation, 'lsp implementation')
         keymap('gk', vim.lsp.buf.signature_help, 'lsp signature_help')
         keymap('gK', vim.lsp.buf.type_definition, 'lsp type_definition')
-        keymap('<leader>R', ':echo "deprecated, use `crn` instead"<cr>', 'lsp rename')
-        -- TODO remove post 0.10 update
-        keymap('crn', vim.lsp.buf.rename, 'lsp rename')
-        keymap('<leader>ca', ':echo "deprecated, use `crr` instead"<cr>', 'lsp code_action')
-        -- TODO remove post 0.10 update
-        keymap('crr', vim.lsp.buf.code_action, 'lsp code_action')
-        -- TODO remove post 0.10 update
+        keymap('<leader>R', vim.lsp.buf.rename, 'lsp rename')
+        keymap('<leader>ca', vim.lsp.buf.code_action, 'lsp code_action')
         keymap('gr', vim.lsp.buf.references, 'lsp references')
         keymap('<leader>L', vim.diagnostic.open_float, 'show current line diagnostic')
         -- TODO remove post 0.10 update
