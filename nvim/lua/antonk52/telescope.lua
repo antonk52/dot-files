@@ -97,7 +97,7 @@ function M.git_diff(opts)
 
     for _, line in ipairs(output) do
         -- new file
-        if line:sub(1, 4) == 'diff' then
+        if vim.startswith(line, 'diff') then
             -- Start of a new hunk
             if hunk[1] ~= nil then
                 table.insert(results, { filename = filename, lnum = linenumber, raw_lines = hunk })
@@ -109,7 +109,7 @@ function M.git_diff(opts)
             linenumber = nil
 
             hunk = {}
-        elseif line:sub(1, 1) == '@' then
+        elseif vim.startswith(line, '@') then
             if filename ~= nil and linenumber ~= nil and #hunk > 0 then
                 table.insert(results, { filename = filename, lnum = linenumber, raw_lines = hunk })
                 hunk = {}
@@ -248,6 +248,7 @@ function M.setup()
         })
     end, { desc = 'Command picker' })
     vim.keymap.set('n', '<leader>r', '<cmd>Telescope resume<cr>', { desc = 'Resume picker' })
+    vim.api.nvim_create_user_command('Diagnostics', 'Telescope diagnostics', { desc = 'Buffer diagnostics picker' })
 
     -- Repro of Rg command from fzf.vim
     vim.api.nvim_create_user_command('Rg', function(a)
