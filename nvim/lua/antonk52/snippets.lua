@@ -1,8 +1,8 @@
 local cmp = require('cmp')
 local M = {}
 
-local snippet = function(a, b)
-    return { a, b }
+local snippet = function(trigger, body)
+    return { trigger = trigger, body = body }
 end
 
 function M.lines(tbl)
@@ -91,7 +91,7 @@ M.default_snippets = {
 
 local function get_buf_snips()
     local ft = vim.bo.filetype
-    local snips = { M.default_snippets.all[1] }
+    local snips = vim.list_slice(M.default_snippets.all)
 
     if ft and M.default_snippets[ft] then
         vim.list_extend(snips, M.default_snippets[ft])
@@ -112,8 +112,8 @@ function M.register_source()
         if not self.cache[bufnr] then
             local completion_items = vim.tbl_map(function(s)
                 return {
-                    word = s[1],
-                    label = s[1],
+                    word = s.trigger,
+                    label = s.trigger,
                     kind = cmp.lsp.CompletionItemKind.Snippet,
                 }
             end, get_buf_snips())
@@ -141,8 +141,8 @@ function M.get_snippet()
     local line_pre_cursor = cur_line[1]:sub(1, col)
 
     for _, s in ipairs(get_buf_snips()) do
-        if vim.endswith(line_pre_cursor, s[1]) then
-            return s[1], s[2], line, col
+        if vim.endswith(line_pre_cursor, s.trigger) then
+            return s.trigger, s.body, line, col
         end
     end
 
