@@ -30,7 +30,7 @@ local function remove()
     local target = vim.trim(vim.fn.getline('.'))
     local is_file = vim.fn.match(target, '\\/$', '') == -1
     local rm_cmd = 'rm' .. (is_file and '' or ' -rf')
-    local confirmed = 0
+    local confirmed = false
 
     if is_file then
         vim.notify('Are you sure you want to delete it? [y/N]')
@@ -44,7 +44,7 @@ local function remove()
     if confirmed then
         vim.fn.system(rm_cmd .. ' ' .. target)
     else
-        vim.notify('Remove aborted', vim.log.levels.WARN)
+        vim.notify('Remove aborted', vim.log.levels.INFO)
     end
     vim.cmd('edit')
 end
@@ -52,22 +52,19 @@ end
 local function add()
     -- no need to escape for fn.mkdir or fn.writefile
     local new_path = vim.fn.input('Enter the new node path: ', vim.fn.expand('%'), 'file')
-    local is_file = vim.fn.match(new_path, '\\/$', '') == -1
 
     if vim.fn.filereadable(new_path) == 1 or vim.fn.isdirectory(new_path) == 1 then
         vim.notify('Already exists', vim.log.levels.WARN)
     else
-        if is_file then
-            local dir_path = vim.fs.dirname(new_path)
-            -- prep dir if it does not exist
-            vim.fn.mkdir(dir_path, 'p')
+        if vim.endswith(new_path, '/') then
+            vim.fn.mkdir(new_path, 'p')
+        else
+            _prep_dir(new_path)
             local result = vim.fn.writefile({ '' }, new_path)
 
             if result == -1 then
                 vim.notify('Failed to create a file', vim.log.levels.ERROR)
             end
-        else
-            vim.fn.mkdir(new_path, 'p')
         end
     end
 
