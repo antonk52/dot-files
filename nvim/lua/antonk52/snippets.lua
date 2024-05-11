@@ -129,7 +129,7 @@ function M.register_source()
         M.expand()
         callback(completion_item)
     end
-    require('cmp').register_source('snip', cmp_source.new())
+    require('cmp').register_source('snp', cmp_source.new())
 end
 
 ----------------------------------------------------

@@ -90,7 +90,6 @@ function M.setup()
             format = function(entry, vim_item)
                 local name_map = {
                     nvim_lsp = 'lsp',
-                    luasnip = 'snp',
                     buffer = 'buf',
                 }
                 if entry.source then
@@ -101,7 +100,7 @@ function M.setup()
             end,
         },
         sources = {
-            { name = 'snip', keyword_length = 2 },
+            { name = 'snp', keyword_length = 2 },
             { name = 'nvim_lsp' },
             { name = 'nvim_lua' },
             { name = 'nvim_lsp_signature_help' },
