@@ -148,15 +148,6 @@ function M.git_diff(opts)
         v.lnum = v.lnum + diff_line_idx
     end
 
-    -- in hg I typically have session not from the repo root
-    if opts.cmd[1] == 'hg' then
-        local hg_root = vim.trim(vim.fn.system({ 'hg', 'root' }))
-        vim.tbl_map(function(entry)
-            -- result filepath contains path from cwd
-            entry.filename = string.sub(hg_root .. '/' .. entry.filename, #(vim.loop.cwd() or vim.fn.getcwd()) + 2)
-        end, results)
-    end
-
     local diff_previewer = require('telescope.previewers').new_buffer_previewer({
         define_preview = function(self, entry, _)
             -- This function is called to populate the preview buffer
@@ -279,14 +270,6 @@ function M.setup()
         vim.api.nvim_create_user_command('TelescopeGitDiffIgnoreAllSpace', function()
             M.git_diff({ cmd = { 'git', 'diff', '--ignore-all-space' } })
         end, { desc = 'git hunk picker' })
-    end
-    if vim.env.WORK ~= nil then
-        vim.api.nvim_create_user_command('TelescopeHgDiff', function()
-            M.git_diff({ cmd = { 'hg', 'diff' } })
-        end, { desc = 'hg hunk picker' })
-        vim.api.nvim_create_user_command('TelescopeHgDiffIgnoreAllSpace', function()
-            M.git_diff({ cmd = { 'hg', 'diff', '--ignore-all-space' } })
-        end, { desc = 'hg hunk picker' })
     end
 end
 
