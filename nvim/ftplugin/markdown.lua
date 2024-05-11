@@ -1,6 +1,6 @@
 local function toggle_checkbox()
     -- save cursor position
-    local cursor_position = vim.fn.getpos('.')
+    local cursor = vim.api.nvim_win_get_cursor(0)
     local content = vim.api.nvim_get_current_line()
     local res = vim.fn.match(content, '\\[ \\]')
     if res == -1 then
@@ -9,12 +9,17 @@ local function toggle_checkbox()
         vim.fn.execute('.s/\\[ \\]/[x]')
     end
     -- restore cursor position
-    vim.fn.setpos('.', cursor_position)
+    vim.api.nvim_win_set_cursor(0, cursor)
 end
 
 local function lookup_word_under_cursor()
     local word = vim.fn.expand('<cword>')
-    vim.cmd('silent !open dict://' .. word)
+    local uri = 'dict://' .. word
+    if vim.ui.open then
+        vim.ui.open(uri)
+    else
+        vim.cmd('silent !open ' .. uri)
+    end
 end
 
 vim.keymap.set('n', '<localleader>t', toggle_checkbox, { buffer = 0, silent = true })
