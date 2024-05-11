@@ -1,19 +1,5 @@
 local M = {}
 
-M.options = {
-    borderchars = {
-        results = { '─', '│', ' ', '│', '┌', '┐', '│', '│' },
-        prompt = { '─', '│', '─', '│', '├', '┤', '┘', '└' },
-        preview = { '─', '│', '─', '│', '┌', '┐', '┘', '└' },
-    },
-    layout_config = {
-        horizontal = {
-            width = 0.99,
-        },
-    },
-    disable_devicons = true,
-}
-
 local _is_inside_git_repo = nil
 local function is_inside_git_repo()
     if _is_inside_git_repo ~= nil then
@@ -184,13 +170,24 @@ end
 
 function M.setup()
     require('telescope').setup({
-        defaults = vim.tbl_extend('force', {
+        defaults = {
+            borderchars = {
+                results = { '─', '│', ' ', '│', '┌', '┐', '│', '│' },
+                prompt = { '─', '│', '─', '│', '├', '┤', '┘', '└' },
+                preview = { '─', '│', '─', '│', '┌', '┐', '┘', '└' },
+            },
+            layout_config = {
+                horizontal = {
+                    width = 0.99,
+                },
+            },
+            disable_devicons = true,
             mappings = {
                 i = {
                     ['<esc>'] = require('telescope.actions').close,
                 },
             },
-        }, M.options),
+        },
     })
     vim.keymap.set('n', '<leader>f', M.action_smart_vcs_files)
     vim.keymap.set('n', '<D-p>', M.action_smart_vcs_files)
