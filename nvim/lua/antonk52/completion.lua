@@ -102,7 +102,6 @@ function M.setup()
         sources = {
             { name = 'snp', keyword_length = 2 },
             { name = 'nvim_lsp' },
-            { name = 'nvim_lua' },
             { name = 'nvim_lsp_signature_help' },
             { name = 'path' },
             { name = 'buffer', keyword_length = 3 },
