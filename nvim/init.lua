@@ -149,7 +149,7 @@ local plugins = {
                 backend = { 'telescope' },
                 telescope = {
                     layout_config = {
-                        width = 120,
+                        width = 80,
                         height = 0.8,
                         preview_width = 0.6,
                     },
