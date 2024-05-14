@@ -37,12 +37,8 @@ local plugins = {
         'stevearc/conform.nvim',
         ft = { 'lua', 'json', 'javascript', 'javascriptreact', 'typescript', 'typescriptreact' },
         config = function()
-            local current_buf = vim.api.nvim_buf_get_name(0)
-            local biome_root_markers = vim.fs.find(
-                { 'biome.json', 'biome.jsonc' },
-                { upward = true, type = 'file', stop = vim.fs.dirname(vim.env.HOME), limit = 1, path = current_buf }
-            )
-            local js_formatters = { #biome_root_markers > 0 and 'biome' or 'prettier' }
+            local biome_config = vim.fs.root(0, { 'biome.json', 'biome.jsonc' })
+            local js_formatters = { biome_config and 'biome' or 'prettier' }
 
             require('conform').setup({
                 format_on_save = function()
