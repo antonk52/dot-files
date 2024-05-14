@@ -61,7 +61,10 @@ function M.modified()
 end
 
 function M.filename()
-    local expanded = vim.api.nvim_buf_get_name(0):sub(2 + #(vim.loop.cwd() or vim.fn.cwd()))
+    local buf_path = vim.api.nvim_buf_get_name(0)
+    local cwd = vim.loop.cwd() or vim.fn.cwd()
+    -- if you open a file outside of nvim cwd it should not cut the filepath
+    local expanded = vim.startswith(buf_path, cwd) and buf_path:sub(2 + #cwd) or buf_path
     local filename_str = expanded == '' and '[No Name]' or expanded
     -- substitute other status line sections
     local win_size = vim.fn.winwidth(0) - 28

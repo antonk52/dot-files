@@ -159,7 +159,7 @@ local plugins = {
     {
         'antonk52/npm_scripts.nvim',
         opts = {},
-        keys = { '<leader>N', '<cmd>lua require("npm_scripts").run_from_all()<cr>', desc = 'Run npm script' },
+        keys = { { '<leader>N', '<cmd>lua require("npm_scripts").run_from_all()<cr>', desc = 'Run npm script' } },
     },
     {
         'folke/trouble.nvim',
@@ -638,8 +638,6 @@ vim.opt.undofile = true
 -- avoid mapping gx in netrw as for conflict reasons
 vim.g.netrw_nogx = 1
 
-require('antonk52.statusline').setup()
-
 if vim.g.vscode then
     local c = function(action)
         return function()
@@ -765,7 +763,7 @@ local commands = {
     end,
 
     ListLSPSupportedCommands = function()
-        for _, client in ipairs(vim.lsp.get_active_clients()) do
+        for _, client in ipairs(vim.lsp.get_clients()) do
             print('LSP client:', client.name)
             -- Check if the server supports workspace/executeCommand, which is often how commands are exposed
             if client.server_capabilities.executeCommandProvider then
@@ -902,6 +900,7 @@ vim.api.nvim_create_autocmd('BufReadPost', {
 })
 
 if not vim.g.vscode then
+    require('antonk52.statusline').setup()
     require('antonk52.indent_lines').setup()
     require('antonk52.print_mappings').setup()
 end
