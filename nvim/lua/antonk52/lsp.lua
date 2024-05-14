@@ -216,9 +216,6 @@ function M.setup_lua()
         return nil
     end
 
-    -- must be called before `lspconfig.sumneko_lua.setup`
-    require('neodev').setup({})
-
     local runtime_path = vim.split(package.path, ';')
     table.insert(runtime_path, 'lua/?.lua')
     table.insert(runtime_path, 'lua/?/init.lua')

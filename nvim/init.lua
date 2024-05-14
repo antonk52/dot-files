@@ -23,7 +23,6 @@ local plugins = {
         'neovim/nvim-lspconfig', -- types & linting
         dependencies = {
             'b0o/schemastore.nvim', -- json schemas for json lsp
-            'folke/neodev.nvim', -- vim api signature help and docs
         },
         config = function()
             vim.opt.updatetime = 300
