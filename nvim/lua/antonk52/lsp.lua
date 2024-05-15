@@ -181,38 +181,22 @@ M.servers = {
 
 function M.setup_lua()
     -- when homebrew is installed globally
-    local GLOBAL_BIN = (function()
-        local system_name
-        if vim.fn.has('mac') == 1 then
-            system_name = 'macOS'
-        elseif vim.fn.has('unix') == 1 then
-            system_name = 'Linux'
-        elseif vim.fn.has('win32') == 1 then
-            system_name = 'Windows'
-        else
-            return print('Unsupported system for sumneko')
-        end
-        local base =
-            vim.fs.normalize('~/.local/share/nvim/lsp_servers/sumneko_lua/extension/server/bin/' .. system_name)
-        local LUA_LSP_BIN = base .. '/lua-language-server'
-        local LUA_LSP_MAIN = base .. '/main.lua'
-
-        return {
-            bin = LUA_LSP_BIN,
-            main = LUA_LSP_MAIN,
-        }
-    end)()
-
-    local prefix = '~/homebrew/Cellar/lua-language-server/*/libexec/bin/'
-    local LOCAL_BIN = {
-        bin = vim.fn.expand(prefix .. 'lua-language-server'),
-        main = vim.fn.expand(prefix .. 'main.lua'),
+    local global_prefix = vim.fs.normalize('~/.local/share/nvim/lsp_servers/sumneko_lua/extension/server/bin/macOS')
+    local GLOBAL_BIN = {
+        bin = global_prefix .. '/lua-language-server',
+        main = global_prefix .. '/main.lua',
     }
 
-    local BIN = (GLOBAL_BIN and vim.fn.filereadable(GLOBAL_BIN.bin) == 1) and GLOBAL_BIN or LOCAL_BIN
+    local local_prefix = '~/homebrew/Cellar/lua-language-server/*/libexec/bin/'
+    local LOCAL_BIN = {
+        bin = vim.fn.expand(local_prefix .. 'lua-language-server'),
+        main = vim.fn.expand(local_prefix .. 'main.lua'),
+    }
+
+    local BIN = (vim.fn.filereadable(GLOBAL_BIN.bin) == 1) and GLOBAL_BIN or LOCAL_BIN
 
     if vim.fn.filereadable(BIN.bin) ~= 1 then
-        print('lua-language-server is not installed or cannot be found')
+        vim.notify('lua-language-server is not installed or cannot be found', vim.log.levels.WARN)
         return nil
     end
 
