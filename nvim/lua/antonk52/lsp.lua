@@ -5,7 +5,14 @@ local M = {}
 local function cross_lsp_definition()
     local util = require('vim.lsp.util')
     local req_params = util.make_position_params()
-    local all_clients = vim.lsp.get_clients()
+    local all_clients = vim.lsp.get_clients({
+        bufnr = 0,
+        method = 'textDocument/definition',
+    })
+
+    if #all_clients == 0 then
+        return vim.notify('No LSP attached with definition support', vim.log.levels.WARN)
+    end
 
     ---@table (Location | Location[] | LocationLink[] | nil)
     local raw_responses = {}
@@ -22,6 +29,7 @@ local function cross_lsp_definition()
 
             if responded == #all_clients then
                 local flatten_responses = {}
+                ---@type string[]
                 local flatten_responses_encoding = {}
                 for _, v in ipairs(raw_responses) do
                     -- first check for Location | LocationLink because
@@ -47,7 +55,7 @@ local function cross_lsp_definition()
                 end
 
                 -- TODO: change to telescope or any other picker with preview
-                local items = util.locations_to_items(flatten_responses, nil)
+                local items = util.locations_to_items(flatten_responses, flatten_responses_encoding[1])
 
                 vim.fn.setqflist({}, ' ', { title = 'LSP locations', items = items })
                 -- vim.api.nvim_command('botright copen')
@@ -57,11 +65,7 @@ local function cross_lsp_definition()
     end
 
     for _, client in ipairs(all_clients) do
-        if client.supports_method('textDocument/definition') then
-            client.request('textDocument/definition', req_params, make_cb(client))
-        else
-            responded = responded + 1
-        end
+        client.request('textDocument/definition', req_params, make_cb(client))
     end
 end
 
