@@ -1,17 +1,13 @@
 local M = {}
-local has_nvim_0_10_x = vim.fn.has('nvim-0.10') == 1
 local hi_next = function(group)
     return '%#' .. group .. '#'
 end
 
 local lsp_status_cache = nil
 function M.lsp_init()
-    if not has_nvim_0_10_x then
-        return ''
-    end
     if not lsp_status_cache then
         lsp_status_cache = {}
-        for _, client in ipairs(vim.lsp.get_active_clients()) do
+        for _, client in ipairs(vim.lsp.get_clients()) do
             for progress in client.progress do
                 local msg = progress.value
                 if type(msg) == 'table' and msg.kind ~= 'end' then
@@ -98,9 +94,6 @@ local hi = {
     [s.INFO] = { hi = 'DiagnosticInfo', char = 'i' },
 }
 function M.diagnostics()
-    if not has_nvim_0_10_x then
-        return ''
-    end
     diagnostics_cache = diagnostics_cache or vim.diagnostic.count(0)
 
     if #diagnostics_cache == 0 then
@@ -184,26 +177,23 @@ function M.setup()
             vim.opt.statusline = "%!v:lua.require'antonk52.statusline'.render()"
         end,
     })
-    -- redraw statusline on lsp progress update
-    if has_nvim_0_10_x then
-        local throttle_timer = nil
-        vim.api.nvim_create_autocmd('LspProgress', {
-            pattern = '*',
-            callback = function()
-                -- LspProgress fires frequently, so we throttle statusline updates.
-                if throttle_timer then
-                    throttle_timer:stop()
-                end
+    local throttle_timer = nil
+    vim.api.nvim_create_autocmd('LspProgress', {
+        pattern = '*',
+        desc = 'refresh statusline on LspProgress',
+        callback = function()
+            -- LspProgress fires frequently, so we throttle statusline updates.
+            if throttle_timer then
+                throttle_timer:stop()
+            end
 
-                throttle_timer = vim.defer_fn(function()
-                    throttle_timer = nil
-                    M.refresh_lsp_status()
-                    vim.cmd.redrawstatus()
-                end, 80)
-            end,
-        })
-    end
-    -- refresh statusline on DiagnosticChanged
+            throttle_timer = vim.defer_fn(function()
+                throttle_timer = nil
+                M.refresh_lsp_status()
+                vim.cmd.redrawstatus()
+            end, 80)
+        end,
+    })
     vim.api.nvim_create_autocmd('DiagnosticChanged', {
         pattern = '*',
         desc = 'refresh statusline on DiagnosticChanged',

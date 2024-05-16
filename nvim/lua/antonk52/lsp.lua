@@ -5,7 +5,7 @@ local M = {}
 local function cross_lsp_definition()
     local util = require('vim.lsp.util')
     local req_params = util.make_position_params()
-    local all_clients = vim.lsp.get_active_clients()
+    local all_clients = vim.lsp.get_clients()
 
     ---@table (Location | Location[] | LocationLink[] | nil)
     local raw_responses = {}
@@ -70,6 +70,9 @@ vim.api.nvim_create_autocmd('LspAttach', {
     callback = function(args)
         local bufnr = args.buf
         local client = vim.lsp.get_client_by_id(args.data.client_id)
+        if not client then
+            return
+        end
         if client.server_capabilities.completionProvider then
             vim.bo[bufnr].omnifunc = 'v:lua.vim.lsp.omnifunc'
         end
@@ -84,8 +87,6 @@ vim.api.nvim_create_autocmd('LspAttach', {
 
         keymap('gD', vim.lsp.buf.declaration, 'lsp declaration')
         keymap('gd', cross_lsp_definition, 'lsp definition')
-        -- TODO remove post 0.10 update
-        keymap('K', vim.lsp.buf.hover, 'lsp hover')
         keymap('<leader>t', vim.lsp.buf.hover, 'lsp hover')
         keymap('gi', vim.lsp.buf.implementation, 'lsp implementation')
         keymap('gk', vim.lsp.buf.signature_help, 'lsp signature_help')
@@ -94,10 +95,6 @@ vim.api.nvim_create_autocmd('LspAttach', {
         keymap('<leader>ca', vim.lsp.buf.code_action, 'lsp code_action')
         keymap('gr', vim.lsp.buf.references, 'lsp references')
         keymap('<leader>L', vim.diagnostic.open_float, 'show current line diagnostic')
-        -- TODO remove post 0.10 update
-        keymap('[d', vim.diagnostic.goto_prev, 'go to prev diagnostic')
-        -- TODO remove post 0.10 update
-        keymap(']d', vim.diagnostic.goto_next, 'go to next diagnostic')
         vim.api.nvim_buf_create_user_command(0, 'FormatLsp', function()
             vim.lsp.buf.format({
                 -- never use tsserver to format files
