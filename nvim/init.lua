@@ -168,7 +168,7 @@ local plugins = {
         },
         cmd = 'Trouble',
     },
-    { 'marilari88/twoslash-queries.nvim', ft = { 'javasciprt', 'javascriptreact', 'typescript', 'typescriptreact' } },
+    { 'marilari88/twoslash-queries.nvim', ft = { 'javascript', 'javascriptreact', 'typescript', 'typescriptreact' } },
     { 'antonk52/gitignore-grabber.nvim', cmd = 'Gitignore' },
     {
         'nvim-treesitter/nvim-treesitter',
