@@ -178,75 +178,76 @@ M.servers = {
     marksman = {},
 
     tailwindcss = {},
-}
 
-function M.setup_lua()
-    -- when homebrew is installed globally
-    local global_prefix = vim.fs.normalize('~/.local/share/nvim/lsp_servers/sumneko_lua/extension/server/bin/macOS')
-    local GLOBAL_BIN = {
-        bin = global_prefix .. '/lua-language-server',
-        main = global_prefix .. '/main.lua',
-    }
+    lua_ls = function()
+        -- when homebrew is installed globally
+        local global_prefix = vim.fs.normalize('~/.local/share/nvim/lsp_servers/sumneko_lua/extension/server/bin/macOS')
+        local GLOBAL_BIN = {
+            bin = global_prefix .. '/lua-language-server',
+            main = global_prefix .. '/main.lua',
+        }
 
-    local local_prefix = '~/homebrew/Cellar/lua-language-server/*/libexec/bin/'
-    local LOCAL_BIN = {
-        bin = vim.fn.expand(local_prefix .. 'lua-language-server'),
-        main = vim.fn.expand(local_prefix .. 'main.lua'),
-    }
+        -- when homebrew is installed to homedir
+        local local_prefix = '~/homebrew/Cellar/lua-language-server/*/libexec/bin/'
+        local LOCAL_BIN = {
+            bin = vim.fn.expand(local_prefix .. 'lua-language-server'),
+            main = vim.fn.expand(local_prefix .. 'main.lua'),
+        }
 
-    local BIN = (vim.fn.filereadable(GLOBAL_BIN.bin) == 1) and GLOBAL_BIN or LOCAL_BIN
+        local BIN = (vim.fn.filereadable(GLOBAL_BIN.bin) == 1) and GLOBAL_BIN or LOCAL_BIN
 
-    if vim.fn.filereadable(BIN.bin) ~= 1 then
-        vim.notify('lua-language-server is not installed or cannot be found', vim.log.levels.WARN)
-        return nil
-    end
+        if vim.fn.filereadable(BIN.bin) ~= 1 then
+            vim.notify('lua-language-server is not installed or cannot be found', vim.log.levels.WARN)
+            return nil
+        end
 
-    local runtime_path = vim.split(package.path, ';')
-    table.insert(runtime_path, 'lua/?.lua')
-    table.insert(runtime_path, 'lua/?/init.lua')
+        local runtime_path = vim.split(package.path, ';')
+        table.insert(runtime_path, 'lua/?.lua')
+        table.insert(runtime_path, 'lua/?/init.lua')
 
-    lspconfig.lua_ls.setup({
-        cmd = { BIN.bin, '-E', BIN.main },
-        settings = {
-            Lua = {
-                runtime = {
-                    -- Tell the language server which version of Lua you're using
-                    -- (most likely LuaJIT in the case of Neovim)
-                    version = 'LuaJIT',
-                    -- Setup your lua path
-                    path = runtime_path,
-                },
-                diagnostics = {
-                    -- Get the language server to recognize the `vim` global
-                    globals = { 'vim' },
-                    unusedLocalExclude = { '_*' },
-                    disable = {
-                        'missing-fields',
-                        'duplicate-set-field',
-                        'undefined-field',
-                        'inject-field',
+        return {
+            cmd = { BIN.bin, '-E', BIN.main },
+            settings = {
+                Lua = {
+                    runtime = {
+                        -- Tell the language server which version of Lua you're using
+                        -- (most likely LuaJIT in the case of Neovim)
+                        version = 'LuaJIT',
+                        -- Setup your lua path
+                        path = runtime_path,
+                    },
+                    diagnostics = {
+                        -- Get the language server to recognize the `vim` global
+                        globals = { 'vim' },
+                        unusedLocalExclude = { '_*' },
+                        disable = {
+                            'missing-fields',
+                            'duplicate-set-field',
+                            'undefined-field',
+                            'inject-field',
+                        },
+                    },
+                    workspace = {
+                        -- Make the server aware of Neovim runtime files
+                        library = vim.api.nvim_get_runtime_file('', true),
+                        maxPreload = 10000,
+                        checkThirdParty = 'Disable',
+                    },
+                    -- Do not send telemetry data containing a randomized but unique identifier
+                    telemetry = {
+                        enable = false,
+                    },
+                    completion = {
+                        callSnippet = 'Replace',
+                    },
+                    codeLens = {
+                        enable = true,
                     },
                 },
-                workspace = {
-                    -- Make the server aware of Neovim runtime files
-                    library = vim.api.nvim_get_runtime_file('', true),
-                    maxPreload = 10000,
-                    checkThirdParty = 'Disable',
-                },
-                -- Do not send telemetry data containing a randomized but unique identifier
-                telemetry = {
-                    enable = false,
-                },
-                completion = {
-                    callSnippet = 'Replace',
-                },
-                codeLens = {
-                    enable = true,
-                },
             },
-        },
-    })
-end
+        }
+    end,
+}
 
 function M.setup()
     -- vim.lsp.log.set_level(vim.lsp.log.DEBUG)
@@ -277,12 +278,11 @@ function M.setup()
         severity_sort = true, -- show errors first
     })
 
-    M.setup_lua()
-
     local capabilities = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities())
     capabilities.textDocument.completion.completionItem.snippetSupport = true
     for lsp, opts in pairs(M.servers) do
         if type(opts) == 'function' then
+            ---@diagnostic disable-next-line: cast-local-type
             opts = opts()
         end
 
