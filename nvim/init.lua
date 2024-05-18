@@ -545,16 +545,16 @@ vim.opt.cursorline = true
 -- insert mode caret is an underline
 vim.opt.guicursor = 'i-ci-ve:hor24'
 
--- Show “invisible” characters
-vim.opt.list = true
-vim.opt.listchars = {
-    tab = '∙ ',
-    trail = '∙',
-    multispace = '∙',
-    leadmultispace = '│   ',
-}
-
 if not vim.g.vscode then
+    -- Show “invisible” characters
+    vim.opt.list = true
+    vim.opt.listchars = {
+        tab = '∙ ',
+        trail = '∙',
+        multispace = '∙',
+        leadmultispace = '│   ',
+    }
+
     vim.cmd('color lake')
     vim.opt.termguicolors = vim.env.__CFBundleIdentifier ~= 'com.apple.Terminal'
 
@@ -828,74 +828,74 @@ for k, v in pairs(commands) do
     end
 end
 
--- plugin manager
--- easier to see all options at a glance
-for _, v in ipairs({ 'check', 'restore', 'update', 'clean' }) do
-    vim.api.nvim_create_user_command('Lazy' .. v:sub(1, 1):upper() .. v:sub(2), function()
-        require('lazy.view.commands').commands[v]()
-    end, { desc = 'Lazy ' .. v })
-end
-
--- Autocommands {{{1
-
--- neovim terminal
-vim.api.nvim_create_autocmd('TermOpen', {
-    pattern = '*',
-    callback = function()
-        -- do not map esc for `fzf` terminals
-        if vim.bo.filetype ~= 'fzf' then
-            -- use Esc to go into normal mode in terminal
-            vim.keymap.set('t', '<esc><esc>', '<c-\\><c-n>')
-        end
-        -- immediate enter terminal
-        vim.cmd('startinsert')
-    end,
-})
-
--- blink yanked text after yanking it
-vim.api.nvim_create_autocmd('TextYankPost', {
-    callback = function()
-        if not vim.v.event.visual then
-            vim.highlight.on_yank({ higroup = 'Substitute', timeout = 250 })
-        end
-    end,
-})
-
-vim.api.nvim_create_autocmd('FileType', {
-    pattern = { 'json', 'query' },
-    callback = function()
-        if vim.fn.expand('%:t') == 'tsconfig.json' then
-            -- allow comments in tsconfig files
-            vim.bo.ft = 'jsonc'
-        elseif vim.fn.expand('%:e') == 'scm' then
-            -- enable syntax in treesitter syntax files
-            vim.bo.filetype = 'scheme'
-        end
-    end,
-})
-
-vim.api.nvim_create_autocmd('FileType', {
-    pattern = { '*' },
-    callback = function()
-        if vim.bo.filetype == 'markdown' then
-            vim.wo.foldmethod = 'expr'
-            -- use treesitter for folding
-            vim.wo.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
-        else
-            vim.wo.foldmethod = 'indent'
-        end
-    end,
-    desc = 'Use treesitter for folding in markdown files',
-})
--- use markdown for mdx files
-vim.api.nvim_create_autocmd('BufReadPost', {
-    pattern = '*.mdx',
-    callback = function()
-        vim.bo.filetype = 'markdown'
-    end,
-})
-
 if not vim.g.vscode then
+    -- plugin manager
+    -- easier to see all options at a glance
+    for _, v in ipairs({ 'check', 'restore', 'update', 'clean' }) do
+        vim.api.nvim_create_user_command('Lazy' .. v:sub(1, 1):upper() .. v:sub(2), function()
+            require('lazy.view.commands').commands[v]()
+        end, { desc = 'Lazy ' .. v })
+    end
+
+    -- Autocommands {{{1
+
+    -- neovim terminal
+    vim.api.nvim_create_autocmd('TermOpen', {
+        pattern = '*',
+        callback = function()
+            -- do not map esc for `fzf` terminals
+            if vim.bo.filetype ~= 'fzf' then
+                -- use Esc to go into normal mode in terminal
+                vim.keymap.set('t', '<esc><esc>', '<c-\\><c-n>')
+            end
+            -- immediate enter terminal
+            vim.cmd('startinsert')
+        end,
+    })
+
+    -- blink yanked text after yanking it
+    vim.api.nvim_create_autocmd('TextYankPost', {
+        callback = function()
+            if not vim.v.event.visual then
+                vim.highlight.on_yank({ higroup = 'Substitute', timeout = 250 })
+            end
+        end,
+    })
+
+    vim.api.nvim_create_autocmd('FileType', {
+        pattern = { 'json', 'query' },
+        callback = function()
+            if vim.fn.expand('%:t') == 'tsconfig.json' then
+                -- allow comments in tsconfig files
+                vim.bo.ft = 'jsonc'
+            elseif vim.fn.expand('%:e') == 'scm' then
+                -- enable syntax in treesitter syntax files
+                vim.bo.filetype = 'scheme'
+            end
+        end,
+    })
+
+    vim.api.nvim_create_autocmd('FileType', {
+        pattern = { '*' },
+        callback = function()
+            if vim.bo.filetype == 'markdown' then
+                vim.wo.foldmethod = 'expr'
+                -- use treesitter for folding
+                vim.wo.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
+            else
+                vim.wo.foldmethod = 'indent'
+            end
+        end,
+        desc = 'Use treesitter for folding in markdown files',
+    })
+    -- use markdown for mdx files
+    vim.api.nvim_create_autocmd('BufReadPost', {
+        pattern = '*.mdx',
+        callback = function()
+            vim.bo.filetype = 'markdown'
+        end,
+    })
+
     require('antonk52.statusline').setup()
     require('antonk52.indent_lines').setup()
     require('antonk52.print_mappings').setup()
