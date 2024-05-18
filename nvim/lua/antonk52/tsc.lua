@@ -108,4 +108,19 @@ function M.run_global()
     })
 end
 
+function M.setup()
+    vim.api.nvim_create_user_command('TscRunGlobal', function()
+        M.run_global()
+    end, {
+        nargs = 0,
+        desc = 'Run tsc next the blosest package.json/tsconfig/jsconfig to cwd',
+    })
+    vim.api.nvim_create_user_command('TscRunLocal', function()
+        M.run_local()
+    end, {
+        nargs = 0,
+        desc = 'Run tsc next the closest package.json/tsconfig/jsconfig to current buffer',
+    })
+end
+
 return M

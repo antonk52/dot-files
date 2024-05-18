@@ -784,31 +784,12 @@ local commands = {
         vim.cmd('hi! link MiniCursorWordCurrent CursorLine')
     end,
 
-    TSCLocal = {
-        function()
-            require('antonk52.tsc').run_local()
-        end,
-        { desc = 'Run tsc next the closest package.json/tsconfig/jsconfig to current buffer' },
-    },
-    TSCGlobal = {
-        function()
-            require('antonk52.tsc').run_global()
-        end,
-        { desc = 'Run tsc next the blosest package.json/tsconfig/jsconfig to cwd' },
-    },
     Eslint = {
         function()
             require('antonk52.eslint').run()
         end,
         { desc = 'Run eslint from the closest eslint config to current buffer' },
     },
-
-    TestRun = function()
-        require('antonk52.test_js').run_buffer()
-    end,
-    TestAttach = function()
-        require('antonk52.test_js').attach_to_buffer()
-    end,
 
     NT = ':set notermguicolors<cr>',
 
@@ -899,4 +880,6 @@ if not vim.g.vscode then
     require('antonk52.statusline').setup()
     require('antonk52.indent_lines').setup()
     require('antonk52.print_mappings').setup()
+    require('antonk52.test_js').setup()
+    require('antonk52.tsc').setup()
 end

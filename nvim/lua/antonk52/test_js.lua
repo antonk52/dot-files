@@ -201,4 +201,13 @@ function M.attach_to_buffer(bufnr, opts)
     })
 end
 
+function M.setup()
+    vim.api.nvim_create_user_command('TestRun', function()
+        M.run_buffer()
+    end, {})
+    vim.api.nvim_create_user_command('TestAttach', function()
+        M.attach_to_buffer()
+    end, {})
+end
+
 return M
