@@ -63,17 +63,20 @@ function M.setup()
         ['<C-o>'] = function(fallback)
             if require('antonk52.snippets').expand() then
                 return
+            elseif vim.snippet.active({ direction = 1 }) then
+                vim.snippet.jump(1)
             elseif cmp.visible() then
                 cmp.confirm({ select = true })
             else
                 fallback()
             end
         end,
-        ['<C-h>'] = function()
-            vim.snippet.jump(-1)
-        end,
-        ['<C-l>'] = function()
-            vim.snippet.jump(1)
+        ['<C-u>'] = function(fallback)
+            if vim.snippet.active({ direction = -1 }) then
+                return vim.snippet.jump(-1)
+            else
+                fallback()
+            end
         end,
         ['<C-k>'] = cmp.mapping.scroll_docs(-4),
         ['<C-j>'] = cmp.mapping.scroll_docs(4),
