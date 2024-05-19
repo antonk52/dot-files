@@ -19,7 +19,7 @@ local function lookdownTSConfigDir()
 
     for _, current_dir in ipairs(dirs_from_cwd_to_buf) do
         for _, file in ipairs(TSC_ROOT_FILES) do
-            local filepath = current_dir .. '/' .. file
+            local filepath = vim.fs.join(current_dir, file)
             if vim.fn.filereadable(filepath) == 1 then
                 return current_dir
             end
@@ -55,8 +55,8 @@ local function callTSC(opts)
                         line:match('(%g+)%((%d+),(%d+)%): (%a+) (%g+): (.+)')
                     if filename ~= nil then
                         table.insert(errors, {
-                            filename = filename_prefix == '' and filename
-                                or string.format('%s/%s', filename_prefix, filename),
+                            -- vim.fs.joinpath returns absolute like path if first arg is empty string
+                            filename = filename_prefix == '' and filename or vim.fs.joinpath(filename_prefix, filename),
                             lnum = line_number,
                             col = col,
                             text = message,
@@ -68,8 +68,7 @@ local function callTSC(opts)
         end,
         on_stderr = function(_, data)
             vim.schedule(function()
-                vim.notify('tsc exited with error', vim.log.levels.ERROR, { title = 'tsc' })
-                vim.notify(string(data), vim.log.levels.ERROR, { title = 'tsc' })
+                vim.notify('tsc exited with error\n' .. string(data), vim.log.levels.ERROR, { title = 'tsc' })
             end)
         end,
         on_exit = function(_, return_val)

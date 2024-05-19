@@ -5,8 +5,7 @@ local function is_inside_git_repo()
     if _is_inside_git_repo ~= nil then
         return _is_inside_git_repo
     else
-        local result = vim.fn.systemlist({ 'git', 'rev-parse', '--is-inside-work-tree' })
-        _is_inside_git_repo = result[1] == 'true'
+        _is_inside_git_repo = vim.fs.root(0, '.git') ~= nil
         return _is_inside_git_repo
     end
 end
