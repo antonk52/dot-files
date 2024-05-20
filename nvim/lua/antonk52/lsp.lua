@@ -268,6 +268,10 @@ function M.setup()
         },
         severity_sort = true, -- show errors first
     })
+    -- add border to hover popup
+    vim.lsp.handlers['textDocument/hover'] = vim.lsp.with(vim.lsp.handlers.hover, {
+        border = 'single',
+    })
 
     local capabilities = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities())
     capabilities.textDocument.completion.completionItem.snippetSupport = true
