@@ -293,6 +293,20 @@ local plugins = {
             end, {
                 bang = true,
             })
+            vim.api.nvim_create_user_command('GitAddPatch', function()
+                vim.cmd('tabnew | term git add --patch')
+                local term_buf = vim.api.nvim_get_current_buf()
+                vim.api.nvim_create_autocmd('TermClose', {
+                    buffer = term_buf,
+                    callback = function()
+                        if vim.api.nvim_buf_is_valid(term_buf) then
+                            vim.api.nvim_buf_delete(term_buf, { force = true })
+                        end
+
+                        vim.api.nvim_command('doautocmd BufEnter')
+                    end,
+                })
+            end, { desc = 'git add --patch' })
         end,
         event = 'VeryLazy',
     },
