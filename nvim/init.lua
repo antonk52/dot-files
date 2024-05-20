@@ -293,20 +293,39 @@ local plugins = {
             end, {
                 bang = true,
             })
-            vim.api.nvim_create_user_command('GitAddPatch', function()
-                vim.cmd('tabnew | term git add --patch')
-                local term_buf = vim.api.nvim_get_current_buf()
-                vim.api.nvim_create_autocmd('TermClose', {
-                    buffer = term_buf,
-                    callback = function()
-                        if vim.api.nvim_buf_is_valid(term_buf) then
-                            vim.api.nvim_buf_delete(term_buf, { force = true })
-                        end
-
-                        vim.api.nvim_command('doautocmd BufEnter')
-                    end,
-                })
-            end, { desc = 'git add --patch' })
+            ---@param cmd string
+            local function run_cmd_and_exit(cmd)
+                return function()
+                    local buf_name = vim.api.nvim_buf_get_name(0)
+                    if vim.fn.filereadable(buf_name) == 0 then
+                        vim.notify('Buffer is not a file', vim.log.levels.ERROR)
+                        return
+                    end
+                    cmd = string.gsub(cmd, '%%', buf_name)
+                    vim.cmd('tabnew | term ' .. cmd)
+                    local term_buf = vim.api.nvim_get_current_buf()
+                    vim.api.nvim_create_autocmd('TermClose', {
+                        buffer = term_buf,
+                        callback = function()
+                            if vim.api.nvim_buf_is_valid(term_buf) then
+                                vim.api.nvim_buf_delete(term_buf, { force = true })
+                            end
+                            vim.api.nvim_command('doautocmd BufEnter')
+                        end,
+                    })
+                end
+            end
+            vim.api.nvim_create_user_command(
+                'GitAddPatch',
+                run_cmd_and_exit('git add --patch'),
+                { desc = 'git add --patch' }
+            )
+            vim.api.nvim_create_user_command(
+                'GitAddPatchFile',
+                run_cmd_and_exit('git add --patch %'),
+                { desc = 'git add --patch <current_buffer>' }
+            )
+            vim.api.nvim_create_user_command('GitCommit', run_cmd_and_exit('git commit'), { desc = 'git commit' })
         end,
         event = 'VeryLazy',
     },
