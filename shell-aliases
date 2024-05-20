@@ -179,14 +179,33 @@ function get_nvim_nightly() {
     local old_pwd=$(pwd)
     cd ~/Downloads
     # clean up if it exists already
-    rm -rf ./nvim-macos-arm64.tar.gz ./nvim-macos-arm64
+    rm -rf ./nvim-macos-arm64.tar.gz ./nvim-macos-arm64 ./nvim-nightly
     # download tar with build
     wget --quiet https://github.com/neovim/neovim/releases/download/nightly/nvim-macos-arm64.tar.gz && echo "- Downloaded"
     # to avoid "unknown developer" warning
     xattr -c ./nvim-macos-arm64.tar.gz > /dev/null 2>&1 && echo "- Removed attributes"
     # extract
     tar xzvf nvim-macos-arm64.tar.gz > /dev/null 2>&1 && echo "- Extracted"
-    ~/Downloads/nvim-macos-arm64/bin/nvim --version | grep 'NVIM v'
+    mv nvim-macos-arm64 nvim-nightly
+    ~/Downloads/nvim-nightly/bin/nvim --version | grep 'NVIM v'
+    # print archive date
+    echo "Build from: $(ls -l ~/Downloads/nvim-macos-arm64.tar.gz | awk '{print $6, $7, $8}')"
+    cd $old_pwd
+}
+
+function get_nvim() {
+    local old_pwd=$(pwd)
+    cd ~/Downloads
+    # clean up if it exists already
+    rm -rf ./nvim-macos-arm64.tar.gz ./nvim-macos-arm64 ./nvim
+    # download tar with build
+    wget --quiet https://github.com/neovim/neovim/releases/download/v0.10.0/nvim-macos-arm64.tar.gz && echo "- Downloaded"
+    # to avoid "unknown developer" warning
+    xattr -c ./nvim-macos-arm64.tar.gz > /dev/null 2>&1 && echo "- Removed attributes"
+    # extract
+    tar xzvf nvim-macos-arm64.tar.gz > /dev/null 2>&1 && echo "- Extracted"
+    mv nvim-macos-arm64 nvim
+    ~/Downloads/nvim/bin/nvim --version | grep 'NVIM v'
     # print archive date
     echo "Build from: $(ls -l ~/Downloads/nvim-macos-arm64.tar.gz | awk '{print $6, $7, $8}')"
     cd $old_pwd
