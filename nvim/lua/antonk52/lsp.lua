@@ -112,7 +112,7 @@ vim.api.nvim_create_autocmd('LspAttach', {
 M.servers = {
     flow = function()
         -- disable flow for projects without flowconfig
-        if vim.fn.glob('.flowconfig') ~= '' then
+        if vim.fs.root(0, '.flowconfig') then
             return {
                 cmd = { 'flow', 'lsp' },
                 single_file_support = false, -- do not start flow server if .flowconfig is not found
