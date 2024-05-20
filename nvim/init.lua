@@ -158,6 +158,15 @@ local plugins = {
         keys = { { '<leader>N', '<cmd>lua require("npm_scripts").run_from_all()<cr>', desc = 'Run npm script' } },
     },
     {
+        'folke/ts-comments.nvim',
+        config = function()
+            require('ts-comments').setup()
+            vim.keymap.set({ 'n' }, '<C-_>', 'gcc', { remap = true })
+            vim.keymap.set({ 'x' }, '<C-_>', 'gc', { remap = true })
+        end,
+        event = 'VeryLazy',
+    },
+    {
         'folke/trouble.nvim',
         opts = {
             icons = false,
@@ -330,32 +339,10 @@ local plugins = {
         event = 'VeryLazy',
     },
     {
-        'JoosepAlviste/nvim-ts-context-commentstring',
-        init = function()
-            vim.g.skip_ts_context_commentstring_module = true
-        end,
-    },
-    {
         'echasnovski/mini.nvim',
-        dependencies = {
-            'JoosepAlviste/nvim-ts-context-commentstring',
-        },
         config = function()
             if not vim.g.vscode then
                 require('mini.bracketed').setup()
-                require('mini.comment').setup({
-                    options = {
-                        custom_commentstring = function()
-                            return require('ts_context_commentstring.internal').calculate_commentstring({})
-                                or vim.bo.commentstring
-                        end,
-                    },
-                    mappings = {
-                        comment = '<C-_>',
-                        comment_line = '<C-_>',
-                        comment_visual = '<C-_>',
-                    },
-                })
                 require('mini.pairs').setup() -- autoclose ([{
                 require('mini.cursorword').setup({ delay = 300 })
                 vim.cmd('hi! link MiniCursorWord Visual')
