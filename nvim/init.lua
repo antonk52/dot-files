@@ -777,6 +777,15 @@ local commands = {
             end
         end
     end,
+    FormatLsp = function()
+        vim.lsp.buf.format({
+            -- never use tsserver to format files
+            filter = function(c)
+                return c ~= 'tsserver'
+            end,
+            async = true,
+        })
+    end,
     ColorDark = function()
         vim.cmd('colorscheme lake')
         -- TODO create an issue for miniCursorWord to supply a highlight group to link to

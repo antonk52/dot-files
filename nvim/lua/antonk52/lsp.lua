@@ -99,15 +99,6 @@ vim.api.nvim_create_autocmd('LspAttach', {
         keymap('<leader>ca', vim.lsp.buf.code_action, 'lsp code_action')
         keymap('gr', vim.lsp.buf.references, 'lsp references')
         keymap('<leader>L', vim.diagnostic.open_float, 'show current line diagnostic')
-        vim.api.nvim_buf_create_user_command(0, 'FormatLsp', function()
-            vim.lsp.buf.format({
-                -- never use tsserver to format files
-                filter = function(c)
-                    return c ~= 'tsserver'
-                end,
-                async = true,
-            })
-        end, {})
         -- unused workspace
         keymap('<leader>wa', vim.lsp.buf.add_workspace_folder, 'lsp add_workspace_folder')
         keymap('<leader>wr', vim.lsp.buf.remove_workspace_folder, 'lsp remove_workspace_folder')
