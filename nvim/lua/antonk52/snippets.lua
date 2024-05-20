@@ -46,11 +46,10 @@ local javascript_snippets = {
     snippet('import', "import ${0:thing} from '${1:package}';"),
     snippet('imp', "import ${0:thing} from '${1:package}';"),
 }
-
-M.default_snippets = {
-    all = {
-        snippet('shebang', '#!/bin sh'),
-    },
+local global_snippets = {
+    snippet('shebang', '#!/bin sh'),
+}
+local snippets_by_filetype = {
     lua = {
         snippet(
             'fun',
@@ -91,10 +90,10 @@ M.default_snippets = {
 
 local function get_buf_snips()
     local ft = vim.bo.filetype
-    local snips = vim.list_slice(M.default_snippets.all)
+    local snips = vim.list_slice(global_snippets)
 
-    if ft and M.default_snippets[ft] then
-        vim.list_extend(snips, M.default_snippets[ft])
+    if ft and snippets_by_filetype[ft] then
+        vim.list_extend(snips, snippets_by_filetype[ft])
     end
 
     return snips
