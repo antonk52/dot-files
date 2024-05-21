@@ -744,7 +744,7 @@ vim.keymap.set('n', '<leader>s', function()
                 local lineNr = startLine + lineNum - 2
                 local col = i - 1
                 local id = vim.api.nvim_buf_set_extmark(buffer, extmark_ns, lineNr, col + 2, {
-                    virt_text = { { overlay_char, 'IncSearch' } },
+                    virt_text = { { overlay_char, 'CurSearch' } },
                     virt_text_pos = 'overlay',
                     hl_mode = 'combine',
                 })
