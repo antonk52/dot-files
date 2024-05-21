@@ -167,7 +167,6 @@ local plugins = {
         cmd = 'Trouble',
     },
     { 'marilari88/twoslash-queries.nvim', ft = { 'javascript', 'javascriptreact', 'typescript', 'typescriptreact' } },
-    { 'antonk52/gitignore-grabber.nvim', cmd = 'Gitignore' },
     {
         'nvim-treesitter/nvim-treesitter',
         dependencies = {
@@ -854,6 +853,47 @@ local commands = {
         vim.cmd('hi! link MiniCursorWord Visual')
         vim.cmd('hi! link MiniCursorWordCurrent CursorLine')
     end,
+    GitIgnore = {
+        function()
+            local out = vim.system({ 'curl', '-s', 'https://api.github.com/repos/github/gitignore/contents' }, nil)
+                :wait()
+            if out.code ~= 0 then
+                return vim.notify('Failed to fetch gitignore files\n' .. out.stderr, vim.log.levels.ERROR)
+            end
+
+            local json = vim.json.decode(out.stdout)
+            local files = {}
+            for _, v in ipairs(json) do
+                if v.type == 'file' and vim.endswith(v.name, '.gitignore') then
+                    table.insert(files, { name = v.name, url = v.download_url })
+                end
+            end
+
+            vim.ui.select(files, {
+                prompt = 'Select a gitignore file',
+                format_item = function(x)
+                    return x.name
+                end,
+            }, function(selected)
+                if not selected then
+                    return
+                end
+
+                local target_file = vim.api.nvim_buf_get_name(0)
+                if vim.fn.isdirectory(target_file) == 1 then
+                    target_file = vim.fs.joinpath(target_file, '.gitignore')
+                else
+                    -- make sure that file is empty before appending to it
+                    vim.api.nvim_buf_set_lines(0, 0, -1, false, { '' })
+                    vim.cmd.write()
+                end
+
+                vim.cmd('!curl -s ' .. selected.url .. ' > ' .. target_file)
+                vim.notify('Downloaded ' .. selected.name .. ' to ' .. target_file, vim.log.levels.INFO)
+            end)
+        end,
+        { desc = 'Download a gitignore file from github/gitignore' },
+    },
 
     Eslint = {
         function()
