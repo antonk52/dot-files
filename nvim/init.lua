@@ -289,11 +289,12 @@ local plugins = {
             local function run_cmd_and_exit(cmd)
                 return function()
                     local buf_name = vim.api.nvim_buf_get_name(0)
-                    if vim.fn.filereadable(buf_name) == 0 then
-                        vim.notify('Buffer is not a file', vim.log.levels.ERROR)
-                        return
+                    if string.find(cmd, '%%') then
+                        if vim.fn.filereadable(buf_name) == 0 then
+                            return vim.notify('Buffer is not a file', vim.log.levels.ERROR)
+                        end
+                        cmd = string.gsub(cmd, '%%', buf_name)
                     end
-                    cmd = string.gsub(cmd, '%%', buf_name)
                     vim.cmd('tabnew | term ' .. cmd)
                     local term_buf = vim.api.nvim_get_current_buf()
                     vim.api.nvim_create_autocmd('TermClose', {
@@ -892,7 +893,7 @@ local commands = {
                 vim.notify('Downloaded ' .. selected.name .. ' to ' .. target_file, vim.log.levels.INFO)
             end)
         end,
-        { desc = 'Download a gitignore file from github/gitignore' },
+        { desc = 'Download a gitignore file from github/gitignore', nargs = 0 },
     },
 
     Eslint = {
