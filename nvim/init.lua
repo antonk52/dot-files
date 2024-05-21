@@ -111,17 +111,6 @@ local plugins = {
         event = 'VeryLazy',
     },
     {
-        'ggandor/leap.nvim', -- easy motion like
-        config = function()
-            require('leap').opts.labels = 'asdfghjklqwertyuiopzxcvbnm'
-            require('leap').opts.safe_labels = 'asdfghjklqwertyuiopzxcvbnm'
-            vim.keymap.set({ 'n', 'x', 'o' }, '<leader>s', function()
-                require('leap').leap({ target_windows = { vim.api.nvim_get_current_win() } })
-            end, { desc = 'Bi-directional search with leap.nvim' })
-        end,
-        event = 'VeryLazy',
-    },
-    {
         'nvim-pack/nvim-spectre', -- global search and replace
         dependencies = {
             'nvim-lua/plenary.nvim',
@@ -731,6 +720,59 @@ end)
 vim.keymap.set('n', '<C-H>', vim.g.vscode and ':call VSCodeNotify("workbench.action.navigateLeft")<cr>' or function()
     require('antonk52.layout').navigate('left')
 end)
+
+vim.keymap.set('n', '<leader>s', function()
+    local extmark_ns = vim.api.nvim_create_namespace('')
+    local charCode1 = vim.fn.getchar()
+    local charCode2 = vim.fn.getchar()
+    local char1 = type(charCode1) == 'number' and vim.fn.nr2char(charCode1) or charCode1
+    local char2 = type(charCode2) == 'number' and vim.fn.nr2char(charCode2) or charCode2
+    local startLine, endLine = vim.fn.line('w0'), vim.fn.line('w$')
+    local buffer = vim.api.nvim_get_current_buf()
+    vim.api.nvim_buf_clear_namespace(buffer, extmark_ns, 0, -1)
+
+    local overlay_chars = vim.split('abcdefghijklmnopqrstuvwxyz', '')
+    local index, extmarkDict = 1, {}
+    local lines = vim.api.nvim_buf_get_lines(buffer, startLine - 1, endLine, false)
+    local needle = char1 .. char2
+
+    for lineNum, lineText in ipairs(lines) do
+        if index > #overlay_chars then
+            break
+        end
+        for i = 1, #lineText do
+            if lineText:sub(i, i + 1) == needle and index <= #overlay_chars then
+                local overlay_char = overlay_chars[index]
+                local lineNr = startLine + lineNum - 2
+                local col = i - 1
+                local id = vim.api.nvim_buf_set_extmark(buffer, extmark_ns, lineNr, col + 2, {
+                    virt_text = { { overlay_char, 'IncSearch' } },
+                    virt_text_pos = 'overlay',
+                    hl_mode = 'combine',
+                })
+                extmarkDict[overlay_char] = { line = lineNr, col = col, id = id }
+                index = index + 1
+            end
+            if index > #overlay_chars then
+                break
+            end
+        end
+    end
+
+    -- otherwise setting extmarks and waiting for next char is on the same frame
+    vim.schedule(function()
+        local nextChar = vim.fn.nr2char(vim.fn.getchar())
+        if extmarkDict[nextChar] then
+            local pos = extmarkDict[nextChar]
+            -- to make <C-o> work
+            vim.cmd("normal! m'")
+            vim.api.nvim_win_set_cursor(0, { pos.line + 1, pos.col })
+        end
+
+        -- clear extmarks
+        vim.api.nvim_buf_clear_namespace(0, extmark_ns, 0, -1)
+    end)
+end, { noremap = true, desc = 'jump to two characters in current buffer(easymotion like)' })
 
 -- ctrl + shift + j/k/l/h resize active split by 5
 vim.keymap.set('n', '<C-S-j>', '<C-W>5-')
