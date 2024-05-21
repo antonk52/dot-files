@@ -21,12 +21,12 @@ end
 function M.run()
     vim.notify('Running eslint...', vim.log.levels.INFO, { title = 'eslint' })
     local errors = {}
-    local start_ms = vim.loop.now()
+    local start_ms = vim.uv.now()
 
     local job = Job:new({
         command = vim.fn.executable('bunx') == 1 and 'bunx' or 'npx',
         args = { 'eslint', '.', '--ext=.ts,.tsx,.js,.jsx', '--format=unix' },
-        cwd = lookupEslintConfig() or vim.loop.cwd() or vim.fn.getcwd(),
+        cwd = lookupEslintConfig() or vim.uv.cwd(),
         on_stdout = function(_, data)
             local lines = vim.split(data, '\n')
             for _, line in ipairs(lines) do
@@ -54,13 +54,13 @@ function M.run()
             vim.schedule(function()
                 if return_val == 0 then
                     vim.notify(
-                        'No errors (' .. (vim.loop.now() - start_ms) .. 'ms)',
+                        'No errors (' .. (vim.uv.now() - start_ms) .. 'ms)',
                         vim.log.levels.INFO,
                         { title = 'eslint' }
                     )
                 else
                     vim.notify(
-                        'Eslint exited with errors. ' .. (vim.loop.now() - start_ms) .. 'ms',
+                        'Eslint exited with errors. ' .. (vim.uv.now() - start_ms) .. 'ms',
                         vim.log.levels.ERROR,
                         { title = 'eslint' }
                     )

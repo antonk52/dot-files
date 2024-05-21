@@ -7,7 +7,7 @@ local TSC_ROOT_FILES = { 'tsconfig.json', 'jsconfig.json', 'package.json' }
 ---@return string|nil
 local function lookdownTSConfigDir()
     local dirs_from_cwd_to_buf = {}
-    local stop_dir = vim.loop.cwd()
+    local stop_dir = vim.uv.cwd()
 
     for dir in vim.fs.parents(vim.api.nvim_buf_get_name(0)) do
         -- insert dir to the beginning of the table
@@ -31,7 +31,7 @@ local function callTSC(opts)
     vim.schedule(function()
         vim.notify('Running tsc...', vim.log.levels.INFO, { title = 'tsc' })
     end)
-    local project_cwd = vim.loop.cwd() or vim.fn.getcwd()
+    local project_cwd = vim.uv.cwd()
     opts = vim.tbl_extend('force', { args = {}, cwd = project_cwd }, opts or {})
     local errors = {}
 
@@ -41,7 +41,7 @@ local function callTSC(opts)
         #project_cwd + 2
     )
 
-    local start_ms = vim.loop.now()
+    local start_ms = vim.uv.now()
 
     local job = Job:new({
         command = vim.fn.executable('bunx') == 1 and 'bunx' or 'npx',
@@ -75,13 +75,13 @@ local function callTSC(opts)
             vim.schedule(function()
                 if return_val == 0 then
                     vim.notify(
-                        'No errors (' .. (vim.loop.now() - start_ms) .. 'ms)',
+                        'No errors (' .. (vim.uv.now() - start_ms) .. 'ms)',
                         vim.log.levels.INFO,
                         { title = 'tsc' }
                     )
                 else
                     vim.notify(
-                        'Tsc exited with errors. ' .. (vim.loop.now() - start_ms) .. 'ms',
+                        'Tsc exited with errors. ' .. (vim.uv.now() - start_ms) .. 'ms',
                         vim.log.levels.ERROR,
                         { title = 'tsc' }
                     )

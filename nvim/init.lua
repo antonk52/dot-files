@@ -5,7 +5,7 @@ vim.g.maplocalleader = ','
 -- Bootstrap lazy.nvim plugin manager {{{1
 local PLUGINS_LOCATION = vim.fs.normalize('~/dot-files/nvim/plugged')
 local lazypath = PLUGINS_LOCATION .. '/lazy.nvim'
-if not vim.loop.fs_stat(lazypath) then
+if not vim.uv.fs_stat(lazypath) then
     vim.fn.system({
         'git',
         'clone',
@@ -45,7 +45,7 @@ local plugins = {
                     if
                         (
                             vim.fs.basename(vim.api.nvim_buf_get_name(0)) ~= 'lazy-lock.json'
-                            and vim.startswith(vim.fn.getcwd() or vim.loop.cwd(), '/Users/antonk52/dot-files')
+                            and vim.startswith(vim.uv.cwd(), '/Users/antonk52/dot-files')
                         )
                         or vim.tbl_contains(
                             { 'typescript', 'typescriptreact', 'javascript', 'javascriptreact' },

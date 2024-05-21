@@ -1,6 +1,3 @@
----@diagnostic disable: redundant-parameter
--- incorrect types for vim.fn.input
-
 local function _prep_dir(full_path)
     -- mkdir -p
     vim.fn.mkdir(vim.fs.dirname(full_path), 'p')
@@ -14,16 +11,16 @@ local function copy()
     local old_path = _escape(vim.trim(vim.fn.getline('.')))
     local new_path = _escape(vim.fn.input('Copy to: ', old_path, 'file'))
     _prep_dir(new_path)
-    vim.fn.system('cp -a ' .. old_path .. ' ' .. new_path)
-    vim.cmd('edit')
+    vim.fn.system({ 'cp', '-a', old_path, new_path })
+    vim.cmd.edit()
 end
 
 local function move()
     local old_path = _escape(vim.trim(vim.fn.getline('.')))
     local new_path = _escape(vim.fn.input('New path: ', old_path, 'file'))
     _prep_dir(new_path)
-    vim.fn.system('mv ' .. old_path .. ' ' .. new_path)
-    vim.cmd('edit')
+    vim.fn.system({ 'mv', old_path, new_path })
+    vim.cmd.edit()
 end
 
 local function remove()
@@ -46,7 +43,7 @@ local function remove()
     else
         vim.notify('Remove aborted', vim.log.levels.INFO)
     end
-    vim.cmd('edit')
+    vim.cmd.edit()
 end
 
 local function add()
@@ -68,7 +65,7 @@ local function add()
         end
     end
 
-    vim.cmd('edit')
+    vim.cmd.edit()
 end
 
 vim.keymap.set('n', 'dd', remove, { buffer = true, silent = true, desc = 'remove focused item' })

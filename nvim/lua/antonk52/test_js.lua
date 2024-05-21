@@ -17,7 +17,7 @@ end
 local function get_test_runner_bin()
     local res = vim.fs.find({ 'node_modules/.bin/vitest', 'node_modules/.bin/jest' }, {
         upward = true,
-        stop = vim.loop.os_homedir() or vim.env.HOME,
+        stop = vim.uv.os_homedir() or vim.env.HOME,
         path = vim.fs.dirname(vim.api.nvim_buf_get_name(0)),
     })
 
@@ -133,7 +133,7 @@ end
 ---@param env table<string, string>
 local function run_jest(bufnr, bin, cwd, env)
     local tmp_file = vim.fn.tempname()
-    local start = vim.loop.now()
+    local start = vim.uv.now()
     job:new({
         command = bin,
         args = { '--json', '--outputFile=' .. tmp_file, '--testLocationInResults', vim.api.nvim_buf_get_name(0) },
@@ -143,7 +143,7 @@ local function run_jest(bufnr, bin, cwd, env)
         -- instead lets write it to a file and read from it
         on_exit = function(_, _, _)
             vim.schedule(function()
-                local finish = vim.loop.now() - start
+                local finish = vim.uv.now() - start
                 vim.notify('Jest took ' .. finish .. 'ms', vim.log.levels.INFO)
                 if vim.fn.filereadable(tmp_file) == 0 then
                     vim.notify('Output file is not readable\n' .. tmp_file, vim.log.levels.ERROR)
@@ -159,7 +159,7 @@ local function run_jest(bufnr, bin, cwd, env)
                 mark_parsed_json_output(bufnr, parsed)
 
                 -- cleanup
-                vim.loop.fs_unlink(tmp_file)
+                vim.uv.fs_unlink(tmp_file)
             end)
         end,
     }):start()
