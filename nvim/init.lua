@@ -148,11 +148,6 @@ local plugins = {
     },
     {
         'folke/ts-comments.nvim',
-        config = function()
-            require('ts-comments').setup()
-            vim.keymap.set({ 'n' }, '<C-_>', 'gcc', { remap = true })
-            vim.keymap.set({ 'x' }, '<C-_>', 'gc', { remap = true })
-        end,
         event = 'VeryLazy',
     },
     {
@@ -705,6 +700,10 @@ vim.keymap.set('n', '<leader>§', ':syntax sync fromstart<CR>', {
 -- indentation shifts keep selection(`=` should still be preferred)
 vim.keymap.set('v', '<', '<gv')
 vim.keymap.set('v', '>', '>gv')
+
+-- toggle comments
+vim.keymap.set('n', '<C-_>', 'gcc', { remap = true })
+vim.keymap.set('x', '<C-_>', 'gc', { remap = true })
 
 -- ctrl j/k/l/h shortcuts to navigate between splits
 vim.keymap.set('n', '<C-J>', vim.g.vscode and ':call VSCodeNotify("workbench.action.navigateDown")<cr>' or function()
