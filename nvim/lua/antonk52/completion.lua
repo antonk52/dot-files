@@ -61,9 +61,7 @@ function M.setup()
         ['<C-y>'] = cmp.mapping.confirm({ select = true }),
         -- O for Open
         ['<C-o>'] = function(fallback)
-            if require('antonk52.snippets').expand() then
-                return
-            elseif vim.snippet.active({ direction = 1 }) then
+            if vim.snippet.active({ direction = 1 }) then
                 vim.snippet.jump(1)
             elseif cmp.visible() then
                 cmp.confirm({ select = true })

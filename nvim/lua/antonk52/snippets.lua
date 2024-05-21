@@ -1,6 +1,8 @@
 local cmp = require('cmp')
 local M = {}
 
+---@param trigger string
+---@param body string
 local snippet = function(trigger, body)
     return { trigger = trigger, body = body }
 end
@@ -99,12 +101,38 @@ local function get_buf_snips()
     return snips
 end
 
+local function get_snippet()
+    local line, col = unpack(vim.api.nvim_win_get_cursor(0))
+    local cur_line = vim.api.nvim_buf_get_lines(0, line - 1, line, true)
+    local line_pre_cursor = cur_line[1]:sub(1, col)
+
+    for _, s in ipairs(get_buf_snips()) do
+        if vim.endswith(line_pre_cursor, s.trigger) then
+            return s.trigger, s.body, line, col
+        end
+    end
+
+    return nil
+end
+
+local function expand_under_cursor()
+    local trigger, body, line, col = get_snippet()
+    if not trigger or not line or not col then
+        return false
+    end
+    -- remove trigger
+    vim.api.nvim_buf_set_text(0, line - 1, col - #trigger, line - 1, col, {})
+    vim.api.nvim_win_set_cursor(0, { line, col - #trigger })
+
+    vim.snippet.expand(body)
+    return true
+end
+
 -- cmp source for snippets to show up in completion menu
 function M.register_source()
     local cmp_source = {}
     cmp_source.new = function()
-        local self = setmetatable({ cache = {} }, { __index = cmp_source })
-        return self
+        return setmetatable({ cache = {} }, { __index = cmp_source })
     end
     cmp_source.complete = function(self, _, callback)
         local bufnr = vim.api.nvim_get_current_buf()
@@ -125,44 +153,10 @@ function M.register_source()
     end
 
     function cmp_source:execute(completion_item, callback)
-        M.expand()
+        expand_under_cursor()
         callback(completion_item)
     end
     require('cmp').register_source('snp', cmp_source.new())
-end
-
-----------------------------------------------------
--- Helper functions to exapnd a snippet under cursor
-----------------------------------------------------
-function M.get_snippet()
-    local line, col = unpack(vim.api.nvim_win_get_cursor(0))
-    local cur_line = vim.api.nvim_buf_get_lines(0, line - 1, line, true)
-    local line_pre_cursor = cur_line[1]:sub(1, col)
-
-    for _, s in ipairs(get_buf_snips()) do
-        if vim.endswith(line_pre_cursor, s.trigger) then
-            return s.trigger, s.body, line, col
-        end
-    end
-
-    return nil
-end
-
-function M.expandable()
-    return M.get_snippet() ~= nil
-end
-
-function M.expand()
-    local trigger, body, line, col = M.get_snippet()
-    if not trigger or not line or not col then
-        return false
-    end
-    -- remove trigger
-    vim.api.nvim_buf_set_text(0, line - 1, col - #trigger, line - 1, col, {})
-    vim.api.nvim_win_set_cursor(0, { line, col - #trigger })
-
-    vim.snippet.expand(body)
-    return true
 end
 
 return M
