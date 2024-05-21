@@ -300,6 +300,7 @@ local plugins = {
                     vim.api.nvim_create_autocmd('TermClose', {
                         buffer = term_buf,
                         callback = function()
+                            vim.cmd.close()
                             if vim.api.nvim_buf_is_valid(term_buf) then
                                 vim.api.nvim_buf_delete(term_buf, { force = true })
                             end

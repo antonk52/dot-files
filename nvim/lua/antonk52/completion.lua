@@ -60,7 +60,7 @@ function M.setup()
         ['<CR>'] = cmp.mapping.confirm(),
         ['<C-y>'] = cmp.mapping.confirm({ select = true }),
         -- O for Open
-        ['<C-o>'] = function(fallback)
+        ['<C-o>'] = cmp.mapping(function(fallback)
             if vim.snippet.active({ direction = 1 }) then
                 vim.snippet.jump(1)
             elseif cmp.visible() then
@@ -68,14 +68,14 @@ function M.setup()
             else
                 fallback()
             end
-        end,
-        ['<C-u>'] = function(fallback)
+        end, { 'i', 's' }),
+        ['<C-u>'] = cmp.mapping(function(fallback)
             if vim.snippet.active({ direction = -1 }) then
                 return vim.snippet.jump(-1)
             else
                 fallback()
             end
-        end,
+        end, { 'i', 's' }),
         ['<C-k>'] = cmp.mapping.scroll_docs(-4),
         ['<C-j>'] = cmp.mapping.scroll_docs(4),
     })
