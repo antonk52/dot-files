@@ -81,11 +81,6 @@ function M.setup()
     })
 
     cmp.setup({
-        snippet = {
-            expand = function(arg)
-                vim.snippet.expand(arg.body)
-            end,
-        },
         mapping = mapping,
         formatting = {
             format = function(entry, vim_item)
