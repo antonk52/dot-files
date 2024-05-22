@@ -99,6 +99,12 @@ vim.api.nvim_create_autocmd('LspAttach', {
         keymap('<leader>ca', vim.lsp.buf.code_action, 'lsp code_action')
         keymap('gr', vim.lsp.buf.references, 'lsp references')
         keymap('<leader>L', vim.diagnostic.open_float, 'show current line diagnostic')
+        keymap(']e', function()
+            vim.diagnostic.goto_next({ severity = vim.diagnostic.severity.ERROR })
+        end, 'go to next error diagnostic')
+        keymap('[e', function()
+            vim.diagnostic.goto_prev({ severity = vim.diagnostic.severity.ERROR })
+        end, 'go to prev error diagnostic')
         -- unused workspace
         keymap('<leader>wa', vim.lsp.buf.add_workspace_folder, 'lsp add_workspace_folder')
         keymap('<leader>wr', vim.lsp.buf.remove_workspace_folder, 'lsp remove_workspace_folder')
