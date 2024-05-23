@@ -90,7 +90,7 @@ vim.api.nvim_create_autocmd('LspAttach', {
         end
 
         keymap('gD', vim.lsp.buf.declaration, 'lsp declaration')
-        keymap('gd', cross_lsp_definition, 'lsp definition')
+        keymap('gd', vim.lsp.buf.definition, 'lsp definition')
         keymap('<leader>t', vim.lsp.buf.hover, 'lsp hover')
         keymap('gi', vim.lsp.buf.implementation, 'lsp implementation')
         keymap('gk', vim.lsp.buf.signature_help, 'lsp signature_help')
@@ -278,6 +278,7 @@ function M.setup()
     vim.lsp.handlers['textDocument/hover'] = vim.lsp.with(vim.lsp.handlers.hover, {
         border = 'single',
     })
+    vim.lsp.handlers['textDocument/definition'] = vim.lsp.with(cross_lsp_definition, {})
 
     local capabilities = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities())
     capabilities.textDocument.completion.completionItem.snippetSupport = true
