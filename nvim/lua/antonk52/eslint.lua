@@ -19,7 +19,7 @@ local function lookupEslintConfig()
 end
 
 function M.run()
-    vim.notify('Running eslint...', vim.log.levels.INFO, { title = 'eslint' })
+    vim.notify('Running eslint…', vim.log.levels.INFO, { title = 'eslint' })
     local errors = {}
     local start_ms = vim.uv.now()
 

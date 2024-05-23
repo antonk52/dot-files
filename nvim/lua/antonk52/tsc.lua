@@ -29,7 +29,7 @@ end
 
 local function callTSC(opts)
     vim.schedule(function()
-        vim.notify('Running tsc...', vim.log.levels.INFO, { title = 'tsc' })
+        vim.notify('Running tsc…', vim.log.levels.INFO, { title = 'tsc' })
     end)
     local project_cwd = vim.uv.cwd()
     opts = vim.tbl_extend('force', { args = {}, cwd = project_cwd }, opts or {})
@@ -75,13 +75,13 @@ local function callTSC(opts)
             vim.schedule(function()
                 if return_val == 0 then
                     vim.notify(
-                        'No errors (' .. (vim.uv.now() - start_ms) .. 'ms)',
+                        'No errors (' .. math.ceil((vim.uv.now() - start_ms) / 1000) .. 's)',
                         vim.log.levels.INFO,
                         { title = 'tsc' }
                     )
                 else
                     vim.notify(
-                        'Tsc exited with errors. ' .. (vim.uv.now() - start_ms) .. 'ms',
+                        'Tsc exited with errors. ' .. math.ceil((vim.uv.now() - start_ms) / 1000) .. 's',
                         vim.log.levels.ERROR,
                         { title = 'tsc' }
                     )

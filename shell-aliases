@@ -156,7 +156,7 @@ alias dict="define"
 
 # brew_upgrade_outdated
 function brew_upgrade_outdated() {
-    echo "Updating Homebrew..."
+    echo "Updating Homebrew…"
     brew update
     # List outdated packages and use fzf to allow the user to select multiple packages
     local packages_to_upgrade=$(brew outdated --quiet | fzf --multi --border --prompt "Select packages to upgrade: " | awk '{printf "%s ", $1}')
