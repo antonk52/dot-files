@@ -4,25 +4,32 @@ local navigation_map = {
     left = {
         vim = 'h',
         tmux = 'L',
+        vscode = 'Left',
     },
     right = {
         vim = 'l',
         tmux = 'R',
+        vscode = 'Right',
     },
     up = {
         vim = 'k',
         tmux = 'U',
+        vscode = 'Up',
     },
     down = {
         vim = 'j',
         tmux = 'D',
+        vscode = 'Down',
     },
 }
 
 function M.navigate(direction)
     if navigation_map[direction] == nil then
         print('Unknown direction to navigate to "' .. direction .. '"')
-        return nil
+        return
+    end
+    if vim.g.vscode then
+        return require('vscode-neovim').call('workbench.action.navigate' .. navigation_map[direction].vscode)
     end
 
     local win_num_before = vim.fn.winnr()
