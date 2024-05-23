@@ -403,7 +403,7 @@ local plugins = {
                 },
             })
             vim.api.nvim_create_user_command('ColorLight', function()
-                vim.cmd('colorscheme github_light')
+                vim.cmd.color('github_light')
                 vim.cmd('hi! link MiniCursorWord Visual')
                 vim.cmd('hi! link MiniCursorWordCurrent CursorLine')
                 local t = require('github-theme.palette.github_light').palette
@@ -561,7 +561,7 @@ if not vim.g.vscode then
         leadmultispace = '│   ',
     }
 
-    vim.cmd('color lake')
+    vim.cmd.color('lake')
     vim.opt.termguicolors = vim.env.__CFBundleIdentifier ~= 'com.apple.Terminal'
 
     -- iterate from 0 to 255
@@ -887,7 +887,7 @@ local commands = {
         })
     end,
     ColorDark = function()
-        vim.cmd('colorscheme lake')
+        vim.cmd.color('lake')
         -- TODO create an issue for miniCursorWord to supply a highlight group to link to
         vim.cmd('hi! link MiniCursorWord Visual')
         vim.cmd('hi! link MiniCursorWordCurrent CursorLine')
@@ -980,7 +980,7 @@ if not vim.g.vscode then
                 vim.keymap.set('t', '<esc><esc>', '<c-\\><c-n>')
             end
             -- immediate enter terminal
-            vim.cmd('startinsert')
+            vim.cmd.startinsert()
         end,
     })
 

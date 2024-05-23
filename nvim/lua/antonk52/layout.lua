@@ -26,11 +26,11 @@ function M.navigate(direction)
     end
 
     local win_num_before = vim.fn.winnr()
-    vim.cmd('wincmd ' .. navigation_map[direction].vim)
+    vim.cmd.wincmd(navigation_map[direction].vim)
     -- if current window id and before the navigation are the same,
     -- than we are at the edge of vim panes and should try tmux navigation
     if vim.fn.winnr() == win_num_before then
-        vim.cmd('silent ! tmux select-pane -' .. navigation_map[direction].tmux)
+        vim.system({ 'tmux', 'select-pane', '-' .. navigation_map[direction].tmux })
     end
 end
 
@@ -53,12 +53,12 @@ end
 
 function M.equalify_splits()
     layout_cmd = vim.fn.winrestcmd()
-    vim.cmd('wincmd =')
+    vim.cmd.wincmd('=')
 end
 
 function M.zoom_split()
     layout_cmd = vim.fn.winrestcmd()
-    vim.cmd('wincmd _')
+    vim.cmd.wincmd('_')
 end
 
 return M

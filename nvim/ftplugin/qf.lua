@@ -1,19 +1,13 @@
 -- close quickfix window on jump to error
-vim.keymap.set('n', '<cr>', '<cr>:cclose<cr>:echo<cr>', { buffer = 0 })
+vim.keymap.set('n', '<cr>', '<cr>:cclose<cr>', { buffer = 0, silent = true })
 -- remove item from quickfix
 vim.keymap.set('n', 'dd', function()
-    local curqfidx = vim.fn.line('.')
-    local qfall = vim.fn.getqflist()
-    local total_items = table.maxn(qfall)
-    table.remove(qfall, curqfidx)
-    vim.fn.setqflist(qfall, 'r')
-    -- avoid executing cfirst with no errors left
+    local cursor = vim.api.nvim_win_get_cursor(0)
+    local items = vim.fn.getqflist()
+    table.remove(items, cursor[1])
+    vim.fn.setqflist(items, 'r')
     -- close quickfix on last item remove
-    if total_items > 1 then
-        vim.cmd('execute ' .. curqfidx .. ' . "cfirst"')
-        vim.cmd('copen')
-    else
-        vim.cmd('cclose')
-        vim.cmd('echo')
+    if #items == 0 then
+        vim.cmd.cclose()
     end
-end, { buffer = 0 })
+end, { buffer = 0, silent = true })

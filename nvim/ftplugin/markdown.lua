@@ -15,11 +15,7 @@ end
 local function lookup_word_under_cursor()
     local word = vim.fn.expand('<cword>')
     local uri = 'dict://' .. word
-    if vim.ui.open then
-        vim.ui.open(uri)
-    else
-        vim.cmd('silent !open ' .. uri)
-    end
+    vim.ui.open(uri)
 end
 
 vim.keymap.set('n', '<localleader>t', toggle_checkbox, { buffer = 0, silent = true })
