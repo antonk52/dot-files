@@ -83,35 +83,6 @@ vim.api.nvim_create_autocmd('LspAttach', {
         if client.server_capabilities.definitionProvider then
             vim.bo[bufnr].tagfunc = 'v:lua.vim.lsp.tagfunc'
         end
-
-        -- Mappings.
-        local function keymap(from, to, desc)
-            vim.keymap.set('n', from, to, { buffer = bufnr or 0, silent = true, desc = desc })
-        end
-
-        keymap('gD', vim.lsp.buf.declaration, 'lsp declaration')
-        keymap('gd', vim.lsp.buf.definition, 'lsp definition')
-        keymap('<leader>t', vim.lsp.buf.hover, 'lsp hover')
-        keymap('gi', vim.lsp.buf.implementation, 'lsp implementation')
-        keymap('gk', vim.lsp.buf.signature_help, 'lsp signature_help')
-        keymap('gK', vim.lsp.buf.type_definition, 'lsp type_definition')
-        keymap('<leader>R', vim.lsp.buf.rename, 'lsp rename')
-        keymap('<leader>ca', vim.lsp.buf.code_action, 'lsp code_action')
-        keymap('gr', vim.lsp.buf.references, 'lsp references')
-        keymap('<leader>L', vim.diagnostic.open_float, 'show current line diagnostic')
-        keymap(']e', function()
-            vim.diagnostic.goto_next({ severity = vim.diagnostic.severity.ERROR })
-        end, 'go to next error diagnostic')
-        keymap('[e', function()
-            vim.diagnostic.goto_prev({ severity = vim.diagnostic.severity.ERROR })
-        end, 'go to prev error diagnostic')
-        -- unused workspace
-        keymap('<leader>wa', vim.lsp.buf.add_workspace_folder, 'lsp add_workspace_folder')
-        keymap('<leader>wr', vim.lsp.buf.remove_workspace_folder, 'lsp remove_workspace_folder')
-        keymap('<leader>wl', function()
-            print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
-        end, 'print workspace folders')
-        keymap('<leader>ws', vim.lsp.buf.workspace_symbol, 'lsp workspace_symbol')
     end,
 })
 

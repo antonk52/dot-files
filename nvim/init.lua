@@ -640,13 +640,18 @@ vim.opt.undofile = true
 -- avoid mapping gx in netrw as for conflict reasons
 vim.g.netrw_nogx = 1
 
-if vim.g.vscode then
-    local c = function(action)
+local is_vscode = vim.g.vscode
+do
+    local function keymap(from, to, desc)
+        vim.keymap.set('n', from, to, { silent = true, desc = desc })
+    end
+    local function c(action)
         return function()
             require('vscode-neovim').call(action)
         end
     end
-    vim.keymap.set('n', 'gd', function()
+    keymap('gD', is_vscode and c('editor.action.goToDeclaration') or vim.lsp.buf.declaration, 'lsp declaration')
+    keymap('gd', is_vscode and function()
         local filepath = vim.api.nvim_buf_get_name(0)
         local is_www_js = string.match(filepath, '/www/') and vim.endswith(filepath, '.js')
         local is_ts_or_js = vim.endswith(filepath, '.js')
@@ -656,18 +661,45 @@ if vim.g.vscode then
             (vim.v.count and not is_www_js and is_ts_or_js) and 'typescript.goToSourceDefinition'
                 or 'editor.action.revealDefinition'
         )
-    end, {})
-    vim.keymap.set('n', 'gD', c('editor.action.goToDeclaration'), {})
-    vim.keymap.set('n', 'gi', c('editor.action.goToImplementation'), {})
-    vim.keymap.set('n', 'gr', c('editor.action.goToReferences'), {})
-    vim.keymap.set('n', '<leader>R', c('editor.action.rename'), {})
-    vim.keymap.set('n', '<leader>t', c('editor.action.showHover'), {})
-    vim.keymap.set('n', 'K', c('editor.action.showHover'), {})
-    vim.keymap.set('n', '-', c('workbench.files.action.showActiveFileInExplorer'), {})
-    vim.keymap.set('n', '<C-b>', c('workbench.action.showAllEditorsByMostRecentlyUsed'), {})
-    vim.keymap.set('n', ']d', c('editor.action.marker.next'), {})
-    vim.keymap.set('n', '[d', c('editor.action.marker.prev'), {})
-    vim.keymap.set('n', 'gp', c('workbench.panel.markers.view.focus'), {})
+    end or vim.lsp.buf.definition, 'lsp definition')
+    keymap('<leader>t', is_vscode and c('editor.action.showHover') or vim.lsp.buf.hover, 'lsp hover')
+    keymap(
+        'gs',
+        is_vscode and c('editor.action.triggerParameterHints') or vim.lsp.buf.signature_help,
+        'lsp signature_help'
+    )
+    keymap(
+        'gK',
+        is_vscode and c('editor.action.peekTypeDefinition') or vim.lsp.buf.type_definition,
+        'lsp type_definition'
+    )
+    keymap('gi', is_vscode and c('editor.action.goToImplementation') or vim.lsp.buf.implementation, 'lsp implemention')
+    keymap('<leader>R', is_vscode and c('editor.action.rename') or vim.lsp.buf.rename, 'lsp rename')
+    keymap('gr', is_vscode and c('editor.action.goToReferences') or vim.lsp.buf.references, 'lsp references')
+
+    if is_vscode then
+        keymap('K', c('editor.action.showHover'), 'lsp hover')
+        keymap('-', c('workbench.files.action.showActiveFileInExplorer'))
+        keymap('<C-b>', c('workbench.action.showAllEditorsByMostRecentlyUsed'))
+        keymap(']d', c('editor.action.marker.next'))
+        keymap('[d', c('editor.action.marker.prev'))
+        keymap('gp', c('workbench.panel.markers.view.focus'))
+    else
+        keymap('<leader>L', vim.diagnostic.open_float, 'show current line diagnostic')
+        keymap('<leader>ca', vim.lsp.buf.code_action, 'lsp code_action')
+        keymap(']e', function()
+            vim.diagnostic.goto_next({ severity = vim.diagnostic.severity.ERROR })
+        end, 'go to next error diagnostic')
+        keymap('[e', function()
+            vim.diagnostic.goto_prev({ severity = vim.diagnostic.severity.ERROR })
+        end, 'go to prev error diagnostic')
+        keymap('<leader>wa', vim.lsp.buf.add_workspace_folder, 'lsp add_workspace_folder')
+        keymap('<leader>wr', vim.lsp.buf.remove_workspace_folder, 'lsp remove_workspace_folder')
+        keymap('<leader>wl', function()
+            print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
+        end, 'print workspace folders')
+        keymap('<leader>ws', vim.lsp.buf.workspace_symbol, 'lsp workspace_symbol')
+    end
 end
 
 -- nvim 0.6 maps Y to yank till the end of the line,
