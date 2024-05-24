@@ -562,8 +562,6 @@ vim.opt.splitright = true
 
 -- folding
 vim.opt.foldmethod = 'indent'
-vim.opt.foldlevelstart = 20
-vim.opt.foldlevel = 20
 -- use wider line for folding
 vim.opt.fillchars = { fold = '⏤' }
 
@@ -659,7 +657,6 @@ vim.keymap.del('', 'Y')
 vim.keymap.set('v', '<leader>c', '"*y', { noremap = false, desc = 'copy to OS clipboard' })
 vim.keymap.set('', '<leader>v', '"*p', { noremap = false, desc = 'paste from OS clipboard' })
 vim.keymap.set('n', 'p', ']p', { desc = 'paste under current indentation level' })
-vim.keymap.set('n', '<leader>z', 'za', { desc = 'toggle folds' })
 vim.keymap.set('n', '<esc>', function()
     vim.opt.hlsearch = false
     if vim.snippet.active() then
@@ -669,23 +666,16 @@ end, { silent = true, desc = 'toggle highlight for last search' })
 vim.keymap.set('n', 'n', '<cmd>set hlsearch<cr>n', { desc = 'always have highlighted search results when navigating' })
 vim.keymap.set('n', 'N', '<cmd>set hlsearch<cr>N', { desc = 'always have highlighted search results when navigating' })
 
-vim.keymap.set('n', '+', '<C-a>', { desc = 'increment number under cursor' })
-vim.keymap.set('n', '_', '<C-x>', { desc = 'decrement number under cursor' })
 vim.keymap.set(
     'n',
     '<tab>',
-    vim.g.vscode and ':call VSCodeNotify("editor.toggleFold")<cr>' or 'za',
+    is_vscode and ':call VSCodeNotify("editor.toggleFold")<cr>' or 'za',
     { desc = 'toggle folds' }
 )
 
 -- Useful when you have many splits & the status line gets truncated
 vim.keymap.set('n', '<leader>p', ':echo expand("%")<CR>', { desc = 'print rel buffer path' })
 vim.keymap.set('n', '<leader>P', ':echo expand("%:p")<CR>', { desc = 'print abs buffer path' })
-
-vim.keymap.set('n', '<leader>§', ':syntax sync fromstart<CR>', {
-    silent = true,
-    desc = 'Fixes (most) syntax highlighting problems in current buffer',
-})
 
 -- indentation shifts keep selection(`=` should still be preferred)
 vim.keymap.set('v', '<', '<gv')
@@ -786,7 +776,6 @@ vim.keymap.set('n', '<Leader>e', '$')
 vim.keymap.set('v', '<Leader>e', '$h')
 
 vim.keymap.set('n', '<C-t>', '<cmd>tabedit<CR>', { desc = 'Open a new tab' })
-vim.keymap.set('n', '<leader>o', '<C-t>', { desc = 'Jump to previous tag stack' })
 
 -- to navigate between buffers
 vim.keymap.set('n', '<Left>', '<cmd>prev<CR>')
