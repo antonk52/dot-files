@@ -589,18 +589,24 @@ vim.opt.undofile = true
 vim.g.netrw_nogx = 1
 
 local is_vscode = vim.g.vscode
+local keymap = vim.keymap
 do
-    local function keymap(from, to, desc)
-        vim.keymap.set('n', from, to, { silent = true, desc = desc })
-    end
-    local function c(action)
-        return function()
-            require('vscode-neovim').call(action)
+    local function lsp_keymap(from, to_nvim, to_vscode, desc)
+        local to = nil
+        if is_vscode then
+            to = type(to_vscode) == 'function' and to_vscode
+                or function()
+                    require('vscode-neovim').call(to_vscode)
+                end
+        else
+            to = to_nvim
         end
+        keymap.set('n', from, to, { silent = true, desc = desc })
     end
-    keymap('gD', is_vscode and c('editor.action.goToDeclaration') or vim.lsp.buf.declaration, 'lsp declaration')
-    keymap('gd', is_vscode and function()
-        local filepath = vim.api.nvim_buf_get_name(0)
+
+    lsp_keymap('gD', vim.lsp.buf.declaration, 'editor.action.goToDeclaration', 'lsp declaration')
+    lsp_keymap('gd', vim.lsp.buf.definition, function()
+        local filepath = vim.api.nvim_buf_get_name(1)
         local is_www_js = string.match(filepath, '/www/') and vim.endswith(filepath, '.js')
         local is_ts_or_js = vim.endswith(filepath, '.js')
             or vim.endswith(filepath, '.ts')
@@ -609,97 +615,85 @@ do
             (vim.v.count and not is_www_js and is_ts_or_js) and 'typescript.goToSourceDefinition'
                 or 'editor.action.revealDefinition'
         )
-    end or vim.lsp.buf.definition, 'lsp definition')
-    keymap('<leader>t', is_vscode and c('editor.action.showHover') or vim.lsp.buf.hover, 'lsp hover')
-    keymap(
-        'gs',
-        is_vscode and c('editor.action.triggerParameterHints') or vim.lsp.buf.signature_help,
-        'lsp signature_help'
-    )
-    keymap(
-        'gK',
-        is_vscode and c('editor.action.peekTypeDefinition') or vim.lsp.buf.type_definition,
-        'lsp type_definition'
-    )
-    keymap('gi', is_vscode and c('editor.action.goToImplementation') or vim.lsp.buf.implementation, 'lsp implemention')
-    keymap('<leader>R', is_vscode and c('editor.action.rename') or vim.lsp.buf.rename, 'lsp rename')
-    keymap('gr', is_vscode and c('editor.action.goToReferences') or vim.lsp.buf.references, 'lsp references')
+    end, 'lsp definition')
+    lsp_keymap('<leader>t', vim.lsp.buf.hover, 'editor.action.showHover', 'lsp hover')
+    lsp_keymap('<leader>t', vim.lsp.buf.hover, 'editor.action.showHover', 'lsp hover')
+    lsp_keymap('gs', vim.lsp.buf.signature_help, 'editor.action.triggerParameterHints', 'lsp signature_help')
+    lsp_keymap('gK', vim.lsp.buf.type_definition, 'editor.action.peekTypeDefinition', 'lsp type_definition')
+    lsp_keymap('gi', vim.lsp.buf.implementation, 'editor.action.goToImplementation', 'lsp implemention')
+    lsp_keymap('<leader>R', vim.lsp.buf.rename, 'editor.action.rename', 'lsp rename')
+    lsp_keymap('gr', vim.lsp.buf.references, 'editor.action.goToReferences', 'lsp references')
 
     if is_vscode then
-        keymap('K', c('editor.action.showHover'), 'lsp hover')
-        keymap('-', c('workbench.files.action.showActiveFileInExplorer'))
-        keymap('<C-b>', c('workbench.action.showAllEditorsByMostRecentlyUsed'))
-        keymap(']d', c('editor.action.marker.next'))
-        keymap('[d', c('editor.action.marker.prev'))
-        keymap('gp', c('workbench.panel.markers.view.focus'))
+        keymap.set('n', 'K', ':call VSCodeNotify("editor.action.showHover")<cr>')
+        keymap.set('n', '-', ':call VSCodeNotify("workbench.files.action.showActiveFileInExplorer")<cr>')
+        keymap.set('n', '<C-b>', ':call VSCodeNotify("workbench.action.showAllEditorsByMostRecentlyUsed")<cr>')
+        keymap.set('n', ']d', ':call VSCodeNotify("editor.action.marker.next")<cr>')
+        keymap.set('n', '[d', ':call VSCodeNotify("editor.action.marker.prev")<cr>')
+        keymap.set('n', 'gp', ':call VSCodeNotify("workbench.panel.markers.view.focus")<cr>')
     else
-        keymap('<leader>L', vim.diagnostic.open_float, 'show current line diagnostic')
-        keymap('<leader>ca', vim.lsp.buf.code_action, 'lsp code_action')
-        keymap(']e', function()
+        keymap.set('n', '<leader>L', vim.diagnostic.open_float, { desc = 'show current line diagnostic' })
+        keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, { desc = 'lsp code_action' })
+        keymap.set('n', ']e', function()
             vim.diagnostic.goto_next({ severity = vim.diagnostic.severity.ERROR })
-        end, 'go to next error diagnostic')
-        keymap('[e', function()
+        end, { desc = 'go to next error diagnostic' })
+        keymap.set('n', '[e', function()
             vim.diagnostic.goto_prev({ severity = vim.diagnostic.severity.ERROR })
-        end, 'go to prev error diagnostic')
-        keymap('<leader>wa', vim.lsp.buf.add_workspace_folder, 'lsp add_workspace_folder')
-        keymap('<leader>wr', vim.lsp.buf.remove_workspace_folder, 'lsp remove_workspace_folder')
-        keymap('<leader>wl', function()
+        end, { desc = 'go to prev error diagnostic' })
+        keymap.set('n', '<leader>wa', vim.lsp.buf.add_workspace_folder, { desc = 'lsp add_workspace_folder' })
+        keymap.set('n', '<leader>wr', vim.lsp.buf.remove_workspace_folder, { desc = 'lsp remove_workspace_folder' })
+        keymap.set('n', '<leader>wl', function()
             print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
-        end, 'print workspace folders')
-        keymap('<leader>ws', vim.lsp.buf.workspace_symbol, 'lsp workspace_symbol')
+        end, { desc = 'print workspace folders' })
+        keymap.set('n', '<leader>ws', vim.lsp.buf.workspace_symbol, { desc = 'lsp workspace_symbol' })
     end
 end
 
 -- nvim 0.6 maps Y to yank till the end of the line,
 -- preserving a legacy behaviour
-vim.keymap.del('', 'Y')
+keymap.del('', 'Y')
 
-vim.keymap.set('v', '<leader>c', '"*y', { noremap = false, desc = 'copy to OS clipboard' })
-vim.keymap.set('', '<leader>v', '"*p', { noremap = false, desc = 'paste from OS clipboard' })
-vim.keymap.set('n', 'p', ']p', { desc = 'paste under current indentation level' })
-vim.keymap.set('n', '<esc>', function()
+keymap.set('v', '<leader>c', '"*y', { noremap = false, desc = 'copy to OS clipboard' })
+keymap.set('', '<leader>v', '"*p', { noremap = false, desc = 'paste from OS clipboard' })
+keymap.set('n', 'p', ']p', { desc = 'paste under current indentation level' })
+keymap.set('n', '<esc>', function()
     vim.opt.hlsearch = false
     if vim.snippet.active() then
         vim.snippet.stop()
     end
 end, { silent = true, desc = 'toggle highlight for last search' })
-vim.keymap.set('n', 'n', '<cmd>set hlsearch<cr>n', { desc = 'always have highlighted search results when navigating' })
-vim.keymap.set('n', 'N', '<cmd>set hlsearch<cr>N', { desc = 'always have highlighted search results when navigating' })
+keymap.set('n', 'n', '<cmd>set hlsearch<cr>n', { desc = 'always have highlighted search results when navigating' })
+keymap.set('n', 'N', '<cmd>set hlsearch<cr>N', { desc = 'always have highlighted search results when navigating' })
 
-vim.keymap.set(
-    'n',
-    '<tab>',
-    is_vscode and ':call VSCodeNotify("editor.toggleFold")<cr>' or 'za',
-    { desc = 'toggle folds' }
-)
+keymap.set('n', '<tab>', is_vscode and ':call VSCodeNotify("editor.toggleFold")<cr>' or 'za', { desc = 'toggle folds' })
 
 -- Useful when you have many splits & the status line gets truncated
-vim.keymap.set('n', '<leader>p', ':echo expand("%")<CR>', { desc = 'print rel buffer path' })
-vim.keymap.set('n', '<leader>P', ':echo expand("%:p")<CR>', { desc = 'print abs buffer path' })
+keymap.set('n', '<leader>p', ':echo expand("%")<CR>', { desc = 'print rel buffer path' })
+keymap.set('n', '<leader>P', ':echo expand("%:p")<CR>', { desc = 'print abs buffer path' })
 
 -- indentation shifts keep selection(`=` should still be preferred)
-vim.keymap.set('v', '<', '<gv')
-vim.keymap.set('v', '>', '>gv')
+keymap.set('v', '<', '<gv')
+keymap.set('v', '>', '>gv')
 
 -- toggle comments
-vim.keymap.set('n', '<C-_>', 'gcc', { remap = true })
-vim.keymap.set('x', '<C-_>', 'gc', { remap = true })
+keymap.set('n', '<C-_>', 'gcc', { remap = true })
+keymap.set('x', '<C-_>', 'gc', { remap = true })
 
 -- ctrl j/k/l/h shortcuts to navigate between splits
-vim.keymap.set('n', '<C-J>', function()
+keymap.set('n', '<C-J>', function()
     require('antonk52.layout').navigate('down')
 end)
-vim.keymap.set('n', '<C-K>', function()
+keymap.set('n', '<C-K>', function()
     require('antonk52.layout').navigate('up')
 end)
-vim.keymap.set('n', '<C-L>', function()
+keymap.set('n', '<C-L>', function()
     require('antonk52.layout').navigate('right')
 end)
-vim.keymap.set('n', '<C-H>', function()
+keymap.set('n', '<C-H>', function()
     require('antonk52.layout').navigate('left')
 end)
 
-vim.keymap.set('n', '<leader>s', function()
+keymap.set('n', '<leader>s', function()
     local extmark_ns = vim.api.nvim_create_namespace('')
     local charCode1 = vim.fn.getchar()
     local charCode2 = vim.fn.getchar()
@@ -753,29 +747,29 @@ vim.keymap.set('n', '<leader>s', function()
 end, { noremap = true, desc = 'jump to two characters in current buffer(easymotion like)' })
 
 -- leader + j/k/l/h resize active split by 5
-vim.keymap.set('n', '<leader>j', '<C-W>10-')
-vim.keymap.set('n', '<leader>k', '<C-W>10+')
-vim.keymap.set('n', '<leader>l', '<C-W>10>')
-vim.keymap.set('n', '<leader>h', '<C-W>10<')
+keymap.set('n', '<leader>j', '<C-W>10-')
+keymap.set('n', '<leader>k', '<C-W>10+')
+keymap.set('n', '<leader>l', '<C-W>10>')
+keymap.set('n', '<leader>h', '<C-W>10<')
 
-vim.keymap.set('n', '<Leader>=', function()
+keymap.set('n', '<Leader>=', function()
     require('antonk52.layout').zoom_split()
 end)
-vim.keymap.set('n', '<Leader>-', function()
+keymap.set('n', '<Leader>-', function()
     require('antonk52.layout').equalify_splits()
 end)
-vim.keymap.set('n', '<Leader>+', function()
+keymap.set('n', '<Leader>+', function()
     require('antonk52.layout').restore_layout()
 end)
 
-vim.keymap.set({ 'n', 'v' }, '<Leader>a', '^', {
+keymap.set({ 'n', 'v' }, '<Leader>a', '^', {
     desc = 'go to the beginning of the line (^ is too far)',
 })
 -- go to the end of the line ($ is too far)
-vim.keymap.set('n', '<Leader>e', '$')
-vim.keymap.set('v', '<Leader>e', '$h')
+keymap.set('n', '<Leader>e', '$')
+keymap.set('v', '<Leader>e', '$h')
 
-vim.keymap.set('n', '<C-t>', '<cmd>tabedit<CR>', { desc = 'Open a new tab' })
+keymap.set('n', '<C-t>', '<cmd>tabedit<CR>', { desc = 'Open a new tab' })
 
 -- Commands {{{1
 local commands = {
@@ -883,7 +877,7 @@ if not vim.g.vscode then
             -- do not map esc for `fzf` terminals
             if vim.bo.filetype ~= 'fzf' then
                 -- use Esc to go into normal mode in terminal
-                vim.keymap.set('t', '<esc><esc>', '<c-\\><c-n>')
+                keymap.set('t', '<esc><esc>', '<c-\\><c-n>')
             end
             -- immediate enter terminal
             vim.cmd.startinsert()
