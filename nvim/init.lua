@@ -562,6 +562,8 @@ vim.opt.splitright = true
 
 -- folding
 vim.opt.foldmethod = 'indent'
+vim.opt.foldlevelstart = 20
+vim.opt.foldlevel = 20
 -- use wider line for folding
 vim.opt.fillchars = { fold = '⏤' }
 
