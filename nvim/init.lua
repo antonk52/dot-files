@@ -777,10 +777,6 @@ vim.keymap.set('v', '<Leader>e', '$h')
 
 vim.keymap.set('n', '<C-t>', '<cmd>tabedit<CR>', { desc = 'Open a new tab' })
 
--- to navigate between buffers
-vim.keymap.set('n', '<Left>', '<cmd>prev<CR>')
-vim.keymap.set('n', '<Right>', '<cmd>next<CR>')
-
 -- Commands {{{1
 local commands = {
     ToggleNumbers = 'set number! relativenumber!',
