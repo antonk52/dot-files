@@ -858,6 +858,18 @@ for k, v in pairs(commands) do
 end
 
 if not vim.g.vscode then
+    vim.filetype.add({
+        filename = {
+            ['.eslintrc.json'] = 'jsonc',
+        },
+        pattern = {
+            ['*.scm'] = 'scheme',
+            ['jsconfig*.json'] = 'jsonc',
+            ['tsconfig*.json'] = 'jsonc',
+            ['.*/%.vscode/.*%.json'] = 'jsonc',
+        },
+    })
+
     -- plugin manager
     -- easier to see all options at a glance
     for _, v in ipairs({ 'check', 'restore', 'update', 'clean' }) do
@@ -887,19 +899,6 @@ if not vim.g.vscode then
         callback = function()
             if not vim.v.event.visual then
                 vim.highlight.on_yank({ higroup = 'Substitute', timeout = 250 })
-            end
-        end,
-    })
-
-    vim.api.nvim_create_autocmd('FileType', {
-        pattern = { 'json', 'query' },
-        callback = function()
-            if vim.fn.expand('%:t') == 'tsconfig.json' then
-                -- allow comments in tsconfig files
-                vim.bo.ft = 'jsonc'
-            elseif vim.fn.expand('%:e') == 'scm' then
-                -- enable syntax in treesitter syntax files
-                vim.bo.filetype = 'scheme'
             end
         end,
     })
