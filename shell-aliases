@@ -1,6 +1,5 @@
 #!/bin/bash
 
-alias mvim='nvim -u $HOME/.config/.mvimrc'
 # vim goodness
 alias :sp='test -n "$TMUX" && tmux split-window'
 alias :vs='test -n "$TMUX" && tmux split-window -h'
@@ -57,33 +56,15 @@ alias listnodes='ps -e|grep node'
 alias agi='sudo apt-get install'
 alias update='sudo apt-get update && sudo apt-get upgrade && sudo apt-get dist-upgrade'
 
-# homebrew
-alias ibrew='arch -x86_64 brew'
-
 # other aliases
 alias e='exit'
 alias o='open .'
 alias ax='chmod a+x'
 alias h='history | fzf +s --tac --tiebreak=index | sed "s/ *[0-9]* *//"'
-alias hgrep='history | fzf'
 alias q='quit'
 alias sl='pmset sleepnow'
 alias chux='chmod u+x'
-# find all TODO from current dir down
-# do not look in dot files
-alias ftd='find ./ -type f ! -name ".*" | xargs grep TODO -n --color'
-alias findtodo='grep -r TODO ./ -n --color'
 
-# see which currently running apps are using most of your RAM
-alias memory='top -o MEM'
-alias myip='curl http://ipecho.net/plain; echo'
-alias localip='ifconfig en0 | grep "inet" | cut -d: -f2'
-alias wifioff='networksetup -setairportpower airport off'
-alias wifion='networksetup -setairportpower airport on'
-alias topmem='top -stats "pid,command,mem,cpu" -o mem'
-alias topcpu='top -stats "pid,command,cpu,mem" -o cpu'
-alias findphp='find ./ -name "*.php" | grep --color -n -i'
-alias findjs='find ./ -name "*.js" | grep --color -n -i'
 # FreeBSD one does not support -m option
 # to display week starting from Monday
 alias cal='cal -m &> /dev/null && cal -m || cal'
