@@ -148,6 +148,7 @@ local plugins = {
     },
     {
         'folke/ts-comments.nvim',
+        opts = {},
         event = 'VeryLazy',
     },
     { 'marilari88/twoslash-queries.nvim', ft = { 'javascript', 'javascriptreact', 'typescript', 'typescriptreact' } },
