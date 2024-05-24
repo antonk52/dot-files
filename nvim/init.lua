@@ -276,52 +276,13 @@ local plugins = {
     {
         'dinhhuy258/git.nvim',
         config = function()
-            require('git').setup({
-                default_mappings = false,
-            })
+            require('git').setup({ default_mappings = false })
 
             vim.api.nvim_create_user_command('GitBrowse', function()
                 require('git.browse').open(false)
-            end, {
-                bang = true,
-            })
-            ---@param cmd string
-            local function run_cmd_and_exit(cmd)
-                return function()
-                    local buf_name = vim.api.nvim_buf_get_name(0)
-                    if string.find(cmd, '%%') then
-                        if vim.fn.filereadable(buf_name) == 0 then
-                            return vim.notify('Buffer is not a file', vim.log.levels.ERROR)
-                        end
-                        cmd = string.gsub(cmd, '%%', buf_name)
-                    end
-                    vim.cmd('tabnew | term ' .. cmd)
-                    local term_buf = vim.api.nvim_get_current_buf()
-                    vim.api.nvim_create_autocmd('TermClose', {
-                        buffer = term_buf,
-                        callback = function()
-                            vim.cmd.close()
-                            if vim.api.nvim_buf_is_valid(term_buf) then
-                                vim.api.nvim_buf_delete(term_buf, { force = true })
-                            end
-                            vim.api.nvim_command('doautocmd BufEnter')
-                        end,
-                    })
-                end
-            end
-            vim.api.nvim_create_user_command(
-                'GitAddPatch',
-                run_cmd_and_exit('git add --patch'),
-                { desc = 'git add --patch' }
-            )
-            vim.api.nvim_create_user_command(
-                'GitAddPatchFile',
-                run_cmd_and_exit('git add --patch %'),
-                { desc = 'git add --patch <current_buffer>' }
-            )
-            vim.api.nvim_create_user_command('GitCommit', run_cmd_and_exit('git commit'), { desc = 'git commit' })
+            end, { bang = true })
         end,
-        event = 'VeryLazy',
+        cmd = { 'GitBrowse', 'GitBlame' },
     },
     {
         'echasnovski/mini.nvim',
@@ -892,47 +853,6 @@ local commands = {
         vim.cmd('hi! link MiniCursorWord Visual')
         vim.cmd('hi! link MiniCursorWordCurrent CursorLine')
     end,
-    GitIgnore = {
-        function()
-            local out = vim.system({ 'curl', '-s', 'https://api.github.com/repos/github/gitignore/contents' }, nil)
-                :wait()
-            if out.code ~= 0 then
-                return vim.notify('Failed to fetch gitignore files\n' .. out.stderr, vim.log.levels.ERROR)
-            end
-
-            local json = vim.json.decode(out.stdout)
-            local files = {}
-            for _, v in ipairs(json) do
-                if v.type == 'file' and vim.endswith(v.name, '.gitignore') then
-                    table.insert(files, { name = v.name, url = v.download_url })
-                end
-            end
-
-            vim.ui.select(files, {
-                prompt = 'Select a gitignore file',
-                format_item = function(x)
-                    return x.name
-                end,
-            }, function(selected)
-                if not selected then
-                    return
-                end
-
-                local target_file = vim.api.nvim_buf_get_name(0)
-                if vim.fn.isdirectory(target_file) == 1 then
-                    target_file = vim.fs.joinpath(target_file, '.gitignore')
-                else
-                    -- make sure that file is empty before appending to it
-                    vim.api.nvim_buf_set_lines(0, 0, -1, false, { '' })
-                    vim.cmd.write()
-                end
-
-                vim.cmd('!curl -s ' .. selected.url .. ' > ' .. target_file)
-                vim.notify('Downloaded ' .. selected.name .. ' to ' .. target_file, vim.log.levels.INFO)
-            end)
-        end,
-        { desc = 'Download a gitignore file from github/gitignore', nargs = 0 },
-    },
 
     Eslint = {
         function()
@@ -1032,4 +952,5 @@ if not vim.g.vscode then
     require('antonk52.print_mappings').setup()
     require('antonk52.test_js').setup()
     require('antonk52.tsc').setup()
+    require('antonk52.git').setup()
 end
