@@ -919,5 +919,5 @@ if not vim.g.vscode then
     require('antonk52.print_mappings').setup()
     require('antonk52.test_js').setup()
     require('antonk52.tsc').setup()
-    require('antonk52.git').setup()
+    require('antonk52.git_utils').setup()
 end
