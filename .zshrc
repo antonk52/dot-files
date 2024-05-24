@@ -56,7 +56,7 @@ npm_completions="$DOT_FILES/scripts/npm-completions.zsh"
 [ ! -f "$npm_completions" ] && npm completion >> "$npm_completions";
 source "$npm_completions"
 
-source "$DOT_FILES/zsh-autosuggestions/zsh-autosuggestions.zsh"
+source "$DOT_FILES/dependencies/zsh-autosuggestions/zsh-autosuggestions.zsh"
 
 if command -v docker &> /dev/null; then
     zsh_site_functions_path="$XDG_DATA_HOME/zsh/site-functions"

@@ -1,9 +1,9 @@
-[submodule "zsh-autosuggestions"]
-	path = zsh-autosuggestions
-	url = https://github.com/zsh-users/zsh-autosuggestions
 [submodule "dependencies/pure"]
 	path = dependencies/pure
 	url = https://github.com/sindresorhus/pure
 [submodule "dependencies/zsh-yarn-completions"]
 	path = dependencies/zsh-yarn-completions
 	url = https://github.com/chrisands/zsh-yarn-completions.git
+[submodule "dependencies/zsh-autosuggestions"]
+	path = dependencies/zsh-autosuggestions
+	url = https://github.com/zsh-users/zsh-autosuggestions
