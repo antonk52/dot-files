@@ -403,7 +403,23 @@ local plugins = {
     },
 }
 
-local lazy_options = {
+-- Dayjob specific {{{2
+if vim.env.WORK_PLUGIN_PATH ~= nil then
+    table.insert(plugins, {
+        dir = vim.fn.expand(vim.env.WORK_PLUGIN_PATH),
+        name = vim.env.WORK_PLUGIN_PATH,
+        config = function()
+            local local_init_lua = vim.fs.normalize('~/.config/local_init.lua')
+            if vim.fn.filereadable(local_init_lua) == 1 and not vim.g.vscode then
+                vim.cmd.luafile(local_init_lua)
+            else
+                vim.notify('No ~/.config/local_init.lua', vim.log.levels.ERROR)
+            end
+        end,
+    })
+end
+
+require('lazy').setup(plugins, {
     root = PLUGINS_LOCATION,
     defaults = {
         -- only enable leap plugin in vscode
@@ -438,25 +454,7 @@ local lazy_options = {
         size = { width = 142, height = 0.95 },
         border = 'single',
     },
-}
-
--- Dayjob specific {{{2
-if vim.env.WORK_PLUGIN_PATH ~= nil then
-    table.insert(plugins, {
-        dir = vim.fn.expand(vim.env.WORK_PLUGIN_PATH),
-        name = vim.env.WORK_PLUGIN_PATH,
-        config = function()
-            local local_init_lua = vim.fs.normalize('~/.config/local_init.lua')
-            if vim.fn.filereadable(local_init_lua) == 1 and not vim.g.vscode then
-                vim.cmd.luafile(local_init_lua)
-            else
-                vim.notify('No ~/.config/local_init.lua', vim.log.levels.ERROR)
-            end
-        end,
-    })
-end
-
-require('lazy').setup(plugins, lazy_options)
+})
 
 -- Avoid startup work {{{1
 -- Skip loading menu.vim, saves ~100ms
@@ -848,6 +846,7 @@ if not vim.g.vscode then
             ['.eslintrc.json'] = 'jsonc',
         },
         pattern = {
+            ['*.mdx'] = 'markdown',
             ['*.scm'] = 'scheme',
             ['jsconfig*.json'] = 'jsonc',
             ['tsconfig*.json'] = 'jsonc',
@@ -900,13 +899,6 @@ if not vim.g.vscode then
             end
         end,
         desc = 'Use treesitter for folding in markdown files',
-    })
-    -- use markdown for mdx files
-    vim.api.nvim_create_autocmd('BufReadPost', {
-        pattern = '*.mdx',
-        callback = function()
-            vim.bo.filetype = 'markdown'
-        end,
     })
 
     require('antonk52.statusline').setup()
