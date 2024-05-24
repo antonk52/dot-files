@@ -150,17 +150,6 @@ local plugins = {
         'folke/ts-comments.nvim',
         event = 'VeryLazy',
     },
-    {
-        'folke/trouble.nvim',
-        opts = {
-            icons = false,
-            fold_open = 'v', -- icon used for open folds
-            fold_closed = '>', -- icon used for closed folds
-            indent_lines = false, -- add an indent guide below the fold icons
-            use_diagnostic_signs = true, -- enabling this will use the signs defined in your lsp client
-        },
-        cmd = 'Trouble',
-    },
     { 'marilari88/twoslash-queries.nvim', ft = { 'javascript', 'javascriptreact', 'typescript', 'typescriptreact' } },
     {
         'nvim-treesitter/nvim-treesitter',

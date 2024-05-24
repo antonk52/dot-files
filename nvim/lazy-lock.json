@@ -25,7 +25,6 @@
   "plenary.nvim": { "branch": "master", "commit": "a3e3bc82a3f95c5ed0d7201546d5d2c19b20d683" },
   "schemastore.nvim": { "branch": "main", "commit": "9a5992a881583d886bfbb46631a09f736f0fae50" },
   "telescope.nvim": { "branch": "master", "commit": "5665d93988acfbb0747bdbf4f4cb583bcebc8930" },
-  "trouble.nvim": { "branch": "main", "commit": "a8264a65a0b894832ea642844f5b7c30112c458f" },
   "ts-comments.nvim": { "branch": "main", "commit": "8ea22850c40b4aef481a6ebdd74c928ed2b20427" },
   "twoslash-queries.nvim": { "branch": "main", "commit": "e000134c7ca3ea44f1095df3ceea89e485b7bdd5" },
   "vim-dirvish": { "branch": "master", "commit": "3851bedb7f191b9a4a5531000b6fc0a8795cc9bb" }
