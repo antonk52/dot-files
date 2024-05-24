@@ -511,11 +511,6 @@ if not vim.g.vscode then
 
     vim.cmd.color('lake')
     vim.opt.termguicolors = vim.env.__CFBundleIdentifier ~= 'com.apple.Terminal'
-
-    -- iterate from 0 to 255
-    for i = 0, 255 do
-        vim.cmd('hi! CtermColor' .. i .. ' ctermfg=' .. i .. ' ctermbg=' .. i)
-    end
 end
 
 -- no numbers by default
