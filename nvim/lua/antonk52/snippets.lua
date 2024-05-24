@@ -47,6 +47,26 @@ local javascript_snippets = {
     snippet('import', "import ${0:thing} from '${1:package}';"),
     snippet('imp', "import ${0:thing} from '${1:package}';"),
 }
+local markdown_snippets = {
+    snippet(
+        'table',
+        M.lines({
+            '| First Header  | Second Header |',
+            '| ------------- | ------------- |',
+            '| Content Cell  | Content Cell  |',
+            '| Content Cell  | Content Cell  |',
+        })
+    ),
+    snippet('img', [[![${1:alt}]($0)]]),
+    snippet(
+        'details',
+        M.lines({
+            '<details><summary>${1:tldr}</summmary>',
+            '$0',
+            '</details>',
+        })
+    ),
+}
 local global_snippets = {
     snippet('shebang', '#!/bin sh'),
 }
@@ -61,26 +81,9 @@ local snippets_by_filetype = {
             })
         ),
     },
-    markdown = {
-        snippet(
-            'table',
-            M.lines({
-                '| First Header  | Second Header |',
-                '| ------------- | ------------- |',
-                '| Content Cell  | Content Cell  |',
-                '| Content Cell  | Content Cell  |',
-            })
-        ),
-        snippet('img', [[![${1:alt}]($0)]]),
-        snippet(
-            'details',
-            M.lines({
-                '<details><summary>${1:tldr}</summmary>',
-                '$0',
-                '</details>',
-            })
-        ),
-    },
+    markdown = markdown_snippets,
+    gitcommit = markdown_snippets,
+    hgcommit = markdown_snippets,
     ['javascript'] = javascript_snippets,
     ['javascript.jsx'] = javascript_snippets,
     ['javascriptreact'] = javascript_snippets,
