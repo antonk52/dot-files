@@ -2,12 +2,10 @@ local M = {}
 
 local _is_inside_git_repo = nil
 local function is_inside_git_repo()
-    if _is_inside_git_repo ~= nil then
-        return _is_inside_git_repo
-    else
+    if _is_inside_git_repo == nil then
         _is_inside_git_repo = vim.fs.root(0, '.git') ~= nil
-        return _is_inside_git_repo
     end
+    return _is_inside_git_repo
 end
 ---@return string[]
 local function get_nongit_ignore_patterns()
@@ -17,9 +15,7 @@ local function get_nongit_ignore_patterns()
         local ignore_lines = vim.fn.readfile(gitignore_path)
 
         return vim.tbl_filter(function(line)
-            if vim.startswith(line, '#') then
-                return false
-            elseif vim.trim(line) == '' then
+            if vim.startswith(line, '#') or vim.trim(line) == '' then
                 return false
             else
                 return true
@@ -66,7 +62,7 @@ function M.dots()
     require('telescope.builtin').find_files({
         prompt_title = 'dot files',
         shorten_path = false,
-        cwd = '~/dot-files/',
+        cwd = '~/dot-files',
         hidden = true,
     })
 end
@@ -168,6 +164,7 @@ function M.git_diff(opts)
 end
 
 function M.setup()
+    ---@diagnostic disable-next-line: redundant-parameter
     require('telescope').setup({
         defaults = {
             borderchars = {
@@ -198,7 +195,7 @@ function M.setup()
     vim.keymap.set('n', '<leader>T', '<cmd>Telescope<cr>', { desc = 'All telescope builtin pickers' })
     vim.keymap.set('n', '<leader>/', M.action_buffer_lines)
     vim.keymap.set('n', '<leader>?', '<cmd>Telescope lsp_document_symbols<cr>', { desc = 'Document symbols' })
-    -- like `Telescope commands but stips unused bang and nargs`
+    -- like `Telescope commands but strips unused bang and nargs`
     vim.keymap.set('n', '<leader>;', function()
         local entry_display = require('telescope.pickers.entry_display')
         local make_entry = require('telescope.make_entry')

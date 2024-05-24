@@ -42,18 +42,17 @@ local plugins = {
 
             require('conform').setup({
                 format_on_save = function()
-                    if
-                        (
+                    return {
+                        timeout_ms = 5000,
+                        lsp_fallback = (
                             vim.fs.basename(vim.api.nvim_buf_get_name(0)) ~= 'lazy-lock.json'
                             and vim.startswith(vim.uv.cwd(), '/Users/antonk52/dot-files')
                         )
-                        or vim.tbl_contains(
-                            { 'typescript', 'typescriptreact', 'javascript', 'javascriptreact' },
-                            vim.bo.filetype
-                        )
-                    then
-                        return { timeout_ms = 5000, lsp_fallback = true }
-                    end
+                            or vim.tbl_contains(
+                                { 'typescript', 'typescriptreact', 'javascript', 'javascriptreact' },
+                                vim.bo.filetype
+                            ),
+                    }
                 end,
                 formatters_by_ft = {
                     lua = { 'stylua' },
@@ -69,6 +68,7 @@ local plugins = {
                 require('conform').format()
             end, {})
         end,
+        event = 'VeryLazy',
     },
     {
         'antonk52/markdowny.nvim',
