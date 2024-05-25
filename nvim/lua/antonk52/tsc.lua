@@ -27,16 +27,17 @@ local function lookdownTSConfigDir()
     end
 end
 
-local function callTSC(opts)
+---@param cwd string?
+local function callTSC(cwd)
     vim.schedule(function()
         vim.notify('Running tsc…', vim.log.levels.INFO, { title = 'tsc' })
     end)
     local project_cwd = vim.uv.cwd()
-    opts = vim.tbl_extend('force', { args = {}, cwd = project_cwd }, opts or {})
+    cwd = cwd or project_cwd
     local errors = {}
 
     local filename_prefix = string.sub(
-        opts.cwd,
+        cwd,
             -- 2 for the next slash too
         #project_cwd + 2
     )
@@ -46,13 +47,13 @@ local function callTSC(opts)
     local job = Job:new({
         command = vim.fn.executable('bunx') == 1 and 'bunx' or 'npx',
         args = { 'tsc', '--noEmit', '--pretty', 'false' },
-        cwd = opts.cwd or project_cwd,
+        cwd = cwd,
         on_stdout = function(_, data)
             local lines = vim.split(data, '\n')
             for _, line in ipairs(lines) do
                 if line ~= '' then
-                    local filename, line_number, col, _err, code, message =
-                        line:match('(%g+)%((%d+),(%d+)%): (%a+) (%g+): (.+)')
+                    local filename, line_number, col, code, message =
+                        line:match('(%g+)%((%d+),(%d+)%): %a+ (%g+): (.+)')
                     if filename ~= nil then
                         table.insert(errors, {
                             -- vim.fs.joinpath returns absolute like path if first arg is empty string
@@ -94,28 +95,16 @@ local function callTSC(opts)
     job:start()
 end
 
--- from buffer to root
-function M.run_local()
-    callTSC({
-        cwd = vim.fs.root(0, TSC_ROOT_FILES),
-    })
-end
-
-function M.run_global()
-    callTSC({
-        cwd = lookdownTSConfigDir(),
-    })
-end
-
 function M.setup()
     vim.api.nvim_create_user_command('TscRunGlobal', function()
-        M.run_global()
+        callTSC(lookdownTSConfigDir())
     end, {
         nargs = 0,
         desc = 'Run tsc next the blosest package.json/tsconfig/jsconfig to cwd',
     })
     vim.api.nvim_create_user_command('TscRunLocal', function()
-        M.run_local()
+        -- from buffer to root
+        callTSC(vim.fs.root(0, TSC_ROOT_FILES))
     end, {
         nargs = 0,
         desc = 'Run tsc next the closest package.json/tsconfig/jsconfig to current buffer',
