@@ -512,10 +512,6 @@ if not vim.g.vscode then
     vim.opt.termguicolors = vim.env.__CFBundleIdentifier ~= 'com.apple.Terminal'
 end
 
--- no numbers by default
-vim.opt.number = false
-vim.opt.relativenumber = false
-
 -- search made easy
 vim.opt.hlsearch = false
 vim.opt.inccommand = 'split'
@@ -537,9 +533,6 @@ vim.opt.shiftround = true
 vim.opt.shortmess = vim.opt.shortmess + 'A'
 -- no splash screen
 vim.opt.shortmess = vim.opt.shortmess + 'I'
-
--- detect filechanges outside of the editor
-vim.opt.autoread = true
 
 -- indent wrapped lines to match start
 vim.opt.breakindent = true
@@ -572,9 +565,6 @@ vim.opt.linebreak = true
 -- always keep 3 lines around the cursor
 vim.opt.scrolloff = 3
 vim.opt.sidescrolloff = 3
-
--- enable mouse scroll and select
-vim.opt.mouse = 'a'
 
 -- persistent undo
 vim.opt.undofile = true
