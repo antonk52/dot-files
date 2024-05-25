@@ -50,7 +50,7 @@ local function add()
     -- no need to escape for fn.mkdir or fn.writefile
     local new_path = vim.fn.input('Enter the new node path: ', vim.fn.expand('%'), 'file')
 
-    if vim.fn.filereadable(new_path) == 1 or vim.fn.isdirectory(new_path) == 1 then
+    if vim.uv.fs_stat(new_path) or vim.fn.isdirectory(new_path) == 1 then
         vim.notify('Already exists', vim.log.levels.WARN)
     else
         if vim.endswith(new_path, '/') then

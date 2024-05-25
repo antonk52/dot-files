@@ -5,7 +5,7 @@ local function run_cmd_and_exit(cmd)
     return function()
         local buf_name = vim.api.nvim_buf_get_name(0)
         if string.find(cmd, '%%') then
-            if vim.fn.filereadable(buf_name) == 0 then
+            if not vim.uv.fs_stat(buf_name) then
                 return vim.notify('Buffer is not a file', vim.log.levels.ERROR)
             end
             cmd = string.gsub(cmd, '%%', buf_name)

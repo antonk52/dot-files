@@ -411,7 +411,7 @@ if vim.env.WORK_PLUGIN_PATH ~= nil then
         name = vim.env.WORK_PLUGIN_PATH,
         config = function()
             local local_init_lua = vim.fs.normalize('~/.config/local_init.lua')
-            if vim.fn.filereadable(local_init_lua) == 1 and not vim.g.vscode then
+            if vim.uv.fs_stat(local_init_lua) and not vim.g.vscode then
                 vim.cmd.luafile(local_init_lua)
             else
                 vim.notify('No ~/.config/local_init.lua', vim.log.levels.ERROR)

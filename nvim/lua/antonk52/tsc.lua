@@ -20,7 +20,7 @@ local function lookdownTSConfigDir()
     for _, current_dir in ipairs(dirs_from_cwd_to_buf) do
         for _, file in ipairs(TSC_ROOT_FILES) do
             local filepath = vim.fs.join(current_dir, file)
-            if vim.fn.filereadable(filepath) == 1 then
+            if vim.uv.fs_stat(filepath) then
                 return current_dir
             end
         end

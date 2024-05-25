@@ -4,7 +4,7 @@ local NOTES_PATH = vim.fn.expand(vim.env.NOTES_PATH)
 function M.source_rus_keymap()
     local filename = 'keymap/russian-jcukenmac.vim'
     local rus_keymap = vim.trim(vim.fn.globpath(vim.o.rtp, filename))
-    if vim.fn.filereadable(rus_keymap) then
+    if vim.uv.fs_stat(rus_keymap) then
         vim.cmd.source(rus_keymap)
     else
         print('Cannot locate Russian keymap file named "' .. filename .. '" in runtime path')

@@ -162,9 +162,9 @@ M.servers = {
             main = vim.fn.expand(local_prefix .. 'main.lua'),
         }
 
-        local BIN = (vim.fn.filereadable(GLOBAL_BIN.bin) == 1) and GLOBAL_BIN or LOCAL_BIN
+        local BIN = vim.uv.fs_stat(GLOBAL_BIN.bin) and GLOBAL_BIN or LOCAL_BIN
 
-        if vim.fn.filereadable(BIN.bin) ~= 1 then
+        if not vim.uv.fs_stat(BIN.bin) then
             vim.notify('lua-language-server is not installed or cannot be found', vim.log.levels.WARN)
             return nil
         end

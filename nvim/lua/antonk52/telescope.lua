@@ -11,7 +11,7 @@ end
 local function get_nongit_ignore_patterns()
     local gitignore_path = vim.fs.joinpath(vim.uv.cwd(), '.gitignore')
     -- we are not in a git repository, but we have .gitignore(mercurial)
-    if vim.fn.filereadable(gitignore_path) == 1 then
+    if vim.uv.fs_stat(gitignore_path) then
         local ignore_lines = vim.fn.readfile(gitignore_path)
 
         return vim.tbl_filter(function(line)
