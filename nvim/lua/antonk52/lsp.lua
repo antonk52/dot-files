@@ -5,10 +5,7 @@ local M = {}
 local function cross_lsp_definition()
     local util = require('vim.lsp.util')
     local req_params = util.make_position_params()
-    local all_clients = vim.lsp.get_clients({
-        bufnr = 0,
-        method = 'textDocument/definition',
-    })
+    local all_clients = vim.lsp.get_clients({ bufnr = 0, method = 'textDocument/definition' })
 
     if #all_clients == 0 then
         return vim.notify('No LSP attached with definition support', vim.log.levels.WARN)
@@ -105,9 +102,7 @@ M.servers = {
             require('twoslash-queries').attach(client, bufnr)
         end,
         settings = {
-            completions = {
-                completeFunctionCalls = true,
-            },
+            completions = { completeFunctionCalls = true },
             includeCompletionsWithSnippetText = true,
             includeCompletionsForImportStatements = true,
         },
@@ -130,9 +125,7 @@ M.servers = {
     cssls = {},
 
     cssmodules_ls = {
-        init_options = {
-            camelCase = 'dashes',
-        },
+        init_options = { camelCase = 'dashes' },
     },
 
     biome = {},
@@ -202,15 +195,9 @@ M.servers = {
                         checkThirdParty = 'Disable',
                     },
                     -- Do not send telemetry data containing a randomized but unique identifier
-                    telemetry = {
-                        enable = false,
-                    },
-                    completion = {
-                        callSnippet = 'Replace',
-                    },
-                    codeLens = {
-                        enable = true,
-                    },
+                    telemetry = { enable = false },
+                    completion = { callSnippet = 'Replace' },
+                    codeLens = { enable = true },
                 },
             },
         }
@@ -246,9 +233,7 @@ function M.setup()
         severity_sort = true, -- show errors first
     })
     -- add border to hover popup
-    vim.lsp.handlers['textDocument/hover'] = vim.lsp.with(vim.lsp.handlers.hover, {
-        border = 'single',
-    })
+    vim.lsp.handlers['textDocument/hover'] = vim.lsp.with(vim.lsp.handlers.hover, { border = 'single' })
     vim.lsp.handlers['textDocument/definition'] = vim.lsp.with(cross_lsp_definition, {})
 
     local capabilities = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities())
@@ -262,9 +247,7 @@ function M.setup()
         if opts ~= nil then
             local final_options = vim.tbl_deep_extend('force', {
                 capabilities = capabilities,
-                flags = {
-                    debounce_text_changes = 150,
-                },
+                flags = { debounce_text_changes = 150 },
             }, opts)
 
             lspconfig[lsp].setup(final_options)

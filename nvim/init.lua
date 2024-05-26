@@ -270,7 +270,7 @@ local plugins = {
                 require('git.browse').open(false)
             end, { bang = true })
         end,
-        cmd = { 'GitBrowse', 'GitBlame' },
+        cmd = { 'GitBrowse', 'GitBlame', 'Git' },
     },
     {
         'echasnovski/mini.nvim',
