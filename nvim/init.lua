@@ -21,9 +21,7 @@ vim.opt.rtp:prepend(lazypath)
 local plugins = {
     {
         'neovim/nvim-lspconfig', -- types & linting
-        dependencies = {
-            'b0o/schemastore.nvim', -- json schemas for json lsp
-        },
+        dependencies = { 'b0o/schemastore.nvim' }, -- json schemas for json lsp
         config = function()
             vim.opt.updatetime = 300
             vim.opt.shortmess = vim.opt.shortmess + 'c'
@@ -112,9 +110,7 @@ local plugins = {
     },
     {
         'nvim-pack/nvim-spectre', -- global search and replace
-        dependencies = {
-            'nvim-lua/plenary.nvim',
-        },
+        dependencies = { 'nvim-lua/plenary.nvim' },
         config = function()
             require('spectre').setup()
             vim.api.nvim_create_user_command('FindAndReplace', function()
@@ -143,7 +139,12 @@ local plugins = {
     },
     {
         'antonk52/npm_scripts.nvim',
-        opts = {},
+        opts = {
+            run_script = function(opts)
+                vim.cmd('tabnew | term cd ' .. opts.path .. ' && ' .. opts.package_manager .. ' run ' .. opts.name)
+                vim.cmd.file('term:' .. opts.name)
+            end,
+        },
         keys = { { '<leader>N', '<cmd>lua require("npm_scripts").run_from_all()<cr>', desc = 'Run npm script' } },
     },
     {
@@ -154,9 +155,7 @@ local plugins = {
     { 'marilari88/twoslash-queries.nvim', ft = { 'javascript', 'javascriptreact', 'typescript', 'typescriptreact' } },
     {
         'nvim-treesitter/nvim-treesitter',
-        dependencies = {
-            'nvim-treesitter/nvim-treesitter-textobjects',
-        },
+        dependencies = { 'nvim-treesitter/nvim-treesitter-textobjects' },
         -- only updates parsers that need an update
         build = ':TSUpdate',
         config = function()
@@ -205,9 +204,7 @@ local plugins = {
     },
     {
         'nvim-telescope/telescope.nvim',
-        dependencies = {
-            'nvim-lua/plenary.nvim',
-        },
+        dependencies = { 'nvim-lua/plenary.nvim' },
         config = function()
             require('antonk52.telescope').setup()
         end,
@@ -217,9 +214,7 @@ local plugins = {
         -- after updating to nvim 0.10
         'utilyre/barbecue.nvim',
         version = '*',
-        dependencies = {
-            'SmiteshP/nvim-navic',
-        },
+        dependencies = { 'SmiteshP/nvim-navic' },
         config = function()
             local function theme()
                 return {
@@ -231,9 +226,6 @@ local plugins = {
                 }
             end
             require('barbecue').setup({
-                symbols = {
-                    separator = '/',
-                },
                 exclude_filetypes = { 'netrw', 'toggleterm', 'dirvish', 'hgssl', 'hghistory', 'hgcommit' },
                 theme = theme(),
             })
