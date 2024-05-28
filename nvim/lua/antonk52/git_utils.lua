@@ -69,6 +69,9 @@ local function git_status()
         if out.code ~= 0 then
             return vim.notify('Failed to run git status\n' .. out.stderr, vim.log.levels.ERROR)
         end
+        -- "XY foo/bar.baz"
+        -- X shows the status of the index
+        -- Y shows the status of the working tree
         local lines = vim.split(out.stdout, '\n')
         vim.api.nvim_buf_set_lines(buf, 0, -1, false, lines)
         for i, line in ipairs(lines) do
@@ -102,6 +105,39 @@ local function git_status()
 
     -- add keymaps
     do
+        vim.keymap.set('n', '<cr>', function()
+            local line = vim.api.nvim_get_current_line()
+            local mode = vim.trim(line:sub(1, 2))
+            local mode_to_commands = {
+                ['??'] = { 'add', 'rm' },
+                ['M'] = { 'add', 'rm', 'reset' },
+                ['D'] = { 'add', 'rm', 'reset' },
+                ['A'] = { 'add', 'rm', 'reset' },
+                ['R'] = { 'add', 'rm', 'reset' },
+            }
+            if not mode_to_commands[mode] then
+                return vim.notify('Not a file under cursor', vim.log.levels.ERROR)
+            end
+            local path = line:match('..%s*(.*)')
+
+            vim.ui.select(mode_to_commands[mode], {
+                prompt = 'Command to run:',
+            }, function(pick)
+                if not pick or pick == '' then
+                    return
+                end
+
+                local out = vim.system({ 'git', pick, path }, nil):wait()
+                if out.code ~= 0 then
+                    return vim.notify(
+                        'Failed to run "git ' .. pick .. ' ' .. path .. '"\n' .. out.stderr,
+                        vim.log.levels.ERROR
+                    )
+                end
+
+                update_status(buf)
+            end)
+        end, { buffer = true, desc = 'Command picker for file under cursor' })
         local char_to_command = {
             a = 'add',
             r = 'reset',
@@ -121,7 +157,7 @@ local function git_status()
                 end
 
                 update_status(buf)
-            end, { desc = 'git ' .. command .. ' file', buf = buf })
+            end, { desc = 'git ' .. command .. ' file', buffer = buf })
         end
     end
 end
