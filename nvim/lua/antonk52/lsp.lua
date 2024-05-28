@@ -190,7 +190,13 @@ M.servers = {
                     },
                     workspace = {
                         -- Make the server aware of Neovim runtime files
-                        library = vim.api.nvim_get_runtime_file('', true),
+                        library = vim.list_extend(vim.api.nvim_get_runtime_file('', true), {
+                            'lua',
+                            'nvim-test',
+                            '${3rd}/busted/library',
+                            '${3rd}/luaassert/library',
+                            '${3rd}/luv/library',
+                        }),
                         maxPreload = 10000,
                         checkThirdParty = 'Disable',
                     },
