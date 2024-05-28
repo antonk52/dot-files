@@ -142,7 +142,7 @@ local plugins = {
         opts = {
             run_script = function(opts)
                 vim.cmd('tabnew | term cd ' .. opts.path .. ' && ' .. opts.package_manager .. ' run ' .. opts.name)
-                vim.cmd.file('term:' .. opts.name)
+                vim.cmd.file('npm:' .. opts.name)
             end,
         },
         keys = { { '<leader>N', '<cmd>lua require("npm_scripts").run_from_all()<cr>', desc = 'Run npm script' } },
@@ -829,11 +829,13 @@ if not vim.g.vscode then
             ['.eslintrc.json'] = 'jsonc',
         },
         pattern = {
-            ['*.mdx'] = 'markdown',
-            ['*.scm'] = 'scheme',
             ['jsconfig*.json'] = 'jsonc',
             ['tsconfig*.json'] = 'jsonc',
             ['.*/%.vscode/.*%.json'] = 'jsonc',
+        },
+        extension = {
+            mdx = 'markdown',
+            scm = 'scheme',
         },
     })
 
