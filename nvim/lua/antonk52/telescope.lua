@@ -259,10 +259,13 @@ function M.setup()
     if is_inside_git_repo() then
         vim.api.nvim_create_user_command('TelescopeGitDiff', function()
             M.git_diff()
-        end, { desc = 'git hunk picker' })
+        end, { desc = 'git diff hunk picker' })
         vim.api.nvim_create_user_command('TelescopeGitDiffIgnoreAllSpace', function()
             M.git_diff({ cmd = { 'git', 'diff', '--ignore-all-space' } })
-        end, { desc = 'git hunk picker' })
+        end, { desc = 'git diff hunk picker ignoring space changes' })
+        vim.api.nvim_create_user_command('TelescopeGitDiffStaged', function()
+            M.git_diff({ cmd = { 'git', 'diff', '--staged' } })
+        end, { desc = 'git staged hunk picker' })
     end
 end
 
