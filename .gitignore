@@ -1,6 +1,7 @@
 nvim/autoload/plug.vim
 nvim/.netrwhist
 nvim/plugged
+nvim/lua/antonk52/work.lua
 nvim/spell/*
 !nvim/spell/*.add
 

@@ -260,7 +260,7 @@ local plugins = {
 
             vim.api.nvim_create_user_command('GitBrowse', function()
                 require('git.browse').open(false)
-            end, { bang = true })
+            end, { bang = true, nargs = 0 })
         end,
         cmd = { 'GitBrowse', 'GitBlame', 'Git' },
     },
@@ -329,7 +329,6 @@ local plugins = {
                 tailwind = true,
             },
         },
-        config = true,
     },
     'antonk52/lake.nvim',
     {
@@ -394,23 +393,19 @@ local plugins = {
         end,
         cmd = 'ColorLight',
     },
-}
-
--- Dayjob specific {{{2
-if vim.env.WORK_PLUGIN_PATH ~= nil then
-    table.insert(plugins, {
-        dir = vim.fn.expand(vim.env.WORK_PLUGIN_PATH),
-        name = vim.env.WORK_PLUGIN_PATH,
+    {
+        -- enabled = vim.env.WORK_PLUGIN_PATH ~= nil,
+        dir = vim.fn.expand(vim.env.WORK_PLUGIN_PATH or 'noop'),
+        name = vim.env.WORK_PLUGIN_PATH or 'work',
         config = function()
-            local local_init_lua = vim.fs.normalize('~/.config/local_init.lua')
-            if vim.uv.fs_stat(local_init_lua) and not vim.g.vscode then
-                vim.cmd.luafile(local_init_lua)
-            else
-                vim.notify('No ~/.config/local_init.lua', vim.log.levels.ERROR)
+            local ok, work = pcall(require, 'antonk52.work')
+            if not ok then
+                return vim.notify('Could not load antonk52.work', vim.log.levels.ERROR)
             end
+            work.setup()
         end,
-    })
-end
+    },
+}
 
 require('lazy').setup(plugins, {
     root = PLUGINS_LOCATION,

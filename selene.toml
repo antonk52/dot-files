@@ -1,5 +1,6 @@
 std = "neovim"
-exclude = ["nvim/plugged/*"]
+exclude = ["nvim/plugged/*", "nvim/lua/antonk52/work.lua"]
+
 
 [rules]
 global_usage = "allow"
