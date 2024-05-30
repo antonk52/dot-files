@@ -35,10 +35,9 @@ brew install procs # ps in rust
 brew install ripgrep
 brew install tmux # terminal multiplexer
 brew install tree # cli to display directories as trees
-brew install vim # get the recent vim version
 brew install wget # cli to download stuff
 brew install yarn # npm alternative
-brew install zsh # bash but better
+brew install zsh # updated version
 
 if [[ -z "${PERSONAL}" ]]; then
     brew install freetype # library to render fonts
