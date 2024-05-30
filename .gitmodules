@@ -7,3 +7,6 @@
 [submodule "dependencies/zsh-autosuggestions"]
 	path = dependencies/zsh-autosuggestions
 	url = https://github.com/zsh-users/zsh-autosuggestions
+[submodule "dependencies/zsh-z"]
+	path = dependencies/zsh-z
+	url = https://github.com/agkozak/zsh-z.git

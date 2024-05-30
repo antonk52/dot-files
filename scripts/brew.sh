@@ -14,7 +14,6 @@ brew upgrade
 
 brew tap clementtsang/bottom
 
-brew install autojump # smart cd
 brew install bat # modern cat
 brew install bottom # top/htop alternative
 brew install dust # like du but more intuitive.

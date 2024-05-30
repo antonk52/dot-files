@@ -145,17 +145,10 @@ LOCAL_SHELLRC="$XDG_CONFIG_HOME"/local_shellrc
 # if you need ruby, do use this
 # eval "$(rbenv init -)"
 
-# $HOMEBREW_PREFIX is not set on intel machines
-homebrew_default_autojump_file="${HOMEBREW_PREFIX:-/usr/local}"/etc/profile.d/autojump.sh
-# when using local homebrew instead of globally installed one
-homebrew_local_autojump_file="$HOME"/homebrew/var/homebrew/linked/autojump/etc/profile.d/autojump.sh
-# needed for `j` (autojump) to work
-if [ -f "$homebrew_default_autojump_file" ]
-then
-    . "$homebrew_default_autojump_file"
-elif [ -f "$homebrew_local_autojump_file" ]
-then
-    . "$homebrew_local_autojump_file"
+autojump_path="$DOT_FILES"/dependencies/zsh-z/zsh-z.plugin.zsh
+if [ -f "$autojump_path" ]; then
+    ZSHZ_CMD=j
+    source "$autojump_path"
 fi
 
 # bun completions
