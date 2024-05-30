@@ -19,8 +19,6 @@ alias ..='cd ..'
 alias ...='cd ../..'
 alias ....='cd ../../..'
 alias .....='cd ../../../..'
-alias .4='cd ../../../../'
-alias .5='cd ../../../../..'
 alias compare='diff -rq'
 
 # git
@@ -36,7 +34,6 @@ alias tst='tmux start-server'
 alias tks='tmux kill-server'
 alias tl='tmux list-sessions'
 alias ta='tmux attach -t'
-alias tmuxr='tmuxinator'
 
 # start a named session by providing a name
 # or a blank session by calling `tm`
@@ -49,12 +46,6 @@ function tm()
     tmux
   fi
 }
-
-alias listnodes='ps -e|grep node'
-
-# linux aliases
-alias agi='sudo apt-get install'
-alias update='sudo apt-get update && sudo apt-get upgrade && sudo apt-get dist-upgrade'
 
 # other aliases
 alias e='exit'
@@ -69,15 +60,11 @@ alias chux='chmod u+x'
 # to display week starting from Monday
 alias cal='cal -m &> /dev/null && cal -m || cal'
 
-alias bang='notify -t "Well hello there" -m "Your time has come" -i "https://thenib.imgix.net/usq/1d97429f-4a64-4d52-bfdb-c36172c05228/this-is-not-fine-001-dae9d5.png" >/dev/null 2>&1'
-alias imgcat='~/dot-files/scripts/imgcat'
-
 export NOTES_PATH="$HOME"/Documents/notes
 function notes()
 {
   YEAR="$(date '+%Y')"
   MONTH="$(date '+%m')"
-  WEEK="$(date '+%W')"
   FILE_PATH="$NOTES_PATH"/"$YEAR"/"$MONTH".md
 
   if [ ! -d "$DIR_PATH" ]; then
@@ -128,15 +115,8 @@ function repo_url()
         | sed 's/^https\//https:/'
 }
 
-# open macos dictionary for a word
-function define() {
-    open "dict://$1"
-}
-
-alias dict="define"
-
 # brew_upgrade_outdated
-function brew_upgrade_outdated() {
+function bu() {
     echo "Updating Homebrew…"
     brew update
     # List outdated packages and use fzf to allow the user to select multiple packages
@@ -150,7 +130,6 @@ function brew_upgrade_outdated() {
         echo "No packages selected for upgrade."
     fi
 }
-alias bu="brew_upgrade_outdated"
 alias bua="brew update --all && brew upgrade && brew cleanup --quiet"
 function docker_stop_all() {
     docker stop $(docker ps -q)
