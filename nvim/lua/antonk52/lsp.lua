@@ -234,7 +234,7 @@ function M.setup()
                 [vim.diagnostic.severity.HINT] = '◉',
                 [vim.diagnostic.severity.INFO] = '◉',
             },
-            severity = vim.diagnostic.severity.ERROR,
+            severity = vim.diagnostic.severity.WARN,
         },
         severity_sort = true, -- show errors first
     })

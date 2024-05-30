@@ -3,6 +3,7 @@ local hi_next = function(group)
     return '%#' .. group .. '#'
 end
 
+---@type table<string, string> | nil
 local lsp_status_cache = nil
 function M.lsp_init()
     if not lsp_status_cache then
@@ -58,7 +59,7 @@ end
 
 function M.filename()
     local buf_path = vim.api.nvim_buf_get_name(0)
-    local cwd = vim.uv.cwd()
+    local cwd = vim.uv.cwd() or vim.fn.getcwd()
     -- if you open a file outside of nvim cwd it should not cut the filepath
     local expanded = vim.startswith(buf_path, cwd) and buf_path:sub(2 + #cwd) or buf_path
     local filename_str = expanded == '' and '[No Name]' or expanded
@@ -191,7 +192,7 @@ function M.setup()
                 throttle_timer = nil
                 M.refresh_lsp_status()
                 vim.cmd.redrawstatus()
-            end, 80)
+            end, 120)
         end,
     })
     vim.api.nvim_create_autocmd('DiagnosticChanged', {

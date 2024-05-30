@@ -44,7 +44,7 @@ local plugins = {
                         timeout_ms = 5000,
                         lsp_fallback = (
                             vim.fs.basename(vim.api.nvim_buf_get_name(0)) ~= 'lazy-lock.json'
-                            and vim.startswith(vim.uv.cwd(), '/Users/antonk52/dot-files')
+                            and vim.startswith(vim.uv.cwd() or vim.fn.getcwd(), '/Users/antonk52/dot-files')
                         )
                             or vim.tbl_contains(
                                 { 'typescript', 'typescriptreact', 'javascript', 'javascriptreact' },
@@ -394,9 +394,8 @@ local plugins = {
         cmd = 'ColorLight',
     },
     {
-        -- enabled = vim.env.WORK_PLUGIN_PATH ~= nil,
         dir = vim.fn.expand(vim.env.WORK_PLUGIN_PATH or 'noop'),
-        name = vim.env.WORK_PLUGIN_PATH or 'work',
+        name = 'work', -- otherwise lazy.nvim errors when updates plugins
         config = function()
             local ok, work = pcall(require, 'antonk52.work')
             if not ok then
@@ -404,6 +403,7 @@ local plugins = {
             end
             work.setup()
         end,
+        event = 'VeryLazy',
     },
 }
 
