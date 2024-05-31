@@ -1,10 +1,8 @@
-local Job = require('plenary.job')
-
 local M = {}
 local TSC_ROOT_FILES = { 'tsconfig.json', 'jsconfig.json', 'package.json' }
 
 -- from cwd to buffer dir
----@return string|nil
+---@return string?
 local function lookdownTSConfigDir()
     local dirs_from_cwd_to_buf = {}
     local stop_dir = vim.uv.cwd()
@@ -19,7 +17,7 @@ local function lookdownTSConfigDir()
 
     for _, current_dir in ipairs(dirs_from_cwd_to_buf) do
         for _, file in ipairs(TSC_ROOT_FILES) do
-            local filepath = vim.fs.join(current_dir, file)
+            local filepath = vim.fs.joinpath(current_dir, file)
             if vim.uv.fs_stat(filepath) then
                 return current_dir
             end
@@ -32,9 +30,8 @@ local function callTSC(cwd)
     vim.schedule(function()
         vim.notify('Running tsc…', vim.log.levels.INFO, { title = 'tsc' })
     end)
-    local project_cwd = vim.uv.cwd()
+    local project_cwd = vim.uv.cwd() or vim.fn.getcwd()
     cwd = cwd or project_cwd
-    local errors = {}
 
     local filename_prefix = string.sub(
         cwd,
@@ -44,12 +41,20 @@ local function callTSC(cwd)
 
     local start_ms = vim.uv.now()
 
-    local job = Job:new({
-        command = vim.fn.executable('bunx') == 1 and 'bunx' or 'npx',
-        args = { 'tsc', '--noEmit', '--pretty', 'false' },
-        cwd = cwd,
-        on_stdout = function(_, data)
-            local lines = vim.split(data, '\n')
+    local bin = vim.fn.executable('bunx') == 1 and 'bunx' or 'npx'
+    vim.system({ bin, 'tsc', '--noEmit', '--pretty', 'false' }, { text = true, cwd = cwd }, function(obj)
+        local diff_sec = math.ceil((vim.uv.now() - start_ms) / 1000)
+        vim.schedule(function()
+            if obj.code == 0 then
+                return vim.notify('No errors (' .. diff_sec .. 's)', vim.log.levels.INFO, { title = 'tsc' })
+            elseif obj.stderr and vim.trim(obj.stderr) ~= '' then
+                vim.notify('tsc stderr:\n' .. tostring(obj.stderr), vim.log.levels.ERROR, { title = 'tsc' })
+            end
+            vim.notify('Tsc exited with errors. (' .. diff_sec .. 's)', vim.log.levels.ERROR, { title = 'tsc' })
+
+            ---@type any[]
+            local errors = {}
+            local lines = vim.split(obj.stdout or '', '\n')
             for _, line in ipairs(lines) do
                 if line ~= '' then
                     local filename, line_number, col, code, message =
@@ -66,33 +71,11 @@ local function callTSC(cwd)
                     end
                 end
             end
-        end,
-        on_stderr = function(_, data)
-            vim.schedule(function()
-                vim.notify('tsc exited with error\n' .. string(data), vim.log.levels.ERROR, { title = 'tsc' })
-            end)
-        end,
-        on_exit = function(_, return_val)
-            vim.schedule(function()
-                if return_val == 0 then
-                    vim.notify(
-                        'No errors (' .. math.ceil((vim.uv.now() - start_ms) / 1000) .. 's)',
-                        vim.log.levels.INFO,
-                        { title = 'tsc' }
-                    )
-                else
-                    vim.notify(
-                        'Tsc exited with errors. ' .. math.ceil((vim.uv.now() - start_ms) / 1000) .. 's',
-                        vim.log.levels.ERROR,
-                        { title = 'tsc' }
-                    )
-                    vim.fn.setqflist({}, ' ', { title = 'TSC Errors', items = errors })
-                    require('telescope.builtin').quickfix({})
-                end
-            end)
-        end,
-    })
-    job:start()
+
+            vim.fn.setqflist({}, ' ', { title = 'TSC Errors', items = errors })
+            require('telescope.builtin').quickfix({})
+        end)
+    end)
 end
 
 function M.setup()

@@ -1,4 +1,3 @@
-local Job = require('plenary.job')
 local M = {}
 ---@return string|nil
 local function lookupEslintConfig()
@@ -20,15 +19,24 @@ end
 
 function M.run()
     vim.notify('Running eslint…', vim.log.levels.INFO, { title = 'eslint' })
-    local errors = {}
     local start_ms = vim.uv.now()
 
-    local job = Job:new({
-        command = vim.fn.executable('bunx') == 1 and 'bunx' or 'npx',
-        args = { 'eslint', '.', '--ext=.ts,.tsx,.js,.jsx', '--format=unix' },
+    local bin = vim.fn.executable('bunx') == 1 and 'bunx' or 'npx'
+    vim.system({ bin, 'eslint', '.', '--ext=.ts,.tsx,.js,.jsx', '--format=unix' }, {
+        text = true,
         cwd = lookupEslintConfig() or vim.uv.cwd(),
-        on_stdout = function(_, data)
-            local lines = vim.split(data, '\n')
+    }, function(obj)
+        local diff_sec = math.ceil((vim.uv.now() - start_ms) / 1000)
+        vim.schedule(function()
+            if obj.code == 0 then
+                return vim.notify('No errors (' .. diff_sec .. 's)', vim.log.levels.INFO, { title = 'eslint' })
+            elseif obj.stderr and vim.trim(obj.stderr) ~= '' then
+                vim.notify('eslint stderr:\n' .. tostring(obj.stderr), vim.log.levels.ERROR, { title = 'eslint' })
+            end
+            vim.notify('Eslint exited with errors. ' .. diff_sec .. 's', vim.log.levels.ERROR, { title = 'eslint' })
+
+            local errors = {}
+            local lines = vim.split(obj.stdout or '', '\n')
             for _, line in ipairs(lines) do
                 if line ~= '' then
                     -- /foo/bar/filename.ts:15:7: any-message-text [Error/rule/name]
@@ -44,33 +52,10 @@ function M.run()
                     end
                 end
             end
-        end,
-        on_stderr = function(_, data)
-            vim.schedule(function()
-                vim.notify(vim.inspect(data), vim.log.levels.ERROR, { title = 'eslint' })
-            end)
-        end,
-        on_exit = function(_, return_val)
-            vim.schedule(function()
-                if return_val == 0 then
-                    vim.notify(
-                        'No errors (' .. (vim.uv.now() - start_ms) .. 'ms)',
-                        vim.log.levels.INFO,
-                        { title = 'eslint' }
-                    )
-                else
-                    vim.notify(
-                        'Eslint exited with errors. ' .. (vim.uv.now() - start_ms) .. 'ms',
-                        vim.log.levels.ERROR,
-                        { title = 'eslint' }
-                    )
-                    vim.fn.setqflist({}, ' ', { title = 'Eslint errors', items = errors })
-                    require('telescope.builtin').quickfix({})
-                end
-            end)
-        end,
-    })
-    job:start()
+            vim.fn.setqflist({}, ' ', { title = 'Eslint errors', items = errors })
+            require('telescope.builtin').quickfix({})
+        end)
+    end)
 end
 
 return M
