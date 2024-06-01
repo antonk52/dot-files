@@ -165,11 +165,12 @@ end
 
 function M.command_picker()
     local top_commands = vim.api.nvim_get_commands({})
+
     local items = {}
-    local max_name_length = 3
     for _, cmd in pairs(top_commands) do
         if
             cmd.nargs ~= '0' -- no arguments
+            and cmd.name ~= 'Man' -- 0 completions, but 200ms to complete the first time
             and cmd.complete -- has completion
             and not vim.list_contains({ 'dir', 'file', 'custom' }, cmd.complete) -- not an interactive completion
         then
@@ -183,7 +184,6 @@ function M.command_picker()
                 -- only handle one level deep subcommands
                 for _, sub_cmd_name in pairs(sub_cmds) do
                     local name = cmd.name .. ' ' .. sub_cmd_name
-                    max_name_length = math.max(max_name_length, #name)
 
                     table.insert(
                         items,
@@ -202,7 +202,8 @@ function M.command_picker()
     vim.ui.select(items, {
         prompt = 'Command picker',
         format_item = function(entry)
-            return entry.name .. string.rep(' ', max_name_length - #entry.name) .. (entry.definition or '')
+            local padding = string.rep(' ', math.max(32 - #entry.name, 2))
+            return entry.name .. padding .. (entry.definition or '')
         end,
     }, function(pick)
         if pick then

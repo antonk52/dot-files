@@ -334,15 +334,15 @@ local plugins = {
     {
         'projekt0n/github-nvim-theme',
         config = function()
-            require('github-theme').setup({
-                options = {
-                    styles = {
-                        comments = 'NONE',
-                        keywords = 'NONE',
-                    },
-                },
-            })
             vim.api.nvim_create_user_command('ColorLight', function()
+                require('github-theme').setup({
+                    options = {
+                        styles = {
+                            comments = 'NONE',
+                            keywords = 'NONE',
+                        },
+                    },
+                })
                 vim.cmd.color('github_light')
                 vim.cmd('hi! link MiniCursorWord Visual')
                 vim.cmd('hi! link MiniCursorWordCurrent CursorLine')
@@ -389,9 +389,9 @@ local plugins = {
                 vim.api.nvim_set_hl(0, 'Todo', { bg = c.red })
                 vim.api.nvim_set_hl(0, 'DiagnosticHint', { fg = t.scale.gray[5] })
                 vim.api.nvim_set_hl(0, 'Directory', { fg = c.blue, bold = true })
-            end, {})
+            end, { nargs = 0, desc = 'Set colorscheme to github-light' })
         end,
-        cmd = 'ColorLight',
+        event = 'VeryLazy',
     },
     {
         dir = vim.fn.expand(vim.env.WORK_PLUGIN_PATH or 'noop'),
