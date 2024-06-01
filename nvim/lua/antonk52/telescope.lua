@@ -163,6 +163,59 @@ function M.git_diff(opts)
         :find()
 end
 
+function M.command_picker()
+    local top_commands = vim.api.nvim_get_commands({})
+    local items = {}
+    local max_name_length = 3
+    for _, cmd in pairs(top_commands) do
+        if
+            cmd.nargs ~= '0' -- no arguments
+            and cmd.complete -- has completion
+            and not vim.list_contains({ 'dir', 'file', 'custom' }, cmd.complete) -- not an interactive completion
+        then
+            local sub_cmds = vim.fn.getcompletion(cmd.name .. ' ', 'cmdline')
+            if #sub_cmds == 0 then
+                table.insert(items, cmd)
+            else
+                if cmd.nargs == '?' then
+                    table.insert(items, cmd)
+                end
+                -- only handle one level deep subcommands
+                for _, sub_cmd_name in pairs(sub_cmds) do
+                    local name = cmd.name .. ' ' .. sub_cmd_name
+                    max_name_length = math.max(max_name_length, #name)
+
+                    table.insert(
+                        items,
+                        vim.tbl_extend('keep', {
+                            name = name,
+                            nargs = '0', -- enforce 0 args for sub commands by default
+                        }, cmd)
+                    )
+                end
+            end
+        else
+            table.insert(items, cmd)
+        end
+    end
+
+    vim.ui.select(items, {
+        prompt = 'Command picker',
+        format_item = function(entry)
+            return entry.name .. string.rep(' ', max_name_length - #entry.name) .. (entry.definition or '')
+        end,
+    }, function(pick)
+        if pick then
+            local cmd = ':' .. pick.name .. ' '
+            if pick.nargs == '0' then
+                cmd = cmd .. vim.api.nvim_replace_termcodes('<cr>', true, false, true)
+            end
+            vim.cmd.stopinsert()
+            vim.api.nvim_feedkeys(cmd, 'nt', false)
+        end
+    end)
+end
+
 function M.setup()
     ---@diagnostic disable-next-line: redundant-parameter
     require('telescope').setup({
@@ -195,44 +248,9 @@ function M.setup()
     vim.keymap.set('n', '<leader>T', '<cmd>Telescope<cr>', { desc = 'All telescope builtin pickers' })
     vim.keymap.set('n', '<leader>/', M.action_buffer_lines)
     vim.keymap.set('n', '<leader>?', '<cmd>Telescope lsp_document_symbols<cr>', { desc = 'Document symbols' })
-    -- like `Telescope commands but strips unused bang and nargs`
-    vim.keymap.set('n', '<leader>;', function()
-        local entry_display = require('telescope.pickers.entry_display')
-        local make_entry = require('telescope.make_entry')
-        local displayer = entry_display.create({
-            separator = '▏',
-            items = {
-                { width = 32 },
-                { width = 15 },
-                { remaining = true },
-            },
-        })
-        require('telescope.builtin').commands({
-            layout_config = {
-                horizontal = {
-                    width = 120,
-                },
-            },
-            entry_maker = function(entry)
-                return make_entry.set_default_entry_mt({
-                    name = entry.name,
-                    complete = entry.complete,
-                    definition = entry.definition,
-                    value = entry,
-                    ordinal = entry.name,
-                    display = function(e)
-                        return displayer({
-                            { e.name, 'TelescopeResultsIdentifier' },
-                            e.complete or '',
-                            e.definition:gsub('\n', ' '),
-                        })
-                    end,
-                })
-            end,
-        })
-    end, { desc = 'Command picker' })
+    -- Like `:Telescope commands` but shows subcommands and no bang / nargs in fuzzy picker
+    vim.keymap.set('n', '<leader>;', M.command_picker, { desc = 'Command picker' })
     vim.keymap.set('n', '<leader>r', '<cmd>Telescope resume<cr>', { desc = 'Resume picker' })
-    vim.api.nvim_create_user_command('Diagnostics', 'Telescope diagnostics', { desc = 'Buffer diagnostics picker' })
 
     -- Repro of Rg command from fzf.vim
     vim.api.nvim_create_user_command('Rg', function(a)
@@ -255,7 +273,6 @@ function M.setup()
         })
     end, { nargs = '+', desc = 'Searches exactly for the given string (including spaces)' })
 
-    vim.api.nvim_create_user_command('TelescopeLiveGrep', 'Telescope live_grep', {})
     if is_inside_git_repo() then
         vim.api.nvim_create_user_command('TelescopeGitDiff', function()
             M.git_diff()
