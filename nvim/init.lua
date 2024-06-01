@@ -440,7 +440,6 @@ require('lazy').setup(plugins, {
     },
     ui = {
         size = { width = 142, height = 0.95 },
-        border = 'single',
     },
 })
 
