@@ -71,7 +71,7 @@ local plugins = {
     {
         'antonk52/markdowny.nvim',
         ft = { 'markdown', 'hgcommit', 'gitcommit' },
-        opts = { filetypes = { 'markdown', 'hgcommit', 'gitcommit' } },
+        opts = {},
     },
     {
         'hrsh7th/nvim-cmp',
@@ -139,12 +139,6 @@ local plugins = {
     },
     {
         'antonk52/npm_scripts.nvim',
-        opts = {
-            run_script = function(opts)
-                vim.cmd('tabnew | term cd ' .. opts.path .. ' && ' .. opts.package_manager .. ' run ' .. opts.name)
-                vim.cmd.file('npm:' .. opts.name)
-            end,
-        },
         keys = { { '<leader>N', '<cmd>lua require("npm_scripts").run_from_all()<cr>', desc = 'Run npm script' } },
     },
     {
