@@ -19,7 +19,7 @@ local function move()
     local old_path = _escape(vim.trim(vim.fn.getline('.')))
     local new_path = _escape(vim.fn.input('New path: ', old_path, 'file'))
     _prep_dir(new_path)
-    vim.system({ 'mv', old_path, new_path }):wait()
+    vim.uv.fs_rename(old_path, new_path)
     vim.cmd.edit()
 end
 
@@ -52,17 +52,16 @@ local function add()
     local new_path = vim.fn.input('Enter the new node path: ', vim.fn.expand('%'), 'file')
 
     if vim.uv.fs_stat(new_path) then
-        vim.notify('Already exists', vim.log.levels.WARN)
+        return vim.notify('Already exists', vim.log.levels.WARN)
+    end
+    if vim.endswith(new_path, '/') then
+        vim.fn.mkdir(new_path, 'p')
     else
-        if vim.endswith(new_path, '/') then
-            vim.fn.mkdir(new_path, 'p')
-        else
-            _prep_dir(new_path)
-            local result = vim.fn.writefile({ '' }, new_path)
+        _prep_dir(new_path)
+        local result = vim.fn.writefile({ '' }, new_path)
 
-            if result == -1 then
-                vim.notify('Failed to create a file', vim.log.levels.ERROR)
-            end
+        if result == -1 then
+            vim.notify('Failed to create a file', vim.log.levels.ERROR)
         end
     end
 
