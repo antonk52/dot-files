@@ -64,7 +64,7 @@ function M.filename()
     local expanded = vim.startswith(buf_path, cwd) and buf_path:sub(2 + #cwd) or buf_path
     local filename_str = expanded == '' and '[No Name]' or expanded
     -- substitute other status line sections
-    local win_size = vim.fn.winwidth(0) - 28
+    local win_size = vim.api.nvim_win_get_width(0) - 28
     return win_size <= #filename_str and vim.fn.pathshorten(filename_str) or filename_str
 end
 local filetype_map = {

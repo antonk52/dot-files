@@ -69,8 +69,7 @@ end
 
 function M.git_diff(opts)
     opts = opts or {}
-    opts.cmd = opts.cmd or { 'git', 'diff' }
-    local output = vim.fn.systemlist(opts.cmd)
+    local output = vim.system(opts.cmd or { 'git', 'diff' }).stdout
     local results = {}
     local filename = nil
     local linenumber = nil

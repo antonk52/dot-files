@@ -50,7 +50,7 @@ local function download_gitignore_file()
         end
 
         local target_file = vim.api.nvim_buf_get_name(0)
-        if vim.fn.isdirectory(target_file) == 1 then
+        if vim.uv.fs_stat(target_file).type == 'directory' then
             target_file = vim.fs.joinpath(target_file, '.gitignore')
         else
             -- make sure that file is empty before appending to it

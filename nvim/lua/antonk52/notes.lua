@@ -48,7 +48,8 @@ function M.setup()
         pattern = '*',
         callback = function()
             local dirname = vim.fs.dirname(vim.api.nvim_buf_get_name(0))
-            if vim.fn.isdirectory(dirname) ~= 1 then
+            local stat = vim.uv.fs_stat(dirname)
+            if not stat or stat.type ~= 'directory' then
                 vim.fn.mkdir(dirname, 'p')
             end
         end,
