@@ -153,7 +153,6 @@ function M.git_diff(opts)
                     entry.value = entry.filename
                     entry.ordinal = entry.filename .. ':' .. entry.lnum
                     entry.display = entry.filename .. ':' .. entry.lnum
-                    entry.lnum = entry.lnum
                     return entry
                 end,
             }),
@@ -246,7 +245,6 @@ function M.setup()
     end, { desc = 'force show files igncluding ignored by .gitignore' })
     vim.keymap.set('n', '<leader>D', M.dots, { desc = 'Dot files file picker' })
     vim.keymap.set('n', '<leader>b', '<cmd>Telescope buffers<cr>', { desc = 'Buffer picker' })
-    vim.keymap.set('n', '<leader>T', '<cmd>Telescope<cr>', { desc = 'All telescope builtin pickers' })
     vim.keymap.set('n', '<leader>/', M.action_buffer_lines)
     vim.keymap.set('n', '<leader>?', '<cmd>Telescope lsp_document_symbols<cr>', { desc = 'Document symbols' })
     -- Like `:Telescope commands` but shows subcommands and no bang / nargs in fuzzy picker

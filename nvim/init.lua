@@ -440,7 +440,9 @@ require('lazy').setup(plugins, {
     },
     ui = {
         size = { width = 142, height = 0.95 },
+        pills = false,
     },
+    readme = { enabled = false },
 })
 
 -- Avoid startup work {{{1
@@ -616,6 +618,12 @@ do
             print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
         end, { desc = 'print workspace folders' })
         keymap.set('n', '<leader>ws', vim.lsp.buf.workspace_symbol, { desc = 'lsp workspace_symbol' })
+
+        keymap.set('n', '<C-`>', function()
+            require('lazy.util').float_term(nil, {
+                cwd = vim.uv.cwd() or vim.fn.getcwd(),
+            })
+        end, { desc = 'Open float term' })
     end
 end
 
