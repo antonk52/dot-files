@@ -1,24 +1,24 @@
-local job = require('plenary.job')
 local M = {}
 
 local ns = vim.api.nvim_create_namespace('test_js')
 
+---@param lines string[]
+---@param needle string
 local function find_line_with_text_in_buffer(lines, needle)
     -- escape special characters in needle
     needle = needle:gsub('+', '%%+'):gsub('-', '%%-') -- :gsub('*', '%%*'):gsub('/', '%%/'):gsub('%%', '%%%'):gsub('^', '%%^'):gsub('#', '%%#'):gsub('&', '%%&'):gsub('~', '%%~'):gsub('|', '%%|')
     for i, line in ipairs(lines) do
-        if line:find(needle) ~= nil then
+        if line:find(needle) then
             return i
         end
     end
-    return nil
 end
 
 local function get_test_runner_bin()
     local res = vim.fs.find({ 'node_modules/.bin/vitest', 'node_modules/.bin/jest' }, {
         upward = true,
-        stop = vim.uv.os_homedir() or vim.env.HOME,
-        path = vim.fs.dirname(vim.api.nvim_buf_get_name(0)),
+        stop = vim.uv.os_homedir(),
+        path = vim.api.nvim_buf_get_name(0),
     })
 
     if res[1] then
@@ -69,12 +69,11 @@ local function mark_parsed_json_output(bufnr, parsed_output)
             -- test can be nil if test timed out
             if test and test.location then
                 return test.location.line
-            else
-                lines = lines or vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
-                local res_line = find_line_with_text_in_buffer(lines, test.title)
-
-                return res_line
             end
+            lines = lines or vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
+            local res_line = find_line_with_text_in_buffer(lines, test.title)
+
+            return res_line
         end)()
 
         if line == nil then
@@ -106,54 +105,40 @@ end
 ---@param bufnr number
 ---@param bin string
 ---@param cwd string
----@param env table<string, string>
+---@param env ?table<string, string>
 local function run_vitest(bufnr, bin, cwd, env)
-    local stdout = ''
-    job:new({
-        command = bin,
-        args = { '--run', '--reporter=json', vim.api.nvim_buf_get_name(0) },
-        cwd = cwd,
-        env = env,
-        on_stdout = function(_, data)
-            -- vitest prettied json, needs concatitation
-            stdout = stdout .. data
-        end,
-        on_exit = function(_, _)
-            vim.schedule(function()
-                local out = vim.json.decode(stdout)
-                mark_parsed_json_output(bufnr, out)
-            end)
-        end,
-    }):start()
+    local cmd = { bin, '--run', '--reporter=json', vim.api.nvim_buf_get_name(0) }
+    vim.system(cmd, { text = true, cwd = cwd, env = env }, function(obj)
+        vim.schedule(function()
+            local out = vim.json.decode(obj.stdout)
+            mark_parsed_json_output(bufnr, out)
+        end)
+    end)
 end
 
 ---@param bufnr number
 ---@param bin string
 ---@param cwd string
----@param env table<string, string>
+---@param env ?table<string, string>
 local function run_jest(bufnr, bin, cwd, env)
     local tmp_file = vim.fn.tempname()
     local start = vim.uv.now()
-    job:new({
-        command = bin,
-        args = { '--json', '--outputFile=' .. tmp_file, '--testLocationInResults', vim.api.nvim_buf_get_name(0) },
-        cwd = cwd,
-        env = env or {},
-        -- plenary does not call on_stdout when jest outputs single line json in stdout,
-        -- instead lets write it to a file and read from it
-        on_exit = function(_, _, _)
+    vim.system(
+        { bin, '--json', '--outputFile=' .. tmp_file, '--testLocationInResults', vim.api.nvim_buf_get_name(0) },
+        { text = true, cwd = cwd, env = env },
+        function(_)
+            local finish = vim.uv.now() - start
             vim.schedule(function()
-                local finish = vim.uv.now() - start
                 vim.notify('Jest took ' .. finish .. 'ms', vim.log.levels.INFO)
                 if not vim.uv.fs_stat(tmp_file) then
-                    vim.notify('Output file is not readable\n' .. tmp_file, vim.log.levels.ERROR)
-                    return
+                    return vim.notify('Output file is not readable\n' .. tmp_file, vim.log.levels.ERROR)
                 end
-                ---string[]
-                local json_str = vim.fn.readfile(tmp_file)
+                -- jest outputs single line json in stdout
+                -- instead lets write it to a file and read from it
+                ---@type string[]
+                local json_str = vim.fn.readfile(tmp_file, '', 1)
                 if json_str == nil then
-                    vim.notify('No output from jest', vim.log.levels.ERROR)
-                    return
+                    return vim.notify('No output from jest', vim.log.levels.ERROR)
                 end
                 local parsed = vim.json.decode(json_str[1])
                 mark_parsed_json_output(bufnr, parsed)
@@ -161,10 +146,12 @@ local function run_jest(bufnr, bin, cwd, env)
                 -- cleanup
                 vim.uv.fs_unlink(tmp_file)
             end)
-        end,
-    }):start()
+        end
+    )
 end
 
+---@param bufnr ?number
+---@param opts ?any
 function M.run_buffer(bufnr, opts)
     bufnr = bufnr or vim.api.nvim_get_current_buf()
     opts = opts or {}
@@ -189,6 +176,8 @@ function M.run_buffer(bufnr, opts)
     end
 end
 
+---@param bufnr ?number
+---@param opts ?any
 function M.attach_to_buffer(bufnr, opts)
     M.run_buffer(bufnr or 0, opts)
     vim.api.nvim_create_autocmd('BufWritePost', {
@@ -204,10 +193,10 @@ end
 function M.setup()
     vim.api.nvim_create_user_command('TestRun', function()
         M.run_buffer()
-    end, {})
+    end, { nargs = 0 })
     vim.api.nvim_create_user_command('TestAttach', function()
         M.attach_to_buffer()
-    end, {})
+    end, { nargs = 0 })
 end
 
 return M
