@@ -6,14 +6,14 @@ vim.g.maplocalleader = ','
 local PLUGINS_LOCATION = vim.fs.normalize('~/dot-files/nvim/plugged')
 local lazypath = PLUGINS_LOCATION .. '/lazy.nvim'
 if not vim.uv.fs_stat(lazypath) then
-    vim.fn.system({
+    vim.system({
         'git',
         'clone',
         '--filter=blob:none',
         'https://github.com/folke/lazy.nvim.git',
         '--branch=stable', -- latest stable release
         lazypath,
-    })
+    }):wait()
 end
 vim.opt.rtp:prepend(lazypath)
 
@@ -102,8 +102,6 @@ local plugins = {
                     accept_line = c.accept_line,
                     dismiss = c.dismiss,
                 })
-            else
-                return print('no copilot at work')
             end
         end,
         event = 'VeryLazy',
@@ -152,56 +150,54 @@ local plugins = {
         dependencies = { 'nvim-treesitter/nvim-treesitter-textobjects' },
         -- only updates parsers that need an update
         build = ':TSUpdate',
-        config = function()
-            -- if you get "wrong architecture error
-            -- open nvim in macos native terminal app and run `:TSInstall`
-            require('nvim-treesitter.configs').setup({
-                ensure_installed = {
-                    'bash',
-                    'c',
-                    'cpp',
-                    'css',
-                    'graphql',
-                    'html',
-                    'javascript',
-                    'jsdoc',
-                    'json',
-                    'jsonc',
-                    'luadoc',
-                    'markdown',
-                    'markdown_inline',
-                    'php',
-                    'scss',
-                    'toml',
-                    'tsx',
-                    'typescript',
-                    'vim',
-                    'yaml',
-                },
-                highlight = { enable = true },
-                indent = { enable = true },
-                textobjects = {
-                    select = {
-                        enable = true,
-                        keymaps = {
-                            ['af'] = '@function.outer',
-                            ['if'] = '@function.inner',
-                            ['ac'] = '@class.outer',
-                            ['ic'] = '@class.inner',
-                            ['ab'] = '@block.outer',
-                            ['ib'] = '@block.inner',
-                        },
+        main = 'nvim-treesitter.configs',
+        -- if you get "wrong architecture error
+        -- open nvim in macos native terminal app and run `:TSInstall`
+        opts = {
+            ensure_installed = {
+                'bash',
+                'c',
+                'cpp',
+                'css',
+                'graphql',
+                'html',
+                'javascript',
+                'jsdoc',
+                'json',
+                'jsonc',
+                'luadoc',
+                'markdown',
+                'markdown_inline',
+                'php',
+                'scss',
+                'toml',
+                'tsx',
+                'typescript',
+                'vim',
+                'yaml',
+            },
+            highlight = { enable = true },
+            indent = { enable = true },
+            textobjects = {
+                select = {
+                    enable = true,
+                    keymaps = {
+                        ['af'] = '@function.outer',
+                        ['if'] = '@function.inner',
+                        ['ac'] = '@class.outer',
+                        ['ic'] = '@class.inner',
+                        ['ab'] = '@block.outer',
+                        ['ib'] = '@block.inner',
                     },
                 },
-            })
-        end,
+            },
+        },
     },
     {
         'nvim-telescope/telescope.nvim',
         dependencies = { 'nvim-lua/plenary.nvim' },
-        config = function()
-            require('antonk52.telescope').setup()
-        end,
+        main = 'antonk52.telescope',
+        opts = {},
     },
     {
         -- TODO: replace with 'Bekaboo/dropbar.nvim',
@@ -300,7 +296,7 @@ local plugins = {
     },
     {
         'justinmk/vim-dirvish', -- project file viewer
-        config = function()
+        init = function()
             vim.g.dirvish_relative_paths = 1
             -- folders on top
             vim.g.dirvish_mode = ':sort ,^\\v(.*[\\/])|\\ze,'
