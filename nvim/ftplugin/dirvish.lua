@@ -26,7 +26,6 @@ end
 local function remove()
     local target = vim.trim(vim.fn.getline('.'))
     local is_file = not vim.endswith(target, '/')
-    local rm_cmd = is_file and { 'rm' } or { 'rm', '-rf' }
     local confirmed = false
 
     if is_file then
@@ -39,8 +38,11 @@ local function remove()
     end
 
     if confirmed then
-        table.insert(rm_cmd, target)
-        vim.system(rm_cmd):wait()
+        if is_file then
+            vim.uv.fs_unlink(target)
+        else
+            vim.system({ 'rm', '-rf', target })
+        end
     else
         vim.notify('Remove aborted', vim.log.levels.INFO)
     end
