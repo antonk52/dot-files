@@ -29,13 +29,10 @@ function M.setup()
         ['<Tab>'] = function(fallback)
             if AI.is_visible() then
                 AI.accept()
-            elseif cmp.visible() then
-                cmp.select_next_item()
             else
                 fallback()
             end
         end,
-        ['<S-Tab>'] = cmp.mapping.select_prev_item(),
         ['<C-d>'] = function()
             if AI.is_visible() then
                 AI.dismiss()

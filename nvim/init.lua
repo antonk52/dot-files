@@ -173,6 +173,7 @@ local plugins = {
                 'toml',
                 'tsx',
                 'typescript',
+                'vim',
                 'yaml',
             },
             highlight = { enable = true },
@@ -387,10 +388,9 @@ local plugins = {
         name = 'work', -- otherwise lazy.nvim errors when updates plugins
         config = function()
             local ok, work = pcall(require, 'antonk52.work')
-            if not ok then
-                return vim.notify('Could not load antonk52.work', vim.log.levels.ERROR)
+            if ok and vim.env.WORK_PLUGIN_PATH then
+                work.setup()
             end
-            work.setup()
         end,
         event = 'VeryLazy',
     },
@@ -573,7 +573,6 @@ do
                 or 'editor.action.revealDefinition'
         )
     end, 'lsp definition')
-    lsp_keymap('<leader>t', vim.lsp.buf.hover, 'editor.action.showHover', 'lsp hover')
     lsp_keymap('<leader>t', vim.lsp.buf.hover, 'editor.action.showHover', 'lsp hover')
     lsp_keymap('gs', vim.lsp.buf.signature_help, 'editor.action.triggerParameterHints', 'lsp signature_help')
     lsp_keymap('gK', vim.lsp.buf.type_definition, 'editor.action.peekTypeDefinition', 'lsp type_definition')
