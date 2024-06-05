@@ -173,7 +173,6 @@ local plugins = {
                 'toml',
                 'tsx',
                 'typescript',
-                'vim',
                 'yaml',
             },
             highlight = { enable = true },
