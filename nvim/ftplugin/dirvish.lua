@@ -71,6 +71,16 @@ local function add()
 end
 
 vim.keymap.set('n', 'dd', remove, { buffer = true, silent = true, desc = 'remove focused item' })
-vim.keymap.set('n', 'mm', move, { buffer = true, silent = true, desc = 'Move focused file/directory' })
-vim.keymap.set('n', 'mc', copy, { buffer = true, silent = true, desc = 'Copy focused file/directory' })
+vim.keymap.set(
+    'n',
+    'mm',
+    move,
+    { buffer = true, silent = true, desc = 'Move focused file/directory' }
+)
+vim.keymap.set(
+    'n',
+    'mc',
+    copy,
+    { buffer = true, silent = true, desc = 'Copy focused file/directory' }
+)
 vim.keymap.set('n', 'ma', add, { buffer = true, silent = true, desc = 'Add new file/directory' })

@@ -44,7 +44,10 @@ local plugins = {
                         timeout_ms = 5000,
                         lsp_fallback = (
                             vim.fs.basename(vim.api.nvim_buf_get_name(0)) ~= 'lazy-lock.json'
-                            and vim.startswith(vim.uv.cwd() or vim.fn.getcwd(), '/Users/antonk52/dot-files')
+                            and vim.startswith(
+                                vim.uv.cwd() or vim.fn.getcwd(),
+                                '/Users/antonk52/dot-files'
+                            )
                         )
                             or vim.tbl_contains(
                                 { 'typescript', 'typescriptreact', 'javascript', 'javascriptreact' },
@@ -137,14 +140,23 @@ local plugins = {
     },
     {
         'antonk52/npm_scripts.nvim',
-        keys = { { '<leader>N', '<cmd>lua require("npm_scripts").run_from_all()<cr>', desc = 'Run npm script' } },
+        keys = {
+            {
+                '<leader>N',
+                '<cmd>lua require("npm_scripts").run_from_all()<cr>',
+                desc = 'Run npm script',
+            },
+        },
     },
     {
         'folke/ts-comments.nvim',
         opts = {},
         event = 'VeryLazy',
     },
-    { 'marilari88/twoslash-queries.nvim', ft = { 'javascript', 'javascriptreact', 'typescript', 'typescriptreact' } },
+    {
+        'marilari88/twoslash-queries.nvim',
+        ft = { 'javascript', 'javascriptreact', 'typescript', 'typescriptreact' },
+    },
     {
         'nvim-treesitter/nvim-treesitter',
         dependencies = { 'nvim-treesitter/nvim-treesitter-textobjects' },
@@ -216,7 +228,14 @@ local plugins = {
                 }
             end
             require('barbecue').setup({
-                exclude_filetypes = { 'netrw', 'toggleterm', 'dirvish', 'hgssl', 'hghistory', 'hgcommit' },
+                exclude_filetypes = {
+                    'netrw',
+                    'toggleterm',
+                    'dirvish',
+                    'hgssl',
+                    'hghistory',
+                    'hgcommit',
+                },
                 theme = theme(),
             })
 
@@ -529,7 +548,8 @@ vim.opt.fillchars = { fold = '⏤' }
 -- +--  7 lines: set foldmethod=indent··············
 -- new
 -- ⏤⏤⏤⏤► [7 lines]: set foldmethod=indent ⏤⏤⏤⏤⏤⏤⏤⏤⏤⏤
-vim.opt.foldtext = '"⏤⏤⏤⏤► [".(v:foldend - v:foldstart + 1)." lines] ".trim(getline(v:foldstart))." "'
+vim.opt.foldtext =
+    '"⏤⏤⏤⏤► [".(v:foldend - v:foldstart + 1)." lines] ".trim(getline(v:foldstart))." "'
 
 -- break long lines on breakable chars
 -- instead of the last fitting character
@@ -574,21 +594,49 @@ do
         )
     end, 'lsp definition')
     lsp_keymap('<leader>t', vim.lsp.buf.hover, 'editor.action.showHover', 'lsp hover')
-    lsp_keymap('gs', vim.lsp.buf.signature_help, 'editor.action.triggerParameterHints', 'lsp signature_help')
-    lsp_keymap('gK', vim.lsp.buf.type_definition, 'editor.action.peekTypeDefinition', 'lsp type_definition')
-    lsp_keymap('gi', vim.lsp.buf.implementation, 'editor.action.goToImplementation', 'lsp implemention')
+    lsp_keymap(
+        'gs',
+        vim.lsp.buf.signature_help,
+        'editor.action.triggerParameterHints',
+        'lsp signature_help'
+    )
+    lsp_keymap(
+        'gK',
+        vim.lsp.buf.type_definition,
+        'editor.action.peekTypeDefinition',
+        'lsp type_definition'
+    )
+    lsp_keymap(
+        'gi',
+        vim.lsp.buf.implementation,
+        'editor.action.goToImplementation',
+        'lsp implemention'
+    )
     lsp_keymap('<leader>R', vim.lsp.buf.rename, 'editor.action.rename', 'lsp rename')
     lsp_keymap('gr', vim.lsp.buf.references, 'editor.action.goToReferences', 'lsp references')
 
     if is_vscode then
         keymap.set('n', 'K', ':call VSCodeNotify("editor.action.showHover")<cr>')
-        keymap.set('n', '-', ':call VSCodeNotify("workbench.files.action.showActiveFileInExplorer")<cr>')
-        keymap.set('n', '<C-b>', ':call VSCodeNotify("workbench.action.showAllEditorsByMostRecentlyUsed")<cr>')
+        keymap.set(
+            'n',
+            '-',
+            ':call VSCodeNotify("workbench.files.action.showActiveFileInExplorer")<cr>'
+        )
+        keymap.set(
+            'n',
+            '<C-b>',
+            ':call VSCodeNotify("workbench.action.showAllEditorsByMostRecentlyUsed")<cr>'
+        )
         keymap.set('n', ']d', ':call VSCodeNotify("editor.action.marker.next")<cr>')
         keymap.set('n', '[d', ':call VSCodeNotify("editor.action.marker.prev")<cr>')
         keymap.set('n', 'gp', ':call VSCodeNotify("workbench.panel.markers.view.focus")<cr>')
     else
-        keymap.set('n', '<leader>L', vim.diagnostic.open_float, { desc = 'show current line diagnostic' })
+        keymap.set(
+            'n',
+            '<leader>L',
+            vim.diagnostic.open_float,
+            { desc = 'show current line diagnostic' }
+        )
         keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, { desc = 'lsp code_action' })
         keymap.set('n', ']e', function()
             vim.diagnostic.goto_next({ severity = vim.diagnostic.severity.ERROR })
@@ -596,12 +644,27 @@ do
         keymap.set('n', '[e', function()
             vim.diagnostic.goto_prev({ severity = vim.diagnostic.severity.ERROR })
         end, { desc = 'go to prev error diagnostic' })
-        keymap.set('n', '<leader>wa', vim.lsp.buf.add_workspace_folder, { desc = 'lsp add_workspace_folder' })
-        keymap.set('n', '<leader>wr', vim.lsp.buf.remove_workspace_folder, { desc = 'lsp remove_workspace_folder' })
+        keymap.set(
+            'n',
+            '<leader>wa',
+            vim.lsp.buf.add_workspace_folder,
+            { desc = 'lsp add_workspace_folder' }
+        )
+        keymap.set(
+            'n',
+            '<leader>wr',
+            vim.lsp.buf.remove_workspace_folder,
+            { desc = 'lsp remove_workspace_folder' }
+        )
         keymap.set('n', '<leader>wl', function()
             print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
         end, { desc = 'print workspace folders' })
-        keymap.set('n', '<leader>ws', vim.lsp.buf.workspace_symbol, { desc = 'lsp workspace_symbol' })
+        keymap.set(
+            'n',
+            '<leader>ws',
+            vim.lsp.buf.workspace_symbol,
+            { desc = 'lsp workspace_symbol' }
+        )
 
         keymap.set('n', '<localleader>t', function()
             require('lazy.util').float_term(nil, {
@@ -624,10 +687,25 @@ keymap.set('n', '<esc>', function()
         vim.snippet.stop()
     end
 end, { silent = true, desc = 'toggle highlight for last search' })
-keymap.set('n', 'n', '<cmd>set hlsearch<cr>n', { desc = 'always have highlighted search results when navigating' })
-keymap.set('n', 'N', '<cmd>set hlsearch<cr>N', { desc = 'always have highlighted search results when navigating' })
+keymap.set(
+    'n',
+    'n',
+    '<cmd>set hlsearch<cr>n',
+    { desc = 'always have highlighted search results when navigating' }
+)
+keymap.set(
+    'n',
+    'N',
+    '<cmd>set hlsearch<cr>N',
+    { desc = 'always have highlighted search results when navigating' }
+)
 
-keymap.set('n', '<tab>', is_vscode and ':call VSCodeNotify("editor.toggleFold")<cr>' or 'za', { desc = 'toggle folds' })
+keymap.set(
+    'n',
+    '<tab>',
+    is_vscode and ':call VSCodeNotify("editor.toggleFold")<cr>' or 'za',
+    { desc = 'toggle folds' }
+)
 
 -- Useful when you have many splits & the status line gets truncated
 keymap.set('n', '<leader>p', ':echo expand("%")<CR>', { desc = 'print rel buffer path' })

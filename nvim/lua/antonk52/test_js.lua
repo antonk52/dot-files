@@ -124,14 +124,23 @@ local function run_jest(bufnr, bin, cwd, env)
     local tmp_file = vim.fn.tempname()
     local start = vim.uv.now()
     vim.system(
-        { bin, '--json', '--outputFile=' .. tmp_file, '--testLocationInResults', vim.api.nvim_buf_get_name(0) },
+        {
+            bin,
+            '--json',
+            '--outputFile=' .. tmp_file,
+            '--testLocationInResults',
+            vim.api.nvim_buf_get_name(0),
+        },
         { text = true, cwd = cwd, env = env },
         function(_)
             local finish = vim.uv.now() - start
             vim.schedule(function()
                 vim.notify('Jest took ' .. finish .. 'ms', vim.log.levels.INFO)
                 if not vim.uv.fs_stat(tmp_file) then
-                    return vim.notify('Output file is not readable\n' .. tmp_file, vim.log.levels.ERROR)
+                    return vim.notify(
+                        'Output file is not readable\n' .. tmp_file,
+                        vim.log.levels.ERROR
+                    )
                 end
                 -- jest outputs single line json in stdout
                 -- instead lets write it to a file and read from it

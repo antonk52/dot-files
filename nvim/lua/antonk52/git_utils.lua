@@ -26,7 +26,9 @@ local function run_cmd_and_exit(cmd)
 end
 
 local function download_gitignore_file()
-    local out = vim.system({ 'curl', '-s', 'https://api.github.com/repos/github/gitignore/contents' }, nil):wait()
+    local out =
+        vim.system({ 'curl', '-s', 'https://api.github.com/repos/github/gitignore/contents' }, nil)
+            :wait()
     if out.code ~= 0 then
         return vim.notify('Failed to fetch gitignore files\n' .. out.stderr, vim.log.levels.ERROR)
     end
@@ -168,7 +170,11 @@ function M.setup()
         run_cmd_and_exit('git add --patch'),
         { nargs = 0, desc = 'git add --patch' }
     )
-    vim.api.nvim_create_user_command('GitStatus', git_status, { nargs = 0, desc = 'git status with smarts' })
+    vim.api.nvim_create_user_command(
+        'GitStatus',
+        git_status,
+        { nargs = 0, desc = 'git status with smarts' }
+    )
     vim.api.nvim_create_user_command(
         'GitAddPatchFile',
         run_cmd_and_exit('git add --patch %'),

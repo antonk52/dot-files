@@ -245,7 +245,12 @@ function M.setup()
     vim.keymap.set('n', '<leader>D', M.dots, { desc = 'Dot files file picker' })
     vim.keymap.set('n', '<leader>b', '<cmd>Telescope buffers<cr>', { desc = 'Buffer picker' })
     vim.keymap.set('n', '<leader>/', M.action_buffer_lines)
-    vim.keymap.set('n', '<leader>?', '<cmd>Telescope lsp_document_symbols<cr>', { desc = 'Document symbols' })
+    vim.keymap.set(
+        'n',
+        '<leader>?',
+        '<cmd>Telescope lsp_document_symbols<cr>',
+        { desc = 'Document symbols' }
+    )
     -- Like `:Telescope commands` but shows subcommands and no bang / nargs in fuzzy picker
     vim.keymap.set('n', '<leader>;', M.command_picker, { desc = 'Command picker' })
     vim.keymap.set('n', '<leader>r', '<cmd>Telescope resume<cr>', { desc = 'Resume picker' })

@@ -19,7 +19,10 @@ local function cross_lsp_definition()
     local function make_cb(client)
         return function(err, response)
             if err == nil and response ~= nil then
-                table.insert(raw_responses, { response = response, encoding = client.offset_encoding })
+                table.insert(
+                    raw_responses,
+                    { response = response, encoding = client.offset_encoding }
+                )
             end
 
             responded = responded + 1
@@ -48,11 +51,15 @@ local function cross_lsp_definition()
 
                 -- if there is only one response, jump to it
                 if #flatten_responses == 1 and not vim.islist(flatten_responses[1]) then
-                    return util.jump_to_location(flatten_responses[1], flatten_responses_encoding[1])
+                    return util.jump_to_location(
+                        flatten_responses[1],
+                        flatten_responses_encoding[1]
+                    )
                 end
 
                 -- TODO: change to telescope or any other picker with preview
-                local items = util.locations_to_items(flatten_responses, flatten_responses_encoding[1])
+                local items =
+                    util.locations_to_items(flatten_responses, flatten_responses_encoding[1])
 
                 vim.fn.setqflist({}, ' ', { title = 'LSP locations', items = items })
                 -- vim.api.nvim_command('botright copen')
@@ -142,7 +149,9 @@ M.servers = {
 
     lua_ls = function()
         -- when homebrew is installed globally
-        local global_prefix = vim.fs.normalize('~/.local/share/nvim/lsp_servers/sumneko_lua/extension/server/bin/macOS')
+        local global_prefix = vim.fs.normalize(
+            '~/.local/share/nvim/lsp_servers/sumneko_lua/extension/server/bin/macOS'
+        )
         local GLOBAL_BIN = {
             bin = global_prefix .. '/lua-language-server',
             main = global_prefix .. '/main.lua',
@@ -158,7 +167,10 @@ M.servers = {
         local BIN = vim.uv.fs_stat(GLOBAL_BIN.bin) and GLOBAL_BIN or LOCAL_BIN
 
         if not vim.uv.fs_stat(BIN.bin) then
-            vim.notify('lua-language-server is not installed or cannot be found', vim.log.levels.WARN)
+            vim.notify(
+                'lua-language-server is not installed or cannot be found',
+                vim.log.levels.WARN
+            )
             return nil
         end
 
@@ -191,7 +203,7 @@ M.servers = {
                     workspace = {
                         -- Make the server aware of Neovim runtime files
                         library = {
-                            vim.env.VIMRUNTIME,
+                            vim.env.VIMRUNTIME, -- nvim core, no 3rd party plugins
                             'lua',
                             'nvim-test',
                             '${3rd}/luv/library',
@@ -240,10 +252,12 @@ function M.setup()
         severity_sort = true, -- show errors first
     })
     -- add border to hover popup
-    vim.lsp.handlers['textDocument/hover'] = vim.lsp.with(vim.lsp.handlers.hover, { border = 'single' })
+    vim.lsp.handlers['textDocument/hover'] =
+        vim.lsp.with(vim.lsp.handlers.hover, { border = 'single' })
     vim.lsp.handlers['textDocument/definition'] = vim.lsp.with(cross_lsp_definition, {})
 
-    local capabilities = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities())
+    local capabilities =
+        require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities())
     capabilities.textDocument.completion.completionItem.snippetSupport = true
     for lsp, opts in pairs(M.servers) do
         if type(opts) == 'function' then

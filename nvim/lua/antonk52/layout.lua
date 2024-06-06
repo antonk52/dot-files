@@ -29,7 +29,9 @@ function M.navigate(direction)
         return
     end
     if vim.g.vscode then
-        return require('vscode-neovim').call('workbench.action.navigate' .. navigation_map[direction].vscode)
+        return require('vscode-neovim').call(
+            'workbench.action.navigate' .. navigation_map[direction].vscode
+        )
     end
 
     local win_num_before = vim.fn.winnr()

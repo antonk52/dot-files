@@ -147,8 +147,7 @@ LOCAL_SHELLRC="$XDG_CONFIG_HOME"/local_shellrc
 
 autojump_path="$DOT_FILES"/dependencies/zsh-z/zsh-z.plugin.zsh
 if [ -f "$autojump_path" ]; then
-    ZSHZ_CMD=j
-    source "$autojump_path"
+    ZSHZ_CMD=j source "$autojump_path"
 fi
 
 # bun completions
