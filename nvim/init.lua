@@ -323,8 +323,6 @@ local plugins = {
             vim.g.dirvish_mode = ':sort ,^\\v(.*[\\/])|\\ze,'
         end,
     },
-    -- live preview markdown files in browser
-    -- {'iamcco/markdown-preview.nvim',  build = 'cd app & yarn install', ft = { 'markdown', 'mdx' } },
     {
         'NvChad/nvim-colorizer.lua', -- hex/rgb color highlight preview
         init = function()
@@ -336,7 +334,6 @@ local plugins = {
             filetypes = { '*', '!lazy' },
             user_default_options = {
                 css = true,
-                mode = 'background',
                 tailwind = true,
             },
         },
@@ -730,7 +727,7 @@ keymap.set('n', '<leader>s', function()
     local buffer = vim.api.nvim_get_current_buf()
     vim.api.nvim_buf_clear_namespace(buffer, extmark_ns, 0, -1)
 
-    local overlay_chars = vim.split('abcdefghijklmnopqrstuvwxyz', '')
+    local overlay_chars = vim.split('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', '')
     local index, extmarkDict = 1, {}
     local lines = vim.api.nvim_buf_get_lines(buffer, startLine - 1, endLine, false)
     local needle = char1 .. char2
