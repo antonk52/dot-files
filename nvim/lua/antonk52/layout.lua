@@ -70,4 +70,36 @@ function M.zoom_split()
     vim.cmd.wincmd('_')
 end
 
+function M.setup()
+    -- ctrl j/k/l/h shortcuts to navigate between splits
+    vim.keymap.set('n', '<C-J>', function()
+        M.navigate('down')
+    end)
+    vim.keymap.set('n', '<C-K>', function()
+        M.navigate('up')
+    end)
+    vim.keymap.set('n', '<C-L>', function()
+        M.navigate('right')
+    end)
+    vim.keymap.set('n', '<C-H>', function()
+        M.navigate('left')
+    end)
+
+    -- leader + j/k/l/h resize active split by 5
+    vim.keymap.set('n', '<leader>j', '<C-W>10-')
+    vim.keymap.set('n', '<leader>k', '<C-W>10+')
+    vim.keymap.set('n', '<leader>l', '<C-W>10>')
+    vim.keymap.set('n', '<leader>h', '<C-W>10<')
+
+    vim.keymap.set('n', '<Leader>=', function()
+        M.zoom_split()
+    end, { desc = 'Expand current split vertically' })
+    vim.keymap.set('n', '<Leader>-', function()
+        M.equalify_splits()
+    end, { desc = 'Make all splits equal proportions' })
+    vim.keymap.set('n', '<Leader>+', function()
+        M.restore_layout()
+    end, { desc = 'Restore split layout' })
+end
+
 return M

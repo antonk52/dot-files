@@ -721,20 +721,6 @@ keymap.set('v', '>', '>gv')
 keymap.set('n', '<C-_>', 'gcc', { remap = true })
 keymap.set('x', '<C-_>', 'gc', { remap = true })
 
--- ctrl j/k/l/h shortcuts to navigate between splits
-keymap.set('n', '<C-J>', function()
-    require('antonk52.layout').navigate('down')
-end)
-keymap.set('n', '<C-K>', function()
-    require('antonk52.layout').navigate('up')
-end)
-keymap.set('n', '<C-L>', function()
-    require('antonk52.layout').navigate('right')
-end)
-keymap.set('n', '<C-H>', function()
-    require('antonk52.layout').navigate('left')
-end)
-
 keymap.set('n', '<leader>s', function()
     local extmark_ns = vim.api.nvim_create_namespace('')
     local charCode1 = vim.fn.getchar()
@@ -787,22 +773,6 @@ keymap.set('n', '<leader>s', function()
         vim.api.nvim_buf_clear_namespace(0, extmark_ns, 0, -1)
     end)
 end, { noremap = true, desc = 'jump to two characters in current buffer(easymotion like)' })
-
--- leader + j/k/l/h resize active split by 5
-keymap.set('n', '<leader>j', '<C-W>10-')
-keymap.set('n', '<leader>k', '<C-W>10+')
-keymap.set('n', '<leader>l', '<C-W>10>')
-keymap.set('n', '<leader>h', '<C-W>10<')
-
-keymap.set('n', '<Leader>=', function()
-    require('antonk52.layout').zoom_split()
-end)
-keymap.set('n', '<Leader>-', function()
-    require('antonk52.layout').equalify_splits()
-end)
-keymap.set('n', '<Leader>+', function()
-    require('antonk52.layout').restore_layout()
-end)
 
 keymap.set({ 'n', 'v' }, '<Leader>a', '^', {
     desc = 'go to the beginning of the line (^ is too far)',
@@ -951,3 +921,5 @@ if not vim.g.vscode then
     require('antonk52.tsc').setup()
     require('antonk52.git_utils').setup()
 end
+
+require('antonk52.layout').setup()
