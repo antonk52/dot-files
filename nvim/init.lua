@@ -186,6 +186,7 @@ local plugins = {
                 'tsx',
                 'typescript',
                 'vim',
+                'vimdoc',
                 'yaml',
             },
             highlight = { enable = true },
@@ -267,9 +268,10 @@ local plugins = {
         config = function()
             require('git').setup({ default_mappings = false })
 
-            vim.api.nvim_create_user_command('GitBrowse', function()
-                require('git.browse').open(false)
-            end, { bang = true, nargs = 0 })
+            vim.api.nvim_create_user_command('GitBrowse', function(x)
+                local has_range = x.range ~= 0
+                require('git.browse').open(has_range)
+            end, { bang = true, range = true, nargs = 0 })
         end,
         cmd = { 'GitBrowse', 'GitBlame', 'Git' },
     },
