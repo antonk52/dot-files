@@ -498,7 +498,6 @@ if not vim.g.vscode then
     vim.opt.listchars = {
         tab = '∙ ',
         trail = '∙',
-        multispace = '∙',
         leadmultispace = '│   ',
     }
 
