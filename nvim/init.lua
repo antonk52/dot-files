@@ -711,8 +711,13 @@ keymap.set('n', '<leader>s', function()
     local needle = char1 .. char2
 
     for lineNum, lineText in ipairs(lines) do
+        local line_idx = lineNum + startLine - 1
         if index > #overlay_chars then
             break
+        end
+        -- skip folded lines
+        if vim.fn.foldclosed(line_idx) ~= -1 then
+            goto continue
         end
         for i = 1, #lineText do
             if lineText:sub(i, i + 1) == needle and index <= #overlay_chars then
@@ -731,6 +736,7 @@ keymap.set('n', '<leader>s', function()
                 break
             end
         end
+        ::continue::
     end
 
     -- otherwise setting extmarks and waiting for next char is on the same frame
