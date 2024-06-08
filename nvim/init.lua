@@ -233,6 +233,7 @@ local plugins = {
                     'netrw',
                     'toggleterm',
                     'dirvish',
+                    'gitcommit',
                     'hgssl',
                     'hghistory',
                     'hgcommit',
@@ -442,7 +443,7 @@ require('lazy').setup(plugins, {
         },
     },
     ui = {
-        size = { width = 142, height = 0.95 },
+        size = { width = 100, height = 0.95 },
         pills = false,
     },
     readme = { enabled = false },
