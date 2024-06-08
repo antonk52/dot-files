@@ -697,21 +697,21 @@ keymap.set('x', '<C-_>', 'gc', { remap = true })
 
 keymap.set('n', '<leader>s', function()
     local extmark_ns = vim.api.nvim_create_namespace('')
-    local charCode1 = vim.fn.getchar()
-    local charCode2 = vim.fn.getchar()
-    local char1 = type(charCode1) == 'number' and vim.fn.nr2char(charCode1) or charCode1
-    local char2 = type(charCode2) == 'number' and vim.fn.nr2char(charCode2) or charCode2
-    local startLine, endLine = vim.fn.line('w0'), vim.fn.line('w$')
+    local char_code1 = vim.fn.getchar()
+    local char_code2 = vim.fn.getchar()
+    local char1 = type(char_code1) == 'number' and vim.fn.nr2char(char_code1) or char_code1
+    local char2 = type(char_code2) == 'number' and vim.fn.nr2char(char_code2) or char_code2
+    local line_idx_start, line_idx_end = vim.fn.line('w0'), vim.fn.line('w$')
     local buffer = vim.api.nvim_get_current_buf()
     vim.api.nvim_buf_clear_namespace(buffer, extmark_ns, 0, -1)
 
     local overlay_chars = vim.split('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', '')
     local index, extmarkDict = 1, {}
-    local lines = vim.api.nvim_buf_get_lines(buffer, startLine - 1, endLine, false)
+    local lines = vim.api.nvim_buf_get_lines(buffer, line_idx_start - 1, line_idx_end, false)
     local needle = char1 .. char2
 
-    for lineNum, lineText in ipairs(lines) do
-        local line_idx = lineNum + startLine - 1
+    for lines_i, line_text in ipairs(lines) do
+        local line_idx = lines_i + line_idx_start - 1
         if index > #overlay_chars then
             break
         end
@@ -719,10 +719,10 @@ keymap.set('n', '<leader>s', function()
         if vim.fn.foldclosed(line_idx) ~= -1 then
             goto continue
         end
-        for i = 1, #lineText do
-            if lineText:sub(i, i + 1) == needle and index <= #overlay_chars then
+        for i = 1, #line_text do
+            if line_text:sub(i, i + 1) == needle and index <= #overlay_chars then
                 local overlay_char = overlay_chars[index]
-                local lineNr = startLine + lineNum - 2
+                local lineNr = line_idx_start + lines_i - 2
                 local col = i - 1
                 local id = vim.api.nvim_buf_set_extmark(buffer, extmark_ns, lineNr, col + 2, {
                     virt_text = { { overlay_char, 'CurSearch' } },
@@ -741,9 +741,9 @@ keymap.set('n', '<leader>s', function()
 
     -- otherwise setting extmarks and waiting for next char is on the same frame
     vim.schedule(function()
-        local nextChar = vim.fn.nr2char(vim.fn.getchar())
-        if extmarkDict[nextChar] then
-            local pos = extmarkDict[nextChar]
+        local next_char = vim.fn.nr2char(vim.fn.getchar())
+        if extmarkDict[next_char] then
+            local pos = extmarkDict[next_char]
             -- to make <C-o> work
             vim.cmd("normal! m'")
             vim.api.nvim_win_set_cursor(0, { pos.line + 1, pos.col })
