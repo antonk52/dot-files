@@ -695,7 +695,7 @@ keymap.set('v', '>', '>gv')
 keymap.set('n', '<C-_>', 'gcc', { remap = true })
 keymap.set('x', '<C-_>', 'gc', { remap = true })
 
-keymap.set('n', '<leader>s', function()
+keymap.set({ 'n', 'x' }, '<leader>s', function()
     local extmark_ns = vim.api.nvim_create_namespace('')
     local char_code1 = vim.fn.getchar()
     local char_code2 = vim.fn.getchar()
