@@ -53,7 +53,6 @@ alias o='open .'
 alias ax='chmod a+x'
 alias h='history | fzf +s --tac --tiebreak=index | sed "s/ *[0-9]* *//"'
 alias q='quit'
-alias sl='pmset sleepnow'
 alias chux='chmod u+x'
 
 # FreeBSD one does not support -m option

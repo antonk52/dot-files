@@ -21,13 +21,12 @@ local function get_nongit_ignore_patterns()
                 return true
             end
         end, ignore_lines)
-    else
-        return {
-            'node_modules',
-            'build',
-            'dist',
-        }
     end
+    return {
+        'node_modules',
+        'build',
+        'dist',
+    }
 end
 
 function M.action_buffer_lines()
@@ -69,13 +68,13 @@ end
 
 function M.git_diff(opts)
     opts = opts or {}
-    local output = vim.system(opts.cmd or { 'git', 'diff' }).stdout
+    local output = vim.system(opts.cmd or { 'git', 'diff' }):wait().stdout
     local results = {}
     local filename = nil
     local linenumber = nil
     local hunk = {}
 
-    for _, line in ipairs(output) do
+    for _, line in ipairs(vim.split(output or '', '\n')) do
         -- new file
         if vim.startswith(line, 'diff') then
             -- Start of a new hunk
@@ -83,9 +82,7 @@ function M.git_diff(opts)
                 table.insert(results, { filename = filename, lnum = linenumber, raw_lines = hunk })
             end
 
-            local _, filepath_, _ = line:match('^diff (.*) a/(.*) b/(.*)$')
-
-            filename = filepath_
+            filename = line:match('^diff .* a/(.*) b/.*$')
             linenumber = nil
 
             hunk = {}
@@ -96,8 +93,8 @@ function M.git_diff(opts)
             end
             -- Hunk header
             -- @example "@@ -157,20 +157,6 @@ some content"
-            local _, _, c, _ = string.match(line, '@@ %-(.*),(.*) %+(.*),(.*) @@')
-            linenumber = tonumber(c)
+            local linenr_str = string.match(line, '@@ %-.*,.* %+(.*),.* @@')
+            linenumber = tonumber(linenr_str)
             hunk = {}
             table.insert(hunk, line)
         else
@@ -128,17 +125,6 @@ function M.git_diff(opts)
         v.lnum = v.lnum + diff_line_idx
     end
 
-    local diff_previewer = require('telescope.previewers').new_buffer_previewer({
-        define_preview = function(self, entry, _)
-            -- This function is called to populate the preview buffer
-            -- Use `vim.api.nvim_buf_set_lines` to set the content of the preview buffer
-            local lines = entry.raw_lines or { 'empty' }
-            vim.api.nvim_buf_set_lines(self.state.bufnr, 0, -1, false, lines)
-            local putils = require('telescope.previewers.utils')
-            putils.regex_highlighter(self.state.bufnr, 'diff')
-        end,
-    })
-
     if #results == 0 then
         return vim.notify('No hunks', vim.log.levels.WARN)
     end
@@ -155,17 +141,24 @@ function M.git_diff(opts)
                     return entry
                 end,
             }),
-            previewer = diff_previewer,
+            previewer = require('telescope.previewers').new_buffer_previewer({
+                define_preview = function(self, entry, _)
+                    -- This function is called to populate the preview buffer
+                    -- Use `vim.api.nvim_buf_set_lines` to set the content of the preview buffer
+                    local lines = entry.raw_lines or { 'empty' }
+                    vim.api.nvim_buf_set_lines(self.state.bufnr, 0, -1, false, lines)
+                    local putils = require('telescope.previewers.utils')
+                    putils.regex_highlighter(self.state.bufnr, 'diff')
+                end,
+            }),
             sorter = require('telescope.config').values.file_sorter({}),
         })
         :find()
 end
 
 function M.command_picker()
-    local top_commands = vim.api.nvim_get_commands({})
-
     local items = {}
-    for _, cmd in pairs(top_commands) do
+    for _, cmd in pairs(vim.api.nvim_get_commands({})) do
         if
             cmd.nargs ~= '0' -- no arguments
             and cmd.name ~= 'Man' -- 0 completions, but 200ms to complete the first time
@@ -238,7 +231,6 @@ function M.setup()
         },
     })
     vim.keymap.set('n', '<leader>f', M.action_smart_vcs_files)
-    vim.keymap.set('n', '<D-p>', M.action_smart_vcs_files)
     vim.keymap.set('n', '<leader>F', function()
         require('telescope.builtin').find_files({ hidden = true, no_ignore = true })
     end, { desc = 'force show files igncluding ignored by .gitignore' })
