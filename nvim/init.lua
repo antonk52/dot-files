@@ -510,9 +510,6 @@ vim.opt.breakindentopt = 'shift:2'
 -- open horizontal splits below current window
 vim.opt.splitbelow = true
 
--- open vertical splits to the right of the current window
-vim.opt.splitright = true
-
 -- folding
 vim.opt.foldmethod = 'indent'
 vim.opt.foldlevelstart = 20
