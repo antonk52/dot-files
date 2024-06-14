@@ -640,9 +640,7 @@ do
         )
 
         keymap.set('n', '<localleader>t', function()
-            require('lazy.util').float_term(nil, {
-                cwd = vim.uv.cwd() or vim.fn.getcwd(),
-            })
+            require('lazy.util').float_term()
         end, { desc = 'Open float term' })
     end
 end
@@ -694,62 +692,60 @@ keymap.set('x', '<C-_>', 'gc', { remap = true })
 
 keymap.set({ 'n', 'x' }, '<leader>s', function()
     local extmark_ns = vim.api.nvim_create_namespace('')
-    local char_code1 = vim.fn.getchar()
-    local char_code2 = vim.fn.getchar()
+    local char_code1, char_code2 = vim.fn.getchar(), vim.fn.getchar()
     local char1 = type(char_code1) == 'number' and vim.fn.nr2char(char_code1) or char_code1
     local char2 = type(char_code2) == 'number' and vim.fn.nr2char(char_code2) or char_code2
     local line_idx_start, line_idx_end = vim.fn.line('w0'), vim.fn.line('w$')
-    local buffer = vim.api.nvim_get_current_buf()
-    vim.api.nvim_buf_clear_namespace(buffer, extmark_ns, 0, -1)
+    local bufnr = vim.api.nvim_get_current_buf()
+    vim.api.nvim_buf_clear_namespace(bufnr, extmark_ns, 0, -1)
 
     local overlay_chars = vim.split('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', '')
-    local index, extmarkDict = 1, {}
-    local lines = vim.api.nvim_buf_get_lines(buffer, line_idx_start - 1, line_idx_end, false)
+    local char_idx = 1
+    ---@type table<string, {line: integer, col: integer; id: integer}>
+    local extmarks = {}
+    local lines = vim.api.nvim_buf_get_lines(bufnr, line_idx_start - 1, line_idx_end, false)
     local needle = char1 .. char2
 
     for lines_i, line_text in ipairs(lines) do
         local line_idx = lines_i + line_idx_start - 1
-        if index > #overlay_chars then
+        if char_idx > #overlay_chars then
             break
         end
         -- skip folded lines
-        if vim.fn.foldclosed(line_idx) ~= -1 then
-            goto continue
-        end
-        for i = 1, #line_text do
-            if line_text:sub(i, i + 1) == needle and index <= #overlay_chars then
-                local overlay_char = overlay_chars[index]
-                local lineNr = line_idx_start + lines_i - 2
-                local col = i - 1
-                local id = vim.api.nvim_buf_set_extmark(buffer, extmark_ns, lineNr, col + 2, {
-                    virt_text = { { overlay_char, 'CurSearch' } },
-                    virt_text_pos = 'overlay',
-                    hl_mode = 'combine',
-                })
-                extmarkDict[overlay_char] = { line = lineNr, col = col, id = id }
-                index = index + 1
+        if vim.fn.foldclosed(line_idx) == -1 then
+            for i = 1, #line_text do
+                if line_text:sub(i, i + 1) == needle and char_idx <= #overlay_chars then
+                    local overlay_char = overlay_chars[char_idx]
+                    local linenr = line_idx_start + lines_i - 2
+                    local col = i - 1
+                    local id = vim.api.nvim_buf_set_extmark(bufnr, extmark_ns, linenr, col + 2, {
+                        virt_text = { { overlay_char, 'CurSearch' } },
+                        virt_text_pos = 'overlay',
+                        hl_mode = 'combine',
+                    })
+                    extmarks[overlay_char] = { line = linenr, col = col, id = id }
+                    char_idx = char_idx + 1
+                end
+                if char_idx > #overlay_chars then
+                    break
+                end
             end
-            if index > #overlay_chars then
-                break
-            end
         end
-        ::continue::
     end
 
     -- otherwise setting extmarks and waiting for next char is on the same frame
     vim.schedule(function()
         local next_char = vim.fn.nr2char(vim.fn.getchar())
-        if extmarkDict[next_char] then
-            local pos = extmarkDict[next_char]
+        if extmarks[next_char] then
+            local pos = extmarks[next_char]
             -- to make <C-o> work
             vim.cmd("normal! m'")
             vim.api.nvim_win_set_cursor(0, { pos.line + 1, pos.col })
         end
-
         -- clear extmarks
         vim.api.nvim_buf_clear_namespace(0, extmark_ns, 0, -1)
     end)
-end, { noremap = true, desc = 'jump to two characters in current buffer(easymotion like)' })
+end, { desc = 'jump to two characters in current buffer(easymotion like)' })
 
 keymap.set({ 'n', 'v' }, '<Leader>a', '^', {
     desc = 'go to the beginning of the line (^ is too far)',
