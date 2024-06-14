@@ -60,7 +60,9 @@ local function download_gitignore_file()
             vim.cmd.write()
         end
 
-        vim.cmd('!curl -s ' .. selected.url .. ' > ' .. target_file)
+        vim.system({ 'curl', '--output', target_file, '-s', selected.url }):wait()
+        -- update buffer content
+        vim.cmd.edit()
         vim.notify('Downloaded ' .. selected.name .. ' to ' .. target_file, vim.log.levels.INFO)
     end)
 end
