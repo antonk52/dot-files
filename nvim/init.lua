@@ -96,6 +96,9 @@ local plugins = {
                     suggestion = {
                         auto_trigger = true,
                     },
+                    filetypes = {
+                        markdown = true,
+                    },
                 })
                 local c = require('copilot.suggestion')
                 ak_completion.update_ai_completion({
@@ -701,7 +704,7 @@ keymap.set({ 'n', 'x' }, '<leader>s', function()
 
     local overlay_chars = vim.split('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', '')
     local char_idx = 1
-    ---@type table<string, {line: integer, col: integer; id: integer}>
+    ---@type table<string, {line: integer, col: integer, id: integer}>
     local extmarks = {}
     local lines = vim.api.nvim_buf_get_lines(bufnr, line_idx_start - 1, line_idx_end, false)
     local needle = char1 .. char2

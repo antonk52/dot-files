@@ -2,8 +2,17 @@
 
 if ! hash brew 2>/dev/null
 then
-    echo 'brew is not install or is not in $PATH'
-    exit 1
+    # Prompt the user for confirmation
+    read -p "Brew is not installed. Do you want to install it globally? (y/n) " choice
+    # Convert the input to lowercase (optional)
+    choice=$(echo "$choice" | tr '[:upper:]' '[:lower:]')
+    if [[ "$choice" == "y" || "$choice" == "yes" ]]; then
+        echo 'Installing globally...'
+        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+    else
+        echo 'Aborting...'
+        exit 1
+    fi
 fi
 
 # install useful stuff with brew
@@ -41,18 +50,16 @@ brew install zsh # updated version
 
 if [[ -z "${PERSONAL}" ]]; then
     brew install freetype # library to render fonts
-    brew install jpeg # image manipulation lib
     brew install python
     brew install python3
-    brew install rbenv # ruby version manager
 fi
 
 # cask apps
 brew install alacritty # terminal
 brew install karabiner-elements # advanced key mapping
 brew install keycastr # useful for demos
-brew install monitorcontrol # control external monitors brightness from keyboard
-brew install raycast # spotlight but useful
+brew install monitorcontrol # control external monitors brightness via keyboard
+brew install raycast # spotlight with window management
 brew install vlc # media player
 
 if [[ -z "${PERSONAL}" ]]; then
