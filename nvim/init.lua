@@ -398,10 +398,9 @@ local plugins = {
 require('lazy').setup(plugins, {
     root = PLUGINS_LOCATION,
     defaults = {
-        -- only enable leap plugin in vscode
+        -- only enable mini.nvim in vscode
         cond = vim.g.vscode and function(plugin)
-            return type(plugin) == 'table'
-                and (plugin[1] == 'ggandor/leap.nvim' or plugin[1] == 'echasnovski/mini.nvim')
+            return type(plugin) == 'table' and plugin[1] == 'echasnovski/mini.nvim'
         end or nil,
     },
     lockfile = vim.fs.normalize('~/dot-files/nvim/lazy-lock.json'),
@@ -794,15 +793,7 @@ local commands = {
             end
         end
     end,
-    FormatLsp = function()
-        vim.lsp.buf.format({
-            -- never use tsserver to format files
-            filter = function(c)
-                return c ~= 'tsserver'
-            end,
-            async = true,
-        })
-    end,
+    FormatLsp = vim.lsp.buf.format,
     ColorDark = function()
         vim.cmd.color('lake')
         -- TODO create an issue for miniCursorWord to supply a highlight group to link to
