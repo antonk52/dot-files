@@ -18,30 +18,6 @@
                 },
                 "rules": [
                     {
-                        "description": "right_option is left_control",
-                        "manipulators": [
-                            {
-                                "from": {
-                                    "key_code": "right_option"
-                                },
-                                "to": [
-                                    {
-                                        "key_code": "left_control"
-                                    }
-                                ],
-                                "to_if_alone": [
-                                    {
-                                        "key_code": "return_or_enter"
-                                    }
-                                ],
-                                "type": "basic"
-                            }
-                        ],
-                        "parameters": {
-                            "basic.to_if_alone_timeout_milliseconds": 150
-                        }
-                    },
-                    {
                         "description": "right_command + home row = numbers row, right_command + qwerty row = shift + number row",
                         "manipulators": [
                             {
