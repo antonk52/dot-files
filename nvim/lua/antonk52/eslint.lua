@@ -1,30 +1,13 @@
 local M = {}
----@return string|nil
-local function lookupEslintConfig()
-    local current_buf_dir = vim.fs.dirname(vim.api.nvim_buf_get_name(0))
-
-    local root_markers = vim.fs.find(
-        {
-            '.eslintrc.js',
-            '.eslintrc.cjs',
-            '.eslintrc.mjs',
-            '.eslintrc.json',
-            'eslint.config.js',
-            'eslint.config.mjs',
-            'eslint.config.cjs',
-        },
-        {
-            upward = true,
-            type = 'file',
-            stop = vim.fs.dirname(vim.env.HOME),
-            limit = 1,
-            path = current_buf_dir,
-        }
-    )
-    if #root_markers > 0 then
-        return vim.fs.dirname(root_markers[1])
-    end
-end
+local ESLINT_CONFIGS = {
+    '.eslintrc.js',
+    '.eslintrc.cjs',
+    '.eslintrc.mjs',
+    '.eslintrc.json',
+    'eslint.config.js',
+    'eslint.config.mjs',
+    'eslint.config.cjs',
+}
 
 function M.run()
     vim.notify('Running eslint…', vim.log.levels.INFO, { title = 'eslint' })
@@ -33,7 +16,7 @@ function M.run()
     local bin = vim.fn.executable('bunx') == 1 and 'bunx' or 'npx'
     vim.system({ bin, 'eslint', '.', '--ext=.ts,.tsx,.js,.jsx', '--format=unix' }, {
         text = true,
-        cwd = lookupEslintConfig() or vim.uv.cwd(),
+        cwd = vim.fs.root(0, ESLINT_CONFIGS) or vim.uv.cwd(),
     }, function(obj)
         local diff_sec = math.ceil((vim.uv.now() - start_ms) / 1000)
         vim.schedule(function()
