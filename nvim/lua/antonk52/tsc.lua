@@ -28,7 +28,7 @@ end
 ---@param cwd string?
 local function callTSC(cwd)
     vim.schedule(function()
-        vim.notify('Running tsc…', vim.log.levels.INFO, { title = 'tsc' })
+        vim.notify('Running tsc…', vim.log.levels.INFO)
     end)
     local project_cwd = vim.uv.cwd() or vim.fn.getcwd()
     cwd = cwd or project_cwd
@@ -49,23 +49,11 @@ local function callTSC(cwd)
             local diff_sec = math.ceil((vim.uv.now() - start_ms) / 1000)
             vim.schedule(function()
                 if obj.code == 0 then
-                    return vim.notify(
-                        'No errors (' .. diff_sec .. 's)',
-                        vim.log.levels.INFO,
-                        { title = 'tsc' }
-                    )
+                    return vim.notify('No errors (' .. diff_sec .. 's)', vim.log.levels.INFO)
                 elseif obj.stderr and vim.trim(obj.stderr) ~= '' then
-                    vim.notify(
-                        'tsc stderr:\n' .. tostring(obj.stderr),
-                        vim.log.levels.ERROR,
-                        { title = 'tsc' }
-                    )
+                    vim.notify('tsc stderr:\n' .. tostring(obj.stderr), vim.log.levels.ERROR)
                 end
-                vim.notify(
-                    'Tsc exited with errors. (' .. diff_sec .. 's)',
-                    vim.log.levels.ERROR,
-                    { title = 'tsc' }
-                )
+                vim.notify('Tsc exited with errors. (' .. diff_sec .. 's)', vim.log.levels.ERROR)
 
                 ---@type any[]
                 local errors = {}

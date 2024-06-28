@@ -5,7 +5,7 @@ local M = {}
 local snippet = function(trigger, body)
     return { trigger = trigger, body = body }
 end
-
+---@param tbl string[]
 function M.lines(tbl)
     return table.concat(tbl, '\n')
 end
@@ -84,12 +84,10 @@ local snippets_by_filetype = {
     markdown = markdown_snippets,
     gitcommit = markdown_snippets,
     hgcommit = markdown_snippets,
-    ['javascript'] = javascript_snippets,
-    ['javascript.jsx'] = javascript_snippets,
-    ['javascriptreact'] = javascript_snippets,
-    ['typescript'] = javascript_snippets,
-    ['typescript.tsx'] = javascript_snippets,
-    ['typescriptreact'] = javascript_snippets,
+    javascript = javascript_snippets,
+    javascriptreact = javascript_snippets,
+    typescript = javascript_snippets,
+    typescriptreact = javascript_snippets,
 }
 
 local function get_buf_snips()
@@ -110,7 +108,7 @@ function M.register_source()
     function cmp_source.complete(_, _, callback)
         local filetype = vim.bo.filetype
         if not cache[filetype] then
-            local completion_items = vim.tbl_map(function(s)
+            cache[filetype] = vim.tbl_map(function(s)
                 ---@type lsp.CompletionItem
                 local item = {
                     word = s.trigger,
@@ -121,8 +119,6 @@ function M.register_source()
                 }
                 return item
             end, get_buf_snips())
-
-            cache[filetype] = completion_items
         end
 
         callback(cache[filetype])

@@ -85,7 +85,7 @@ vim.keymap.set(
 )
 vim.keymap.set('n', 'ma', add, { buffer = true, silent = true, desc = 'Add new file/directory' })
 
--- disable inserty keys to avoid accidentally modifing the buffer
+-- disable inserty keys to avoid accidentally modifying the buffer
 vim.keymap.set('n', 'i', '<nop>', { buffer = true })
 vim.keymap.set('n', 'I', '<nop>', { buffer = true })
 vim.keymap.set('n', 'a', '<nop>', { buffer = true })

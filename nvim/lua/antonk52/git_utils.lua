@@ -26,9 +26,8 @@ local function run_cmd_and_exit(cmd)
 end
 
 local function download_gitignore_file()
-    local out =
-        vim.system({ 'curl', '-s', 'https://api.github.com/repos/github/gitignore/contents' }, nil)
-            :wait()
+    local ignores_url = 'https://api.github.com/repos/github/gitignore/contents'
+    local out = vim.system({ 'curl', '-s', ignores_url }):wait()
     if out.code ~= 0 then
         return vim.notify('Failed to fetch gitignore files\n' .. out.stderr, vim.log.levels.ERROR)
     end
@@ -63,13 +62,13 @@ local function download_gitignore_file()
         vim.system({ 'curl', '--output', target_file, '-s', selected.url }):wait()
         -- update buffer content
         vim.cmd.edit()
-        vim.notify('Downloaded ' .. selected.name .. ' to ' .. target_file, vim.log.levels.INFO)
+        vim.notify('Downloaded ' .. selected.name .. ' to ' .. target_file)
     end)
 end
 
 local function git_status()
     local function update_status(buf)
-        local out = vim.system({ 'git', 'status', '--porcelain' }, nil):wait()
+        local out = vim.system({ 'git', 'status', '--porcelain' }):wait()
         if out.code ~= 0 then
             return vim.notify('Failed to run git status\n' .. out.stderr, vim.log.levels.ERROR)
         end
@@ -133,10 +132,8 @@ local function git_status()
 
                 local out = vim.system({ 'git', pick, path }, nil):wait()
                 if out.code ~= 0 then
-                    return vim.notify(
-                        'Failed to run "git ' .. pick .. ' ' .. path .. '"\n' .. out.stderr,
-                        vim.log.levels.ERROR
-                    )
+                    local msg = 'Failed to run "git ' .. pick .. ' ' .. path .. '"\n' .. out.stderr
+                    return vim.notify(msg, vim.log.levels.ERROR)
                 end
 
                 update_status(buf)

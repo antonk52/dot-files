@@ -10,7 +10,7 @@ local ESLINT_CONFIGS = {
 }
 
 function M.run()
-    vim.notify('Running eslint…', vim.log.levels.INFO, { title = 'eslint' })
+    vim.notify('Running eslint…', vim.log.levels.INFO)
     local start_ms = vim.uv.now()
 
     local bin = vim.fn.executable('bunx') == 1 and 'bunx' or 'npx'
@@ -21,23 +21,11 @@ function M.run()
         local diff_sec = math.ceil((vim.uv.now() - start_ms) / 1000)
         vim.schedule(function()
             if obj.code == 0 then
-                return vim.notify(
-                    'No errors (' .. diff_sec .. 's)',
-                    vim.log.levels.INFO,
-                    { title = 'eslint' }
-                )
+                return vim.notify('No errors (' .. diff_sec .. 's)', vim.log.levels.INFO)
             elseif obj.stderr and vim.trim(obj.stderr) ~= '' then
-                vim.notify(
-                    'eslint stderr:\n' .. tostring(obj.stderr),
-                    vim.log.levels.ERROR,
-                    { title = 'eslint' }
-                )
+                vim.notify('eslint stderr:\n' .. tostring(obj.stderr), vim.log.levels.ERROR)
             end
-            vim.notify(
-                'Eslint exited with errors. ' .. diff_sec .. 's',
-                vim.log.levels.ERROR,
-                { title = 'eslint' }
-            )
+            vim.notify('Eslint exited with errors. ' .. diff_sec .. 's', vim.log.levels.ERROR)
 
             local errors = {}
             local lines = vim.split(obj.stdout or '', '\n')

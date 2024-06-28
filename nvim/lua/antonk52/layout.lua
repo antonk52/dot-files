@@ -25,7 +25,7 @@ local navigation_map = {
 
 function M.navigate(direction)
     if navigation_map[direction] == nil then
-        print('Unknown direction to navigate to "' .. direction .. '"')
+        vim.notify('Unknown direction to navigate to "' .. direction .. '"')
         return
     end
     if vim.g.vscode then
@@ -49,7 +49,7 @@ local layout_cmd = ''
 function M.restore_layout()
     -- do nothing if there are no splits
     if vim.fn.winnr('$') == 1 then
-        return nil
+        return
     end
     local restore_layout_cmd = vim.fn.winrestcmd()
     if layout_cmd ~= '' then

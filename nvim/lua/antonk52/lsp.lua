@@ -13,7 +13,7 @@ local function cross_lsp_definition()
 
     ---@table (Location | Location[] | LocationLink[] | nil)
     local raw_responses = {}
-    -- esentially redoing Promise.all with filtering of empty/nil values
+    -- essentially redoing Promise.all with filtering of empty/nil values
     local responded = 0
 
     local function make_cb(client)
@@ -73,7 +73,6 @@ local function cross_lsp_definition()
     end
 end
 
--- set keymaps without having to pass a function to on_attach
 vim.api.nvim_create_autocmd('LspAttach', {
     callback = function(args)
         local bufnr = args.buf
@@ -261,7 +260,7 @@ function M.setup()
     capabilities.textDocument.completion.completionItem.snippetSupport = true
     for lsp, opts in pairs(M.servers) do
         if type(opts) == 'function' then
-            ---@diagnostic disable-next-line: cast-local-type
+            ---@diagnostic disable-next-line
             opts = opts()
         end
 

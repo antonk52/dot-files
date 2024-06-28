@@ -101,7 +101,7 @@ function M.setup()
         },
     })
 
-    -- complitions for in buffer search
+    -- completion for buffer search
     cmp.setup.cmdline({ '/', '?' }, {
         mapping = cmp.mapping.preset.cmdline(),
         sources = {
