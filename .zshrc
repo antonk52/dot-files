@@ -13,7 +13,6 @@ export NODE_REPL_HISTORY=$XDG_DATA_HOME/node/repl_history
 export NODE_REPL_HISTORY_SIZE=10000
 export NODE_REPL_MODE=strict
 export DOCKER_CONFIG="$XDG_CONFIG_HOME"/docker
-export TS_NODE_HISTORY="$XDG_DATA_HOME"/ts-node/history
 export GEM_HOME="$XDG_DATA_HOME"/gem
 export GEM_SPEC_CACHE="$XDG_CACHE_HOME"/gem
 export CARGO_HOME="$XDG_DATA_HOME"/cargo
@@ -24,7 +23,7 @@ export HOMEBREW_NO_AUTO_UPDATE="1"
 export DOT_FILES="$HOME"/dot-files
 
 # pick up base16 colortheme
-if [[ -f /.base16_theme && -z "$NVIM" && "$__CFBundleIdentifier" != "com.apple.Terminal" ]]; then
+if [[ -f ~/.base16_theme && -z "$NVIM" && "$__CFBundleIdentifier" != "com.apple.Terminal" ]]; then
     . ~/.base16_theme
 fi
 
@@ -32,7 +31,7 @@ fi
 export PATH="$HOME"/.cargo/bin:"$HOME"/.local/share/cargo/bin:$PATH
 # pip packages
 export PATH="$HOME"/Library/Python/3.9/bin:$PATH
-export PATH=$PATH:"$HOME"/homebrew/bin:"$HOME"/homebrew/sbin:"$HOME"/homebrew/opt/node@16/bin
+export PATH=$PATH:"$HOME"/homebrew/bin:"$HOME"/homebrew/sbin
 
 # avoid using find if `fd` is installed
 if command -v fd &> /dev/null; then
