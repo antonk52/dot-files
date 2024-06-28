@@ -21,11 +21,6 @@
 1. Set shell theme as tomorrow night by running `base16_tomorrow-night`
 1. Install global npm deps
     <br>`./scripts/prepare-npm.sh`
-1. Set up [n]vim
-    <br>`./scripts/prepare-vim.sh`
-1. Install vim plugins
-    `vim -c PlugInstall`
-
 
 ## Macos system preferences (TODO: move to `prepare-mac.sh`)
 
