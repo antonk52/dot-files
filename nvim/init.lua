@@ -115,12 +115,7 @@ local plugins = {
     {
         'nvim-pack/nvim-spectre', -- global search and replace
         dependencies = { 'nvim-lua/plenary.nvim' },
-        config = function()
-            require('spectre').setup()
-            vim.api.nvim_create_user_command('FindAndReplace', function()
-                require('spectre').open()
-            end, { desc = 'Open Spectre' })
-        end,
+        opts = {},
         event = 'VeryLazy',
     },
     {
@@ -214,6 +209,7 @@ local plugins = {
         dependencies = { 'nvim-lua/plenary.nvim' },
         main = 'antonk52.telescope',
         opts = {},
+        event = 'VeryLazy',
     },
     {
         -- TODO: replace with 'Bekaboo/dropbar.nvim',
@@ -511,6 +507,7 @@ vim.opt.breakindentopt = 'shift:2'
 
 -- open horizontal splits below current window
 vim.opt.splitbelow = true
+vim.opt.splitright = true
 
 -- folding
 vim.opt.foldmethod = 'indent'
