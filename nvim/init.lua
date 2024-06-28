@@ -436,26 +436,9 @@ vim.g.python_host_skip_check = 1
 vim.g.loaded_python_provider = 0
 -- Disable python3 provider
 vim.g.loaded_python3_provider = 0
-
 vim.g.python3_host_skip_check = 1
--- if vim.fn.executable('python3') == 1 then
---     vim.g.python3_host_prog = vim.fn.exepath('python3')
--- else
---     vim.g.loaded_python3_provider = 0
--- end
-
--- if vim.fn.executable('neovim-node-host') == 1 then
---     vim.g.node_host_prog = vim.fn.exepath('neovim-node-host')
--- else
 vim.g.loaded_node_provider = 0
--- end
-
--- if vim.fn.executable('neovim-ruby-host') == 1 then
---     vim.g.ruby_host_prog = vim.fn.exepath('neovim-ruby-host')
--- else
 vim.g.loaded_ruby_provider = 0
--- end
-
 vim.g.loaded_perl_provider = 0
 
 -- Defaults {{{1
@@ -677,10 +660,6 @@ keymap.set(
     { desc = 'toggle folds' }
 )
 
--- Useful when you have many splits & the status line gets truncated
-keymap.set('n', '<leader>p', ':echo expand("%")<CR>', { desc = 'print rel buffer path' })
-keymap.set('n', '<leader>P', ':echo expand("%:p")<CR>', { desc = 'print abs buffer path' })
-
 -- indentation shifts keep selection(`=` should still be preferred)
 keymap.set('v', '<', '<gv')
 keymap.set('v', '>', '>gv')
@@ -790,6 +769,23 @@ local commands = {
             end
         end
     end,
+    BufferInfo = function()
+        vim.notify(table.concat({
+            'Buffer info:',
+            '* Rel path: ' .. vim.fn.expand('%'),
+            '* Abs path: ' .. vim.fn.expand('%:p'),
+            '* Filetype: ' .. vim.bo.filetype,
+            '* Shift width: ' .. vim.bo.shiftwidth,
+            '* Expand tab: ' .. tostring(vim.bo.expandtab),
+            '* Encoding: ' .. vim.bo.fileencoding,
+            '* LS: ' .. table.concat(
+                vim.tbl_map(function(x)
+                    return x.name
+                end, vim.lsp.get_clients()),
+                ', '
+            ),
+        }, '\n'))
+    end,
     FormatLsp = vim.lsp.buf.format,
     ColorDark = function()
         vim.cmd.color('lake')
@@ -804,8 +800,6 @@ local commands = {
         end,
         { desc = 'Run eslint from the closest eslint config to current buffer' },
     },
-
-    NT = ':set notermguicolors<cr>',
 
     -- fat fingers
     W = ':w',
