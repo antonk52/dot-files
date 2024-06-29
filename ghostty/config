@@ -1,0 +1,18 @@
+# vim: set ft=conf:
+shell-integration-features = no-cursor
+# disable ligatures
+font-feature = -calt
+# macOS only, use thicker strokes
+font-thicken = true
+font-family = FiraCode Nerd Font
+cursor-style = block
+# do not blink
+cursor-style-blink = false
+# bump font size
+font-size = 16
+# no title bar
+window-decoration = false
+quit-after-last-window-closed = true
+macos-option-as-alt = true
+window-padding-x = 0
+window-padding-y = 0
