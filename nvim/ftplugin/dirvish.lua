@@ -41,7 +41,7 @@ local function remove()
         if is_file then
             vim.uv.fs_unlink(target)
         else
-            vim.system({ 'rm', '-rf', target })
+            vim.system({ 'rm', '-rf', target }):wait()
         end
     else
         vim.notify('Remove aborted', vim.log.levels.INFO)
