@@ -22,11 +22,6 @@ export HOMEBREW_NO_AUTO_UPDATE="1"
 
 export DOT_FILES="$HOME"/dot-files
 
-# pick up base16 colortheme
-if [[ -f ~/.base16_theme && -z "$NVIM" && "$__CFBundleIdentifier" != "com.apple.Terminal" ]]; then
-    . ~/.base16_theme
-fi
-
 # cargo crates
 export PATH="$HOME"/.cargo/bin:"$HOME"/.local/share/cargo/bin:$PATH
 # pip packages
