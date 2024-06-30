@@ -3,7 +3,7 @@ shell-integration-features = no-cursor
 # disable ligatures
 font-feature = -calt
 # macOS only, use thicker strokes
-font-thicken = true
+font-thicken = false
 font-family = FiraCode Nerd Font
 cursor-style = block
 # do not blink
