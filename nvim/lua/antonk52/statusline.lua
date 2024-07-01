@@ -1,4 +1,32 @@
 local M = {}
+local LSP_KIND_TO_ICON = {
+    File = '',
+    Module = '',
+    Namespace = '',
+    Package = '',
+    Class = '',
+    Method = '',
+    Property = '',
+    Field = '',
+    Constructor = '',
+    Enum = '',
+    Interface = '',
+    Function = '',
+    Variable = '',
+    Constant = '',
+    String = '',
+    Number = '',
+    Boolean = '',
+    Array = '',
+    Object = '',
+    Key = '',
+    Null = '',
+    EnumMember = '',
+    Struct = '',
+    Event = '',
+    Operator = '',
+    TypeParameter = '',
+}
 local hi_next = function(group)
     return '%#' .. group .. '#'
 end
@@ -78,6 +106,74 @@ function M.filetype()
     return filetype_map[current_filetype] or current_filetype
 end
 
+local _lsp_symbol_cache = ''
+vim.api.nvim_create_autocmd({ 'CursorMoved', 'CursorMovedI' }, {
+    pattern = { '*' },
+    callback = function()
+        if #vim.lsp.get_clients({ method = 'textDocument/documentSymbol' }) == 0 then
+            _lsp_symbol_cache = ''
+            return
+        end
+        local params = { textDocument = vim.lsp.util.make_text_document_params() }
+        vim.lsp.buf_request(0, 'textDocument/documentSymbol', params, function(err, result)
+            if err then
+                vim.print('Error: ', err)
+                return
+            end
+            if not result then
+                _lsp_symbol_cache = ''
+                return
+            end
+            local cursor_pos = vim.api.nvim_win_get_cursor(0)
+            local cursor_line = cursor_pos[1] - 1 -- Convert to 0-based index
+            local cursor_col = cursor_pos[2] -- 0 based
+
+            local named_symbols = {}
+
+            -- Recursively traverses symbols
+            -- Gets the named nodes surrounding current cursor
+            local function process_symbols(symbols)
+                for _, symbol in ipairs(symbols) do
+                    if
+                        (
+                            symbol.range.start.line < cursor_line
+                            or (
+                                symbol.range.start.line == cursor_line
+                                and symbol.range.start.character <= cursor_col
+                            )
+                        )
+                        and (
+                            symbol.range['end'].line > cursor_line
+                            or (
+                                symbol.range['end'].line == cursor_line
+                                and symbol.range['end'].character >= cursor_col
+                            )
+                        )
+                    then
+                        table.insert(named_symbols, { symbol.kind, symbol.name })
+                        if symbol.children then
+                            process_symbols(symbol.children)
+                        end
+                    end
+                end
+            end
+            process_symbols(result)
+
+            _lsp_symbol_cache = table.concat(
+                vim.tbl_map(function(s)
+                    local kind_str = vim.lsp.protocol.SymbolKind[s[1]]
+                    return LSP_KIND_TO_ICON[kind_str] .. ' ' .. s[2]
+                end, named_symbols),
+                '  '
+            )
+        end)
+    end,
+    desc = 'Update lsp symbols for status line',
+})
+function M.lsp_symbols()
+    return _lsp_symbol_cache
+end
+
 local diagnostics_cache = { error = 0, warn = 0, info = 0, hint = 0 }
 local s = vim.diagnostic.severity
 local hi = {
@@ -130,6 +226,7 @@ function M.render()
         hi_next('StatusLineModified') .. M.modified(),
         hi_next('CursorLineNr') .. ' ' .. M.filename() .. ' ',
         '%<',
+        hi_next('Comment') .. ' ' .. M.lsp_symbols(),
         hi_next('Normal') .. '  %=', -- space and right align
         hi_next('Comment') .. M.lsp_init(),
         '  ',

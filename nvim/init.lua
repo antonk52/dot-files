@@ -212,35 +212,6 @@ local plugins = {
         event = 'VeryLazy',
     },
     {
-        -- TODO: replace with 'Bekaboo/dropbar.nvim',
-        -- after updating to nvim 0.10
-        'utilyre/barbecue.nvim',
-        version = '*',
-        dependencies = { 'SmiteshP/nvim-navic' },
-        config = function()
-            require('barbecue').setup({
-                exclude_filetypes = { 'dirvish', 'gitcommit', 'hgcommit', 'hghistory', 'hgssl' },
-                theme = {
-                    dirname = { link = 'barbecue_basename' },
-                    separator = { link = 'barbeque_normal' },
-                },
-            })
-
-            vim.keymap.set('n', '<up>', function()
-                local init_pos = vim.api.nvim_win_get_cursor(0)
-                require('barbecue.ui').navigate(-1)
-                vim.schedule(function()
-                    local next_pos = vim.api.nvim_win_get_cursor(0)
-                    if init_pos[1] == next_pos[1] and init_pos[2] == next_pos[2] then
-                        -- if the cursor did not move, navigate to the parent node
-                        require('barbecue.ui').navigate(-2)
-                    end
-                end)
-            end, { desc = 'navigate to current node start or parent node' })
-        end,
-        event = 'VeryLazy',
-    },
-    {
         'dinhhuy258/git.nvim',
         config = function()
             require('git').setup({ default_mappings = false })
