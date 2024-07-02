@@ -87,6 +87,7 @@ function M.filename()
     local win_size = vim.api.nvim_win_get_width(0) - 28
     return win_size <= #filename_str and vim.fn.pathshorten(filename_str) or filename_str
 end
+
 local filetype_map = {
     ['typescript'] = 'ts',
     ['typescript.jest'] = 'ts',
@@ -107,26 +108,30 @@ function M.filetype()
 end
 
 local _lsp_symbol_cache = ''
-vim.api.nvim_create_autocmd({ 'CursorMoved', 'CursorMovedI' }, {
+vim.api.nvim_create_autocmd({ 'CursorHold', 'InsertLeave', 'WinScrolled', 'BufWinEnter' }, {
     pattern = { '*' },
     callback = function()
-        if #vim.lsp.get_clients({ method = 'textDocument/documentSymbol' }) == 0 then
+        if #vim.lsp.get_clients({ bufnr = 0, method = 'textDocument/documentSymbol' }) == 0 then
             _lsp_symbol_cache = ''
+            vim.cmd.redrawstatus()
             return
         end
         local params = { textDocument = vim.lsp.util.make_text_document_params() }
         vim.lsp.buf_request(0, 'textDocument/documentSymbol', params, function(err, result)
             if err then
                 vim.print('Error: ', err)
+                _lsp_symbol_cache = ''
+                vim.cmd.redrawstatus()
                 return
             end
             if not result then
                 _lsp_symbol_cache = ''
+                vim.cmd.redrawstatus()
                 return
             end
             local cursor_pos = vim.api.nvim_win_get_cursor(0)
             local cursor_line = cursor_pos[1] - 1 -- Convert to 0-based index
-            local cursor_col = cursor_pos[2] -- 0 based
+            local cursor_col = cursor_pos[2]      -- 0 based
 
             local named_symbols = {}
 
@@ -166,6 +171,7 @@ vim.api.nvim_create_autocmd({ 'CursorMoved', 'CursorMovedI' }, {
                 end, named_symbols),
                 '  '
             )
+            vim.cmd.redrawstatus()
         end)
     end,
     desc = 'Update lsp symbols for status line',
@@ -198,6 +204,7 @@ function M.diagnostics()
 
     return table.concat(items, ' ') .. hi_next('Normal') .. '  '
 end
+
 function M.refresh_diagnostics()
     diagnostics_cache = nil
 end
@@ -235,7 +242,7 @@ function M.render()
         M.diagnostics(),
         M.filetype(),
         '  ',
-        '%p%%', -- percentage through file
+        '%p%%',   -- percentage through file
         '  ',
         '%l:%c ', -- 'line:column'
     })
