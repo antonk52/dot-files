@@ -157,13 +157,13 @@ M.servers = {
         }
 
         -- when homebrew is installed to homedir
-        local local_prefix = '~/homebrew/Cellar/lua-language-server/*/libexec/bin/'
-        local LOCAL_BIN = {
-            bin = vim.fn.expand(local_prefix .. 'lua-language-server'),
-            main = vim.fn.expand(local_prefix .. 'main.lua'),
+        local opt_prefix = '/opt/homebrew/Cellar/lua-language-server/*/libexec/bin/'
+        local OPT_BIN = {
+            bin = vim.fn.expand(opt_prefix .. 'lua-language-server'),
+            main = vim.fn.expand(opt_prefix .. 'main.lua'),
         }
 
-        local BIN = vim.uv.fs_stat(GLOBAL_BIN.bin) and GLOBAL_BIN or LOCAL_BIN
+        local BIN = vim.uv.fs_stat(GLOBAL_BIN.bin) and GLOBAL_BIN or OPT_BIN
 
         if not vim.uv.fs_stat(BIN.bin) then
             vim.notify(

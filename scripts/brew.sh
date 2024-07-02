@@ -33,6 +33,7 @@ brew install gh # github cli
 brew install git # updated version
 brew install git-delta # improved diff highlight
 brew install git-lfs # github large file storage
+brew install gnu-sed # used by neovim
 brew install htop # top but better
 brew install jq # cli for working with json
 brew install lua-language-server
