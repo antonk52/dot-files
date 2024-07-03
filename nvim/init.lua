@@ -20,16 +20,10 @@ vim.opt.rtp:prepend(lazypath)
 -- Plugins {{{1
 local plugins = {
     {
-        'neovim/nvim-lspconfig',                   -- types & linting
+        'neovim/nvim-lspconfig', -- types & linting
         dependencies = { 'b0o/schemastore.nvim' }, -- json schemas for json lsp
-        config = function()
-            vim.opt.updatetime = 300
-            vim.opt.shortmess = vim.opt.shortmess + 'c'
-
-            vim.schedule(function()
-                require('antonk52.lsp').setup()
-            end)
-        end,
+        main = 'antonk52.lsp',
+        opts = {},
     },
     {
         'stevearc/conform.nvim',
@@ -43,12 +37,12 @@ local plugins = {
                     return {
                         timeout_ms = 5000,
                         lsp_fallback = (
-                                vim.fs.basename(vim.api.nvim_buf_get_name(0)) ~= 'lazy-lock.json'
-                                and vim.startswith(
-                                    vim.uv.cwd() or vim.fn.getcwd(),
-                                    '/Users/antonk52/dot-files'
-                                )
+                            vim.fs.basename(vim.api.nvim_buf_get_name(0)) ~= 'lazy-lock.json'
+                            and vim.startswith(
+                                vim.uv.cwd() or vim.fn.getcwd(),
+                                '/Users/antonk52/dot-files'
                             )
+                        )
                             or vim.tbl_contains(
                                 { 'typescript', 'typescriptreact', 'javascript', 'javascriptreact' },
                                 vim.bo.filetype
@@ -305,8 +299,8 @@ local plugins = {
                 local t = require('github-theme.palette.github_light').palette
                 local c = {
                     black = t.black.base, -- "#24292f"
-                    red = t.red.base,     -- "#cf222e"
-                    blue = t.blue.base,   -- "#0969da"
+                    red = t.red.base, -- "#cf222e"
+                    blue = t.blue.base, -- "#0969da"
                 }
 
                 -- override highlighing groups that dont match personal preferrences
@@ -412,6 +406,9 @@ vim.g.loaded_node_provider = 0
 vim.g.loaded_ruby_provider = 0
 vim.g.loaded_perl_provider = 0
 
+vim.opt.updatetime = 300
+vim.opt.shortmess = vim.opt.shortmess + 'c'
+
 -- Defaults {{{1
 -- highlight current cursor line
 vim.opt.cursorline = true
@@ -475,7 +472,7 @@ vim.opt.fillchars = { fold = '⏤' }
 -- new
 -- ⏤⏤⏤⏤► [7 lines]: set foldmethod=indent ⏤⏤⏤⏤⏤⏤⏤⏤⏤⏤
 vim.opt.foldtext =
-'"⏤⏤⏤⏤► [".(v:foldend - v:foldstart + 1)." lines] ".trim(getline(v:foldstart))." "'
+    '"⏤⏤⏤⏤► [".(v:foldend - v:foldstart + 1)." lines] ".trim(getline(v:foldstart))." "'
 
 -- break long lines on breakable chars
 -- instead of the last fitting character
@@ -514,7 +511,7 @@ do
         local is_ts_or_js = filepath:match('%.[jt]sx?$')
         require('vscode-neovim').call(
             (vim.v.count and not is_www_js and is_ts_or_js) and 'typescript.goToSourceDefinition'
-            or 'editor.action.revealDefinition'
+                or 'editor.action.revealDefinition'
         )
     end, 'lsp definition')
     lsp_keymap('<leader>t', vim.lsp.buf.hover, 'editor.action.showHover', 'lsp hover')

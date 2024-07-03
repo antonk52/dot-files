@@ -205,7 +205,7 @@ M.servers = {
                             vim.env.VIMRUNTIME, -- nvim core, no 3rd party plugins
                             'lua',
                             'nvim-test',
-                            '${3rd}/luv/library',       -- docs for uv
+                            '${3rd}/luv/library', -- docs for uv
                             '${3rd}/luaassert/library', -- docs for assert
                             '${3rd}/busted/library',
                         },
