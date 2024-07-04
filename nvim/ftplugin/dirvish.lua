@@ -70,20 +70,10 @@ local function add()
     vim.cmd.edit()
 end
 
-vim.keymap.set('n', 'dd', remove, { buffer = true, silent = true, desc = 'remove focused item' })
-vim.keymap.set(
-    'n',
-    'mm',
-    move,
-    { buffer = true, silent = true, desc = 'Move focused file/directory' }
-)
-vim.keymap.set(
-    'n',
-    'mc',
-    copy,
-    { buffer = true, silent = true, desc = 'Copy focused file/directory' }
-)
-vim.keymap.set('n', 'ma', add, { buffer = true, silent = true, desc = 'Add new file/directory' })
+vim.keymap.set('n', 'dd', remove, { buffer = 0, silent = true, desc = 'Remove focused item' })
+vim.keymap.set('n', 'mm', move, { buffer = 0, silent = true, desc = 'Move focused file/directory' })
+vim.keymap.set('n', 'mc', copy, { buffer = 0, silent = true, desc = 'Copy focused file/directory' })
+vim.keymap.set('n', 'ma', add, { buffer = 0, silent = true, desc = 'Add new file/directory' })
 
 -- disable inserty keys to avoid accidentally modifying the buffer
 vim.keymap.set('n', 'i', '<nop>', { buffer = true })
@@ -115,7 +105,7 @@ do
                     local col = 0
                     vim.schedule(function()
                         vim.api.nvim_buf_set_extmark(bufnr, ns, linenr, col, {
-                            virt_text = { { '-> ' .. target, 'Comment' } },
+                            virt_text = { { '⏤⏤► ' .. target, 'Comment' } },
                             hl_mode = 'combine',
                         })
                     end)
