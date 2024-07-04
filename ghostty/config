@@ -10,6 +10,7 @@ cursor-style-blink = false
 font-size = 16
 # no title bar
 window-decoration = false
+window-padding-balance = true
 quit-after-last-window-closed = true
 macos-option-as-alt = true
 window-padding-x = 0
