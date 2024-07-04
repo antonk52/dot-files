@@ -562,27 +562,6 @@ do
         keymap.set('n', '[e', function()
             vim.diagnostic.goto_prev({ severity = vim.diagnostic.severity.ERROR })
         end, { desc = 'go to prev error diagnostic' })
-        keymap.set(
-            'n',
-            '<leader>wa',
-            vim.lsp.buf.add_workspace_folder,
-            { desc = 'lsp add_workspace_folder' }
-        )
-        keymap.set(
-            'n',
-            '<leader>wr',
-            vim.lsp.buf.remove_workspace_folder,
-            { desc = 'lsp remove_workspace_folder' }
-        )
-        keymap.set('n', '<leader>wl', function()
-            print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
-        end, { desc = 'print workspace folders' })
-        keymap.set(
-            'n',
-            '<leader>ws',
-            vim.lsp.buf.workspace_symbol,
-            { desc = 'lsp workspace_symbol' }
-        )
 
         keymap.set('n', '<localleader>t', function()
             require('lazy.util').float_term()
@@ -765,6 +744,25 @@ local commands = {
             require('antonk52.eslint').run()
         end,
         { desc = 'Run eslint from the closest eslint config to current buffer' },
+    },
+
+    LspWorkspaceAdd = {
+        function()
+            vim.lsp.buf.add_workspace_folder()
+        end,
+        { desc = 'lsp add_workspace_folder' },
+    },
+    LspWorkspaceRemove = {
+        function()
+            vim.lsp.buf.remove_workspace_folder()
+        end,
+        { desc = 'lsp remove_workspace_folder' },
+    },
+    LspWorkspaceList = {
+        function()
+            vim.print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
+        end,
+        { desc = 'print workspace folders' },
     },
 
     -- fat fingers
