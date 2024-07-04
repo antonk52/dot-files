@@ -37,12 +37,14 @@ brew install gnu-sed # used by neovim
 brew install htop # top but better
 brew install jq # cli for working with json
 brew install lua-language-server
+brew install luacheck # lua linter
 brew install marksman # markdown lsp
 brew install neovim # vim but better
 brew install node # nodejs & npm
 brew install openssl
 brew install procs # ps in rust
 brew install ripgrep
+brew install selene # lua formatter
 brew install tmux # terminal multiplexer
 brew install tree # cli to display directories as trees
 brew install wget # cli to download stuff
