@@ -56,7 +56,6 @@ if [[ -z "${PERSONAL}" ]]; then
 fi
 
 # cask apps
-brew install alacritty # terminal
 brew install karabiner-elements # advanced key mapping
 brew install keycastr # useful for demos
 brew install monitorcontrol # control external monitors brightness via keyboard
@@ -70,5 +69,3 @@ fi
 # fonts
 brew tap homebrew/cask-fonts
 brew install font-fira-code
-brew install font-fira-code-nerd-font
-
