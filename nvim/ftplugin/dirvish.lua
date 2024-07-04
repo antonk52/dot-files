@@ -92,3 +92,35 @@ vim.keymap.set('n', 'a', '<nop>', { buffer = true })
 vim.keymap.set('n', 'A', '<nop>', { buffer = true })
 vim.keymap.set('n', 'r', '<nop>', { buffer = true })
 vim.keymap.set('n', 'R', '<nop>', { buffer = true })
+
+-- virtual text for symlinks
+do
+    local ns = vim.api.nvim_create_namespace('dirvish_symlinks')
+    local bufnr = vim.api.nvim_get_current_buf()
+
+    for i, line in ipairs(vim.api.nvim_buf_get_lines(0, 0, -1, false)) do
+        if vim.endswith(line, '/') then
+            line = line:sub(1, -2)
+        end
+        vim.uv.fs_lstat(line, function(err, lstat)
+            if err then
+                return
+            end
+            if lstat and lstat.type == 'link' then
+                vim.uv.fs_readlink(line, function(reallink_err, target)
+                    if reallink_err then
+                        return
+                    end
+                    local linenr = i - 1
+                    local col = 0
+                    vim.schedule(function()
+                        vim.api.nvim_buf_set_extmark(bufnr, ns, linenr, col, {
+                            virt_text = { { '-> ' .. target, 'Comment' } },
+                            hl_mode = 'combine',
+                        })
+                    end)
+                end)
+            end
+        end)
+    end
+end

@@ -36,13 +36,10 @@ local plugins = {
                 format_on_save = function()
                     return {
                         timeout_ms = 5000,
-                        lsp_fallback = (
-                            vim.fs.basename(vim.api.nvim_buf_get_name(0)) ~= 'lazy-lock.json'
-                            and vim.startswith(
+                        lsp_fallback = not vim.startswith(
                                 vim.uv.cwd() or vim.fn.getcwd(),
                                 '/Users/antonk52/dot-files'
                             )
-                        )
                             or vim.tbl_contains(
                                 { 'typescript', 'typescriptreact', 'javascript', 'javascriptreact' },
                                 vim.bo.filetype
