@@ -738,14 +738,8 @@ local commands = {
         }, '\n'))
     end,
     FormatLsp = vim.lsp.buf.format,
-    ColorDark = function()
-        require('lake').set_theme_name('default')
-        vim.cmd.color('lake')
-    end,
-    ColorDarkContrast = function()
-        require('lake').set_theme_name('contrast')
-        vim.cmd.color('lake')
-    end,
+    ColorDark = 'color lake',
+    ColorDarkContrast = 'color lake_contrast',
 
     Eslint = {
         function()
