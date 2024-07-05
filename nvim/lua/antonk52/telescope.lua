@@ -102,7 +102,7 @@ function M.git_diff(opts)
         end
     end
     -- Add the last hunk to the table
-    if hunk[1] ~= nil then
+    if hunk[1] ~= nil and filename and linenumber and hunk then
         table.insert(results, { filename = filename, lnum = linenumber, raw_lines = hunk })
     end
 
