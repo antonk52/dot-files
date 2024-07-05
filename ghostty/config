@@ -2,6 +2,9 @@
 
 shell-integration-features = no-cursor
 
+# darken from #fff so it is easier on the eyes
+foreground = #f5f7ff
+
 # disable ligatures
 font-feature = -calt
 # font-family = FiraCode Nerd Font Mono
