@@ -221,8 +221,16 @@ local plugins = {
                 require('mini.bracketed').setup()
                 require('mini.pairs').setup() -- autoclose ([{
                 require('mini.cursorword').setup({ delay = 300 })
-                vim.cmd('hi! link MiniCursorWord Visual')
-                vim.cmd('hi! link MiniCursorWordCurrent CursorLine')
+                local function set_mini_highlights()
+                    -- TODO create an issue for miniCursorWord to supply a highlight group to link to
+                    vim.api.nvim_set_hl(0, 'MiniCursorWord', { link = 'Visual' })
+                    vim.api.nvim_set_hl(0, 'MiniCursorWordCurrent', { link = 'CursorLine' })
+                end
+                set_mini_highlights()
+                vim.api.nvim_create_autocmd('ColorScheme', {
+                    pattern = '*',
+                    callback = set_mini_highlights,
+                })
                 require('mini.splitjoin').setup() -- gS to toggle listy things
                 require('mini.hipatterns').setup({
                     highlighters = {
@@ -291,8 +299,6 @@ local plugins = {
                     },
                 })
                 vim.cmd.color('github_light')
-                vim.cmd('hi! link MiniCursorWord Visual')
-                vim.cmd('hi! link MiniCursorWordCurrent CursorLine')
                 local t = require('github-theme.palette.github_light').palette
                 local c = {
                     black = t.black.base, -- "#24292f"
@@ -733,10 +739,12 @@ local commands = {
     end,
     FormatLsp = vim.lsp.buf.format,
     ColorDark = function()
+        require('lake').set_theme_name('default')
         vim.cmd.color('lake')
-        -- TODO create an issue for miniCursorWord to supply a highlight group to link to
-        vim.cmd('hi! link MiniCursorWord Visual')
-        vim.cmd('hi! link MiniCursorWordCurrent CursorLine')
+    end,
+    ColorDarkContrast = function()
+        require('lake').set_theme_name('contrast')
+        vim.cmd.color('lake')
     end,
 
     Eslint = {
