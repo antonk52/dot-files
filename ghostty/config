@@ -1,6 +1,10 @@
 # vim: set ft=conf:
 
-shell-integration-features = no-cursor
+shell-integration-features = no-title
+
+mouse-hide-while-typing = true
+# alacritty has a faster scroll
+mouse-scroll-multiplier = 1.2
 
 # darken from #fff so it is easier on the eyes
 foreground = #f5f7ff
@@ -16,11 +20,14 @@ cursor-style-blink = false
 
 # bump font size
 font-size = 16
-# no title bar
-window-decoration = false
+
+# title bar
+window-decoration = true
+
 window-padding-balance = true
 window-padding-x = 0
 window-padding-y = 0
+
 quit-after-last-window-closed = true
 macos-option-as-alt = true
 
