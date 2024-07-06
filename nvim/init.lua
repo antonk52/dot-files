@@ -186,10 +186,20 @@ local plugins = {
                     keymaps = {
                         ['af'] = '@function.outer',
                         ['if'] = '@function.inner',
-                        ['ac'] = '@class.outer',
-                        ['ic'] = '@class.inner',
                         ['ab'] = '@block.outer',
                         ['ib'] = '@block.inner',
+                    },
+                },
+                move = {
+                    enable = true,
+                    set_jumps = true,
+                    goto_next_start = {
+                        [']f'] = '@function.outer',
+                        [']b'] = '@block.outer',
+                    },
+                    goto_previous_start = {
+                        ['[f'] = '@function.outer',
+                        ['[b'] = '@block.outer',
                     },
                 },
             },
@@ -218,7 +228,9 @@ local plugins = {
         'echasnovski/mini.nvim',
         config = function()
             if not vim.g.vscode then
-                require('mini.bracketed').setup()
+                require('mini.bracketed').setup({
+                    file = { suffix = '' }, -- disabled file navigation
+                })
                 require('mini.pairs').setup() -- autoclose ([{
                 require('mini.cursorword').setup({ delay = 300 })
                 local function set_mini_highlights()

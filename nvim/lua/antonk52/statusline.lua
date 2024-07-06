@@ -131,12 +131,14 @@ vim.api.nvim_create_autocmd({ 'CursorHold', 'InsertLeave', 'WinScrolled', 'BufWi
             end
             local cursor_pos = vim.api.nvim_win_get_cursor(0)
             local cursor_line = cursor_pos[1] - 1 -- Convert to 0-based index
-            local cursor_col = cursor_pos[2]      -- 0 based
+            local cursor_col = cursor_pos[2] -- 0 based
 
+            ---@type {kind: string, name: string}[]
             local named_symbols = {}
 
             -- Recursively traverses symbols
             -- Gets the named nodes surrounding current cursor
+            ---@param symbols lsp.DocumentSymbol[]
             local function process_symbols(symbols)
                 for _, symbol in ipairs(symbols) do
                     if
@@ -155,7 +157,7 @@ vim.api.nvim_create_autocmd({ 'CursorHold', 'InsertLeave', 'WinScrolled', 'BufWi
                             )
                         )
                     then
-                        table.insert(named_symbols, { symbol.kind, symbol.name })
+                        table.insert(named_symbols, { kind = symbol.kind, name = symbol.name })
                         if symbol.children then
                             process_symbols(symbol.children)
                         end
@@ -166,8 +168,8 @@ vim.api.nvim_create_autocmd({ 'CursorHold', 'InsertLeave', 'WinScrolled', 'BufWi
 
             _lsp_symbol_cache = table.concat(
                 vim.tbl_map(function(s)
-                    local kind_str = vim.lsp.protocol.SymbolKind[s[1]]
-                    return LSP_KIND_TO_ICON[kind_str] .. ' ' .. s[2]
+                    local kind_str = vim.lsp.protocol.SymbolKind[s.kind]
+                    return LSP_KIND_TO_ICON[kind_str] .. ' ' .. s.name
                 end, named_symbols),
                 '  '
             )
@@ -242,7 +244,7 @@ function M.render()
         M.diagnostics(),
         M.filetype(),
         '  ',
-        '%p%%',   -- percentage through file
+        '%p%%', -- percentage through file
         '  ',
         '%l:%c ', -- 'line:column'
     })

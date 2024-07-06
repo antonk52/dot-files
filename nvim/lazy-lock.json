@@ -11,7 +11,7 @@
   "git.nvim": { "branch": "main", "commit": "164daed4eff61bd6bee6f1c97cb78144b9374022" },
   "github-nvim-theme": { "branch": "main", "commit": "4f44a5c930372c85483d02700f332d34417e50b2" },
   "lake.nvim": { "branch": "main", "commit": "b6bbf2eb496e6f44ad98c8aa260d4702af26cbb3" },
-  "lazy.nvim": { "branch": "main", "commit": "d901d2166fef0304e360316e7a04316f11ab62d0" },
+  "lazy.nvim": { "branch": "main", "commit": "0ff7e83c17c6eef181116954761ee8ed84db88a7" },
   "markdowny.nvim": { "branch": "main", "commit": "a8862350edfde8e32e4937455be8aae297dd4e4c" },
   "mini.nvim": { "branch": "main", "commit": "d187614ecee84ef8d7456339ed7ce1160d054310" },
   "npm_scripts.nvim": { "branch": "main", "commit": "aadad7a75fbb598b5b8903bcc2ff54bf63627173" },
@@ -23,7 +23,7 @@
   "plenary.nvim": { "branch": "master", "commit": "a3e3bc82a3f95c5ed0d7201546d5d2c19b20d683" },
   "schemastore.nvim": { "branch": "main", "commit": "30946db59edba23103c2f524e636910a7a2160df" },
   "telescope.nvim": { "branch": "master", "commit": "bfcc7d5c6f12209139f175e6123a7b7de6d9c18a" },
-  "ts-comments.nvim": { "branch": "main", "commit": "ea43f37f7c685316c2d30dbae1c6892beb27cd41" },
+  "ts-comments.nvim": { "branch": "main", "commit": "9591d7d3758183a44f9cefc06dccfab89d31212f" },
   "twoslash-queries.nvim": { "branch": "main", "commit": "b92622c7b71eceefabd02eef24236041069904b1" },
   "vim-dirvish": { "branch": "master", "commit": "3851bedb7f191b9a4a5531000b6fc0a8795cc9bb" }
 }
