@@ -33,19 +33,11 @@ local plugins = {
             local js_formatters = { biome_config and 'biome' or 'prettier' }
 
             require('conform').setup({
-                format_on_save = function()
-                    return {
-                        timeout_ms = 5000,
-                        lsp_fallback = not vim.startswith(
-                                vim.uv.cwd() or vim.fn.getcwd(),
-                                '/Users/antonk52/dot-files'
-                            )
-                            or vim.tbl_contains(
-                                { 'typescript', 'typescriptreact', 'javascript', 'javascriptreact' },
-                                vim.bo.filetype
-                            ),
-                    }
-                end,
+                format_on_save = {
+                    timeout_ms = 5000,
+                    lsp_fallback = 'fallback',
+                },
+                notify_on_errror = false,
                 formatters_by_ft = {
                     lua = { 'stylua' },
                     -- Use a sub-list to run only the first available formatter
@@ -53,7 +45,7 @@ local plugins = {
                     javascriptreact = { js_formatters },
                     typescript = { js_formatters },
                     typescriptreact = { js_formatters },
-                    json = { js_formatters },
+                    -- json = { js_formatters },
                 },
             })
             vim.api.nvim_create_user_command('Format', function()
@@ -156,12 +148,7 @@ local plugins = {
         -- open nvim in macos native terminal app and run `:TSInstall`
         opts = {
             ensure_installed = {
-                'bash',
-                'c',
-                'cpp',
                 'css',
-                'graphql',
-                'html',
                 'javascript',
                 'jsdoc',
                 'json',
@@ -169,7 +156,6 @@ local plugins = {
                 'luadoc',
                 'markdown',
                 'markdown_inline',
-                'php',
                 'scss',
                 'toml',
                 'tsx',

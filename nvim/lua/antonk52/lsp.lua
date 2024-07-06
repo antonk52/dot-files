@@ -257,7 +257,6 @@ function M.setup()
 
     local capabilities =
         require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities())
-    capabilities.textDocument.completion.completionItem.snippetSupport = true
     for lsp, opts in pairs(M.servers) do
         if type(opts) == 'function' then
             ---@diagnostic disable-next-line
