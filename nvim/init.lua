@@ -586,18 +586,8 @@ keymap.set('n', '<esc>', function()
         vim.snippet.stop()
     end
 end, { silent = true, desc = 'toggle highlight for last search' })
-keymap.set(
-    'n',
-    'n',
-    '<cmd>set hlsearch<cr>n',
-    { desc = 'always have highlighted search results when navigating' }
-)
-keymap.set(
-    'n',
-    'N',
-    '<cmd>set hlsearch<cr>N',
-    { desc = 'always have highlighted search results when navigating' }
-)
+keymap.set('n', 'n', '<cmd>set hlsearch<cr>n', { desc = 'highlight search when navigating' })
+keymap.set('n', 'N', '<cmd>set hlsearch<cr>N', { desc = 'highlight search when navigating' })
 
 keymap.set(
     'n',
