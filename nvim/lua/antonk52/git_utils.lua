@@ -77,17 +77,25 @@ local function git_status()
         -- Y shows the status of the working tree
         local lines = vim.split(out.stdout, '\n')
         vim.api.nvim_buf_set_lines(buf, 0, -1, false, lines)
+        local mode_to_hl = {
+            M = '@diff.plus',
+            D = '@diff.minus',
+            A = '@diff.plus',
+            R = '@diff.minus',
+        }
         for i, line in ipairs(lines) do
-            local mode = vim.trim(line:sub(1, 2))
-            local mode_to_hl = {
-                ['??'] = 'DiffNewFile',
-                ['M'] = 'DiffChange',
-                ['D'] = 'DiffDelete',
-                ['A'] = 'DiffAdd',
-                ['R'] = 'DiffRemoved',
-            }
-            if mode_to_hl[mode] then
-                vim.api.nvim_buf_add_highlight(buf, -1, mode_to_hl[mode], i - 1, 0, 2)
+            local new_path = line:sub(1, 2)
+            -- untracked files
+            if new_path == '??' then
+                return vim.api.nvim_buf_add_highlight(buf, -1, 'Conditional', i - 1, 0, 2)
+            end
+            local staged = line:sub(1, 1)
+            if mode_to_hl[staged] then
+                vim.api.nvim_buf_add_highlight(buf, -1, mode_to_hl[staged], i - 1, 0, 1)
+            end
+            local unstaged = line:sub(2, 2)
+            if mode_to_hl[unstaged] then
+                vim.api.nvim_buf_add_highlight(buf, -1, mode_to_hl[unstaged], i - 1, 1, 2)
             end
         end
     end
@@ -108,37 +116,6 @@ local function git_status()
 
     -- add keymaps
     do
-        vim.keymap.set('n', '<cr>', function()
-            local line = vim.api.nvim_get_current_line()
-            local mode = vim.trim(line:sub(1, 2))
-            local mode_to_commands = {
-                ['??'] = { 'add', 'rm' },
-                ['M'] = { 'add', 'rm', 'reset' },
-                ['D'] = { 'add', 'rm', 'reset' },
-                ['A'] = { 'add', 'rm', 'reset' },
-                ['R'] = { 'add', 'rm', 'reset' },
-            }
-            if not mode_to_commands[mode] then
-                return vim.notify('Not a file under cursor', vim.log.levels.ERROR)
-            end
-            local path = line:match('..%s*(.*)')
-
-            vim.ui.select(mode_to_commands[mode], {
-                prompt = 'Command to run:',
-            }, function(pick)
-                if not pick or pick == '' then
-                    return
-                end
-
-                local out = vim.system({ 'git', pick, path }, nil):wait()
-                if out.code ~= 0 then
-                    local msg = 'Failed to run "git ' .. pick .. ' ' .. path .. '"\n' .. out.stderr
-                    return vim.notify(msg, vim.log.levels.ERROR)
-                end
-
-                update_status(buf)
-            end)
-        end, { buffer = true, desc = 'Command picker for file under cursor' })
         local char_to_command = {
             a = 'add',
             r = 'reset',
@@ -149,7 +126,7 @@ local function git_status()
                 local line = vim.api.nvim_get_current_line()
                 local path = line:match('..%s*(.*)')
 
-                local out = vim.system({ 'git', command, path }, nil):wait()
+                local out = vim.system({ 'git', command, path }):wait()
                 if out.code ~= 0 then
                     return vim.notify(
                         'Failed to run "git ' .. command .. ' ' .. path .. '"\n' .. out.stderr,
@@ -160,6 +137,9 @@ local function git_status()
                 update_status(buf)
             end, { desc = 'git ' .. command .. ' file', buffer = buf })
         end
+        vim.keymap.set('n', '?', function()
+            vim.notify('a - add\nr - reset\nd - rm\n? - show help', vim.log.levels.INFO)
+        end, { desc = 'show help', buffer = buf })
     end
 end
 
