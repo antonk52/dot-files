@@ -2,6 +2,9 @@
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ','
 
+local usercmd = vim.api.nvim_create_user_command
+local keymap = vim.keymap
+
 -- Bootstrap lazy.nvim plugin manager {{{1
 local PLUGINS_LOCATION = vim.fs.normalize('~/dot-files/nvim/plugged')
 local lazypath = PLUGINS_LOCATION .. '/lazy.nvim'
@@ -48,9 +51,7 @@ local plugins = {
                     -- json = { js_formatters },
                 },
             })
-            vim.api.nvim_create_user_command('Format', function()
-                require('conform').format()
-            end, {})
+            usercmd('Format', '<cmd>lua require("conform").format()<cr>', {})
         end,
         event = 'VeryLazy',
     },
@@ -99,7 +100,7 @@ local plugins = {
         'nvim-pack/nvim-spectre', -- global search and replace
         dependencies = { 'nvim-lua/plenary.nvim' },
         opts = {},
-        event = 'VeryLazy',
+        cmd = { 'Spectre' },
     },
     {
         'stevearc/dressing.nvim',
@@ -203,7 +204,7 @@ local plugins = {
         config = function()
             require('git').setup({ default_mappings = false })
 
-            vim.api.nvim_create_user_command('GitBrowse', function(x)
+            usercmd('GitBrowse', function(x)
                 local has_range = x.range ~= 0
                 require('git.browse').open(has_range)
             end, { bang = true, range = true, nargs = 0 })
@@ -287,7 +288,7 @@ local plugins = {
     {
         'projekt0n/github-nvim-theme',
         config = function()
-            vim.api.nvim_create_user_command('ColorLight', function()
+            usercmd('ColorLight', function()
                 require('github-theme').setup({
                     options = {
                         styles = {
@@ -407,9 +408,6 @@ vim.g.loaded_node_provider = 0
 vim.g.loaded_ruby_provider = 0
 vim.g.loaded_perl_provider = 0
 
-vim.opt.updatetime = 300
-vim.opt.shortmess = vim.opt.shortmess + 'c'
-
 -- Defaults {{{1
 -- highlight current cursor line
 vim.opt.cursorline = true
@@ -430,27 +428,19 @@ if not vim.g.vscode then
     vim.opt.termguicolors = vim.env.__CFBundleIdentifier ~= 'com.apple.Terminal'
 end
 
--- search made easy
-vim.opt.hlsearch = false
+-- show search effect as you type
 vim.opt.inccommand = 'split'
 
 -- 1 tab == 4 spaces
 vim.opt.tabstop = 4
 vim.opt.shiftwidth = 4
 
--- consider that not all emojis take up full width
-vim.opt.emoji = false
-
 -- use spaces instead of tabs
 vim.opt.expandtab = true
 
--- always indent by multiple of shiftwidth
-vim.opt.shiftround = true
-
 -- ignore swapfile messages
-vim.opt.shortmess = vim.opt.shortmess + 'A'
--- no splash screen
-vim.opt.shortmess = vim.opt.shortmess + 'I'
+vim.opt.shortmess:append('A')
+vim.opt.updatetime = 300
 
 -- indent wrapped lines to match start
 vim.opt.breakindent = true
@@ -463,15 +453,12 @@ vim.opt.splitright = true
 
 -- folding
 vim.opt.foldmethod = 'indent'
-vim.opt.foldlevelstart = 20
 vim.opt.foldlevel = 20
 -- use wider line for folding
 vim.opt.fillchars = { fold = '⏤' }
 
--- default
--- +--  7 lines: set foldmethod=indent··············
--- new
--- ⏤⏤⏤⏤► [7 lines]: set foldmethod=indent ⏤⏤⏤⏤⏤⏤⏤⏤⏤⏤
+-- default   +--  7 lines: set foldmethod=indent···············
+-- current   ⏤⏤⏤⏤► [7 lines]: set foldmethod=indent ⏤⏤⏤⏤⏤⏤⏤⏤⏤⏤
 vim.opt.foldtext =
     '"⏤⏤⏤⏤► [".(v:foldend - v:foldstart + 1)." lines] ".trim(getline(v:foldstart))." "'
 
@@ -479,18 +466,13 @@ vim.opt.foldtext =
 -- instead of the last fitting character
 vim.opt.linebreak = true
 
--- always keep 3 lines around the cursor
-vim.opt.scrolloff = 3
-vim.opt.sidescrolloff = 3
-
--- persistent undo
+-- persistent undo across sessions
 vim.opt.undofile = true
 
 -- avoid mapping gx in netrw as for conflict reasons
 vim.g.netrw_nogx = 1
 
 local is_vscode = vim.g.vscode
-local keymap = vim.keymap
 do
     local function lsp_keymap(from, to_nvim, to_vscode, desc)
         local to = nil
@@ -553,12 +535,7 @@ do
         keymap.set('n', '[d', ':call VSCodeNotify("editor.action.marker.prev")<cr>')
         keymap.set('n', 'gp', ':call VSCodeNotify("workbench.panel.markers.view.focus")<cr>')
     else
-        keymap.set(
-            'n',
-            '<leader>L',
-            vim.diagnostic.open_float,
-            { desc = 'show current line diagnostic' }
-        )
+        keymap.set('n', '<leader>L', vim.diagnostic.open_float, { desc = 'show line diagnostic' })
         keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, { desc = 'lsp code_action' })
         keymap.set('n', ']e', function()
             vim.diagnostic.goto_next({ severity = vim.diagnostic.severity.ERROR })
@@ -582,17 +559,15 @@ keymap.set('', '<leader>v', '"*p', { noremap = false, desc = 'paste from OS clip
 keymap.set('n', 'p', ']p', { desc = 'paste under current indentation level' })
 keymap.set('n', '<esc>', function()
     vim.opt.hlsearch = false
-    if vim.snippet.active() then
-        vim.snippet.stop()
-    end
-end, { silent = true, desc = 'toggle highlight for last search' })
+    vim.snippet.stop()
+end, { desc = 'toggle highlight for last search; exit snippets' })
 keymap.set('n', 'n', '<cmd>set hlsearch<cr>n', { desc = 'highlight search when navigating' })
 keymap.set('n', 'N', '<cmd>set hlsearch<cr>N', { desc = 'highlight search when navigating' })
 
 keymap.set(
     'n',
     '<tab>',
-    is_vscode and ':call VSCodeNotify("editor.toggleFold")<cr>' or 'za',
+    is_vscode and '<cmd>lua require("vscode").call("editor.toggleFold")<cr>' or 'za',
     { desc = 'toggle folds' }
 )
 
@@ -661,9 +636,7 @@ keymap.set({ 'n', 'x' }, '<leader>s', function()
     end)
 end, { desc = 'jump to two characters in current buffer(easymotion like)' })
 
-keymap.set({ 'n', 'v' }, '<Leader>a', '^', {
-    desc = 'go to the beginning of the line (^ is too far)',
-})
+keymap.set({ 'n', 'v' }, '<Leader>a', '^', { desc = 'go to line start (^ is too far)' })
 -- go to the end of the line ($ is too far)
 keymap.set('n', '<Leader>e', '$')
 keymap.set('v', '<Leader>e', '$h')
@@ -671,105 +644,79 @@ keymap.set('v', '<Leader>e', '$h')
 keymap.set('n', '<C-t>', '<cmd>tabedit<CR>', { desc = 'Open a new tab' })
 
 -- Commands {{{1
-local commands = {
-    ToggleNumbers = 'set number! relativenumber!',
-    ToggleTermColors = 'set termguicolors!',
-
-    SourceRussianMacKeymap = function()
-        require('antonk52.notes').source_rus_keymap()
-    end,
-    NotesMode = function()
-        -- allow a little time for lsp to kick in
-        vim.schedule(function()
-            require('antonk52.notes').setup()
-            require('antonk52.notes').note_month_now()
-        end)
-    end,
-    NoteToday = function()
+usercmd('SourceRussianMacKeymap', function()
+    require('antonk52.notes').source_rus_keymap()
+end, {})
+usercmd('NotesMode', function()
+    -- allow a little time for lsp to kick in
+    vim.schedule(function()
+        require('antonk52.notes').setup()
         require('antonk52.notes').note_month_now()
-    end,
+    end)
+end, {})
+usercmd('NoteToday', function()
+    require('antonk52.notes').note_month_now()
+end, {})
 
-    ListLSPSupportedCommands = function()
-        for _, client in ipairs(vim.lsp.get_clients()) do
-            print('LSP client:', client.name)
-            -- Check if the server supports workspace/executeCommand, which is often how commands are exposed
-            if client.server_capabilities.executeCommandProvider then
-                print('Supported commands:')
-                -- If the server provides specific commands, list them
-                if client.server_capabilities.executeCommandProvider.commands then
-                    for _, cmd in ipairs(client.server_capabilities.executeCommandProvider.commands) do
-                        print('-', cmd)
-                    end
-                else
-                    print('This LSP server supports commands, but does not list specific commands.')
+usercmd('ListLSPSupportedCommands', function()
+    for _, client in ipairs(vim.lsp.get_clients()) do
+        print('LSP client:', client.name)
+        -- Check if the server supports workspace/executeCommand, which is often how commands are exposed
+        if client.server_capabilities.executeCommandProvider then
+            print('Supported commands:')
+            -- If the server provides specific commands, list them
+            if client.server_capabilities.executeCommandProvider.commands then
+                for _, cmd in ipairs(client.server_capabilities.executeCommandProvider.commands) do
+                    print('-', cmd)
                 end
             else
-                print('This LSP server does not support commands.')
+                print('This LSP server supports commands, but does not list specific commands.')
             end
+        else
+            print('This LSP server does not support commands.')
         end
-    end,
-    BufferInfo = function()
-        vim.notify(table.concat({
-            'Buffer info:',
-            '* Rel path: ' .. vim.fn.expand('%'),
-            '* Abs path: ' .. vim.fn.expand('%:p'),
-            '* Filetype: ' .. vim.bo.filetype,
-            '* Shift width: ' .. vim.bo.shiftwidth,
-            '* Expand tab: ' .. tostring(vim.bo.expandtab),
-            '* Encoding: ' .. vim.bo.fileencoding,
-            '* LS: ' .. table.concat(
-                vim.tbl_map(function(x)
-                    return x.name
-                end, vim.lsp.get_clients()),
-                ', '
-            ),
-        }, '\n'))
-    end,
-    FormatLsp = vim.lsp.buf.format,
-    ColorDark = 'color lake',
-    ColorDarkContrast = 'color lake_contrast',
-
-    Eslint = {
-        function()
-            require('antonk52.eslint').run()
-        end,
-        { desc = 'Run eslint from the closest eslint config to current buffer' },
-    },
-
-    LspWorkspaceAdd = {
-        function()
-            vim.lsp.buf.add_workspace_folder()
-        end,
-        { desc = 'lsp add_workspace_folder' },
-    },
-    LspWorkspaceRemove = {
-        function()
-            vim.lsp.buf.remove_workspace_folder()
-        end,
-        { desc = 'lsp remove_workspace_folder' },
-    },
-    LspWorkspaceList = {
-        function()
-            vim.print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
-        end,
-        { desc = 'print workspace folders' },
-    },
-
-    -- fat fingers
-    W = ':w',
-    Wq = ':wq',
-    Ter = ':ter',
-    Sp = ':sp',
-    Vs = ':vs',
-}
-
-for k, v in pairs(commands) do
-    if type(v) == 'table' then
-        vim.api.nvim_create_user_command(k, v[1], v[2])
-    else
-        vim.api.nvim_create_user_command(k, v, {})
     end
-end
+end, {})
+usercmd('BufferInfo', function()
+    vim.notify(table.concat({
+        'Buffer info:',
+        '* Rel path: ' .. vim.fn.expand('%'),
+        '* Abs path: ' .. vim.fn.expand('%:p'),
+        '* Filetype: ' .. vim.bo.filetype,
+        '* Shift width: ' .. vim.bo.shiftwidth,
+        '* Expand tab: ' .. tostring(vim.bo.expandtab),
+        '* Encoding: ' .. vim.bo.fileencoding,
+        '* LS: ' .. table.concat(
+            vim.tbl_map(function(x)
+                return x.name
+            end, vim.lsp.get_clients()),
+            ', '
+        ),
+    }, '\n'))
+end, {})
+usercmd('FormatLsp', vim.lsp.buf.format, {})
+usercmd('ColorDark', 'color lake', {})
+usercmd('ColorDarkContrast', 'color lake_contrast', {})
+usercmd('Eslint', function()
+    require('antonk52.eslint').run()
+end, { desc = 'Run eslint from the closest eslint config to current buffer' })
+
+usercmd('LspWorkspaceAdd', function()
+    vim.lsp.buf.add_workspace_folder()
+end, { desc = 'lsp add_workspace_folder' })
+usercmd('LspWorkspaceRemove', function()
+    vim.lsp.buf.remove_workspace_folder()
+end, { desc = 'lsp remove_workspace_folder' })
+usercmd('LspWorkspaceList', function()
+    vim.print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
+end, { desc = 'print workspace folders' })
+
+-- fat fingers
+usercmd('W', ':w', {})
+usercmd('Wq', ':wq', {})
+usercmd('Ter', ':ter', {})
+usercmd('Sp', ':sp', {})
+usercmd('Vs', ':vs', {})
 
 if not vim.g.vscode then
     vim.filetype.add({
@@ -788,23 +735,16 @@ if not vim.g.vscode then
     })
 
     -- Autocommands {{{1
-
-    -- neovim terminal
     vim.api.nvim_create_autocmd('TermOpen', {
-        pattern = '*',
+        desc = 'Immediately enter terminal',
         callback = function()
-            -- do not map esc for `fzf` terminals
-            if vim.bo.filetype ~= 'fzf' then
-                -- use Esc to go into normal mode in terminal
-                keymap.set('t', '<esc><esc>', '<c-\\><c-n>')
-            end
-            -- immediate enter terminal
+            keymap.set('t', '<esc><esc>', '<c-\\><c-n>', { desc = 'exit term buffer' })
             vim.cmd.startinsert()
         end,
     })
 
-    -- blink yanked text after yanking it
     vim.api.nvim_create_autocmd('TextYankPost', {
+        desc = 'Blink yanked text after yanking it',
         callback = function()
             if not vim.v.event.visual then
                 vim.highlight.on_yank({ higroup = 'Substitute', timeout = 250 })
@@ -813,17 +753,15 @@ if not vim.g.vscode then
     })
 
     vim.api.nvim_create_autocmd('FileType', {
-        pattern = { '*' },
+        desc = 'Use treesitter for folding in markdown files',
         callback = function()
             if vim.bo.filetype == 'markdown' then
                 vim.wo.foldmethod = 'expr'
-                -- use treesitter for folding
                 vim.wo.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
             else
                 vim.wo.foldmethod = 'indent'
             end
         end,
-        desc = 'Use treesitter for folding in markdown files',
     })
 
     require('antonk52.statusline').setup()

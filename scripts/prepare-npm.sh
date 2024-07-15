@@ -11,7 +11,6 @@
 # install global node dependencies
 
 sudo npm i -g cssmodules-language-server
-sudo npm i -g lerna    # monorepo management
 sudo npm i -g n        # switch node versions
 sudo npm i -g neovim   # editor dependency
 sudo npm i -g npmrc    # switch between different npmrc
