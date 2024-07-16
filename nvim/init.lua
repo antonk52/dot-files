@@ -220,10 +220,7 @@ local plugins = {
                     vim.api.nvim_set_hl(0, 'MiniCursorWordCurrent', { link = 'CursorLine' })
                 end
                 set_mini_highlights()
-                vim.api.nvim_create_autocmd('ColorScheme', {
-                    pattern = '*',
-                    callback = set_mini_highlights,
-                })
+                vim.api.nvim_create_autocmd('ColorScheme', { callback = set_mini_highlights })
                 require('mini.splitjoin').setup() -- gS to toggle listy things
                 require('mini.hipatterns').setup({
                     highlighters = {
@@ -231,6 +228,7 @@ local plugins = {
                         todo = { pattern = '%f[%w]()TODO()%f[%W]', group = 'DiagnosticWarn' },
                         note = { pattern = '%f[%w]()NOTE()%f[%W]', group = 'DiagnosticInfo' },
                         info = { pattern = '%f[%w]()INFO()%f[%W]', group = 'DiagnosticInfo' },
+                        hex_color = require('mini.hipatterns').gen_highlighter.hex_color(),
                     },
                 })
             end
@@ -262,21 +260,6 @@ local plugins = {
             -- folders on top
             vim.g.dirvish_mode = ':sort ,^\\v(.*[\\/])|\\ze,'
         end,
-    },
-    {
-        'NvChad/nvim-colorizer.lua', -- hex/rgb color highlight preview
-        init = function()
-            -- to avoid default user commands
-            vim.g.loaded_colorizer = 1
-        end,
-        name = 'colorizer',
-        opts = {
-            filetypes = { '*', '!lazy' },
-            user_default_options = {
-                css = true,
-                tailwind = true,
-            },
-        },
     },
     'antonk52/lake.nvim',
     {
@@ -594,6 +577,7 @@ keymap.set('n', '<Leader>e', '$')
 keymap.set('v', '<Leader>e', '$h')
 
 keymap.set('n', '<C-t>', '<cmd>tabedit<CR>', { desc = 'Open a new tab' })
+keymap.set('t', '<esc><esc>', '<c-\\><c-n>', { desc = 'exit term buffer' })
 
 -- Commands {{{1
 usercmd('SourceRussianMacKeymap', function()
@@ -689,10 +673,7 @@ if not is_vscode then
     -- Autocommands {{{1
     vim.api.nvim_create_autocmd('TermOpen', {
         desc = 'Immediately enter terminal',
-        callback = function()
-            keymap.set('t', '<esc><esc>', '<c-\\><c-n>', { desc = 'exit term buffer' })
-            vim.cmd.startinsert()
-        end,
+        command = 'startinsert',
     })
 
     vim.api.nvim_create_autocmd('TextYankPost', {
