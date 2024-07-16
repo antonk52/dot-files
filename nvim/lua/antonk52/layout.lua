@@ -29,7 +29,7 @@ function M.navigate(direction)
         return
     end
     if vim.g.vscode then
-        return require('vscode-neovim').call(
+        return require('vscode').call(
             'workbench.action.navigate' .. navigation_map[direction].vscode
         )
     end

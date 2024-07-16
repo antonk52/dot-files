@@ -4,6 +4,7 @@ vim.g.maplocalleader = ','
 
 local usercmd = vim.api.nvim_create_user_command
 local keymap = vim.keymap
+local is_vscode = vim.g.vscode == 1
 
 -- Bootstrap lazy.nvim plugin manager {{{1
 local PLUGINS_LOCATION = vim.fs.normalize('~/dot-files/nvim/plugged')
@@ -84,14 +85,7 @@ local plugins = {
                         markdown = true,
                     },
                 })
-                local c = require('copilot.suggestion')
-                ak_completion.update_ai_completion({
-                    is_visible = c.is_visible,
-                    accept = c.accept,
-                    accept_word = c.accept_word,
-                    accept_line = c.accept_line,
-                    dismiss = c.dismiss,
-                })
+                ak_completion.update_ai_completion(require('copilot.suggestion'))
             end
         end,
         event = 'VeryLazy',
@@ -214,7 +208,7 @@ local plugins = {
     {
         'echasnovski/mini.nvim',
         config = function()
-            if not vim.g.vscode then
+            if not is_vscode then
                 require('mini.bracketed').setup({
                     file = { suffix = '' }, -- disabled file navigation
                 })
@@ -362,7 +356,7 @@ require('lazy').setup(plugins, {
     root = PLUGINS_LOCATION,
     defaults = {
         -- only enable mini.nvim in vscode
-        cond = vim.g.vscode and function(plugin)
+        cond = is_vscode and function(plugin)
             return type(plugin) == 'table' and plugin[1] == 'echasnovski/mini.nvim'
         end or nil,
     },
@@ -415,7 +409,7 @@ vim.opt.cursorline = true
 -- insert mode caret is an underline
 vim.opt.guicursor = 'i-ci-ve:hor24'
 
-if not vim.g.vscode then
+if not is_vscode then
     -- Show “invisible” characters
     vim.opt.list = true
     vim.opt.listchars = {
@@ -472,68 +466,26 @@ vim.opt.undofile = true
 -- avoid mapping gx in netrw as for conflict reasons
 vim.g.netrw_nogx = 1
 
-local is_vscode = vim.g.vscode
+local vs_call = function(cmd)
+    return '<cmd>lua require("vscode").call("' .. cmd .. '")<cr>'
+end
 do
-    local function lsp_keymap(from, to_nvim, to_vscode, desc)
-        local to = nil
-        if is_vscode then
-            to = type(to_vscode) == 'function' and to_vscode
-                or function()
-                    require('vscode-neovim').call(to_vscode)
-                end
-        else
-            to = to_nvim
-        end
-        keymap.set('n', from, to, { silent = true, desc = desc })
-    end
-
-    lsp_keymap('gD', vim.lsp.buf.declaration, 'editor.action.goToDeclaration', 'lsp declaration')
-    lsp_keymap('gd', vim.lsp.buf.definition, function()
-        local filepath = vim.api.nvim_buf_get_name(0)
-        local is_www_js = filepath:find('/www/') and vim.endswith(filepath, '.js')
-        local is_ts_or_js = filepath:match('%.[jt]sx?$')
-        require('vscode-neovim').call(
-            (vim.v.count and not is_www_js and is_ts_or_js) and 'typescript.goToSourceDefinition'
-                or 'editor.action.revealDefinition'
-        )
-    end, 'lsp definition')
-    lsp_keymap('<leader>t', vim.lsp.buf.hover, 'editor.action.showHover', 'lsp hover')
-    lsp_keymap(
-        'gs',
-        vim.lsp.buf.signature_help,
-        'editor.action.triggerParameterHints',
-        'lsp signature_help'
-    )
-    lsp_keymap(
-        'gK',
-        vim.lsp.buf.type_definition,
-        'editor.action.peekTypeDefinition',
-        'lsp type_definition'
-    )
-    lsp_keymap(
-        'gi',
-        vim.lsp.buf.implementation,
-        'editor.action.goToImplementation',
-        'lsp implemention'
-    )
-    lsp_keymap('<leader>R', vim.lsp.buf.rename, 'editor.action.rename', 'lsp rename')
-    lsp_keymap('gr', vim.lsp.buf.references, 'editor.action.goToReferences', 'lsp references')
+    keymap.set('n', 'gD', vim.lsp.buf.declaration, { desc = 'lsp declaration' })
+    keymap.set('n', 'gd', vim.lsp.buf.definition, { desc = 'lsp definition' })
+    keymap.set('n', '<leader>t', vim.lsp.buf.hover, { desc = 'lsp hover' })
+    -- keymap.set('i', '<C-s>', vim.lsp.buf.signature_help, { desc = 'lsp signature_help' })
+    keymap.set('n', 'gK', vim.lsp.buf.type_definition, { desc = 'lsp type_definition' })
+    keymap.set('n', 'gi', vim.lsp.buf.implementation, { desc = 'lsp implemention' })
+    keymap.set('n', '<leader>R', vim.lsp.buf.rename, { desc = 'lsp rename' })
+    keymap.set('n', 'gr', vim.lsp.buf.references, { desc = 'lsp references' })
 
     if is_vscode then
-        keymap.set('n', 'K', ':call VSCodeNotify("editor.action.showHover")<cr>')
-        keymap.set(
-            'n',
-            '-',
-            ':call VSCodeNotify("workbench.files.action.showActiveFileInExplorer")<cr>'
-        )
-        keymap.set(
-            'n',
-            '<C-b>',
-            ':call VSCodeNotify("workbench.action.showAllEditorsByMostRecentlyUsed")<cr>'
-        )
-        keymap.set('n', ']d', ':call VSCodeNotify("editor.action.marker.next")<cr>')
-        keymap.set('n', '[d', ':call VSCodeNotify("editor.action.marker.prev")<cr>')
-        keymap.set('n', 'gp', ':call VSCodeNotify("workbench.panel.markers.view.focus")<cr>')
+        keymap.set('n', '-', vs_call('workbench.files.action.showActiveFileInExplorer'))
+        keymap.set('n', '<leader>b', vs_call('workbench.action.showAllEditorsByMostRecentlyUsed'))
+        keymap.set('n', '<leader>f', vs_call('workbench.action.quickOpen'))
+        keymap.set('n', ']d', vs_call('editor.action.marker.next'))
+        keymap.set('n', '[d', vs_call('editor.action.marker.prev'))
+        keymap.set('n', 'gp', vs_call('workbench.panel.markers.view.focus'))
     else
         keymap.set('n', '<leader>L', vim.diagnostic.open_float, { desc = 'show line diagnostic' })
         keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, { desc = 'lsp code_action' })
@@ -567,7 +519,7 @@ keymap.set('n', 'N', '<cmd>set hlsearch<cr>N', { desc = 'highlight search when n
 keymap.set(
     'n',
     '<tab>',
-    is_vscode and '<cmd>lua require("vscode").call("editor.toggleFold")<cr>' or 'za',
+    is_vscode and vs_call('editor.toggleFold') or 'za',
     { desc = 'toggle folds' }
 )
 
@@ -718,7 +670,7 @@ usercmd('Ter', ':ter', {})
 usercmd('Sp', ':sp', {})
 usercmd('Vs', ':vs', {})
 
-if not vim.g.vscode then
+if not is_vscode then
     vim.filetype.add({
         filename = {
             ['.eslintrc.json'] = 'jsonc',
