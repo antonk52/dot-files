@@ -126,6 +126,7 @@ local plugins = {
     },
     {
         'folke/ts-comments.nvim',
+        tag = 'v1.4.0',
         opts = {},
         event = 'VeryLazy',
     },

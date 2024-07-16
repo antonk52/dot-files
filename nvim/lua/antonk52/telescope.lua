@@ -219,7 +219,7 @@ function M.setup()
             },
             layout_config = {
                 horizontal = {
-                    width = 216,
+                    width = 180,
                 },
             },
             disable_devicons = true,
