@@ -137,11 +137,8 @@ local plugins = {
     {
         'nvim-treesitter/nvim-treesitter',
         dependencies = { 'nvim-treesitter/nvim-treesitter-textobjects' },
-        -- only updates parsers that need an update
-        build = ':TSUpdate',
+        build = ':TSUpdate', -- only updates parsers that need an update
         main = 'nvim-treesitter.configs',
-        -- if you get "wrong architecture error
-        -- open nvim in macos native terminal app and run `:TSInstall`
         opts = {
             ensure_installed = {
                 'css',
@@ -370,7 +367,6 @@ vim.opt.splitbelow = true
 vim.opt.splitright = true
 
 -- folding
-vim.opt.foldmethod = 'indent'
 vim.opt.foldlevel = 20
 -- use wider line for folding
 vim.opt.fillchars = { fold = '⏤' }
@@ -380,8 +376,7 @@ vim.opt.fillchars = { fold = '⏤' }
 vim.opt.foldtext =
     '"⏤⏤⏤⏤► [".(v:foldend - v:foldstart + 1)." lines] ".trim(getline(v:foldstart))." "'
 
--- break long lines on breakable chars
--- instead of the last fitting character
+-- break long lines on breakable chars, instead of the last fitting character
 vim.opt.linebreak = true
 
 -- persistent undo across sessions
@@ -455,16 +450,16 @@ keymap.set('v', '>', '>gv')
 keymap.set('n', '<C-_>', 'gcc', { remap = true })
 keymap.set('x', '<C-_>', 'gc', { remap = true })
 
+local EASYMOTION_NS = vim.api.nvim_create_namespace('EASYMOTION_NS')
+local EM_CHARS = vim.split('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', '')
 keymap.set({ 'n', 'x' }, '<leader>s', function()
-    local extmark_ns = vim.api.nvim_create_namespace('')
     local char_code1, char_code2 = vim.fn.getchar(), vim.fn.getchar()
     local char1 = type(char_code1) == 'number' and vim.fn.nr2char(char_code1) or char_code1
     local char2 = type(char_code2) == 'number' and vim.fn.nr2char(char_code2) or char_code2
     local line_idx_start, line_idx_end = vim.fn.line('w0'), vim.fn.line('w$')
     local bufnr = vim.api.nvim_get_current_buf()
-    vim.api.nvim_buf_clear_namespace(bufnr, extmark_ns, 0, -1)
+    vim.api.nvim_buf_clear_namespace(bufnr, EASYMOTION_NS, 0, -1)
 
-    local overlay_chars = vim.split('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', '')
     local char_idx = 1
     ---@type table<string, {line: integer, col: integer, id: integer}>
     local extmarks = {}
@@ -473,17 +468,17 @@ keymap.set({ 'n', 'x' }, '<leader>s', function()
 
     for lines_i, line_text in ipairs(lines) do
         local line_idx = lines_i + line_idx_start - 1
-        if char_idx > #overlay_chars then
+        if char_idx > #EM_CHARS then
             break
         end
         -- skip folded lines
         if vim.fn.foldclosed(line_idx) == -1 then
             for i = 1, #line_text do
-                if line_text:sub(i, i + 1) == needle and char_idx <= #overlay_chars then
-                    local overlay_char = overlay_chars[char_idx]
+                if line_text:sub(i, i + 1) == needle and char_idx <= #EM_CHARS then
+                    local overlay_char = EM_CHARS[char_idx]
                     local linenr = line_idx_start + lines_i - 2
                     local col = i - 1
-                    local id = vim.api.nvim_buf_set_extmark(bufnr, extmark_ns, linenr, col + 2, {
+                    local id = vim.api.nvim_buf_set_extmark(bufnr, EASYMOTION_NS, linenr, col + 2, {
                         virt_text = { { overlay_char, 'CurSearch' } },
                         virt_text_pos = 'overlay',
                         hl_mode = 'combine',
@@ -491,7 +486,7 @@ keymap.set({ 'n', 'x' }, '<leader>s', function()
                     extmarks[overlay_char] = { line = linenr, col = col, id = id }
                     char_idx = char_idx + 1
                 end
-                if char_idx > #overlay_chars then
+                if char_idx > #EM_CHARS then
                     break
                 end
             end
@@ -508,14 +503,13 @@ keymap.set({ 'n', 'x' }, '<leader>s', function()
             vim.api.nvim_win_set_cursor(0, { pos.line + 1, pos.col })
         end
         -- clear extmarks
-        vim.api.nvim_buf_clear_namespace(0, extmark_ns, 0, -1)
+        vim.api.nvim_buf_clear_namespace(0, EASYMOTION_NS, 0, -1)
     end)
 end, { desc = 'jump to two characters in current buffer(easymotion like)' })
 
 keymap.set({ 'n', 'v' }, '<Leader>a', '^', { desc = 'go to line start (^ is too far)' })
--- go to the end of the line ($ is too far)
-keymap.set('n', '<Leader>e', '$')
-keymap.set('v', '<Leader>e', '$h')
+keymap.set('n', '<Leader>e', '$', { desc = 'go to line end ($ is too far)' })
+keymap.set('v', '<Leader>e', '$h', { desc = 'go to line end ($ is too far)' })
 
 keymap.set('n', '<C-t>', '<cmd>tabedit<CR>', { desc = 'Open a new tab' })
 keymap.set('t', '<esc><esc>', '<c-\\><c-n>', { desc = 'exit term buffer' })
@@ -577,17 +571,7 @@ usercmd('ColorDark', 'set background=dark | color lake', {})
 usercmd('ColorDarkContrast', 'set background=dark | color lake_contrast', {})
 usercmd('Eslint', function()
     require('antonk52.eslint').run()
-end, { desc = 'Run eslint from the closest eslint config to current buffer' })
-
-usercmd('LspWorkspaceAdd', function()
-    vim.lsp.buf.add_workspace_folder()
-end, { desc = 'lsp add_workspace_folder' })
-usercmd('LspWorkspaceRemove', function()
-    vim.lsp.buf.remove_workspace_folder()
-end, { desc = 'lsp remove_workspace_folder' })
-usercmd('LspWorkspaceList', function()
-    vim.print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
-end, { desc = 'print workspace folders' })
+end, { desc = 'Run eslint from the closest eslintrc' })
 
 -- fat fingers
 usercmd('W', ':w', {})
