@@ -114,38 +114,11 @@ M.servers = {
     tailwindcss = {},
 
     lua_ls = function()
-        -- when homebrew is installed globally
-        local global_prefix = vim.fs.normalize(
-            '~/.local/share/nvim/lsp_servers/sumneko_lua/extension/server/bin/macOS'
-        )
-        local GLOBAL_BIN = {
-            bin = global_prefix .. '/lua-language-server',
-            main = global_prefix .. '/main.lua',
-        }
-
-        -- when homebrew is installed to homedir
-        local opt_prefix = '/opt/homebrew/Cellar/lua-language-server/*/libexec/bin/'
-        local OPT_BIN = {
-            bin = vim.fn.expand(opt_prefix .. 'lua-language-server'),
-            main = vim.fn.expand(opt_prefix .. 'main.lua'),
-        }
-
-        local BIN = vim.uv.fs_stat(GLOBAL_BIN.bin) and GLOBAL_BIN or OPT_BIN
-
-        if not vim.uv.fs_stat(BIN.bin) then
-            vim.notify(
-                'lua-language-server is not installed or cannot be found',
-                vim.log.levels.WARN
-            )
-            return nil
-        end
-
         local runtime_path = vim.split(package.path, ';')
         table.insert(runtime_path, 'lua/?.lua')
         table.insert(runtime_path, 'lua/?/init.lua')
 
         return {
-            cmd = { BIN.bin, '-E', BIN.main },
             settings = {
                 Lua = {
                     runtime = {
@@ -226,7 +199,6 @@ function M.setup()
         require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities())
     for lsp, opts in pairs(M.servers) do
         if type(opts) == 'function' then
-            ---@diagnostic disable-next-line
             opts = opts()
         end
 

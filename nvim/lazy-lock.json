@@ -9,7 +9,7 @@
   "dressing.nvim": { "branch": "master", "commit": "6741f1062d3dc6e4755367a7e9b347b553623f04" },
   "git.nvim": { "branch": "main", "commit": "164daed4eff61bd6bee6f1c97cb78144b9374022" },
   "lake.nvim": { "branch": "main", "commit": "32ab4ab152e35572dcf800bc6cfa51eb1e99c0ec" },
-  "lazy.nvim": { "branch": "main", "commit": "5473e3d77c13e40fc4758fa977a1f2c14d0b4ceb" },
+  "lazy.nvim": { "branch": "main", "commit": "6ca90a21202808796418e46d3cebfbb5a44e54a2" },
   "markdowny.nvim": { "branch": "main", "commit": "a8862350edfde8e32e4937455be8aae297dd4e4c" },
   "mini.nvim": { "branch": "main", "commit": "f20d8cd3a116ef65f022797de064a044b217ff53" },
   "npm_scripts.nvim": { "branch": "main", "commit": "aadad7a75fbb598b5b8903bcc2ff54bf63627173" },
