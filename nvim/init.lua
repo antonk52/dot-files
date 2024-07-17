@@ -264,66 +264,6 @@ local plugins = {
     },
     'antonk52/lake.nvim',
     {
-        'projekt0n/github-nvim-theme',
-        config = function()
-            usercmd('ColorLight', function()
-                require('github-theme').setup({
-                    options = {
-                        styles = {
-                            comments = 'NONE',
-                            keywords = 'NONE',
-                        },
-                    },
-                })
-                vim.cmd.color('github_light')
-                local t = require('github-theme.palette.github_light').palette
-                local c = {
-                    black = t.black.base, -- "#24292f"
-                    red = t.red.base, -- "#cf222e"
-                    blue = t.blue.base, -- "#0969da"
-                }
-
-                -- override highlighing groups that dont match personal preferrences
-                -- or differ from github's website theme
-                --
-                -- setup(opts.groups.all) did not override so doing it manually
-                vim.api.nvim_set_hl(0, 'TSPunctSpecial', { fg = c.black })
-                vim.api.nvim_set_hl(0, 'NormalNC', { link = 'ColorColumn' })
-                vim.api.nvim_set_hl(0, '@punctuation.delimiter', { fg = c.black })
-                vim.api.nvim_set_hl(0, '@type.builtin', { fg = c.black })
-                vim.api.nvim_set_hl(0, '@variable', { fg = c.black })
-                vim.api.nvim_set_hl(0, '@constant', { fg = c.black })
-                vim.api.nvim_set_hl(0, '@type', { fg = c.black })
-                vim.api.nvim_set_hl(0, '@method', { fg = c.black })
-                vim.api.nvim_set_hl(0, '@method.call', { fg = c.black })
-                vim.api.nvim_set_hl(0, '@conditional', { fg = c.black })
-                -- Used for jsx tags too
-                -- see my old PR https://github.com/nvim-treesitter/nvim-treesitter/pull/1556
-                vim.api.nvim_set_hl(0, '@constructor', { fg = c.black })
-                vim.api.nvim_set_hl(0, '@property', { fg = c.blue })
-                vim.api.nvim_set_hl(0, '@exception', { fg = c.red })
-                vim.api.nvim_set_hl(0, '@keyword.operator', { fg = c.red })
-                vim.api.nvim_set_hl(0, '@text.todo', { fg = c.black })
-                vim.api.nvim_set_hl(0, '@markup.heading', { link = 'Title' })
-                vim.api.nvim_set_hl(0, '@markup.link', { link = 'Normal' })
-                vim.api.nvim_set_hl(0, '@markup.link.label', { fg = c.red })
-                vim.api.nvim_set_hl(0, '@markup.link.url', { link = 'String' })
-                vim.api.nvim_set_hl(0, '@markup.quote', { link = '@text.quote' })
-                vim.api.nvim_set_hl(0, '@markup.raw', { link = 'String' })
-                vim.api.nvim_set_hl(0, '@markup.raw.block', { link = 'Normal' })
-                vim.api.nvim_set_hl(0, '@markup.raw.delimiter', { link = 'Normal' })
-                vim.api.nvim_set_hl(0, '@markup.strong', { link = 'Bold' })
-                vim.api.nvim_set_hl(0, '@text.strike', { link = 'Comment' })
-                vim.api.nvim_set_hl(0, 'CursorLine', { bg = t.scale.gray[2] })
-                vim.api.nvim_set_hl(0, 'StatusLineNC', { fg = c.black, bg = t.scale.gray[2] })
-                vim.api.nvim_set_hl(0, 'Todo', { bg = c.red })
-                vim.api.nvim_set_hl(0, 'DiagnosticHint', { fg = t.scale.gray[5] })
-                vim.api.nvim_set_hl(0, 'Directory', { fg = c.blue, bold = true })
-            end, { nargs = 0, desc = 'Set colorscheme to github-light' })
-        end,
-        event = 'VeryLazy',
-    },
-    {
         dir = vim.fn.expand(vim.env.WORK_PLUGIN_PATH or 'noop'),
         name = 'work', -- otherwise lazy.nvim errors when updates plugins
         config = function()
@@ -632,8 +572,9 @@ usercmd('BufferInfo', function()
     }, '\n'))
 end, {})
 usercmd('FormatLsp', vim.lsp.buf.format, {})
-usercmd('ColorDark', 'color lake', {})
-usercmd('ColorDarkContrast', 'color lake_contrast', {})
+usercmd('ColorLight', 'set background=light | color default', {})
+usercmd('ColorDark', 'set background=dark | color lake', {})
+usercmd('ColorDarkContrast', 'set background=dark | color lake_contrast', {})
 usercmd('Eslint', function()
     require('antonk52.eslint').run()
 end, { desc = 'Run eslint from the closest eslint config to current buffer' })
