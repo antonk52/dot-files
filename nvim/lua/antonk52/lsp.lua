@@ -73,38 +73,13 @@ local function cross_lsp_definition()
     end
 end
 
-vim.api.nvim_create_autocmd('LspAttach', {
-    callback = function(args)
-        local bufnr = args.buf
-        local client = vim.lsp.get_client_by_id(args.data.client_id)
-        if not client then
-            return
-        end
-        if client.server_capabilities.completionProvider then
-            vim.bo[bufnr].omnifunc = 'v:lua.vim.lsp.omnifunc'
-        end
-        if client.server_capabilities.definitionProvider then
-            vim.bo[bufnr].tagfunc = 'v:lua.vim.lsp.tagfunc'
-        end
-    end,
-})
-
 M.servers = {
-    flow = function()
-        -- disable flow for projects without flowconfig
-        if vim.fs.root(0, '.flowconfig') then
-            return {
-                cmd = { 'flow', 'lsp' },
-                single_file_support = false, -- do not start flow server if .flowconfig is not found
-            }
-        end
-    end,
+    flow = {
+        cmd = { 'flow', 'lsp' },
+        single_file_support = false, -- do not start flow server if .flowconfig is not found
+    },
     tsserver = {
         on_attach = function(client, bufnr)
-            -- force disable typescript formatting
-            client.server_capabilities.document_formatting = false
-            -- disable highlighting hints from tsserver
-            client.server_capabilities.semanticTokensProvider = nil
             require('twoslash-queries').attach(client, bufnr)
         end,
         settings = {
@@ -135,12 +110,7 @@ M.servers = {
     },
 
     biome = {},
-    eslint = {
-        on_attach = function(client)
-            -- force enable formatting
-            client.server_capabilities.document_formatting = true
-        end,
-    },
+    eslint = {},
 
     marksman = {},
 
