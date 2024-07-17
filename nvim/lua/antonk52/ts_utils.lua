@@ -14,7 +14,7 @@ local lua_percentish_nodes = {
 
 -- just like the default `%` but for lua where there is no block punctuation
 function M.lua_smart_percent()
-    local node = ts_utils.get_node_at_cursor()
+    local node = vim.treesitter.get_node()
     if node == nil then
         return
     end

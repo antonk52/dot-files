@@ -194,22 +194,16 @@ function M.setup()
     vim.lsp.handlers['textDocument/hover'] =
         vim.lsp.with(vim.lsp.handlers.hover, { border = 'single' })
     vim.lsp.handlers['textDocument/definition'] = vim.lsp.with(cross_lsp_definition, {})
+    -- start language servers
+    local lsp_caps = vim.lsp.protocol.make_client_capabilities()
+    local cmp_caps = require('cmp_nvim_lsp').default_capabilities(lsp_caps)
+    for server_name, opts in pairs(M.servers) do
+        opts = type(opts) == 'function' and opts() or opts
 
-    local capabilities =
-        require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities())
-    for lsp, opts in pairs(M.servers) do
-        if type(opts) == 'function' then
-            opts = opts()
-        end
+        opts.capabilities = cmp_caps
+        opts.flags = { debounce_text_changes = 120 }
 
-        if opts ~= nil then
-            local final_options = vim.tbl_deep_extend('force', {
-                capabilities = capabilities,
-                flags = { debounce_text_changes = 150 },
-            }, opts)
-
-            lspconfig[lsp].setup(final_options)
-        end
+        lspconfig[server_name].setup(opts)
     end
 end
 

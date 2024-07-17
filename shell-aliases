@@ -62,23 +62,13 @@ alias cal='cal -m &> /dev/null && cal -m || cal'
 export NOTES_PATH="$HOME"/Documents/notes
 function notes()
 {
-  YEAR="$(date '+%Y')"
-  MONTH="$(date '+%m')"
-  FILE_PATH="$NOTES_PATH"/"$YEAR"/"$MONTH".md
-
-  if [ ! -d "$DIR_PATH" ]; then
-      mkdir -p "$DIR_PATH"
-  fi
-
   # If there is no "notes" window, rename the current one
   if [[ -n "$TMUX" ]]; then
     has_notes_window=$(tmux list-windows | grep notes)
     [ "$has_notes_window" ] || tmux rename-window "notes"
   fi
 
-  old_pwd=$(pwd)
-
-  eval PWD=$NOTES_PATH $EDITOR "$FILE_PATH" -c "NotesMode"
+  eval PWD=$NOTES_PATH $EDITOR -c "NotesStart"
 }
 
 alias colorlight="~/dot-files/scripts/base16-github.sh"
