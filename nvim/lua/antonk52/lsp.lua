@@ -74,10 +74,9 @@ local function cross_lsp_definition()
 end
 
 M.servers = {
-    flow = {
-        cmd = { 'flow', 'lsp' },
-        single_file_support = false, -- do not start flow server if .flowconfig is not found
-    },
+    flow = {},
+    hhvm = {},
+
     tsserver = {
         on_attach = function(client, bufnr)
             require('twoslash-queries').attach(client, bufnr)
@@ -88,8 +87,6 @@ M.servers = {
             includeCompletionsForImportStatements = true,
         },
     },
-
-    hhvm = {},
 
     -- https://github.com/hrsh7th/vscode-langservers-extracted
     html = {},
