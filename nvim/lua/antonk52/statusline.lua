@@ -133,7 +133,7 @@ vim.api.nvim_create_autocmd({ 'CursorHold', 'InsertLeave', 'WinScrolled', 'BufWi
             local cursor_line = cursor_pos[1] - 1 -- Convert to 0-based index
             local cursor_col = cursor_pos[2] -- 0 based
 
-            ---@type {kind: string, name: string}[]
+            ---@type string[]
             local named_symbols = {}
 
             -- Recursively traverses symbols
@@ -157,30 +157,23 @@ vim.api.nvim_create_autocmd({ 'CursorHold', 'InsertLeave', 'WinScrolled', 'BufWi
                             )
                         )
                     then
-                        table.insert(named_symbols, { kind = symbol.kind, name = symbol.name })
+                        local icon = LSP_KIND_TO_ICON[vim.lsp.protocol.SymbolKind[symbol.kind]]
+                        table.insert(named_symbols, icon .. ' ' .. symbol.name)
                         if symbol.children then
                             process_symbols(symbol.children)
                         end
+                        break
                     end
                 end
             end
             process_symbols(result)
 
-            _lsp_symbol_cache = table.concat(
-                vim.tbl_map(function(s)
-                    local kind_str = vim.lsp.protocol.SymbolKind[s.kind]
-                    return LSP_KIND_TO_ICON[kind_str] .. ' ' .. s.name
-                end, named_symbols),
-                '  '
-            )
+            _lsp_symbol_cache = table.concat(named_symbols, '  ')
             vim.cmd.redrawstatus()
         end)
     end,
     desc = 'Update lsp symbols for status line',
 })
-function M.lsp_symbols()
-    return _lsp_symbol_cache
-end
 
 local diagnostics_cache = { error = 0, warn = 0, info = 0, hint = 0 }
 local s = vim.diagnostic.severity
@@ -235,7 +228,7 @@ function M.render()
         hi_next('StatusLineModified') .. M.modified(),
         hi_next('CursorLineNr') .. ' ' .. M.filename() .. ' ',
         '%<',
-        hi_next('Comment') .. ' ' .. M.lsp_symbols(),
+        hi_next('Comment') .. ' ' .. _lsp_symbol_cache,
         hi_next('Normal') .. '  %=', -- space and right align
         hi_next('Comment') .. M.lsp_init(),
         '  ',
