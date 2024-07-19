@@ -950,29 +950,6 @@
                                 "type": "basic"
                             }
                         ]
-                    },
-                    {
-                        "description": "tab + enter - toggles between terminal and browser",
-                        "manipulators": [
-                            {
-                                "from": {
-                                    "key_code": "return_or_enter",
-                                    "modifiers": {
-                                        "mandatory": [
-                                            "left_shift",
-                                            "left_control",
-                                            "left_option"
-                                        ]
-                                    }
-                                },
-                                "to": [
-                                    {
-                                        "shell_command": "/Users/$(whoami)/dot-files/scripts/toggle-term-browser.sh"
-                                    }
-                                ],
-                                "type": "basic"
-                            }
-                        ]
                     }
                 ]
             },
