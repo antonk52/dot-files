@@ -55,10 +55,6 @@ alias h='history | fzf +s --tac --tiebreak=index | sed "s/ *[0-9]* *//"'
 alias q='quit'
 alias chux='chmod u+x'
 
-# FreeBSD one does not support -m option
-# to display week starting from Monday
-alias cal='cal -m &> /dev/null && cal -m || cal'
-
 export NOTES_PATH="$HOME"/Documents/notes
 function notes()
 {
@@ -110,8 +106,6 @@ function repo_url()
 
 # brew_upgrade_outdated
 function bu() {
-    echo "Updating Homebrew…"
-    brew update
     # List outdated packages and use fzf to allow the user to select multiple packages
     local packages_to_upgrade=$(brew outdated --quiet | fzf --multi --border --prompt "Select packages to upgrade: " | awk '{printf "%s ", $1}')
     # Check if the user selected any packages

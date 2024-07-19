@@ -17,9 +17,6 @@ export GEM_HOME="$XDG_DATA_HOME"/gem
 export GEM_SPEC_CACHE="$XDG_CACHE_HOME"/gem
 export CARGO_HOME="$XDG_DATA_HOME"/cargo
 
-# disable autoupdates when running other brew commands
-export HOMEBREW_NO_AUTO_UPDATE="1"
-
 export DOT_FILES="$HOME"/dot-files
 
 # cargo crates
@@ -118,15 +115,7 @@ fi
 autoload -U edit-command-line
 zle -N edit-command-line
 
-# handy key bindings
-bindkey "^A" beginning-of-line
-bindkey "^E" end-of-line
-bindkey "^K" kill-line
 bindkey "^R" history-incremental-search-backward
-bindkey "^P" history-search-backward
-bindkey "^Y" accept-and-hold
-bindkey "^N" insert-last-word
-bindkey "^Q" push-line-or-edit
 # ctrl+v to edit command in vim
 bindkey "^v" edit-command-line
 
