@@ -40,14 +40,14 @@ function M.setup()
                 if first_char == tab then
                     -- do not use spaces in this buffer
                     vim.bo.expandtab = false
-                    update_listchars()
+                    return update_listchars()
                 elseif first_char == ' ' then
                     local indent_level = vim.fn.indent(lnum)
                     if indent_level == 4 or indent_level == 2 then
                         vim.bo.expandtab = true
                         vim.bo.shiftwidth = indent_level
                         vim.bo.tabstop = indent_level
-                        update_listchars()
+                        return update_listchars()
                     end
                 end
             end

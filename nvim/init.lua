@@ -312,7 +312,7 @@ if not is_vscode then
         leadmultispace = '│   ',
     }
 
-    vim.cmd.color('lake')
+    vim.cmd.color('lake_contrast')
     vim.opt.termguicolors = vim.env.__CFBundleIdentifier ~= 'com.apple.Terminal'
 end
 
