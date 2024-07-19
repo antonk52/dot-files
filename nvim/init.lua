@@ -30,33 +30,6 @@ local plugins = {
         opts = {},
     },
     {
-        'stevearc/conform.nvim',
-        ft = { 'lua', 'json', 'javascript', 'javascriptreact', 'typescript', 'typescriptreact' },
-        config = function()
-            local biome_config = vim.fs.root(0, { 'biome.json', 'biome.jsonc' })
-            local js_formatters = { biome_config and 'biome' or 'prettier' }
-
-            require('conform').setup({
-                format_on_save = {
-                    timeout_ms = 5000,
-                    lsp_fallback = 'fallback',
-                },
-                notify_on_errror = false,
-                formatters_by_ft = {
-                    lua = { 'stylua' },
-                    -- Use a sub-list to run only the first available formatter
-                    javascript = { js_formatters },
-                    javascriptreact = { js_formatters },
-                    typescript = { js_formatters },
-                    typescriptreact = { js_formatters },
-                    -- json = { js_formatters },
-                },
-            })
-            usercmd('Format', '<cmd>lua require("conform").format()<cr>', {})
-        end,
-        event = 'VeryLazy',
-    },
-    {
         'antonk52/markdowny.nvim',
         ft = { 'markdown', 'hgcommit', 'gitcommit' },
         opts = {},
@@ -575,7 +548,6 @@ usercmd('BufferInfo', function()
         ),
     }, '\n'))
 end, {})
-usercmd('FormatLsp', vim.lsp.buf.format, {})
 usercmd('ColorLight', 'set background=light | color default', {})
 usercmd('ColorDark', 'set background=dark | color lake', {})
 usercmd('ColorDarkContrast', 'set background=dark | color lake_contrast', {})
@@ -639,6 +611,7 @@ if not is_vscode then
     require('antonk52.test_js').setup()
     require('antonk52.tsc').setup()
     require('antonk52.git_utils').setup()
+    require('antonk52.format_on_save').setup()
 end
 
 require('antonk52.layout').setup()
