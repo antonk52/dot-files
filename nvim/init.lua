@@ -409,14 +409,10 @@ keymap.set('n', 'n', '<cmd>set hlsearch<cr>n', { desc = 'highlight search when n
 keymap.set('n', 'N', '<cmd>set hlsearch<cr>N', { desc = 'highlight search when navigating' })
 
 keymap.set({ 'n', 'x' }, 'gX', function()
-    local mode = vim.fn.mode()
+    local fn = vim.fn
+    local mode = fn.mode()
     local query = mode == 'n' and vim.fn.expand('<cword>')
-        or vim.trim(
-            table.concat(
-                vim.fn.getregion(vim.fn.getpos('.'), vim.fn.getpos('v'), { type = vim.fn.mode() }),
-                ' '
-            )
-        )
+        or table.concat(fn.getregion(fn.getpos('.'), fn.getpos('v'), { type = mode }), ' ')
 
     vim.ui.open('https://www.google.com/search?q=' .. query)
     vim.api.nvim_input('<esc>')

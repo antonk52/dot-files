@@ -106,6 +106,7 @@ function repo_url()
 
 # brew_upgrade_outdated
 function bu() {
+    brew update --quiet
     # List outdated packages and use fzf to allow the user to select multiple packages
     local packages_to_upgrade=$(brew outdated --quiet | fzf --multi --border --prompt "Select packages to upgrade: " | awk '{printf "%s ", $1}')
     # Check if the user selected any packages
