@@ -28,6 +28,7 @@ local plugins = {
         dependencies = { 'b0o/schemastore.nvim' }, -- json schemas for json lsp
         main = 'antonk52.lsp',
         opts = {},
+        event = 'BufReadPre',
     },
     {
         'antonk52/markdowny.nvim',
@@ -86,6 +87,7 @@ local plugins = {
                 },
             },
         },
+        event = 'VeryLazy',
     },
     {
         'antonk52/npm_scripts.nvim',
@@ -156,6 +158,7 @@ local plugins = {
                 },
             },
         },
+        event = 'VeryLazy',
     },
     {
         'nvim-telescope/telescope.nvim',
@@ -261,10 +264,15 @@ require('lazy').setup(plugins, {
                 '2html_plugin',
                 'getscript',
                 'getscriptPlugin',
+                'gzip',
+                'man',
                 'netrwFileHandlers',
+                'netrwPlugin',
                 'netrwSettings',
+                'rplugin', -- remote plugins
                 'tar',
                 'tarPlugin',
+                'tohtml',
                 'tutor',
                 'tutor_mode_plugin',
                 'zip',
