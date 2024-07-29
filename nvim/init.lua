@@ -65,10 +65,10 @@ local plugins = {
         event = 'VeryLazy',
     },
     {
-        'nvim-pack/nvim-spectre', -- global search and replace
+        'antonk52/nvim-spectre', -- global search and replace
+        branch = 'patch-2', -- lazy load spectre core inside :Specre callback
         dependencies = { 'nvim-lua/plenary.nvim' },
-        opts = {},
-        cmd = { 'Spectre' },
+        event = 'VeryLazy',
     },
     {
         'stevearc/dressing.nvim',
@@ -281,7 +281,7 @@ require('lazy').setup(plugins, {
         },
     },
     ui = {
-        size = { width = 100, height = 0.95 },
+        size = { width = 100, height = 0.9 },
         pills = false,
     },
     readme = { enabled = false },
