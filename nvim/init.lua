@@ -105,10 +105,6 @@ local plugins = {
         event = 'VeryLazy',
     },
     {
-        'marilari88/twoslash-queries.nvim',
-        ft = { 'javascript', 'javascriptreact', 'typescript', 'typescriptreact' },
-    },
-    {
         'nvim-treesitter/nvim-treesitter',
         dependencies = { 'nvim-treesitter/nvim-treesitter-textobjects' },
         build = ':TSUpdate', -- only updates parsers that need an update
