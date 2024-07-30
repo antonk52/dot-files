@@ -65,8 +65,7 @@ local plugins = {
         event = 'VeryLazy',
     },
     {
-        'antonk52/nvim-spectre', -- global search and replace
-        branch = 'patch-2', -- lazy load spectre core inside :Specre callback
+        'nvim-pack/nvim-spectre', -- global search and replace
         dependencies = { 'nvim-lua/plenary.nvim' },
         event = 'VeryLazy',
     },
@@ -373,7 +372,7 @@ do
     keymap.set('n', 'gD', vim.lsp.buf.declaration, { desc = 'lsp declaration' })
     keymap.set('n', 'gd', vim.lsp.buf.definition, { desc = 'lsp definition' })
     keymap.set('n', '<leader>t', vim.lsp.buf.hover, { desc = 'lsp hover' })
-    -- keymap.set('i', '<C-s>', vim.lsp.buf.signature_help, { desc = 'lsp signature_help' })
+    keymap.set({ 'i', 'n' }, '<C-s>', vim.lsp.buf.signature_help, { desc = 'lsp signature_help' })
     keymap.set('n', 'gK', vim.lsp.buf.type_definition, { desc = 'lsp type_definition' })
     keymap.set('n', 'gi', vim.lsp.buf.implementation, { desc = 'lsp implemention' })
     keymap.set('n', '<leader>R', vim.lsp.buf.rename, { desc = 'lsp rename' })
