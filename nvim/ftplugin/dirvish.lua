@@ -25,19 +25,12 @@ end
 
 local function remove()
     local target = vim.trim(vim.fn.getline('.'))
-    local is_file = not vim.endswith(target, '/')
-    local confirmed = false
-
-    if is_file then
-        vim.notify('Are you sure you want to delete it? [y/N]')
-        local choice = vim.fn.nr2char(vim.fn.getchar())
-        confirmed = choice == 'y'
-    else
-        local choice = vim.fn.input('To delete, type "yes": ')
-        confirmed = choice == 'yes'
-    end
+    vim.notify('Are you sure you want to delete it? [y/N]')
+    local choice = vim.fn.nr2char(vim.fn.getchar())
+    local confirmed = choice == 'y'
 
     if confirmed then
+        local is_file = not vim.endswith(target, '/')
         if is_file then
             vim.uv.fs_unlink(target)
         else
