@@ -1,6 +1,5 @@
 -- close quickfix window on jump to error
 vim.keymap.set('n', '<cr>', '<cr>:cclose<cr>', { buffer = 0, silent = true })
--- remove item from quickfix
 vim.keymap.set('n', 'dd', function()
     local cursor = vim.api.nvim_win_get_cursor(0)
     local items = vim.fn.getqflist()
@@ -10,4 +9,4 @@ vim.keymap.set('n', 'dd', function()
     if #items == 0 then
         vim.cmd.cclose()
     end
-end, { buffer = 0, silent = true })
+end, { buffer = 0, silent = true, desc = 'Remove item under cursor' })

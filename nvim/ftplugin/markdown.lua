@@ -1,4 +1,4 @@
-local function toggle_checkbox()
+vim.keymap.set('n', '<localleader>t', function()
     -- save cursor position
     local cursor = vim.api.nvim_win_get_cursor(0)
     local content = vim.api.nvim_get_current_line()
@@ -10,9 +10,7 @@ local function toggle_checkbox()
     end
     -- restore cursor position
     vim.api.nvim_win_set_cursor(0, cursor)
-end
-
-vim.keymap.set('n', '<localleader>t', toggle_checkbox, { buffer = 0, silent = true })
+end, { buffer = 0, silent = true, desc = 'Toggle checkbox' })
 vim.keymap.set('n', 'j', 'gj', { buffer = 0 })
 vim.keymap.set('n', 'k', 'gk', { buffer = 0 })
 vim.opt_local.spell = true
@@ -34,4 +32,4 @@ vim.keymap.set('n', 'gO', function()
 
     vim.fn.setqflist({}, ' ', { title = 'Buffer headings', items = items })
     vim.cmd.copen()
-end, { buffer = 0 })
+end, { buffer = 0, desc = 'Quickfix buffer headings lines' })
