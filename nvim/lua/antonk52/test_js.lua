@@ -2,6 +2,14 @@ local M = {}
 
 local ns = vim.api.nvim_create_namespace('test_js')
 
+local STATUS_TO_ICON = {
+    passed = '🟢',
+    failed = '🔴',
+    todo = '🟡',
+    skipped = '⏭️',
+    pending = '⏭️',
+}
+
 ---@param lines string[]
 ---@param needle string
 local function find_line_with_text_in_buffer(lines, needle)
@@ -50,20 +58,11 @@ local function mark_parsed_json_output(bufnr, parsed_output)
         end
     end
 
-    local status_to_iconf = {
-        passed = '🟢',
-        failed = '🔴',
-        todo = '🟡',
-        skipped = '⏭️',
-        pending = '⏭️',
-    }
-
     local failed_tests = {}
 
     local lines = nil
     for _, test in ipairs(parsed_results) do
-        local icon = status_to_iconf[test.status]
-        local text = icon .. ' ' .. (test.message or '')
+        local text = STATUS_TO_ICON[test.status] .. ' ' .. (test.message or '')
 
         local line = (function()
             -- test can be nil if test timed out
@@ -123,49 +122,41 @@ end
 local function run_jest(bufnr, bin, cwd, env)
     local tmp_file = vim.fn.tempname()
     local start = vim.uv.now()
-    vim.system(
-        {
-            bin,
-            '--json',
-            '--outputFile=' .. tmp_file,
-            '--testLocationInResults',
-            vim.api.nvim_buf_get_name(0),
-        },
-        { text = true, cwd = cwd, env = env },
-        function(_)
-            local finish = vim.uv.now() - start
-            vim.schedule(function()
-                vim.notify('Jest took ' .. finish .. 'ms', vim.log.levels.INFO)
-                if not vim.uv.fs_stat(tmp_file) then
-                    return vim.notify(
-                        'Output file is not readable\n' .. tmp_file,
-                        vim.log.levels.ERROR
-                    )
-                end
-                -- jest outputs single line json in stdout
-                -- instead lets write it to a file and read from it
-                ---@type string[]
-                local json_str = vim.fn.readfile(tmp_file, '', 1)
-                if json_str == nil then
-                    return vim.notify('No output from jest', vim.log.levels.ERROR)
-                end
-                local parsed = vim.json.decode(json_str[1])
-                mark_parsed_json_output(bufnr, parsed)
+    vim.system({
+        bin,
+        '--json',
+        '--outputFile=' .. tmp_file,
+        '--testLocationInResults',
+        vim.api.nvim_buf_get_name(0),
+    }, { text = true, cwd = cwd, env = env }, function(_)
+        local finish = vim.uv.now() - start
+        vim.schedule(function()
+            vim.notify('Jest took ' .. finish .. 'ms', vim.log.levels.INFO)
+            if not vim.uv.fs_stat(tmp_file) then
+                return vim.notify('Output file is not readable\n' .. tmp_file, vim.log.levels.ERROR)
+            end
+            -- jest outputs single line json in stdout
+            -- instead lets write it to a file and read from it
+            ---@type string[]
+            local json_str = vim.fn.readfile(tmp_file, '', 1)
+            if json_str == nil then
+                return vim.notify('No output from jest', vim.log.levels.ERROR)
+            end
+            local parsed = vim.json.decode(json_str[1])
+            mark_parsed_json_output(bufnr, parsed)
 
-                -- cleanup
-                vim.uv.fs_unlink(tmp_file)
-            end)
-        end
-    )
+            -- cleanup
+            vim.uv.fs_unlink(tmp_file)
+        end)
+    end)
 end
 
 ---@param bufnr ?number
----@param opts ?any
-function M.run_buffer(bufnr, opts)
+---@param env ?table<string, string>
+function M.run_buffer(bufnr, env)
     bufnr = bufnr or vim.api.nvim_get_current_buf()
-    opts = opts or {}
-    opts.env = opts.env or {}
-    opts.env.PATH = opts.env.PATH or os.getenv('PATH')
+    env = env or {}
+    env.PATH = env.PATH or os.getenv('PATH')
     -- reset previous results
     bufnr = bufnr or 0
     vim.api.nvim_buf_clear_namespace(bufnr, ns, 0, -1)
@@ -176,25 +167,25 @@ function M.run_buffer(bufnr, opts)
         vim.notify('Could not find test runner', vim.log.levels.WARN)
     elseif runner.name == 'vitest' then
         vim.notify('Running vitest', vim.log.levels.INFO)
-        run_vitest(bufnr, runner.bin, runner.root, opts.env)
+        run_vitest(bufnr, runner.bin, runner.root, env)
     elseif runner.name == 'jest' then
         vim.notify('Running jest', vim.log.levels.INFO)
-        run_jest(bufnr, runner.bin, runner.root, opts.env)
+        run_jest(bufnr, runner.bin, runner.root, env)
     else
         vim.notify('Unknown test runner', vim.log.levels.ERROR)
     end
 end
 
 ---@param bufnr ?number
----@param opts ?any
-function M.attach_to_buffer(bufnr, opts)
-    M.run_buffer(bufnr or 0, opts)
+---@param env ?any
+function M.attach_to_buffer(bufnr, env)
+    M.run_buffer(bufnr or 0, env)
     vim.api.nvim_create_autocmd('BufWritePost', {
         group = ns,
         buffer = 0,
         desc = 'Run tests on save',
         callback = function(_, _, _, _, buf_nr)
-            M.run_buffer(buf_nr, opts)
+            M.run_buffer(buf_nr, env)
         end,
     })
 end
