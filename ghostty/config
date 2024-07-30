@@ -1,4 +1,4 @@
-# vim: set ft=conf:
+# vim: set ft=config:
 
 shell-integration-features = no-title
 

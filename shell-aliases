@@ -70,6 +70,7 @@ function notes()
 alias colorlight="~/dot-files/scripts/base16-github.sh"
 alias colordark="~/dot-files/scripts/base16-tomorrow-night.sh"
 alias nvi="~/Downloads/nvim-macos-arm64/bin/nvim"
+alias nnvim="~/Downloads/nvim-nightly/bin/nvim"
 
 function cdf()
 {
