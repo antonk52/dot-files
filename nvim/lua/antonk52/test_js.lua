@@ -45,15 +45,14 @@ local function mark_parsed_json_output(bufnr, parsed_output)
             vim.notify(test_result.message, vim.log.levels.ERROR)
         else
             for _, assert_result in ipairs(test_result.assertionResults) do
-                local parsed_result = {
+                table.insert(parsed_results, {
                     name = assert_result.title,
                     status = assert_result.status,
                     message = assert_result.failureMessages[1],
                     time = assert_result.duration,
                     title = assert_result.title,
                     location = assert_result.location,
-                }
-                table.insert(parsed_results, parsed_result)
+                })
             end
         end
     end
@@ -64,16 +63,11 @@ local function mark_parsed_json_output(bufnr, parsed_output)
     for _, test in ipairs(parsed_results) do
         local text = STATUS_TO_ICON[test.status] .. ' ' .. (test.message or '')
 
-        local line = (function()
-            -- test can be nil if test timed out
-            if test and test.location then
-                return test.location.line
-            end
+        local line = test and test.location and test.location.line
+        if not line then
             lines = lines or vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
-            local res_line = find_line_with_text_in_buffer(lines, test.title)
-
-            return res_line
-        end)()
+            line = find_line_with_text_in_buffer(lines, test.title)
+        end
 
         if line == nil then
             vim.notify('Failed to find line for test: ' .. test.title, vim.log.levels.WARN)
