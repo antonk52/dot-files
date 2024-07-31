@@ -6,7 +6,6 @@
   "cmp-path": { "branch": "main", "commit": "91ff86cd9c29299a64f968ebb45846c485725f23" },
   "copilot.lua": { "branch": "master", "commit": "86537b286f18783f8b67bccd78a4ef4345679625" },
   "dressing.nvim": { "branch": "master", "commit": "6741f1062d3dc6e4755367a7e9b347b553623f04" },
-  "git.nvim": { "branch": "main", "commit": "164daed4eff61bd6bee6f1c97cb78144b9374022" },
   "lake.nvim": { "branch": "main", "commit": "32ab4ab152e35572dcf800bc6cfa51eb1e99c0ec" },
   "lazy.nvim": { "branch": "main", "commit": "077102c5bfc578693f12377846d427f49bc50076" },
   "markdowny.nvim": { "branch": "main", "commit": "8ff18e8677cf39821913f387697378fcf3e141a0" },

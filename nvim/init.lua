@@ -163,11 +163,6 @@ local plugins = {
         event = 'VeryLazy',
     },
     {
-        'dinhhuy258/git.nvim',
-        opts = { default_mappings = false },
-        cmd = { 'Git' },
-    },
-    {
         'echasnovski/mini.nvim',
         config = function()
             if not is_vscode then

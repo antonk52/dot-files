@@ -321,6 +321,11 @@ function git_browse(x)
     end
 end
 
+local function git(x)
+    local cmd = vim.list_extend({ 'git' }, x.fargs)
+    require('lazy.util').float_term(cmd, { interactive = false })
+end
+
 function M.setup()
     vim.api.nvim_create_user_command(
         'GitAddPatch',
@@ -357,6 +362,7 @@ function M.setup()
         git_browse,
         { nargs = 0, range = true, desc = 'Open current buffer or selecter range in the browser' }
     )
+    vim.api.nvim_create_user_command('Git', git, { nargs = '+', desc = 'Run any git command' })
 end
 
 return M
