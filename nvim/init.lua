@@ -237,7 +237,11 @@ require('lazy').setup(plugins, {
     defaults = {
         -- only enable mini.nvim in vscode
         cond = is_vscode and function(plugin)
-            return type(plugin) == 'table' and plugin[1] == 'echasnovski/mini.nvim'
+            return type(plugin) == 'table'
+                and (
+                    plugin[1] == 'echasnovski/mini.nvim'
+                    or plugin[1] == 'antonk52/npm_scripts.nvim'
+                )
         end or nil,
     },
     lockfile = vim.fs.normalize('~/dot-files/nvim/lazy-lock.json'),
