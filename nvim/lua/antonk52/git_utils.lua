@@ -28,9 +28,7 @@ end
 local function download_gitignore_file()
     local ignores_url = 'https://api.github.com/repos/github/gitignore/contents'
     local out = vim.system({ 'curl', '-s', ignores_url }):wait()
-    if out.code ~= 0 then
-        return vim.notify('Failed to fetch gitignore files\n' .. out.stderr, vim.log.levels.ERROR)
-    end
+    assert(out.code == 0, 'Failed to fetch gitignore files\n' .. out.stderr)
 
     local json = vim.json.decode(out.stdout)
     local files = {}
@@ -69,9 +67,8 @@ end
 local function git_status()
     local function update_status(buf)
         local out = vim.system({ 'git', 'status', '--porcelain' }):wait()
-        if out.code ~= 0 then
-            return vim.notify('Failed to run git status\n' .. out.stderr, vim.log.levels.ERROR)
-        end
+        assert(out.code == 0, 'Failed to run git status\n' .. out.stderr)
+
         -- "XY foo/bar.baz"
         -- X shows the status of the index
         -- Y shows the status of the working tree
@@ -127,12 +124,9 @@ local function git_status()
                 local path = line:match('..%s*(.*)')
 
                 local out = vim.system({ 'git', command, path }):wait()
-                if out.code ~= 0 then
-                    return vim.notify(
-                        'Failed to run "git ' .. command .. ' ' .. path .. '"\n' .. out.stderr,
-                        vim.log.levels.ERROR
-                    )
-                end
+                local assert_msg =
+                    string.format('Failed to run "git %s %s"\n%s', command, path, out.stderr)
+                assert(out.code == 0, assert_msg)
 
                 update_status(buf)
             end, { desc = 'git ' .. command .. ' file', buffer = buf })
@@ -162,9 +156,8 @@ end
 
 local function git_blame()
     local out = vim.system({ 'git', '--no-pager', 'blame', vim.api.nvim_buf_get_name(0) }):wait()
-    if out.code ~= 0 then
-        return vim.notify('Failed to run git blame\n' .. out.stderr, vim.log.levels.ERROR)
-    end
+    assert(out.code == 0, 'Failed to run git blame\n' .. out.stderr)
+
     ---@type {sha: string; author: string; date: string}[]
     local lines_by_lnum = {}
     local max_width = nil
@@ -262,36 +255,20 @@ end
 -- TODO use current commit, not branch
 local function git_browse(x)
     local origin_obj = vim.system({ 'git', 'remote', 'get-url', 'origin' }):wait()
-    if origin_obj.code ~= 0 then
-        return vim.notify(
-            'Failed to get git remote url\n' .. origin_obj.stderr,
-            vim.log.levels.ERROR
-        )
-    end
+    assert(origin_obj.code == 0, 'Failed to get git remote url\n' .. origin_obj.stderr)
 
     local remote_url = vim.trim(origin_obj.stdout)
-    if not remote_url or remote_url == '' then
-        return vim.notify('No remote url found', vim.log.levels.ERROR)
-    end
+    assert(remote_url and (remote_url ~= ''), 'No remote url found')
 
     local branch_obj = vim.system({ 'git', 'branch', '--show-current' }):wait()
-    if branch_obj.code ~= 0 then
-        return vim.notify(
-            'Failed to get current branch\n' .. branch_obj.stderr,
-            vim.log.levels.ERROR
-        )
-    end
+    assert(branch_obj.code == 0, 'Failed to get current branch\n' .. branch_obj.stderr)
+
     local branch = vim.trim(branch_obj.stdout)
-    if not branch or branch == '' then
-        return vim.notify('No branch found', vim.log.levels.ERROR)
-    end
+    assert(branch and (branch ~= ''), 'No branch found')
 
     local bufpath = vim.api.nvim_buf_get_name(0)
     local root = vim.fs.root(bufpath, '.git')
-
-    if not root then
-        return vim.notify('No git root found', vim.log.levels.ERROR)
-    end
+    assert(root, 'No git root found')
 
     local filepath = bufpath:sub(1 + #root + 1)
 

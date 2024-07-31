@@ -100,7 +100,6 @@ local plugins = {
     },
     {
         'folke/ts-comments.nvim',
-        tag = 'v1.4.0',
         opts = {},
         event = 'VeryLazy',
     },
@@ -218,7 +217,7 @@ local plugins = {
             vim.g.dirvish_mode = ':sort ,^\\v(.*[\\/])|\\ze,'
         end,
     },
-    'antonk52/lake.nvim',
+    { 'antonk52/lake.nvim' },
     {
         dir = vim.fn.expand(vim.env.WORK_PLUGIN_PATH or 'noop'),
         name = 'work', -- otherwise lazy.nvim errors when updates plugins
@@ -235,13 +234,10 @@ local plugins = {
 require('lazy').setup(plugins, {
     root = PLUGINS_LOCATION,
     defaults = {
-        -- only enable mini.nvim in vscode
+        -- only enable mini.nvim & npm_scripts.nvim in vscode
         cond = is_vscode and function(plugin)
-            return type(plugin) == 'table'
-                and (
-                    plugin[1] == 'echasnovski/mini.nvim'
-                    or plugin[1] == 'antonk52/npm_scripts.nvim'
-                )
+            local p = plugin[1]
+            return p == 'echasnovski/mini.nvim' or p == 'antonk52/npm_scripts.nvim'
         end or nil,
     },
     lockfile = vim.fs.normalize('~/dot-files/nvim/lazy-lock.json'),
