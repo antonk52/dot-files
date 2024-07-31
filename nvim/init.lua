@@ -498,43 +498,6 @@ end, {})
 usercmd('NoteToday', function()
     require('antonk52.notes').note_month_now()
 end, {})
-
-usercmd('ListLSPSupportedCommands', function()
-    for _, client in ipairs(vim.lsp.get_clients()) do
-        print('LSP client:', client.name)
-        -- Check if the server supports workspace/executeCommand, which is often how commands are exposed
-        if client.server_capabilities.executeCommandProvider then
-            print('Supported commands:')
-            -- If the server provides specific commands, list them
-            if client.server_capabilities.executeCommandProvider.commands then
-                for _, cmd in ipairs(client.server_capabilities.executeCommandProvider.commands) do
-                    print('-', cmd)
-                end
-            else
-                print('This LSP server supports commands, but does not list specific commands.')
-            end
-        else
-            print('This LSP server does not support commands.')
-        end
-    end
-end, {})
-usercmd('BufferInfo', function()
-    vim.notify(table.concat({
-        'Buffer info:',
-        '* Rel path: ' .. vim.fn.expand('%'),
-        '* Abs path: ' .. vim.fn.expand('%:p'),
-        '* Filetype: ' .. vim.bo.filetype,
-        '* Shift width: ' .. vim.bo.shiftwidth,
-        '* Expand tab: ' .. tostring(vim.bo.expandtab),
-        '* Encoding: ' .. vim.bo.fileencoding,
-        '* LS: ' .. table.concat(
-            vim.tbl_map(function(x)
-                return x.name
-            end, vim.lsp.get_clients()),
-            ', '
-        ),
-    }, '\n'))
-end, {})
 usercmd('ColorLight', 'set background=light | color default', {})
 usercmd('ColorDark', 'set background=dark | color lake', {})
 usercmd('ColorDarkContrast', 'set background=dark | color lake_contrast', {})
@@ -594,11 +557,14 @@ if not is_vscode then
 
     require('antonk52.statusline').setup()
     require('antonk52.indent_lines').setup()
-    require('antonk52.print_mappings').setup()
-    require('antonk52.test_js').setup()
-    require('antonk52.tsc').setup()
-    require('antonk52.git_utils').setup()
     require('antonk52.format_on_save').setup()
+
+    vim.defer_fn(function()
+        require('antonk52.debug_nvim').setup()
+        require('antonk52.test_js').setup()
+        require('antonk52.tsc').setup()
+        require('antonk52.git_utils').setup()
+    end, 1000)
 end
 
 require('antonk52.layout').setup()
