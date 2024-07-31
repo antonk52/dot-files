@@ -164,15 +164,8 @@ local plugins = {
     },
     {
         'dinhhuy258/git.nvim',
-        config = function()
-            require('git').setup({ default_mappings = false })
-
-            usercmd('GitBrowse', function(x)
-                local has_range = x.range ~= 0
-                require('git.browse').open(has_range)
-            end, { bang = true, range = true, nargs = 0 })
-        end,
-        cmd = { 'GitBrowse', 'Git' },
+        opts = { default_mappings = false },
+        cmd = { 'Git' },
     },
     {
         'echasnovski/mini.nvim',

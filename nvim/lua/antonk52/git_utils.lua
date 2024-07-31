@@ -264,6 +264,63 @@ local function git_blame()
     vim.api.nvim_win_set_width(blame_win, max_width)
 end
 
+-- TODO use current commit, not branch
+function git_browse(x)
+    local origin_obj = vim.system({ 'git', 'remote', 'get-url', 'origin' }):wait()
+    if origin_obj.code ~= 0 then
+        return vim.notify(
+            'Failed to get git remote url\n' .. origin_obj.stderr,
+            vim.log.levels.ERROR
+        )
+    end
+
+    local remote_url = vim.trim(origin_obj.stdout)
+    if not remote_url or remote_url == '' then
+        return vim.notify('No remote url found', vim.log.levels.ERROR)
+    end
+
+    local branch_obj = vim.system({ 'git', 'branch', '--show-current' }):wait()
+    if branch_obj.code ~= 0 then
+        return vim.notify(
+            'Failed to get current branch\n' .. branch_obj.stderr,
+            vim.log.levels.ERROR
+        )
+    end
+    local branch = vim.trim(branch_obj.stdout)
+    if not branch or branch == '' then
+        return vim.notify('No branch found', vim.log.levels.ERROR)
+    end
+
+    local bufpath = vim.api.nvim_buf_get_name(0)
+    local root = vim.fs.root(bufpath, '.git')
+
+    if not root then
+        return vim.notify('No git root found', vim.log.levels.ERROR)
+    end
+
+    local filepath = bufpath:sub(1 + #root + 1)
+
+    local url = remote_url
+        :gsub('git@', 'https://')
+        :gsub('ssh://git@', 'https://')
+        :gsub('git:', 'https:')
+        :gsub('.git$', '') .. '/blob/' .. branch .. '/' .. filepath
+
+    if x.range > 0 then
+        if x.line1 == x.line2 then
+            url = url .. '#L' .. x.line1
+        else
+            url = url .. '#L' .. x.line1 .. '-L' .. x.line2
+        end
+    end
+
+    if vim.env.SSH then
+        vim.notify(url, vim.log.levels.INFO)
+    else
+        vim.ui.open(url)
+    end
+end
+
 function M.setup()
     vim.api.nvim_create_user_command(
         'GitAddPatch',
@@ -294,6 +351,11 @@ function M.setup()
         'GitBlame2',
         git_blame,
         { nargs = 0, desc = 'Show blame for current file' }
+    )
+    vim.api.nvim_create_user_command(
+        'GitBrowse2',
+        git_browse,
+        { nargs = 0, range = true, desc = 'Open current buffer or selecter range in the browser' }
     )
 end
 
