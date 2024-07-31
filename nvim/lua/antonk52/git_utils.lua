@@ -143,25 +143,20 @@ local function git_status()
     end
 end
 
-local _groups_defined = false
 local define_blame_hi_groups = function()
-    if not _groups_defined then
-        local function randomColor()
-            local r = math.random(128, 255)
-            local g = math.random(128, 255)
-            local b = math.random(128, 255)
-            return string.format('#%02X%02X%02X', r, g, b)
-        end
-
+    local out = vim.api.nvim_get_hl(0, { name = 'GitBlameSha1' })
+    if vim.tbl_isempty(out) then
         -- Seed the random number generator
         math.randomseed(os.time())
 
         -- Generate 32 distinct bright colors
         for i = 1, 32 do
-            local hex = randomColor()
+            local r = math.random(128, 255)
+            local g = math.random(128, 255)
+            local b = math.random(128, 255)
+            local hex = string.format('#%02X%02X%02X', r, g, b)
             vim.api.nvim_set_hl(0, 'GitBlameSha' .. i, { fg = hex })
         end
-        _groups_defined = true
     end
 end
 
@@ -265,7 +260,7 @@ local function git_blame()
 end
 
 -- TODO use current commit, not branch
-function git_browse(x)
+local function git_browse(x)
     local origin_obj = vim.system({ 'git', 'remote', 'get-url', 'origin' }):wait()
     if origin_obj.code ~= 0 then
         return vim.notify(
