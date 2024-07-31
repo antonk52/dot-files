@@ -78,9 +78,6 @@ M.servers = {
     hhvm = {},
 
     tsserver = {
-        on_attach = function(client, bufnr)
-            require('twoslash-queries').attach(client, bufnr)
-        end,
         settings = {
             completions = { completeFunctionCalls = true },
             includeCompletionsWithSnippetText = true,
