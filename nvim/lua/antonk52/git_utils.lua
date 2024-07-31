@@ -143,6 +143,127 @@ local function git_status()
     end
 end
 
+local _groups_defined = false
+local define_blame_hi_groups = function()
+    if not _groups_defined then
+        local function randomColor()
+            local r = math.random(128, 255)
+            local g = math.random(128, 255)
+            local b = math.random(128, 255)
+            return string.format('#%02X%02X%02X', r, g, b)
+        end
+
+        -- Seed the random number generator
+        math.randomseed(os.time())
+
+        -- Generate 32 distinct bright colors
+        for i = 1, 32 do
+            local hex = randomColor()
+            vim.api.nvim_set_hl(0, 'GitBlameSha' .. i, { fg = hex })
+        end
+        _groups_defined = true
+    end
+end
+
+local function git_blame()
+    local out = vim.system({ 'git', '--no-pager', 'blame', vim.api.nvim_buf_get_name(0) }):wait()
+    if out.code ~= 0 then
+        return vim.notify('Failed to run git blame\n' .. out.stderr, vim.log.levels.ERROR)
+    end
+    ---@type {sha: string; author: string; date: string}[]
+    local lines_by_lnum = {}
+    local max_width = nil
+    local lines = vim.tbl_map(function(line)
+        -- "qwertyui (Author 2021-01-01 00:00:00 +0000 1)"
+        -- "qwertyui (Author Full Name 2021-01-01 00:00:00 +0000 1)"
+        -- "qwertyui path/to/file.ext (Author 2021-01-01 00:00:00 +0000 1)"
+        local sha, author, date =
+            string.match(line, '^(%x+)%s+.*%(([^)]+)%s+(%d%d%d%d%-%d%d%-%d%d)')
+        if not sha then
+            table.insert(lines_by_lnum, { sha = '', author = '', date = '' })
+            return ''
+        end
+        max_width = max_width or (#sha + #author + #date + 2)
+        table.insert(lines_by_lnum, { sha = sha, author = vim.trim(author), date = date })
+        return sha .. ' ' .. author .. ' ' .. date
+    end, vim.split(vim.trim(out.stdout), '\n'))
+
+    if not max_width then
+        return vim.notify('No committed lines', vim.log.levels.ERROR)
+    end
+
+    local start_win = vim.api.nvim_get_current_win()
+
+    vim.cmd('leftabove vnew')
+
+    local blame_win = vim.api.nvim_get_current_win()
+    local blame_buf = vim.api.nvim_get_current_buf()
+
+    vim.api.nvim_set_option_value('buftype', 'nofile', { buf = blame_buf })
+    vim.api.nvim_set_option_value('swapfile', false, { buf = blame_buf })
+    vim.api.nvim_set_option_value('bufhidden', 'wipe', { buf = blame_buf })
+    vim.api.nvim_set_option_value('filetype', 'gitblame', { buf = blame_buf })
+    vim.api.nvim_set_option_value('buflisted', false, { buf = blame_buf })
+
+    vim.api.nvim_set_option_value('number', false, { win = blame_win })
+    vim.api.nvim_set_option_value('foldcolumn', '0', { win = blame_win })
+    vim.api.nvim_set_option_value('foldenable', false, { win = blame_win })
+    vim.api.nvim_set_option_value('foldenable', false, { win = blame_win })
+    vim.api.nvim_set_option_value('winfixwidth', true, { win = blame_win })
+    vim.api.nvim_set_option_value('signcolumn', 'no', { win = blame_win })
+    vim.api.nvim_set_option_value('wrap', false, { win = blame_win })
+
+    vim.api.nvim_buf_set_lines(blame_buf, 0, -1, false, lines)
+
+    vim.api.nvim_set_option_value('modifiable', false, { buf = blame_buf })
+
+    vim.api.nvim_set_option_value('cursorbind', true, { win = blame_win })
+    vim.api.nvim_set_option_value('scrollbind', true, { win = blame_win })
+
+    vim.api.nvim_set_option_value('scrollbind', true, { win = start_win })
+    vim.api.nvim_set_option_value('cursorbind', true, { win = start_win })
+
+    vim.api.nvim_create_autocmd('WinClosed', {
+        desc = 'Cleanup scrollbind and cursorbind once blame is closed',
+        buffer = blame_buf,
+        callback = function()
+            vim.api.nvim_set_option_value('scrollbind', false, { win = start_win })
+            vim.api.nvim_set_option_value('cursorbind', false, { win = start_win })
+        end,
+    })
+
+    vim.keymap.set('n', '<cr>', function()
+        local cursor = vim.api.nvim_win_get_cursor(blame_win)
+        local commit = lines_by_lnum[cursor[1]]
+        require('lazy.util').float_cmd(
+            { 'git', '--paginate', 'show', commit.sha },
+            { filetype = 'git' }
+        )
+    end, { desc = 'Show commit in a float', buffer = blame_buf })
+
+    -- highlight commits sha
+    define_blame_hi_groups()
+    local used = {}
+    local hl_idx = 1
+    for i = 1, #lines do
+        local commit = lines_by_lnum[i]
+        if commit.sha ~= '' then
+            local hl = ''
+            if not used[commit.sha] then
+                hl = 'GitBlameSha' .. hl_idx
+                used[commit.sha] = hl
+                hl_idx = hl_idx > 32 and 1 or (hl_idx + 1)
+            else
+                hl = used[commit.sha]
+            end
+            vim.api.nvim_buf_add_highlight(blame_buf, -1, hl, i - 1, 0, #commit.sha)
+        end
+    end
+
+    -- resize split to sha + author + date width
+    vim.api.nvim_win_set_width(blame_win, max_width)
+end
+
 function M.setup()
     vim.api.nvim_create_user_command(
         'GitAddPatch',
@@ -168,6 +289,11 @@ function M.setup()
         'GitIgnore',
         download_gitignore_file,
         { nargs = 0, desc = 'Download a gitignore file from github/gitignore' }
+    )
+    vim.api.nvim_create_user_command(
+        'GitBlame2',
+        git_blame,
+        { nargs = 0, desc = 'Show blame for current file' }
     )
 end
 
