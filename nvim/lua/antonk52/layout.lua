@@ -37,9 +37,13 @@ function M.navigate(direction)
     local win_num_before = vim.fn.winnr()
     vim.cmd.wincmd(navigation_map[direction].vim)
     -- if current window id and before the navigation are the same,
-    -- than we are at the edge of vim panes and should try tmux navigation
+    -- than we are at the edge of vim panes and should try zellij/tmux navigation
     if vim.fn.winnr() == win_num_before then
-        vim.system({ 'tmux', 'select-pane', '-' .. navigation_map[direction].tmux })
+        if vim.env.ZELLIJ ~= nil then
+            vim.system({ 'zellij', 'move-focus', navigation_map[direction].tmux })
+        elseif vim.env.TMUX ~= nil then
+            vim.system({ 'tmux', 'select-pane', '-' .. navigation_map[direction].tmux })
+        end
     end
 end
 
