@@ -1,77 +1,7 @@
 local lspconfig = require('lspconfig')
+local lsp = vim.lsp
 
 local M = {}
-
-local function cross_lsp_definition()
-    local util = require('vim.lsp.util')
-    local req_params = util.make_position_params()
-    local all_clients = vim.lsp.get_clients({ bufnr = 0, method = 'textDocument/definition' })
-
-    if #all_clients == 0 then
-        return vim.notify('No LSP attached with definition support', vim.log.levels.WARN)
-    end
-
-    ---@table (Location | Location[] | LocationLink[] | nil)
-    local raw_responses = {}
-    -- essentially redoing Promise.all with filtering of empty/nil values
-    local responded = 0
-
-    local function make_cb(client)
-        return function(err, response)
-            if err == nil and response ~= nil then
-                table.insert(
-                    raw_responses,
-                    { response = response, encoding = client.offset_encoding }
-                )
-            end
-
-            responded = responded + 1
-
-            if responded == #all_clients then
-                local flatten_responses = {}
-                ---@type string[]
-                local flatten_responses_encoding = {}
-                for _, v in ipairs(raw_responses) do
-                    -- first check for Location | LocationLink because
-                    -- tbl_islist returns `false` for empty lists
-                    if v.response.uri or v.response.targetUri then
-                        table.insert(flatten_responses, v.response)
-                        table.insert(flatten_responses_encoding, v.encoding)
-                    elseif vim.islist(v.response) then
-                        for _, v2 in ipairs(v.response) do
-                            table.insert(flatten_responses, v2)
-                            table.insert(flatten_responses_encoding, v.encoding)
-                        end
-                    end
-                end
-
-                if #flatten_responses == 0 then
-                    return
-                end
-
-                -- if there is only one response, jump to it
-                if #flatten_responses == 1 and not vim.islist(flatten_responses[1]) then
-                    return util.jump_to_location(
-                        flatten_responses[1],
-                        flatten_responses_encoding[1]
-                    )
-                end
-
-                -- TODO: change to telescope or any other picker with preview
-                local items =
-                    util.locations_to_items(flatten_responses, flatten_responses_encoding[1])
-
-                vim.fn.setqflist({}, ' ', { title = 'LSP locations', items = items })
-                -- vim.api.nvim_command('botright copen')
-                vim.api.nvim_command('Telescope quickfix')
-            end
-        end
-    end
-
-    for _, client in ipairs(all_clients) do
-        client.request('textDocument/definition', req_params, make_cb(client))
-    end
-end
 
 M.servers = {
     flow = {},
@@ -159,8 +89,14 @@ M.servers = {
     end,
 }
 
+local function telescope(method)
+    return function()
+        vim.cmd('Telescope lsp_' .. method)
+    end
+end
+
 function M.setup()
-    -- vim.lsp.log.set_level(vim.lsp.log.DEBUG)
+    -- lsp.log.set_level(lsp.log.DEBUG)
     -- set global diagnostic settings to avoid passing them
     -- to every vim.diagnostic method explicitly
     vim.diagnostic.config({
@@ -187,12 +123,20 @@ function M.setup()
         },
         severity_sort = true, -- show errors first
     })
+
+    local ms = lsp.protocol.Methods
     -- add border to hover popup
-    vim.lsp.handlers['textDocument/hover'] =
-        vim.lsp.with(vim.lsp.handlers.hover, { border = 'single' })
-    vim.lsp.handlers['textDocument/definition'] = vim.lsp.with(cross_lsp_definition, {})
+    lsp.handlers[ms.textDocument_hover] = lsp.with(lsp.handlers.hover, { border = 'single' })
+
+    -- Override lsp methods to telescope as it handles multiple servers supporting same methods
+    lsp.handlers[ms.textDocument_definition] = lsp.with(telescope('definitions'), {})
+    lsp.handlers[ms.textDocument_declaration] = lsp.with(telescope('declarations'), {})
+    lsp.handlers[ms.textDocument_typeDefinition] = lsp.with(telescope('type_definitions'), {})
+    lsp.handlers[ms.textDocument_implementation] = lsp.with(telescope('implementations'), {})
+    lsp.handlers[ms.textDocument_references] = lsp.with(telescope('references'), {})
+
     -- start language servers
-    local lsp_caps = vim.lsp.protocol.make_client_capabilities()
+    local lsp_caps = lsp.protocol.make_client_capabilities()
     local cmp_caps = require('cmp_nvim_lsp').default_capabilities(lsp_caps)
     for server_name, opts in pairs(M.servers) do
         opts = type(opts) == 'function' and opts() or opts
