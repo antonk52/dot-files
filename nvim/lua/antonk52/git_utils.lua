@@ -137,6 +137,61 @@ local function git_status()
     end
 end
 
+local function git_status_qf()
+    local out = vim.system({ 'git', 'status', '--porcelain' }):wait()
+    assert(out.code == 0, 'Failed to run git status\n' .. out.stderr)
+
+    -- "XY foo/bar.baz"
+    -- X shows the status of the index
+    -- Y shows the status of the working tree
+    local lines = vim.split(out.stdout, '\n')
+    -- vim.api.nvim_buf_set_lines(buf, 0, -1, false, lines)
+    local mode_to_hl = {
+        M = '@diff.plus',
+        D = '@diff.minus',
+        A = '@diff.plus',
+        R = '@diff.minus',
+    }
+    local qf_items = {}
+    for i, line in ipairs(lines) do
+        local new_path = line:sub(1, 2)
+        -- untracked files
+        if new_path == '??' then
+            table.insert(qf_items, {
+                filename = line:sub(4),
+                text = 'Untracked',
+                type = 'e',
+                valid = true,
+            })
+        end
+        local staged = line:sub(1, 1)
+        if mode_to_hl[staged] then
+            table.insert(qf_items, {
+                filename = line:sub(4),
+                text = 'Staged: ' .. staged,
+                type = 'e',
+                valid = true,
+            })
+        end
+        local unstaged = line:sub(2, 2)
+        if mode_to_hl[unstaged] then
+            table.insert(qf_items, {
+                filename = line:sub(4),
+                text = 'Unstaged: ' .. unstaged,
+                type = 'e',
+                valid = true,
+            })
+        end
+    end
+
+    if #qf_items == 0 then
+        return vim.notify('No changes', vim.log.levels.INFO)
+    end
+
+    vim.fn.setqflist({}, ' ', { title = 'Git status', items = qf_items })
+    vim.cmd.copen()
+end
+
 local define_blame_hi_groups = function()
     local out = vim.api.nvim_get_hl(0, { name = 'GitBlameSha1' })
     if vim.tbl_isempty(out) then
@@ -310,6 +365,11 @@ function M.setup()
         { nargs = 0, desc = 'git status with smarts' }
     )
     vim.api.nvim_create_user_command(
+        'GitStatusQuickFix',
+        git_status_qf,
+        { nargs = 0, desc = 'git status in quickfix window' }
+    )
+    vim.api.nvim_create_user_command(
         'GitAddPatchFile',
         run_cmd_and_exit('git add --patch %'),
         { nargs = 0, desc = 'git add --patch <current_buffer>' }
@@ -325,12 +385,12 @@ function M.setup()
         { nargs = 0, desc = 'Download a gitignore file from github/gitignore' }
     )
     vim.api.nvim_create_user_command(
-        'GitBlame2',
+        'GitBlame',
         git_blame,
         { nargs = 0, desc = 'Show blame for current file' }
     )
     vim.api.nvim_create_user_command(
-        'GitBrowse2',
+        'GitBrowse',
         git_browse,
         { nargs = 0, range = true, desc = 'Open current buffer or selecter range in the browser' }
     )
