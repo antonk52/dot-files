@@ -23,6 +23,8 @@ M.servers = {
                     includeInlayFunctionLikeReturnTypeHints = true,
                     includeInlayEnumMemberValueHints = true,
                 },
+                implementationsCodeLens = { enabled = true },
+                referencesCodeLens = { enabled = true, showOnAllFunctions = true },
             },
             javascript = {
                 inlayHints = {
@@ -35,6 +37,8 @@ M.servers = {
                     includeInlayFunctionLikeReturnTypeHints = true,
                     includeInlayEnumMemberValueHints = true,
                 },
+                implementationsCodeLens = { enabled = true },
+                referencesCodeLens = { enabled = true, showOnAllFunctions = true },
             },
         },
     },
@@ -159,6 +163,11 @@ function M.setup()
     lsp.handlers[ms.textDocument_typeDefinition] = lsp.with(telescope('type_definitions'), {})
     lsp.handlers[ms.textDocument_implementation] = lsp.with(telescope('implementations'), {})
     lsp.handlers[ms.textDocument_references] = lsp.with(telescope('references'), {})
+
+    -- call on CursorHold
+    -- vim.lsp.codeLens.refresh()
+    --
+    -- vim.lsp.codeLens.clear()
 
     -- start language servers
     local lsp_caps = lsp.protocol.make_client_capabilities()
