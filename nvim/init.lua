@@ -42,7 +42,6 @@ local plugins = {
             'hrsh7th/cmp-path',
             'hrsh7th/cmp-cmdline',
             'hrsh7th/cmp-nvim-lsp',
-            'hrsh7th/cmp-nvim-lsp-signature-help',
             'zbirenbaum/copilot.lua',
         },
         config = function()
@@ -497,9 +496,6 @@ usercmd('NotesStart', function()
 end, {})
 usercmd('NoteToday', function()
     require('antonk52.notes').note_month_now()
-end, {})
-usercmd('ToggleLSPInlayHints', function()
-    vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
 end, {})
 usercmd('ColorLight', 'set background=light | color default', {})
 usercmd('ColorDark', 'set background=dark | color lake', {})
