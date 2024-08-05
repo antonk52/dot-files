@@ -125,8 +125,8 @@ local plugins = {
                 'vimdoc',
                 'yaml',
             },
-            highlight = { enable = true },
-            indent = { enable = true },
+            highlight = { enable = not is_vscode },
+            indent = { enable = not is_vscode },
             textobjects = {
                 select = {
                     enable = true,
@@ -236,7 +236,10 @@ require('lazy').setup(plugins, {
         -- only enable mini.nvim & npm_scripts.nvim in vscode
         cond = is_vscode and function(plugin)
             local p = plugin[1]
-            return p == 'echasnovski/mini.nvim' or p == 'antonk52/npm_scripts.nvim'
+            return p == 'echasnovski/mini.nvim'
+                or p == 'antonk52/npm_scripts.nvim'
+                or p == 'nvim-treesitter/nvim-treesitter'
+                or p == 'nvim-treesitter/nvim-treesitter-textobjects'
         end or nil,
     },
     lockfile = vim.fs.normalize('~/dot-files/nvim/lazy-lock.json'),

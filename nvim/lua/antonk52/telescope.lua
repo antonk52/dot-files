@@ -255,7 +255,8 @@ function M.setup()
             -- when working in a mercurial repo, rg ignores .gitignore files
             -- here we manually parse and supply what should be ignored
             additional_args = function()
-                local cli_args = {}
+                -- default threads is 2
+                local cli_args = { '--threads', '4' }
                 if not is_inside_git_repo() then
                     local ignore_patterns = get_nongit_ignore_patterns()
                     for _, p in ipairs(ignore_patterns) do
