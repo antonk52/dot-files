@@ -9,12 +9,6 @@ export XDG_CACHE_HOME=$HOME/.cache
 
 # env setup
 export LESSHISTFILE="$XDG_DATA_HOME/less/history"
-export NODE_REPL_HISTORY=$XDG_DATA_HOME/node/repl_history
-export NODE_REPL_HISTORY_SIZE=10000
-export NODE_REPL_MODE=strict
-export DOCKER_CONFIG="$XDG_CONFIG_HOME"/docker
-export GEM_HOME="$XDG_DATA_HOME"/gem
-export GEM_SPEC_CACHE="$XDG_CACHE_HOME"/gem
 export CARGO_HOME="$XDG_DATA_HOME"/cargo
 
 export DOT_FILES="$HOME"/dot-files
@@ -102,11 +96,9 @@ if prompt -l | grep pure &> /dev/null; then
     zstyle ':vcs_info:*:*' actionformats "$FX[bold]%r$FX[no-bold]/%S" "%s/%b" "%u%c (%a)"
 
     prompt pure
-else
+elif prompt -l | grep oliver &> /dev/null; then
     # when pure is not installed but a basic fallback is needed
-    if prompt -l | grep oliver &> /dev/null; then
-        prompt oliver
-    fi
+    prompt oliver
 fi
 
 # misc 2 {{{1
