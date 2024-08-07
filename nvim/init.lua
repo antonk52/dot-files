@@ -104,7 +104,6 @@ local plugins = {
     },
     {
         'nvim-treesitter/nvim-treesitter',
-        dependencies = { 'nvim-treesitter/nvim-treesitter-textobjects' },
         build = ':TSUpdate', -- only updates parsers that need an update
         main = 'nvim-treesitter.configs',
         opts = {
@@ -127,29 +126,6 @@ local plugins = {
             },
             highlight = { enable = not is_vscode },
             indent = { enable = not is_vscode },
-            textobjects = {
-                select = {
-                    enable = true,
-                    keymaps = {
-                        ['af'] = '@function.outer',
-                        ['if'] = '@function.inner',
-                        ['ab'] = '@block.outer',
-                        ['ib'] = '@block.inner',
-                    },
-                },
-                move = {
-                    enable = true,
-                    set_jumps = true,
-                    goto_next_start = {
-                        [']f'] = '@function.outer',
-                        [']b'] = '@block.outer',
-                    },
-                    goto_previous_start = {
-                        ['[f'] = '@function.outer',
-                        ['[b'] = '@block.outer',
-                    },
-                },
-            },
         },
         event = 'VeryLazy',
     },
@@ -560,6 +536,7 @@ if not is_vscode then
     require('antonk52.statusline').setup()
     require('antonk52.indent_lines').setup()
     require('antonk52.format_on_save').setup()
+    require('antonk52.treesitter_textobjects').setup()
 
     vim.defer_fn(function()
         require('antonk52.debug_nvim').setup()
