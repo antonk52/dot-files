@@ -160,6 +160,7 @@ local plugins = {
                         note = { pattern = '%f[%w]()NOTE()%f[%W]', group = 'DiagnosticInfo' },
                         info = { pattern = '%f[%w]()INFO()%f[%W]', group = 'DiagnosticInfo' },
                         hex_color = require('mini.hipatterns').gen_highlighter.hex_color(),
+                        tailwind = require('antonk52.tailwind').gen_highlighter(),
                     },
                 })
             end
