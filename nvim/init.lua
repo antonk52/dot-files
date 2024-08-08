@@ -216,7 +216,6 @@ require('lazy').setup(plugins, {
             return p == 'echasnovski/mini.nvim'
                 or p == 'antonk52/npm_scripts.nvim'
                 or p == 'nvim-treesitter/nvim-treesitter'
-                or p == 'nvim-treesitter/nvim-treesitter-textobjects'
         end or nil,
     },
     lockfile = vim.fs.normalize('~/dot-files/nvim/lazy-lock.json'),
@@ -537,7 +536,6 @@ if not is_vscode then
     require('antonk52.statusline').setup()
     require('antonk52.indent_lines').setup()
     require('antonk52.format_on_save').setup()
-    require('antonk52.treesitter_textobjects').setup()
 
     vim.defer_fn(function()
         require('antonk52.debug_nvim').setup()
@@ -547,4 +545,5 @@ if not is_vscode then
     end, 1000)
 end
 
+require('antonk52.treesitter_textobjects').setup()
 require('antonk52.layout').setup()

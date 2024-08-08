@@ -76,6 +76,12 @@ end
 function M.setup()
     vim.keymap.set('n', 'vif', M.select_fn(false), { desc = 'Select function body' })
     vim.keymap.set('n', 'vaf', M.select_fn(true), { desc = 'Select function' })
+
+    -- TODO dif/daf
+    -- TODO vic/vaf
+    -- TODO cif/caf
+    -- TODO dic/dac
+    -- TODO cic/caf
 end
 
 return M
