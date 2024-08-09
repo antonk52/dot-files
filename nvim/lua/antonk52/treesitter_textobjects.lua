@@ -123,13 +123,8 @@ end
 ---@param outer boolean
 function M.select_comment(outer)
     return function()
-        local has_treesitter_parser = pcall(vim.treesitter.get_parser, 0, vim.bo.filetype)
-        if not has_treesitter_parser then
-            return
-        end
-
-        local node = vim.treesitter.get_node()
-        if not node then
+        local has_ts, node = pcall(vim.treesitter.get_node)
+        if not has_ts or not node then
             return
         end
 
@@ -170,14 +165,14 @@ function M.select_comment(outer)
             end_node = end_node:child_count() > 0 and end_node:child(1) or end_node
         end
 
-        local start_line, start_col, end_line, end_col = start_node:range()
+        local start_line, start_col = start_node:range()
         local _, _, end_line, end_col = end_node:range()
 
         -- Set the cursor to the start position
-        vim.api.nvim_buf_set_mark(0, '<', start_line, start_col, {})
+        vim.api.nvim_buf_set_mark(0, '<', start_line + 1, start_col, {})
         -- Set the cursor to the end position
         -- have to not include last character since it is \n
-        vim.api.nvim_buf_set_mark(0, '>', end_line, end_col - 1, {})
+        vim.api.nvim_buf_set_mark(0, '>', end_line + 1, end_col - 1, {})
 
         -- Enter visual mode and select the range
         vim.cmd('normal! gv')
