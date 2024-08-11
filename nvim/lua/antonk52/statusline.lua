@@ -141,19 +141,20 @@ vim.api.nvim_create_autocmd({ 'CursorHold', 'InsertLeave', 'WinScrolled', 'BufWi
             ---@param symbols lsp.DocumentSymbol[]
             local function process_symbols(symbols)
                 for _, symbol in ipairs(symbols) do
+                    local range = symbol.range or symbol.location.range
                     if
                         (
-                            symbol.range.start.line < cursor_line
+                            range.start.line < cursor_line
                             or (
-                                symbol.range.start.line == cursor_line
-                                and symbol.range.start.character <= cursor_col
+                                range.start.line == cursor_line
+                                and range.start.character <= cursor_col
                             )
                         )
                         and (
-                            symbol.range['end'].line > cursor_line
+                            range['end'].line > cursor_line
                             or (
-                                symbol.range['end'].line == cursor_line
-                                and symbol.range['end'].character >= cursor_col
+                                range['end'].line == cursor_line
+                                and range['end'].character >= cursor_col
                             )
                         )
                     then
