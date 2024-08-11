@@ -68,11 +68,12 @@ vim.keymap.set('n', 'mm', move, { buffer = 0, silent = true, desc = 'Move focuse
 vim.keymap.set('n', 'mc', copy, { buffer = 0, silent = true, desc = 'Copy focused file/directory' })
 vim.keymap.set('n', 'ma', add, { buffer = 0, silent = true, desc = 'Add new file/directory' })
 
+vim.keymap.set('n', 'gs', 'o', { buffer = true, desc = 'Open in split' })
+vim.keymap.set('n', 'gv', 'a', { buffer = true, desc = 'Open in vsplit' })
+
 -- disable inserty keys to avoid accidentally modifying the buffer
 vim.keymap.set('n', 'i', '<nop>', { buffer = true })
 vim.keymap.set('n', 'I', '<nop>', { buffer = true })
-vim.keymap.set('n', 'a', '<nop>', { buffer = true })
-vim.keymap.set('n', 'A', '<nop>', { buffer = true })
 vim.keymap.set('n', 'r', '<nop>', { buffer = true })
 vim.keymap.set('n', 'R', '<nop>', { buffer = true })
 
