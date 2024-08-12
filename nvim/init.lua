@@ -105,28 +105,31 @@ local plugins = {
     {
         'nvim-treesitter/nvim-treesitter',
         build = ':TSUpdate', -- only updates parsers that need an update
-        main = 'nvim-treesitter.configs',
-        opts = {
-            ensure_installed = {
-                'css',
-                'javascript',
-                'jsdoc',
-                'json',
-                'jsonc',
-                'luadoc',
-                'markdown',
-                'markdown_inline',
-                'scss',
-                'toml',
-                'tsx',
-                'typescript',
-                'vim',
-                'vimdoc',
-                'yaml',
-            },
-            highlight = { enable = not is_vscode },
-            indent = { enable = not is_vscode },
-        },
+        config = function()
+            -- use git instead of curl to download treesitter parsers
+            require('nvim-treesitter.install').prefer_git = true
+            require('nvim-treesitter.configs').setup({
+                ensure_installed = {
+                    'css',
+                    'javascript',
+                    'jsdoc',
+                    'json',
+                    'jsonc',
+                    'luadoc',
+                    'markdown',
+                    'markdown_inline',
+                    'scss',
+                    'toml',
+                    'tsx',
+                    'typescript',
+                    'vim',
+                    'vimdoc',
+                    'yaml',
+                },
+                highlight = { enable = not is_vscode },
+                indent = { enable = not is_vscode },
+            })
+        end,
         event = 'VeryLazy',
     },
     {
@@ -534,6 +537,7 @@ if not is_vscode then
     })
 
     require('antonk52.statusline').setup()
+    -- vim.opt.statusline = '  %f%m%r  %=%p%%  %l:%c  '
     require('antonk52.indent_lines').setup()
     require('antonk52.format_on_save').setup()
 
