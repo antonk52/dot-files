@@ -1,5 +1,4 @@
 local M = {}
-local NOTES_PATH = vim.fn.expand(vim.env.NOTES_PATH)
 
 function M.source_rus_keymap()
     local filename = 'keymap/russian-jcukenmac.vim'
@@ -12,7 +11,7 @@ function M.source_rus_keymap()
 end
 
 function M.setup()
-    vim.cmd.cd(NOTES_PATH)
+    vim.cmd.cd(vim.env.NOTES_PATH)
     M.source_rus_keymap()
     vim.opt.shiftwidth = 2
 
@@ -47,22 +46,6 @@ function M.setup()
     })
 
     M.note_month_now()
-end
-
-function M.list_notes()
-    local files = {}
-    for name, type in vim.fs.dir(NOTES_PATH, { depth = 100 }) do
-        if type == 'file' then
-            table.insert(files, name)
-        end
-    end
-    table.sort(files)
-
-    return files
-end
-
-function M.note_month_now()
-    vim.cmd.edit(NOTES_PATH .. os.date('/%Y/%m.md'))
 end
 
 return M
