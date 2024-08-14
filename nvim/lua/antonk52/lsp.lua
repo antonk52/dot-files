@@ -212,7 +212,7 @@ function M.setup()
         SHOW_SIGNATURE_HELP = not SHOW_SIGNATURE_HELP
     end, { nargs = 0, desc = 'Toggle LSP signature help' })
     usercmd('ToggleLSPInlayHints', function()
-        vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
+        vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled({ bufnr = 0 }))
     end, { nargs = 0, desc = 'Toggle LSP inlay hints' })
 end
 
