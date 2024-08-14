@@ -406,7 +406,7 @@ keymap.set('n', '<C-_>', 'gcc', { remap = true })
 keymap.set('x', '<C-_>', 'gc', { remap = true })
 
 local EASYMOTION_NS = vim.api.nvim_create_namespace('EASYMOTION_NS')
-local EM_CHARS = vim.split('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', '')
+local EM_CHARS = vim.split('fjdkslgha;rueiwotyqpvbcnxmzFJDKSLGHARUEIWOTYQPVBCNXMZ', '')
 keymap.set({ 'n', 'x' }, '<leader>s', function()
     local char_code1, char_code2 = vim.fn.getchar(), vim.fn.getchar()
     local char1 = type(char_code1) == 'number' and vim.fn.nr2char(char_code1) or char_code1
