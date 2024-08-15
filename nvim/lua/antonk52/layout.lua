@@ -88,12 +88,17 @@ function M.setup()
     vim.keymap.set('n', '<C-H>', function()
         M.navigate('left')
     end)
+    local vs_call = function(cmd)
+        return '<cmd>lua require("vscode").call("workbench.action.' .. cmd .. '")<cr>'
+    end
+
+    local is_vscode = vim.g.vscode ~= nil
 
     -- leader + j/k/l/h resize active split by 5
-    vim.keymap.set('n', '<leader>j', '<C-W>10-')
-    vim.keymap.set('n', '<leader>k', '<C-W>10+')
-    vim.keymap.set('n', '<leader>l', '<C-W>10>')
-    vim.keymap.set('n', '<leader>h', '<C-W>10<')
+    vim.keymap.set('n', '<leader>j', is_vscode and vs_call('decreaseViewHeight') or '<C-W>10-')
+    vim.keymap.set('n', '<leader>k', is_vscode and vs_call('increaseViewHeight') or '<C-W>10+')
+    vim.keymap.set('n', '<leader>l', is_vscode and vs_call('increaseViewWidth') or '<C-W>10>')
+    vim.keymap.set('n', '<leader>h', is_vscode and vs_call('decreaseViewWidth') or '<C-W>10<')
 
     vim.keymap.set('n', '<Leader>=', function()
         M.zoom_split()
