@@ -49,31 +49,6 @@ end
 
 local layout_cmd = ''
 
--- restores the split layout
-function M.restore_layout()
-    -- do nothing if there are no splits
-    if vim.fn.winnr('$') == 1 then
-        return
-    end
-    local restore_layout_cmd = vim.fn.winrestcmd()
-    if layout_cmd ~= '' then
-        vim.cmd(layout_cmd)
-        layout_cmd = ''
-    else
-        layout_cmd = restore_layout_cmd
-    end
-end
-
-function M.equalify_splits()
-    layout_cmd = vim.fn.winrestcmd()
-    vim.cmd.wincmd('=')
-end
-
-function M.zoom_split()
-    layout_cmd = vim.fn.winrestcmd()
-    vim.cmd.wincmd('_')
-end
-
 function M.setup()
     -- ctrl j/k/l/h shortcuts to navigate between splits
     vim.keymap.set('n', '<C-J>', function()
@@ -101,13 +76,25 @@ function M.setup()
     vim.keymap.set('n', '<leader>h', is_vscode and vs_call('decreaseViewWidth') or '<C-W>10<')
 
     vim.keymap.set('n', '<Leader>=', function()
-        M.zoom_split()
+        layout_cmd = vim.fn.winrestcmd()
+        vim.cmd.wincmd('_')
     end, { desc = 'Expand current split vertically' })
     vim.keymap.set('n', '<Leader>-', function()
-        M.equalify_splits()
+        layout_cmd = vim.fn.winrestcmd()
+        vim.cmd.wincmd('=')
     end, { desc = 'Make all splits equal proportions' })
     vim.keymap.set('n', '<Leader>+', function()
-        M.restore_layout()
+        -- do nothing if there are no splits
+        if vim.fn.winnr('$') == 1 then
+            return
+        end
+        local restore_layout_cmd = vim.fn.winrestcmd()
+        if layout_cmd ~= '' then
+            vim.cmd(layout_cmd)
+            layout_cmd = ''
+        else
+            layout_cmd = restore_layout_cmd
+        end
     end, { desc = 'Restore split layout' })
 end
 

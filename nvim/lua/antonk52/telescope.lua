@@ -15,11 +15,7 @@ local function get_nongit_ignore_patterns()
         local ignore_lines = vim.fn.readfile(gitignore_path)
 
         return vim.tbl_filter(function(line)
-            if vim.startswith(line, '#') or vim.trim(line) == '' then
-                return false
-            else
-                return true
-            end
+            return not vim.startswith(line, '#') and vim.trim(line) ~= ''
         end, ignore_lines)
     end
     return {
@@ -27,13 +23,6 @@ local function get_nongit_ignore_patterns()
         'build',
         'dist',
     }
-end
-
-function M.action_buffer_lines()
-    require('telescope.builtin').current_buffer_fuzzy_find({
-        skip_empty_lines = true,
-        results_ts_highlight = false, -- no highlighting for results
-    })
 end
 
 function M.action_smart_vcs_files()
@@ -54,15 +43,6 @@ function M.action_smart_vcs_files()
 
             return find_command
         end,
-    })
-end
-
-function M.dots()
-    require('telescope.builtin').find_files({
-        prompt_title = 'dot files',
-        shorten_path = false,
-        cwd = '~/dot-files',
-        hidden = true,
     })
 end
 
@@ -234,9 +214,21 @@ function M.setup()
     vim.keymap.set('n', '<leader>F', function()
         require('telescope.builtin').find_files({ hidden = true, no_ignore = true })
     end, { desc = 'force show files igncluding ignored by .gitignore' })
-    vim.keymap.set('n', '<leader>D', M.dots, { desc = 'Dot files file picker' })
+    vim.keymap.set('n', '<leader>D', function()
+        require('telescope.builtin').find_files({
+            prompt_title = 'dot files',
+            shorten_path = false,
+            cwd = '~/dot-files',
+            hidden = true,
+        })
+    end, { desc = 'Dot files file picker' })
     vim.keymap.set('n', '<leader>b', '<cmd>Telescope buffers<cr>', { desc = 'Buffer picker' })
-    vim.keymap.set('n', '<leader>/', M.action_buffer_lines)
+    vim.keymap.set('n', '<leader>/', function()
+        require('telescope.builtin').current_buffer_fuzzy_find({
+            skip_empty_lines = true,
+            results_ts_highlight = false, -- no highlighting for results
+        })
+    end, { desc = 'Search in current buffer' })
     vim.keymap.set(
         'n',
         '<leader>?',

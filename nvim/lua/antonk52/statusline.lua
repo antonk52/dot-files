@@ -88,25 +88,6 @@ function M.filename()
     return win_size <= #filename_str and vim.fn.pathshorten(filename_str) or filename_str
 end
 
-local filetype_map = {
-    ['typescript'] = 'ts',
-    ['typescript.jest'] = 'ts',
-    ['typescript.tsx'] = 'tsx',
-    ['typescript.tsx.jest'] = 'tsx',
-    ['typescriptreact'] = 'tsx',
-    ['javascript'] = 'js',
-    ['javascript.jest'] = 'js',
-    ['javascript.jsx'] = 'jsx',
-    ['javascript.jsx.jest'] = 'jsx',
-    ['javascriptreact'] = 'jsx',
-    ['yaml'] = 'yml',
-    ['markdown'] = 'md',
-}
-function M.filetype()
-    local current_filetype = vim.bo.filetype
-    return filetype_map[current_filetype] or current_filetype
-end
-
 local _lsp_symbol_cache = ''
 vim.api.nvim_create_autocmd({ 'CursorHold', 'InsertLeave', 'WinScrolled', 'BufWinEnter' }, {
     pattern = { '*' },
@@ -236,7 +217,6 @@ function M.render()
         hi_next('Normal'),
         print_extras(),
         M.diagnostics(),
-        M.filetype(),
         '  ',
         '%p%%', -- percentage through file
         '  ',

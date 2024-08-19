@@ -21,8 +21,7 @@ if not vim.uv.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
--- Plugins {{{1
-local plugins = {
+require('lazy').setup({
     {
         'neovim/nvim-lspconfig', -- types & linting
         dependencies = { 'b0o/schemastore.nvim' }, -- json schemas for json lsp
@@ -208,9 +207,7 @@ local plugins = {
         end,
         event = 'VeryLazy',
     },
-}
-
-require('lazy').setup(plugins, {
+}, {
     root = PLUGINS_LOCATION,
     defaults = {
         -- only enable mini.nvim & npm_scripts.nvim in vscode
@@ -319,7 +316,7 @@ vim.opt.fillchars = { fold = '⏤' }
 -- default   +--  7 lines: set foldmethod=indent···············
 -- current   ⏤⏤⏤⏤► [7 lines]: set foldmethod=indent ⏤⏤⏤⏤⏤⏤⏤⏤⏤⏤
 vim.opt.foldtext =
-    '"⏤⏤⏤⏤► [".(v:foldend - v:foldstart + 1)." lines] ".trim(getline(v:foldstart))." "'
+    '"⏤⏤⏤► [".(v:foldend - v:foldstart + 1)." lines] ".trim(getline(v:foldstart))." "'
 
 -- break long lines on breakable chars, instead of the last fitting character
 vim.opt.linebreak = true
@@ -535,7 +532,7 @@ if not is_vscode then
     })
 
     require('antonk52.statusline').setup()
-    -- vim.opt.statusline = '  %f%m%r  %=%p%%  %l:%c  '
+    -- vim.opt.statusline = '  %m%r%f  %=%p%%  %l:%c  '
     require('antonk52.indent_lines').setup()
     require('antonk52.format_on_save').setup()
 
