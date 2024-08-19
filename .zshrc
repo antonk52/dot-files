@@ -34,24 +34,27 @@ else
     compinit -C;
 fi;
 
-npm_completions="$DOT_FILES/scripts/npm-completions.zsh"
+# this zshrc can be sourced in environment that does not require npm compleiton
+if [[ -z "${AK_COMPLETION_DISABLE+x}" ]]; then
+    npm_completions="$DOT_FILES/scripts/npm-completions.zsh"
 
-[ ! -f "$npm_completions" ] && npm completion >> "$npm_completions";
-source "$npm_completions"
+    [ ! -f "$npm_completions" ] && npm completion >> "$npm_completions";
+    source "$npm_completions"
 
-source "$DOT_FILES/dependencies/zsh-autosuggestions/zsh-autosuggestions.zsh"
+    if command -v docker &> /dev/null; then
+        zsh_site_functions_path="$XDG_DATA_HOME/zsh/site-functions"
 
-if command -v docker &> /dev/null; then
-    zsh_site_functions_path="$XDG_DATA_HOME/zsh/site-functions"
-
-    if [ ! -f "$zsh_site_functions_path/_docker" ]; then
-        mkdir -p "$zsh_site_functions_path"
-        docker_etc="/Applications/Docker.app/Contents/Resources/etc/"
-        ln -s "$docker_etc/docker.zsh-completion" "$zsh_site_functions_path/_docker"
-        ln -s "$docker_etc/docker-machine.zsh-completion" "$zsh_site_functions_path/_docker-machine"
-        ln -s "$docker_etc/docker-compose.zsh-completion" "$zsh_site_functions_path/_docker-compose"
+        if [ ! -f "$zsh_site_functions_path/_docker" ]; then
+            mkdir -p "$zsh_site_functions_path"
+            docker_etc="/Applications/Docker.app/Contents/Resources/etc/"
+            ln -s "$docker_etc/docker.zsh-completion" "$zsh_site_functions_path/_docker"
+            ln -s "$docker_etc/docker-machine.zsh-completion" "$zsh_site_functions_path/_docker-machine"
+            ln -s "$docker_etc/docker-compose.zsh-completion" "$zsh_site_functions_path/_docker-compose"
+        fi
     fi
 fi
+
+source "$DOT_FILES/dependencies/zsh-autosuggestions/zsh-autosuggestions.zsh"
 
 if command -v yarn &> /dev/null && command -v compdef &> /dev/null; then
     source "$DOT_FILES/dependencies/zsh-yarn-completions/zsh-yarn-completions.plugin.zsh"
