@@ -48,4 +48,8 @@ function M.setup()
     M.note_month_now()
 end
 
+function M.note_month_now()
+    vim.cmd.edit(vim.env.NOTES_PATH .. os.date('/%Y/%m.md'))
+end
+
 return M
