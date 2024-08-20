@@ -72,6 +72,7 @@ require('lazy').setup({
         opts = {
             input = {
                 border = 'single',
+                width = 80,
             },
             select = {
                 backend = { 'telescope' },
@@ -356,12 +357,15 @@ do
         keymap.set('n', '[e', function()
             vim.diagnostic.goto_prev({ severity = vim.diagnostic.severity.ERROR })
         end, { desc = 'go to prev error diagnostic' })
-
-        keymap.set('n', '<localleader>t', function()
-            require('lazy.util').float_term()
-        end, { desc = 'Open float term' })
     end
 end
+
+keymap.set(
+    'n',
+    '<localleader>t',
+    is_vscode and vs_call('workbench.action.terminal.new') or '<cmd>tabnew | terminal<cr>',
+    { desc = 'Open new terminal' }
+)
 
 -- nvim 0.6 maps Y to yank till the end of the line,
 -- preserving a legacy behaviour
@@ -532,7 +536,7 @@ if not is_vscode then
     })
 
     require('antonk52.statusline').setup()
-    -- vim.opt.statusline = '  %m%r%f  %=%p%%  %l:%c  '
+    -- vim.opt.statusline = ' %m%r %f %= %p%%  %l:%c  '
     require('antonk52.indent_lines').setup()
     require('antonk52.format_on_save').setup()
 
