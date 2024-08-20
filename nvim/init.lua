@@ -15,7 +15,7 @@ if not vim.uv.fs_stat(lazypath) then
         'clone',
         '--filter=blob:none',
         'https://github.com/folke/lazy.nvim.git',
-        '--branch=stable', -- latest stable release
+        '--branch=stable',
         lazypath,
     }):wait()
 end
@@ -315,7 +315,7 @@ vim.opt.foldlevel = 20
 vim.opt.fillchars = { fold = '⏤' }
 
 -- default   +--  7 lines: set foldmethod=indent···············
--- current   ⏤⏤⏤⏤► [7 lines]: set foldmethod=indent ⏤⏤⏤⏤⏤⏤⏤⏤⏤⏤
+-- current   ⏤⏤⏤► [7 lines]: set foldmethod=indent ⏤⏤⏤⏤⏤⏤⏤⏤⏤⏤⏤
 vim.opt.foldtext =
     '"⏤⏤⏤► [".(v:foldend - v:foldstart + 1)." lines] ".trim(getline(v:foldstart))." "'
 

@@ -309,18 +309,14 @@ function M.gen_highlighter()
             local parts = vim.split(hl_name, '-')
             local name = parts[1]
             local value = parts[2]
-            if TAILWIND_COLORS[name] and TAILWIND_COLORS[name][value] then
-                if hl_cache[hl_name] then
-                    return hl_name
+            local bg = vim.tbl_get(TAILWIND_COLORS, name, value)
+            if bg then
+                if not hl_cache[hl_name] then
+                    local fg = M.gen_opposite_hex(bg)
+
+                    vim.api.nvim_set_hl(0, hl_name, { fg = fg, bg = bg })
+                    hl_cache[hl_name] = true
                 end
-
-                local bg = TAILWIND_COLORS[name][value]
-                -- TODO: calculate reverse or far opposite #eeeeee or #111112
-                local fg = M.gen_opposite_hex(bg)
-                -- local fg = nil
-
-                vim.api.nvim_set_hl(0, hl_name, { fg = fg, bg = bg })
-                hl_cache[hl_name] = true
 
                 return hl_name
             end
