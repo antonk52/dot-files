@@ -242,6 +242,7 @@ require('lazy').setup({
             },
         },
     },
+    pkg = { enabled = false },
     ui = {
         size = { width = 100, height = 0.9 },
         pills = false,
