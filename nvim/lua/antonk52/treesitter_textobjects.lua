@@ -102,11 +102,9 @@ function M.select_fn(select_around)
     return function()
         local range = _get_fn_bounds(select_around)
 
-        if not range then
-            return
+        if range then
+            select_range(range.start.line, range.start.col, range.endd.line, range.endd.col)
         end
-
-        select_range(range.start.line, range.start.col, range.endd.line, range.endd.col)
     end
 end
 
