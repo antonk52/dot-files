@@ -6,6 +6,19 @@ local SHOW_SIGNATURE_HELP = false
 
 local M = {}
 
+local ts_lang_options = {
+    inlayHints = {
+        includeInlayParameterNameHints = 'all',
+        includeInlayFunctionParameterTypeHints = true,
+        includeInlayVariableTypeHints = true,
+        includeInlayPropertyDeclarationTypeHints = true,
+        includeInlayFunctionLikeReturnTypeHints = true,
+        includeInlayEnumMemberValueHints = true,
+    },
+    implementationsCodeLens = { enabled = true },
+    referencesCodeLens = { enabled = true, showOnAllFunctions = true },
+}
+
 M.servers = {
     flow = {},
     hhvm = {},
@@ -13,36 +26,8 @@ M.servers = {
     tsserver = {
         settings = {
             completions = { completeFunctionCalls = true },
-            includeCompletionsWithSnippetText = true,
-            includeCompletionsForImportStatements = true,
-            typescript = {
-                inlayHints = {
-                    includeInlayParameterNameHints = 'all',
-                    includeInlayParameterNameHintsWhenArgumentMatchesName = false,
-                    includeInlayFunctionParameterTypeHints = true,
-                    includeInlayVariableTypeHints = true,
-                    includeInlayVariableTypeHintsWhenTypeMatchesName = false,
-                    includeInlayPropertyDeclarationTypeHints = true,
-                    includeInlayFunctionLikeReturnTypeHints = true,
-                    includeInlayEnumMemberValueHints = true,
-                },
-                implementationsCodeLens = { enabled = true },
-                referencesCodeLens = { enabled = true, showOnAllFunctions = true },
-            },
-            javascript = {
-                inlayHints = {
-                    includeInlayParameterNameHints = 'all',
-                    includeInlayParameterNameHintsWhenArgumentMatchesName = false,
-                    includeInlayFunctionParameterTypeHints = true,
-                    includeInlayVariableTypeHints = true,
-                    includeInlayVariableTypeHintsWhenTypeMatchesName = false,
-                    includeInlayPropertyDeclarationTypeHints = true,
-                    includeInlayFunctionLikeReturnTypeHints = true,
-                    includeInlayEnumMemberValueHints = true,
-                },
-                implementationsCodeLens = { enabled = true },
-                referencesCodeLens = { enabled = true, showOnAllFunctions = true },
-            },
+            typescript = ts_lang_options,
+            javascript = ts_lang_options,
         },
     },
 
@@ -133,11 +118,6 @@ function M.setup()
     -- to every vim.diagnostic method explicitly
     vim.diagnostic.config({
         float = {
-            close_events = {
-                'CursorMoved',
-                'InsertEnter',
-                'FocusLost',
-            },
             source = true,
             header = 'Line diagnostics:',
             prefix = ' ',
@@ -145,12 +125,6 @@ function M.setup()
             border = 'single',
         },
         signs = {
-            text = {
-                [vim.diagnostic.severity.ERROR] = '●',
-                [vim.diagnostic.severity.WARN] = '●',
-                [vim.diagnostic.severity.HINT] = '◉',
-                [vim.diagnostic.severity.INFO] = '◉',
-            },
             severity = vim.diagnostic.severity.WARN,
         },
         severity_sort = true, -- show errors first
