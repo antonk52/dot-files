@@ -464,9 +464,8 @@ keymap.set({ 'n', 'x' }, '<leader>s', function()
     end)
 end, { desc = 'jump to two characters in current buffer(easymotion like)' })
 
-keymap.set({ 'n', 'v' }, '<Leader>a', '^', { desc = 'go to line start (^ is too far)' })
-keymap.set('n', '<Leader>e', '$', { desc = 'go to line end ($ is too far)' })
-keymap.set('v', '<Leader>e', '$h', { desc = 'go to line end ($ is too far)' })
+keymap.set({ 'n', 'x' }, '<Leader>a', '^', { desc = 'go to line start (^ is too far)' })
+keymap.set({ 'n', 'x' }, '<Leader>e', 'g_', { desc = 'go to line end ($ is too far)' })
 
 keymap.set('n', '<C-t>', '<cmd>tabedit<CR>', { desc = 'Open a new tab' })
 keymap.set('t', '<esc><esc>', '<c-\\><c-n>', { desc = 'exit term buffer' })
