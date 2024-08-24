@@ -505,6 +505,7 @@ if not is_vscode then
         extension = {
             mdx = 'markdown',
             scm = 'scheme',
+            jsonl = 'jsonc',
         },
     })
 
