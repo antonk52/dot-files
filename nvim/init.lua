@@ -522,3 +522,4 @@ end
 
 require('antonk52.treesitter_textobjects').setup()
 require('antonk52.layout').setup()
+require('antonk52.fzf').setup()
