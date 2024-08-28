@@ -41,6 +41,9 @@ local function fzf(kind)
                     vim.api.nvim_win_close(win, true) -- Close the floating window
                     vim.notify('fzf canceled or failed', vim.log.levels.ERROR)
                 end
+
+                -- delete buffer to clean up
+                vim.api.nvim_buf_delete(buf, { force = true })
             end,
         })
 
