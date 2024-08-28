@@ -1,9 +1,11 @@
 local M = {}
----@param kind 'files' | 'all_files'
+---@param kind 'files' | 'all_files' | 'dot_files'
 local function fzf(kind)
     local fzf_cmd = 'fzf'
     if kind == 'all_files' then
         fzf_cmd = 'fd --type f --no-ignore | fzf'
+    elseif kind == 'dot_files' then
+        fzf_cmd = 'fd --type f . ~/dot-files | fzf'
     end
     return function()
         -- Define the floating window options
@@ -19,17 +21,12 @@ local function fzf(kind)
             relative = 'editor',
             width = width,
             height = height,
-            row = math.floor((vim.o.lines - height) / 2),
+            row = math.floor((vim.o.lines - height) / 2) - 1,
             col = math.floor((vim.o.columns - width) / 2),
         })
 
-        vim.keymap.set('t', '<esc><esc>', '<c-\\><c-n>:q<cr>', { buffer = buf, silent = true })
-        vim.keymap.set(
-            't',
-            '<esc>',
-            '<c-\\><c-n>:q<cr>',
-            { buffer = buf, silent = true, nowait = true }
-        )
+        local keymap_opts = { buffer = buf, silent = true, nowait = true }
+        vim.keymap.set('t', '<esc>', '<c-\\><c-n>:q<cr>', keymap_opts)
 
         -- Run fzf in the terminal
         vim.fn.termopen(fzf_cmd, {
@@ -54,6 +51,7 @@ end
 function M.setup()
     vim.keymap.set('n', '<leader>f', fzf('files'), { desc = 'fzf' })
     vim.keymap.set('n', '<leader>F', fzf('all_files'), { desc = 'fzf all files' })
+    vim.keymap.set('n', '<leader>D', fzf('dot_files'), { desc = 'fzf dot files' })
 end
 
 return M

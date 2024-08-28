@@ -214,14 +214,6 @@ function M.setup()
     -- vim.keymap.set('n', '<leader>F', function()
     --     require('telescope.builtin').find_files({ hidden = true, no_ignore = true })
     -- end, { desc = 'force show files igncluding ignored by .gitignore' })
-    vim.keymap.set('n', '<leader>D', function()
-        require('telescope.builtin').find_files({
-            prompt_title = 'dot files',
-            shorten_path = false,
-            cwd = '~/dot-files',
-            hidden = true,
-        })
-    end, { desc = 'Dot files file picker' })
     vim.keymap.set('n', '<leader>b', '<cmd>Telescope buffers<cr>', { desc = 'Buffer picker' })
     vim.keymap.set('n', '<leader>/', function()
         require('telescope.builtin').current_buffer_fuzzy_find({
