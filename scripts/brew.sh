@@ -38,6 +38,7 @@ brew install htop # top but better
 brew install jq # cli for working with json
 brew install lua-language-server
 brew install luacheck # lua linter
+brew install luarocks # lua package manager
 brew install marksman # markdown lsp
 brew install neovim # vim but better
 brew install node # nodejs & npm
