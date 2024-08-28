@@ -210,10 +210,10 @@ function M.setup()
             },
         },
     })
-    vim.keymap.set('n', '<leader>f', M.action_smart_vcs_files)
-    vim.keymap.set('n', '<leader>F', function()
-        require('telescope.builtin').find_files({ hidden = true, no_ignore = true })
-    end, { desc = 'force show files igncluding ignored by .gitignore' })
+    -- vim.keymap.set('n', '<leader>f', M.action_smart_vcs_files)
+    -- vim.keymap.set('n', '<leader>F', function()
+    --     require('telescope.builtin').find_files({ hidden = true, no_ignore = true })
+    -- end, { desc = 'force show files igncluding ignored by .gitignore' })
     vim.keymap.set('n', '<leader>D', function()
         require('telescope.builtin').find_files({
             prompt_title = 'dot files',
