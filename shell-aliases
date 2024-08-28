@@ -51,7 +51,7 @@ function tm()
 alias e='exit'
 alias o='open .'
 alias ax='chmod a+x'
-alias h='history | fzf +s --tac --tiebreak=index | sed "s/ *[0-9]* *//"'
+alias h='eval $(history | fzf +s --tac --tiebreak=index | sed "s/ *[0-9]* *//")'
 alias q='quit'
 alias chux='chmod u+x'
 
