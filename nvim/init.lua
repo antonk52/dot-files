@@ -510,6 +510,7 @@ if not is_vscode then
     require('antonk52.indent_lines').setup()
     require('antonk52.format_on_save').setup()
     require('antonk52.treesitter').setup()
+    require('antonk52.fzf').setup()
 
     vim.defer_fn(function()
         require('antonk52.debug_nvim').setup()
@@ -521,4 +522,3 @@ end
 
 require('antonk52.treesitter_textobjects').setup()
 require('antonk52.layout').setup()
-require('antonk52.fzf').setup()
