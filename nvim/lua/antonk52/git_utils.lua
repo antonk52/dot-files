@@ -75,10 +75,10 @@ local function git_status()
         local lines = vim.split(out.stdout, '\n')
         vim.api.nvim_buf_set_lines(buf, 0, -1, false, lines)
         local mode_to_hl = {
-            M = '@diff.plus',
-            D = '@diff.minus',
-            A = '@diff.plus',
-            R = '@diff.minus',
+            M = true,
+            D = true,
+            A = true,
+            R = true,
         }
         for i, line in ipairs(lines) do
             local new_path = line:sub(1, 2)
@@ -88,11 +88,11 @@ local function git_status()
             end
             local staged = line:sub(1, 1)
             if mode_to_hl[staged] then
-                vim.api.nvim_buf_add_highlight(buf, -1, mode_to_hl[staged], i - 1, 0, 1)
+                vim.api.nvim_buf_add_highlight(buf, -1, '@diff.plus', i - 1, 0, 1)
             end
             local unstaged = line:sub(2, 2)
             if mode_to_hl[unstaged] then
-                vim.api.nvim_buf_add_highlight(buf, -1, mode_to_hl[unstaged], i - 1, 1, 2)
+                vim.api.nvim_buf_add_highlight(buf, -1, '@diff.minus', i - 1, 1, 2)
             end
         end
     end
