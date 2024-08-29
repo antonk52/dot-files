@@ -63,11 +63,6 @@ require('lazy').setup({
         event = 'VeryLazy',
     },
     {
-        'nvim-pack/nvim-spectre', -- global search and replace
-        dependencies = { 'nvim-lua/plenary.nvim' },
-        event = 'VeryLazy',
-    },
-    {
         'stevearc/dressing.nvim',
         opts = {
             input = {
@@ -522,6 +517,7 @@ if not is_vscode then
         require('antonk52.test_js').setup()
         require('antonk52.tsc').setup()
         require('antonk52.git_utils').setup()
+        require('antonk52.find_and_replace').setup()
     end, 1000)
 end
 
