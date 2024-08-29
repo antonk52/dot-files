@@ -1,51 +1,5 @@
 local M = {}
 
-local _is_inside_git_repo = nil
-local function is_inside_git_repo()
-    if _is_inside_git_repo == nil then
-        _is_inside_git_repo = vim.fs.root(0, '.git') ~= nil
-    end
-    return _is_inside_git_repo
-end
----@return string[]
-local function get_nongit_ignore_patterns()
-    local gitignore_path = vim.fs.joinpath(vim.uv.cwd(), '.gitignore')
-    -- we are not in a git repository, but we have .gitignore(mercurial)
-    if vim.uv.fs_stat(gitignore_path) then
-        local ignore_lines = vim.fn.readfile(gitignore_path)
-
-        return vim.tbl_filter(function(line)
-            return not vim.startswith(line, '#') and vim.trim(line) ~= ''
-        end, ignore_lines)
-    end
-    return {
-        'node_modules',
-        'build',
-        'dist',
-    }
-end
-
-function M.action_smart_vcs_files()
-    if is_inside_git_repo() then
-        return require('telescope.builtin').git_files()
-    end
-
-    require('telescope.builtin').find_files({
-        hidden = true,
-        find_command = function()
-            local ignore_patterns = get_nongit_ignore_patterns()
-            local find_command = { 'fd', '--type', 'file' }
-            for _, p in ipairs(ignore_patterns) do
-                table.insert(find_command, '-E')
-                table.insert(find_command, p)
-            end
-            table.insert(find_command, '.')
-
-            return find_command
-        end,
-    })
-end
-
 function M.git_diff(opts)
     opts = opts or {}
     local output = vim.system(opts.cmd or { 'git', 'diff' }):wait().stdout
@@ -210,10 +164,6 @@ function M.setup()
             },
         },
     })
-    -- vim.keymap.set('n', '<leader>f', M.action_smart_vcs_files)
-    -- vim.keymap.set('n', '<leader>F', function()
-    --     require('telescope.builtin').find_files({ hidden = true, no_ignore = true })
-    -- end, { desc = 'force show files igncluding ignored by .gitignore' })
     vim.keymap.set('n', '<leader>b', '<cmd>Telescope buffers<cr>', { desc = 'Buffer picker' })
     vim.keymap.set('n', '<leader>/', function()
         require('telescope.builtin').current_buffer_fuzzy_find({
@@ -241,8 +191,9 @@ function M.setup()
             additional_args = function()
                 -- default threads is 2
                 local cli_args = { '--threads', '4' }
-                if not is_inside_git_repo() then
-                    local ignore_patterns = get_nongit_ignore_patterns()
+                if not require('antonk52.git_utils').is_inside_git_repo() then
+                    local ignore_patterns =
+                        require('antonk52.git_utils').get_nongit_ignore_patterns()
                     for _, p in ipairs(ignore_patterns) do
                         table.insert(cli_args, '--iglob')
                         table.insert(cli_args, '!' .. p)
@@ -253,7 +204,7 @@ function M.setup()
         })
     end, { nargs = '+', desc = 'Searches exactly for the given string (including spaces)' })
 
-    if is_inside_git_repo() then
+    if require('antonk52.git_utils').is_inside_git_repo() then
         vim.api.nvim_create_user_command('TelescopeGitDiff', function()
             M.git_diff()
         end, { desc = 'git diff hunk picker' })

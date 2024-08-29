@@ -353,6 +353,32 @@ local function git(x)
     require('lazy.util').float_term(cmd, { interactive = false })
 end
 
+local _is_inside_git_repo = nil
+function M.is_inside_git_repo()
+    if _is_inside_git_repo == nil then
+        _is_inside_git_repo = vim.fs.root(0, '.git') ~= nil
+    end
+    return _is_inside_git_repo
+end
+
+---@return string[]
+function M.get_nongit_ignore_patterns()
+    local gitignore_path = vim.fs.joinpath(vim.uv.cwd(), '.gitignore')
+    -- we are not in a git repository, but we have .gitignore(mercurial)
+    if vim.uv.fs_stat(gitignore_path) then
+        local ignore_lines = vim.fn.readfile(gitignore_path)
+
+        return vim.tbl_filter(function(line)
+            return not vim.startswith(line, '#') and vim.trim(line) ~= ''
+        end, ignore_lines)
+    end
+    return {
+        'node_modules',
+        'build',
+        'dist',
+    }
+end
+
 function M.setup()
     vim.api.nvim_create_user_command(
         'GitAddPatch',

@@ -1,39 +1,13 @@
 local M = {}
 
-local _is_inside_git_repo = nil
-local function is_inside_git_repo()
-    if _is_inside_git_repo == nil then
-        _is_inside_git_repo = vim.fs.root(0, '.git') ~= nil
-    end
-    return _is_inside_git_repo
-end
-
----@return string[]
-local function get_nongit_ignore_patterns()
-    local gitignore_path = vim.fs.joinpath(vim.uv.cwd(), '.gitignore')
-    -- we are not in a git repository, but we have .gitignore(mercurial)
-    if vim.uv.fs_stat(gitignore_path) then
-        local ignore_lines = vim.fn.readfile(gitignore_path)
-
-        return vim.tbl_filter(function(line)
-            return not vim.startswith(line, '#') and vim.trim(line) ~= ''
-        end, ignore_lines)
-    end
-    return {
-        'node_modules',
-        'build',
-        'dist',
-    }
-end
-
 ---@param kind 'files' | 'all_files' | 'dot_files'
 local function fzf(kind)
     local fzf_cmd = 'fzf'
     if kind == 'files' then
-        if is_inside_git_repo() then
+        if require('antonk52.git_utils').is_inside_git_repo() then
             fzf_cmd = 'fd --type f -E node_modules -E build -E dist . | fzf'
         else
-            local ignore_patterns = get_nongit_ignore_patterns()
+            local ignore_patterns = require('antonk52.git_utils').get_nongit_ignore_patterns()
             local find_command = { 'fd', '--type', 'file' }
             for _, p in ipairs(ignore_patterns) do
                 table.insert(find_command, '-E')
