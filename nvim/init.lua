@@ -393,7 +393,12 @@ keymap.set({ 'n', 'x' }, '<leader>s', function()
     local lines = vim.api.nvim_buf_get_lines(bufnr, line_idx_start - 1, line_idx_end, false)
     local needle = char1 .. char2
 
+    local is_case_sensitive = needle ~= string.lower(needle)
+
     for lines_i, line_text in ipairs(lines) do
+        if not is_case_sensitive then
+            line_text = string.lower(line_text)
+        end
         local line_idx = lines_i + line_idx_start - 1
         if char_idx > #EM_CHARS then
             break
