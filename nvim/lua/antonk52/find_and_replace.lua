@@ -1,6 +1,6 @@
 local M = {}
 
-M.find_and_replace = function(x)
+M.find_and_replace = function()
     local input = vim.fn.input('Find and replace: ')
     local paths = vim.fn.input('In files(comma separated): ')
 
@@ -20,6 +20,12 @@ M.find_and_replace = function(x)
 
             vim.cmd.tabnew(tmp_file)
             local buf = vim.api.nvim_get_current_buf()
+
+            vim.keymap.set('n', 'gf', function()
+                local current_line = vim.api.nvim_get_current_line()
+                local file, line_number = string.match(current_line, '^(.*):(.*):(.*)$')
+                vim.cmd(string.format('edit %s | :%s | normal zz', file, line_number))
+            end, { buffer = buf, desc = 'open file on line' })
 
             vim.api.nvim_create_autocmd('BufWritePost', {
                 desc = 'If lines are changed, apply changes to files',
