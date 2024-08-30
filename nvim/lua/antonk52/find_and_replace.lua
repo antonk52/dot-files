@@ -8,7 +8,7 @@ M.find_and_replace = function()
     local input = vim.fn.input('Find and replace: ')
     local paths = vim.fn.input('In files(comma separated): ')
 
-    local cmd = { 'rg', '--line-number', input }
+    local cmd = { 'rg', '--hidden', '--line-number', input }
     if paths ~= '' then
         vim.list_extend(cmd, vim.split(paths, ','))
     end
