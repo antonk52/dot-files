@@ -5,7 +5,7 @@ local function fzf(kind)
     local fzf_cmd = 'fzf'
     if kind == 'files' then
         if require('antonk52.git_utils').is_inside_git_repo() then
-            fzf_cmd = 'fd --type f --hidden -E .git -E node_modules -E build -E dist . | fzf'
+            fzf_cmd = 'git ls-files | fzf'
         elseif vim.fs.root(0, '.hg') ~= nil then
             fzf_cmd = 'hg files . | fzf'
         else
