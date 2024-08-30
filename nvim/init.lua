@@ -518,7 +518,7 @@ if not is_vscode then
         require('antonk52.tsc').setup()
         require('antonk52.git_utils').setup()
         require('antonk52.find_and_replace').setup()
-    end, 1000)
+    end, 500)
 end
 
 require('antonk52.treesitter_textobjects').setup()
