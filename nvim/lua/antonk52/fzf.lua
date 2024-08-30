@@ -5,7 +5,7 @@ local function fzf(kind)
     local fzf_cmd = 'fzf'
     if kind == 'files' then
         if require('antonk52.git_utils').is_inside_git_repo() then
-            fzf_cmd = 'fd --type f --hidden -E node_modules -E build -E dist . | fzf'
+            fzf_cmd = 'fd --type f --hidden -E .git -E node_modules -E build -E dist . | fzf'
         else
             local ignore_patterns = require('antonk52.git_utils').get_nongit_ignore_patterns()
             local find_command = { 'fd', '--type', 'file', '--hidden' }
@@ -24,7 +24,7 @@ local function fzf(kind)
     elseif kind == 'all_files' then
         fzf_cmd = 'fd --type f --no-ignore --hidden | fzf'
     elseif kind == 'dot_files' then
-        fzf_cmd = 'fd --type f --hidden . ~/dot-files | fzf'
+        fzf_cmd = 'fd --type f --hidden -E .git . ~/dot-files | fzf'
     end
     return function()
         -- Define the floating window options
