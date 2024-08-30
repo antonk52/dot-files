@@ -19,7 +19,6 @@ function M.setup()
         callback = update_listchars,
         desc = 'Update listchars when tabstop or shiftwidth is changed',
     })
-    -- update indent levels
     vim.api.nvim_create_autocmd({
         'BufReadPost',
         -- Reset on each buffer as listchars is a window option
@@ -28,6 +27,7 @@ function M.setup()
         -- This ensures that the current buffer has correct indent levels.
         'BufEnter',
     }, {
+        desc = 'Update listchars based on indent levels',
         pattern = '*',
         callback = function()
             local lines = vim.api.nvim_buf_get_lines(0, 0, 100, false)
