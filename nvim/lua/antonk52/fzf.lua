@@ -5,9 +5,9 @@ local function fzf(kind)
     local fzf_cmd = 'fzf'
     if kind == 'files' then
         if require('antonk52.git_utils').is_inside_git_repo() then
-            fzf_cmd = 'git ls-files | fzf'
+            fzf_cmd = 'git ls-files | fzf --prompt "GitFiles> "'
         elseif vim.fs.root(0, '.hg') ~= nil then
-            fzf_cmd = 'hg files . | fzf'
+            fzf_cmd = 'hg files . | fzf --prompt "HgFiles> "'
         else
             local ignore_patterns = require('antonk52.git_utils').get_nongit_ignore_patterns()
             local find_command = { 'fd', '--type', 'file', '--hidden' }
@@ -24,9 +24,9 @@ local function fzf(kind)
             fzf_cmd = string.format('%s | fzf', table.concat(find_command, ' '))
         end
     elseif kind == 'all_files' then
-        fzf_cmd = 'fd --type f --no-ignore --hidden | fzf'
+        fzf_cmd = 'fd --type f --no-ignore --hidden | fzf --prompt "AllFiles> "'
     elseif kind == 'dot_files' then
-        fzf_cmd = 'fd --type f --hidden -E .git . ~/dot-files | fzf'
+        fzf_cmd = 'fd --type f --hidden -E .git . ~/dot-files | fzf --prompt "DotFiles> "'
     end
     return function()
         -- Define the floating window options
