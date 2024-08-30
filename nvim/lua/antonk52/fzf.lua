@@ -6,6 +6,8 @@ local function fzf(kind)
     if kind == 'files' then
         if require('antonk52.git_utils').is_inside_git_repo() then
             fzf_cmd = 'fd --type f --hidden -E .git -E node_modules -E build -E dist . | fzf'
+        elseif vim.fs.root(0, '.hg') ~= nil then
+            fzf_cmd = 'hg files . | fzf'
         else
             local ignore_patterns = require('antonk52.git_utils').get_nongit_ignore_patterns()
             local find_command = { 'fd', '--type', 'file', '--hidden' }
