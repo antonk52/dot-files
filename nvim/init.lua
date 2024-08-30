@@ -35,7 +35,11 @@ require('lazy').setup({
         opts = {},
     },
     {
-        'hrsh7th/nvim-cmp',
+        -- 'hrsh7th/nvim-cmp',
+        -- experimental branch with performance improvements
+        -- see https://github.com/hrsh7th/nvim-cmp/pull/1980
+        'yioneko/nvim-cmp',
+        branch = 'perf',
         dependencies = {
             'hrsh7th/cmp-buffer',
             'hrsh7th/cmp-path',

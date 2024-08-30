@@ -98,6 +98,10 @@ function M.setup()
             { name = 'path' },
             { name = 'buffer', keyword_length = 3 },
         },
+        performance = {
+            debounce = 30, -- default 60ms
+            throttle = 20, -- default 30ms
+        },
     })
 
     -- completion for buffer search
