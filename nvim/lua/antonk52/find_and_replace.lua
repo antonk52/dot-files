@@ -65,8 +65,8 @@ M.find_and_replace = function()
             end
 
             vim.keymap.set('n', 'gf', function()
-                local current_line = vim.api.nvim_get_current_line()
-                local file, line_number = parse_line(current_line)
+                local i = vim.api.nvim_win_get_cursor(0)[1]
+                local file, line_number = matches[i].file, matches[i].line_number
                 vim.cmd(string.format('edit %s | :%s | normal zz', file, line_number))
             end, { buffer = buf, desc = 'open file on line' })
 
