@@ -1,5 +1,8 @@
 local M = {}
+local NS = vim.api.nvim_create_namespace('find_and_replace')
 
+---@param line string
+---@return string, string, string
 local function parse_line(line)
     return string.match(line, '^(.*):(%d*):(.*)$')
 end
@@ -24,20 +27,41 @@ M.find_and_replace = function()
         vim.schedule(function()
             local lines_str = vim.trim(obj.stdout or '')
             local initial_lines = vim.split(lines_str, '\n')
+            local matches = vim.tbl_map(function(line)
+                local file, line_number, text = parse_line(line)
+                return {
+                    file = file,
+                    line_number = line_number,
+                    text = text,
+                }
+            end, initial_lines)
             local tmp_file = vim.fn.tempname()
 
-            vim.fn.writefile(initial_lines, tmp_file)
+            vim.fn.writefile(
+                vim.tbl_map(function(m)
+                    return m.text
+                end, matches),
+                tmp_file
+            )
 
             vim.cmd.tabnew(tmp_file)
             local buf = vim.api.nvim_get_current_buf()
 
             vim.api.nvim_set_option_value('wrap', false, { scope = 'local' })
 
-            for i, line in ipairs(initial_lines) do
-                local file, line_number = parse_line(line)
+            for i, m in ipairs(matches) do
                 local lnum = i - 1 -- 0 based
-                local col_end = #file + #line_number + 2
-                vim.api.nvim_buf_add_highlight(buf, 0, 'Directory', lnum, 0, col_end)
+
+                vim.api.nvim_buf_set_extmark(buf, NS, lnum, 0, {
+                    virt_text = {
+                        { m.file, 'Directory' },
+                        { ':', 'Comment' },
+                        { m.line_number, 'Directory' },
+                        { ':', 'Comment' },
+                    },
+                    virt_text_pos = 'inline',
+                    hl_mode = 'combine',
+                })
             end
 
             vim.keymap.set('n', 'gf', function()
@@ -63,18 +87,19 @@ M.find_and_replace = function()
 
                     local changes_count = 0
 
-                    for i, line in ipairs(new_lines) do
-                        if line ~= initial_lines[i] then
-                            local file, line_number, text = parse_line(line)
+                    for i, new_text in ipairs(new_lines) do
+                        if new_text ~= matches[i].text then
+                            local file, line_number = matches[i].file, matches[i].line_number
                             local init_file, init_lnum = parse_line(initial_lines[i])
 
                             if file == init_file and line_number == init_lnum then
                                 local og_lines = vim.fn.readfile(file)
 
-                                og_lines[tonumber(line_number)] = text
+                                og_lines[tonumber(line_number)] = new_text
 
                                 vim.fn.writefile(og_lines, file)
-                                initial_lines[i] = line
+
+                                matches[i].text = new_text
 
                                 changes_count = changes_count + 1
                             else
