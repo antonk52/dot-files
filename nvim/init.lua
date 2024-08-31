@@ -167,6 +167,7 @@ require('lazy').setup({
     },
     { 'antonk52/lake.nvim' },
     {
+        enabled = vim.env.WORK ~= nil,
         dir = vim.fn.expand(vim.env.WORK_PLUGIN_PATH or 'noop'),
         name = 'work', -- otherwise lazy.nvim errors when updates plugins
         config = function()
