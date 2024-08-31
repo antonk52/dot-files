@@ -720,6 +720,7 @@
                                 "type": "basic"
                             },
                             {
+                                "description": "right_command + c = pipe |",
                                 "from": {
                                     "key_code": "c",
                                     "modifiers": {
@@ -736,7 +737,7 @@
                                 },
                                 "to": [
                                     {
-                                        "key_code": "open_bracket",
+                                        "key_code": "backslash",
                                         "modifiers": [
                                             "left_shift"
                                         ]
@@ -745,6 +746,7 @@
                                 "type": "basic"
                             },
                             {
+                                "description": "right_command + v = backslash \\",
                                 "from": {
                                     "key_code": "v",
                                     "modifiers": {
@@ -761,10 +763,8 @@
                                 },
                                 "to": [
                                     {
-                                        "key_code": "close_bracket",
-                                        "modifiers": [
-                                            "left_shift"
-                                        ]
+                                        "key_code": "backslash",
+                                        "modifiers": []
                                     }
                                 ],
                                 "type": "basic"
