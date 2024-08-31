@@ -14,6 +14,11 @@ M.find_and_replace = function()
     end
 
     vim.system(cmd, { text = true }, function(obj)
+        if vim.trim(obj.stdout) == '' then
+            return vim.schedule(function()
+                vim.notify('No results found', vim.log.levels.INFO)
+            end)
+        end
         assert(obj.code == 0, 'Rg command failed; stderr:\n' .. obj.stderr)
 
         vim.schedule(function()
