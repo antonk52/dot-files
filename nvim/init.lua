@@ -413,7 +413,7 @@ keymap.set({ 'n', 'x' }, '<leader>s', function()
                     local id = vim.api.nvim_buf_set_extmark(bufnr, EASYMOTION_NS, linenr, col + 2, {
                         virt_text = { { overlay_char, 'CurSearch' } },
                         virt_text_pos = 'overlay',
-                        hl_mode = 'combine',
+                        hl_mode = 'replace',
                     })
                     extmarks[overlay_char] = { line = linenr, col = col, id = id }
                     char_idx = char_idx + 1
