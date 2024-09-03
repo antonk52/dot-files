@@ -53,13 +53,15 @@ M.find_and_replace = function()
                 local lnum = i - 1 -- 0 based
 
                 vim.api.nvim_buf_set_extmark(buf, NS, lnum, 0, {
-                    virt_text = {
-                        { m.file, 'Directory' },
-                        { ':', 'Comment' },
-                        { m.line_number, 'Directory' },
-                        { ':', 'Comment' },
+                    virt_lines = {
+                        {
+
+                            { m.file, 'Directory' },
+                            { ':', 'Comment' },
+                            { m.line_number, 'Directory' },
+                        },
                     },
-                    virt_text_pos = 'inline',
+                    virt_lines_above = true,
                     hl_mode = 'combine',
                 })
             end
@@ -113,6 +115,10 @@ M.find_and_replace = function()
                     end)
                 end,
             })
+
+            -- by default the first virtual line is not shown, we need to scroll up for it to be displayed
+            local cmd = vim.api.nvim_replace_termcodes('<C-u>', true, false, true)
+            vim.api.nvim_feedkeys(cmd, 'nt', false)
         end)
     end)
 end
