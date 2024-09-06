@@ -43,7 +43,7 @@ function M.format()
     then
         vim.lsp.buf.format({
             filter = function(client)
-                return client.name ~= 'lua_ls' and client.name ~= 'tsserver'
+                return client.name ~= 'lua_ls' and client.name ~= 'ts_ls'
             end,
         })
     end

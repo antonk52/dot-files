@@ -23,7 +23,8 @@ M.servers = {
     flow = {},
     hhvm = {},
 
-    tsserver = {
+    -- tsserver
+    ts_ls = {
         settings = {
             completions = { completeFunctionCalls = true },
             typescript = ts_lang_options,
