@@ -386,6 +386,11 @@ function M.setup()
         { nargs = 0, desc = 'git add --patch' }
     )
     vim.api.nvim_create_user_command(
+        'GitRestorePatch',
+        run_cmd_and_exit('git restore --patch'),
+        { nargs = 0, desc = 'git restore --patch' }
+    )
+    vim.api.nvim_create_user_command(
         'GitStatus',
         git_status,
         { nargs = 0, desc = 'git status with smarts' }
