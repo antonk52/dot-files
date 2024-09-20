@@ -30,7 +30,10 @@ function M.setup()
     vim.api.nvim_create_autocmd('FileType', {
         desc = 'Start treesitter automatically',
         callback = function()
-            pcall(vim.treesitter.start)
+            local ok, parser = pcall(vim.treesitter.get_parser, 0)
+            if ok and parser then
+                pcall(vim.treesitter.start)
+            end
         end,
     })
 
