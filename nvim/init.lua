@@ -377,68 +377,6 @@ keymap.set('v', '>', '>gv')
 keymap.set('n', '<C-_>', 'gcc', { remap = true })
 keymap.set('x', '<C-_>', 'gc', { remap = true })
 
-local EASYMOTION_NS = vim.api.nvim_create_namespace('EASYMOTION_NS')
-local EM_CHARS = vim.split('fjdkslgha;rueiwotyqpvbcnxmzFJDKSLGHARUEIWOTYQPVBCNXMZ', '')
-keymap.set({ 'n', 'x' }, '<leader>s', function()
-    local char_code1, char_code2 = vim.fn.getchar(), vim.fn.getchar()
-    local char1 = type(char_code1) == 'number' and vim.fn.nr2char(char_code1) or char_code1
-    local char2 = type(char_code2) == 'number' and vim.fn.nr2char(char_code2) or char_code2
-    local line_idx_start, line_idx_end = vim.fn.line('w0'), vim.fn.line('w$')
-    local bufnr = vim.api.nvim_get_current_buf()
-    vim.api.nvim_buf_clear_namespace(bufnr, EASYMOTION_NS, 0, -1)
-
-    local char_idx = 1
-    ---@type table<string, {line: integer, col: integer, id: integer}>
-    local extmarks = {}
-    local lines = vim.api.nvim_buf_get_lines(bufnr, line_idx_start - 1, line_idx_end, false)
-    local needle = char1 .. char2
-
-    local is_case_sensitive = needle ~= string.lower(needle)
-
-    for lines_i, line_text in ipairs(lines) do
-        if not is_case_sensitive then
-            line_text = string.lower(line_text)
-        end
-        local line_idx = lines_i + line_idx_start - 1
-        if char_idx > #EM_CHARS then
-            break
-        end
-        -- skip folded lines
-        if vim.fn.foldclosed(line_idx) == -1 then
-            for i = 1, #line_text do
-                if line_text:sub(i, i + 1) == needle and char_idx <= #EM_CHARS then
-                    local overlay_char = EM_CHARS[char_idx]
-                    local linenr = line_idx_start + lines_i - 2
-                    local col = i - 1
-                    local id = vim.api.nvim_buf_set_extmark(bufnr, EASYMOTION_NS, linenr, col + 2, {
-                        virt_text = { { overlay_char, 'CurSearch' } },
-                        virt_text_pos = 'overlay',
-                        hl_mode = 'replace',
-                    })
-                    extmarks[overlay_char] = { line = linenr, col = col, id = id }
-                    char_idx = char_idx + 1
-                end
-                if char_idx > #EM_CHARS then
-                    break
-                end
-            end
-        end
-    end
-
-    -- otherwise setting extmarks and waiting for next char is on the same frame
-    vim.schedule(function()
-        local next_char = vim.fn.nr2char(vim.fn.getchar())
-        if extmarks[next_char] then
-            local pos = extmarks[next_char]
-            -- to make <C-o> work
-            vim.cmd("normal! m'")
-            vim.api.nvim_win_set_cursor(0, { pos.line + 1, pos.col })
-        end
-        -- clear extmarks
-        vim.api.nvim_buf_clear_namespace(0, EASYMOTION_NS, 0, -1)
-    end)
-end, { desc = 'jump to two characters in current buffer(easymotion like)' })
-
 keymap.set({ 'n', 'x' }, '<Leader>a', '^', { desc = 'go to line start (^ is too far)' })
 keymap.set({ 'n', 'x' }, '<Leader>e', 'g_', { desc = 'go to line end ($ is too far)' })
 
@@ -515,6 +453,7 @@ if not is_vscode then
     require('antonk52.indent_lines').setup()
     require('antonk52.format_on_save').setup()
     require('antonk52.treesitter').setup()
+    require('antonk52.treesitter_textobjects').setup()
     require('antonk52.fzf').setup()
 
     vim.defer_fn(function()
@@ -526,5 +465,5 @@ if not is_vscode then
     end, 300)
 end
 
-require('antonk52.treesitter_textobjects').setup()
+require('antonk52.easy_motion').setup()
 require('antonk52.layout').setup()
