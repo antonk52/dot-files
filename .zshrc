@@ -13,6 +13,14 @@ export CARGO_HOME="$XDG_DATA_HOME"/cargo
 
 export DOT_FILES="$HOME"/dot-files
 
+# pick up base16 colortheme
+if [[ -f /.base16_theme && -z "$NVIM" && "$__CFBundleIdentifier" != "com.apple.Terminal" ]]; then
+    . ~/.base16_theme
+fi
+
+# global node modules
+export PATH="$HOME"/.npm-global/bin:$PATH
+
 # cargo crates
 export PATH="$HOME"/.cargo/bin:"$HOME"/.local/share/cargo/bin:$PATH
 # pip packages

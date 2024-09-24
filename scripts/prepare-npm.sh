@@ -1,5 +1,14 @@
 #!/bin/bash
 
+# install global dependencies into `~/.npm-global`
+# otherwise npm requires sudo and that's a no no
+# https://docs.npmjs.com/resolving-eacces-permissions-errors-when-installing-packages-globally#manually-change-npms-default-directory
+npm config set prefix '~/.npm-global'
+
+if [ ! -d ~/.npm-global ]; then
+    mkdir ~/.npm-global
+fi
+
 # newly created packages should be MIT licensed
 # npm config set init.license MIT
 
@@ -10,12 +19,12 @@
 
 # install global node dependencies
 
-sudo npm i -g cssmodules-language-server
-sudo npm i -g n        # switch node versions
-sudo npm i -g neovim   # editor dependency
-sudo npm i -g npmrc    # switch between different npmrc
-sudo npm i -g serve    # local web server for static files
-sudo npm i -g synd     # rsync wrapper
-sudo npm i -g tailwindcss-language-server
-sudo npm i -g typescript-language-server
-sudo npm i -g vscode-langservers-extracted # html/json/css/eslint LSPs
+npm i -g cssmodules-language-server
+npm i -g n        # switch node versions
+npm i -g neovim   # editor dependency
+npm i -g npmrc    # switch between different npmrc
+npm i -g serve    # local web server for static files
+npm i -g synd     # rsync wrapper
+npm i -g tailwindcss-language-server
+npm i -g typescript-language-server
+npm i -g vscode-langservers-extracted # html/json/css/eslint LSPs
