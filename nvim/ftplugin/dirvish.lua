@@ -31,6 +31,8 @@ local function remove()
 
     if confirmed then
         local is_file = not vim.endswith(target, '/')
+        -- replace with vim.fs.rm after 0.11
+        -- vim.fs.rm(target, {force = true, recursive = true})
         if is_file then
             vim.uv.fs_unlink(target)
         else
