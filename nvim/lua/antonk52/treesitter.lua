@@ -83,7 +83,8 @@ function M.setup()
         desc = 'Start treesitter automatically',
         pattern = ft_pattern,
         callback = function()
-            local ok, parser = pcall(vim.treesitter.get_parser, 0)
+            -- TODO: remove pcall & and nil, {error = false} after stable nvim 0.12
+            local ok, parser = pcall(vim.treesitter.get_parser, 0, nil, { error = false })
             if ok and parser then
                 pcall(vim.treesitter.start)
             end
