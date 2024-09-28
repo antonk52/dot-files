@@ -1,5 +1,6 @@
 local M = {}
 local usercmd = vim.api.nvim_create_user_command
+local has_stylua = vim.fn.executable('stylua') == 1
 
 M.enabled = true
 
@@ -9,6 +10,9 @@ function M.format()
     end
 
     if vim.bo.filetype == 'lua' then
+        if not has_stylua then
+            return
+        end
         local buf_name = vim.api.nvim_buf_get_name(0)
         local root = vim.fs.root(buf_name, { '.stylua.toml', 'stylua.toml' })
         if not root then
