@@ -1,23 +1,34 @@
 local M = {}
 local std_path_data = vim.fn.stdpath('data') --[[@as string]]
 
-M.parsers = {
+local rocks_to_install = {
     'tree-sitter-typescript',
-    'tree-sitter-typescriptreact',
     'tree-sitter-javascript',
-    'tree-sitter-javascriptreact',
-    'tree-sitter-ecma',
     'tree-sitter-jsdoc',
-    'tree-sitter-json',
-    'tree-sitter-jsonc',
-    'tree-sitter-jsx',
-    'tree-sitter-tsx',
+    'tree-sitter-jsonc', -- includes json
+    'tree-sitter-tsx', -- includes jsx
 
     'tree-sitter-css',
     'tree-sitter-luadoc',
     'tree-sitter-scss',
     'tree-sitter-toml',
     'tree-sitter-yaml',
+
+    'tree-sitter-markdown', -- includes markdown_inline
+}
+
+local ft_pattern = {
+    'javascript',
+    'typescript',
+    'javascriptreact',
+    'typescriptreact',
+    'json',
+    'jsonc',
+    'css',
+    'scss',
+    'toml',
+    'yaml',
+    'markdown',
 }
 
 function M.setup()
@@ -29,6 +40,7 @@ function M.setup()
 
     vim.api.nvim_create_autocmd('FileType', {
         desc = 'Start treesitter automatically',
+        pattern = ft_pattern,
         callback = function()
             local ok, parser = pcall(vim.treesitter.get_parser, 0)
             if ok and parser then
@@ -38,7 +50,7 @@ function M.setup()
     })
 
     vim.api.nvim_create_user_command('TSInstallParsers', function()
-        for _, name in ipairs(M.parsers) do
+        for _, name in ipairs(rocks_to_install) do
             local start_ms = vim.uv.now()
             vim.print('- installing ' .. name)
             vim.system({
