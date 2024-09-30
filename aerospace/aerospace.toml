@@ -92,6 +92,9 @@ alt-f = ['layout floating tiling', 'mode main']
 alt-d = 'layout accordion vertical'
 alt-s = 'layout tiles vertical horizontal'
 
+alt-m = 'move-node-to-monitor next'
+alt-n = 'focus-monitor next'
+
 # See: https://nikitabobko.github.io/AeroSpace/commands#focus
 alt-h = 'focus left'
 alt-j = 'focus down'
