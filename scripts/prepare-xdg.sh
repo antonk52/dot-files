@@ -12,6 +12,7 @@ DOTS="$HOME"/dot-files
 [ ! -L "$XDG_CONFIG_HOME"/tmux ] && ln -s "$DOTS"/tmux "$XDG_CONFIG_HOME"/tmux
 [ ! -L "$XDG_CONFIG_HOME"/karabiner ] && ln -s "$DOTS"/karabiner "$XDG_CONFIG_HOME"/karabiner
 [ ! -L "$XDG_CONFIG_HOME"/alacritty.toml ] && ln -s "$DOTS"/alacritty.toml "${XDG_CONFIG_HOME}"/alacritty.toml
+[ ! -L "$XDG_CONFIG_HOME"/aerospace ] && ln -s "$DOTS"/aerospace "${XDG_CONFIG_HOME}"/aerospace
 
 [ ! -L "$HOME"/.zshrc ] && ln -s "$DOTS"/.zshrc "$HOME"/.zshrc
 
