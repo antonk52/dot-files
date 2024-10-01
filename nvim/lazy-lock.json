@@ -6,7 +6,7 @@
   "copilot.lua": { "branch": "master", "commit": "1a237cf50372830a61d92b0adf00d3b23882e0e1" },
   "dressing.nvim": { "branch": "master", "commit": "1b7921eecc65af1baf8ac1dc06f0794934cbcfb2" },
   "lake.nvim": { "branch": "main", "commit": "42e371fdd5bf174e4d95cde96ec2ccde37ee17b5" },
-  "lazy.nvim": { "branch": "main", "commit": "460e1cd8f24e364d54543a4b0e83f6f4ec1f65fb" },
+  "lazy.nvim": { "branch": "main", "commit": "077102c5bfc578693f12377846d427f49bc50076" },
   "markdowny.nvim": { "branch": "main", "commit": "8ff18e8677cf39821913f387697378fcf3e141a0" },
   "mini.nvim": { "branch": "main", "commit": "848c5e8f428faf843051768e0d56104cd02aea1f" },
   "npm_scripts.nvim": { "branch": "main", "commit": "2dfa5d3b09564042c65ef8975eb3948b00f95422" },

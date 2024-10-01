@@ -27,7 +27,7 @@ enable-normalization-opposite-orientation-for-nested-containers = true
 accordion-padding = 30
 
 # Possible values: tiles|accordion
-default-root-container-layout = 'tiles'
+default-root-container-layout = 'accordion'
 
 # Possible values: horizontal|vertical|auto
 # 'auto' means: wide monitor (anything wider than high) gets horizontal orientation,
@@ -92,8 +92,10 @@ alt-f = ['layout floating tiling', 'mode main']
 alt-d = 'layout accordion vertical'
 alt-s = 'layout tiles vertical horizontal'
 
-alt-m = 'move-node-to-monitor next'
-alt-n = 'focus-monitor next'
+# move window and focus to next/prev monitor
+# `--wrap-around` to only use one mapping for moving window/focus
+alt-m = ['move-node-to-monitor --wrap-around next', 'focus-monitor --wrap-around next']
+alt-n = 'focus-monitor --wrap-around next'
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#focus
 alt-h = 'focus left'
