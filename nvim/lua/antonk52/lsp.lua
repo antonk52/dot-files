@@ -35,15 +35,13 @@ M.servers = {
     -- https://github.com/hrsh7th/vscode-langservers-extracted
     html = {},
     -- lazy require schemastore
-    jsonls = function()
-        return {
-            settings = {
-                json = {
-                    schemas = require('schemastore').json.schemas(),
-                },
+    jsonls = {
+        settings = {
+            json = {
+                schemas = require('schemastore').json.schemas(),
             },
-        }
-    end,
+        },
+    },
     cssls = {},
 
     cssmodules_ls = {
@@ -154,8 +152,6 @@ function M.setup()
     local lsp_caps = lsp.protocol.make_client_capabilities()
     local cmp_caps = require('cmp_nvim_lsp').default_capabilities(lsp_caps)
     for server_name, opts in pairs(M.servers) do
-        opts = type(opts) == 'function' and opts() or opts
-
         opts.capabilities = cmp_caps
         opts.flags = { debounce_text_changes = 120 }
 
@@ -168,8 +164,8 @@ function M.setup()
             if not SHOW_SIGNATURE_HELP then
                 return
             end
-            local has_treesitter_parser = pcall(vim.treesitter.get_parser, 0, vim.bo.filetype)
-            if not has_treesitter_parser then
+            local has_parser = pcall(vim.treesitter.get_parser, 0, vim.bo.filetype)
+            if not has_parser then
                 return
             end
             -- check if current treesitter node is inside arguments node
@@ -177,8 +173,7 @@ function M.setup()
             local node_type = node and node:type()
             if node_type ~= 'argument_list' and node_type ~= 'arguments' then
                 return
-            end
-            if not require('cmp').visible() then
+            elseif not require('cmp').visible() then
                 vim.lsp.buf.signature_help()
             end
         end,
