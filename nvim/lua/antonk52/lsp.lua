@@ -151,6 +151,11 @@ function M.setup()
     -- start language servers
     local lsp_caps = lsp.protocol.make_client_capabilities()
     local cmp_caps = require('cmp_nvim_lsp').default_capabilities(lsp_caps)
+    if vim.endswith(vim.uv.cwd() or vim.fn.getcwd(), '/www') then
+        M.servers.ts_ls = nil
+        M.servers.biome = nil
+        M.servers.eslint = nil
+    end
     for server_name, opts in pairs(M.servers) do
         opts.capabilities = cmp_caps
         opts.flags = { debounce_text_changes = 120 }

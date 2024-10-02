@@ -88,7 +88,8 @@ alt-slash = 'layout tiles horizontal vertical'
 alt-comma = 'layout accordion horizontal vertical'
 
 # Toggle between floating and tiling layout
-alt-f = ['layout floating tiling', 'mode main']
+alt-g = ['layout floating tiling', 'mode main']
+alt-f = 'fullscreen'
 alt-d = 'layout accordion vertical'
 alt-s = 'layout tiles vertical horizontal'
 
