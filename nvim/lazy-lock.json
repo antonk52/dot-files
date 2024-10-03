@@ -9,6 +9,7 @@
   "lazy.nvim": { "branch": "main", "commit": "1159bdccd8910a0fd0914b24d6c3d186689023d9" },
   "markdowny.nvim": { "branch": "main", "commit": "8ff18e8677cf39821913f387697378fcf3e141a0" },
   "mini.nvim": { "branch": "main", "commit": "61e5d46fc0cf71306c51275383767d996f559a60" },
+  "none-ls.nvim": { "branch": "main", "commit": "0e0a940477cc08fa7b1799384a1d668058ed4e61" },
   "npm_scripts.nvim": { "branch": "main", "commit": "2dfa5d3b09564042c65ef8975eb3948b00f95422" },
   "nvim-cmp": { "branch": "perf", "commit": "6c3d595f3223c1ae7392d4fde1626355439af6c1" },
   "nvim-lspconfig": { "branch": "master", "commit": "1c2595e38da319a1a58c94f58afe6fe6fe02e292" },

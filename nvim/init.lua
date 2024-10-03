@@ -167,6 +167,19 @@ require('lazy').setup({
     },
     { 'antonk52/lake.nvim' },
     {
+        'nvimtools/none-ls.nvim',
+        config = function()
+            local null_ls = require('null-ls')
+            null_ls.setup({
+                sources = {
+                    null_ls.builtins.formatting.stylua,
+                    null_ls.builtins.diagnostics.selene,
+                },
+            })
+        end,
+        event = 'VeryLazy',
+    },
+    {
         enabled = vim.env.WORK ~= nil,
         dir = vim.fn.expand(vim.env.WORK_PLUGIN_PATH or 'noop'),
         name = 'work', -- otherwise lazy.nvim errors when updates plugins
@@ -176,6 +189,10 @@ require('lazy').setup({
                 work.setup()
             end
         end,
+        dependencies = {
+            'nvim-telescope/telescope.nvim',
+            'nvimtools/none-ls.nvim',
+        },
         event = 'VeryLazy',
     },
 }, {
