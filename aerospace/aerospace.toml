@@ -145,7 +145,7 @@ alt-tab = 'workspace-back-and-forth'
 alt-shift-semicolon = 'mode service'
 
 alt-r = 'reload-config'
-alt-x = 'enable'
+alt-x = 'enable toggle'
 
 # 'service' binding mode declaration.
 # See: https://nikitabobko.github.io/AeroSpace/guide#binding-modes
