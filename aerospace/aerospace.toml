@@ -83,11 +83,11 @@ PATH = '/opt/homebrew/bin:/opt/homebrew/sbin:${PATH}'
 alt-slash = 'layout tiles horizontal vertical'
 alt-comma = 'layout accordion horizontal vertical'
 
-# Toggle between floating and tiling layout
-alt-f = ['layout floating tiling', 'mode main']
-alt-d = 'fullscreen'
-alt-s = 'layout accordion vertical'
-alt-a = 'layout tiles vertical horizontal'
+# Layout mappings
+alt-f = 'fullscreen'
+alt-d = 'layout accordion vertical'
+alt-s = 'layout tiles vertical horizontal'
+alt-a = ['layout floating tiling', 'mode main']
 
 # move window and focus to next/prev monitor
 # `--wrap-around` to only use one mapping for moving window/focus
