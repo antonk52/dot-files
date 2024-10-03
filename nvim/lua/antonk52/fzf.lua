@@ -50,7 +50,7 @@ local function fzf(kind)
         vim.keymap.set('t', '<esc>', '<c-\\><c-n>:q<cr>', keymap_opts)
 
         -- Run fzf in the terminal, use sh as shell to avoid start up cost
-        vim.fn.termopen(string.format("sh -c '%s'", fzf_cmd), {
+        vim.fn.termopen(fzf_cmd, {
             on_exit = function(_, code, _)
                 if code == 0 then
                     local file = vim.api.nvim_buf_get_lines(0, 0, 1, true)[1]
