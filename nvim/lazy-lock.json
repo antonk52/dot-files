@@ -12,7 +12,7 @@
   "none-ls.nvim": { "branch": "main", "commit": "0e0a940477cc08fa7b1799384a1d668058ed4e61" },
   "npm_scripts.nvim": { "branch": "main", "commit": "2dfa5d3b09564042c65ef8975eb3948b00f95422" },
   "nvim-cmp": { "branch": "perf", "commit": "6c3d595f3223c1ae7392d4fde1626355439af6c1" },
-  "nvim-lspconfig": { "branch": "master", "commit": "5408121379b45f7f64626d77f7a62237dadbde82" },
+  "nvim-lspconfig": { "branch": "master", "commit": "f5c2a085110923d2f6aa8d62306b02a563b965b7" },
   "plenary.nvim": { "branch": "master", "commit": "2d9b06177a975543726ce5c73fca176cedbffe9d" },
   "schemastore.nvim": { "branch": "main", "commit": "14e405d383a97766ff5d3432a4868d312090450d" },
   "telescope.nvim": { "branch": "master", "commit": "eae0d8fbde590b0eaa2f9481948cd6fd7dd21656" },
