@@ -103,6 +103,35 @@ M.servers = {
             },
         },
     },
+
+    basics_ls = {
+        settings = {
+            buffer = {
+                enable = true,
+                minCompletionLength = 6,
+            },
+            path = {
+                enable = true,
+            },
+            snippet = {
+                enable = false,
+                -- enable = true,
+                -- sources = {
+                -- path to snippets package ✅
+                -- '/Users/antonk52/Documents/dev/personal/friendly-snippets',
+                --
+                -- path to snippets package.json file ✅
+                -- '/Users/antonk52/Documents/dev/personal/friendly-snippets/package.json',
+                --
+                -- path to snippet lang.json file ✅
+                -- '/Users/antonk52/Documents/dev/personal/friendly-snippets/snippets/javascript/javascript.json',
+                --
+                -- path to snippet dir containing lang.json files ✅
+                -- '/Users/antonk52/Documents/dev/personal/friendly-snippets/snippets/javascript',
+                -- },
+            },
+        },
+    },
 }
 
 local function telescope(method)
