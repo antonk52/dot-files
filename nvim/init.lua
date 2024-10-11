@@ -170,14 +170,50 @@ require('lazy').setup({
         'nvimtools/none-ls.nvim',
         config = function()
             local null_ls = require('null-ls')
-            null_ls.setup({
-                sources = {
-                    null_ls.builtins.formatting.stylua,
-                    null_ls.builtins.diagnostics.selene,
+            local sources = {}
+            if vim.fn.executable('selene') == 1 then
+                table.insert(sources, null_ls.builtins.diagnostics.selene)
+            else
+                vim.notify('selene not found, skipping lua linting/formatting', vim.log.levels.WARN)
+            end
+            if vim.fn.executable('stylua') == 1 then
+                table.insert(sources, null_ls.builtins.formatting.stylua)
+            else
+                vim.notify('stylua not found, skipping lua linting/formatting', vim.log.levels.WARN)
+            end
+            if #sources > 0 then
+                null_ls.setup({ sources = sources })
+            end
+        end,
+        event = 'VeryLazy',
+    },
+    {
+        'nvim-treesitter/nvim-treesitter',
+        build = ':TSUpdate',
+        config = function()
+            if vim.env.WORK and vim.env.WORK_TS_PROXY then
+                require('nvim-treesitter.install').command_extra_args = {
+                    curl = { '--proxy', vim.env.WORK_TS_PROXY },
+                }
+            end
+
+            require('nvim-treesitter.configs').setup({
+                highlight = {
+                    enable = true,
+                },
+                ensure_installed = {
+                    'javascript',
+                    'jsdoc',
+                    'json',
+                    'jsonc',
+                    'markdown',
+                    'markdown_inline',
+                    'tsx',
+                    'typescript',
+                    'lua',
                 },
             })
         end,
-        event = 'VeryLazy',
     },
     {
         enabled = vim.env.WORK ~= nil,
@@ -474,7 +510,7 @@ if not is_vscode then
     -- vim.opt.statusline = ' %m%r %f %= %p%%  %l:%c  '
     require('antonk52.indent_lines').setup()
     require('antonk52.format_on_save').setup()
-    require('antonk52.treesitter').setup()
+    -- require('antonk52.treesitter').setup()
     require('antonk52.treesitter_textobjects').setup()
     require('antonk52.fzf').setup()
 
