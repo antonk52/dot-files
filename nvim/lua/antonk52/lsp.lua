@@ -171,6 +171,7 @@ function M.setup()
     lsp.handlers[ms.textDocument_typeDefinition] = lsp.with(telescope('type_definitions'), {})
     lsp.handlers[ms.textDocument_implementation] = lsp.with(telescope('implementations'), {})
     lsp.handlers[ms.textDocument_references] = lsp.with(telescope('references'), {})
+    lsp.handlers[ms.textDocument_documentSymbol] = lsp.with(telescope('document_symbols'), {})
 
     -- call on CursorHold
     -- vim.lsp.codeLens.refresh()
