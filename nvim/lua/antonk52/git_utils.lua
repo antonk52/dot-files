@@ -153,7 +153,7 @@ local function git_status_qf()
         R = '@diff.minus',
     }
     local qf_items = {}
-    for i, line in ipairs(lines) do
+    for _, line in ipairs(lines) do
         local new_path = line:sub(1, 2)
         -- untracked files
         if new_path == '??' then

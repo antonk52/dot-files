@@ -95,8 +95,8 @@ function M.setup()
         sources = {
             { name = 'snp', keyword_length = 2 },
             { name = 'nvim_lsp' },
-            -- { name = 'path' },
-            -- { name = 'buffer', keyword_length = 3 },
+            { name = 'path' },
+            { name = 'buffer', keyword_length = 3 },
         },
         performance = {
             debounce = 30, -- default 60ms
