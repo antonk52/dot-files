@@ -346,6 +346,9 @@ vim.opt.linebreak = true
 -- persistent undo across sessions
 vim.opt.undofile = true
 
+-- disable syntax highlighting if a line is too long
+vim.opt.synmaxcol = 300
+
 -- avoid mapping gx in netrw as for conflict reasons
 vim.g.netrw_nogx = 1
 
@@ -510,6 +513,7 @@ if not is_vscode then
         require('antonk52.tsc').setup()
         require('antonk52.git_utils').setup()
         require('antonk52.find_and_replace').setup()
+        require('antonk52.bigfile').setup()
     end, 300)
 end
 
