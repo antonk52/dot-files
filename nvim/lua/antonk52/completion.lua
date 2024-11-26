@@ -54,8 +54,7 @@ function M.setup()
                 fallback()
             end
         end,
-        ['<CR>'] = cmp.mapping.confirm(),
-        ['<C-y>'] = cmp.mapping.confirm({ select = true }),
+        ['<CR>'] = cmp.mapping.confirm({ select = true }),
         -- O for Open
         ['<C-o>'] = cmp.mapping(function(fallback)
             if cmp.visible() then
