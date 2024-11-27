@@ -6,19 +6,18 @@ local function update_swin_position(swin, bufnr)
     local total_lines = vim.api.nvim_buf_line_count(bufnr)
     local win_width = vim.api.nvim_win_get_width(0)
 
+    local viewport_height = vim.api.nvim_win_get_height(0)
     local top_line = vim.fn.line('w0')
-    local bottom_line = vim.fn.line('w$')
-    local viewport_height = bottom_line - top_line
     local swin_top = math.floor((top_line / total_lines) * viewport_height)
-
-    -- TODO fix jumping into the bottom scrollbar position
-    if bottom_line == total_lines then
-        swin_top = viewport_height
-    end
 
     local swin_height = math.floor((viewport_height / total_lines) * viewport_height)
     if swin_height < 1 then
         swin_height = 1
+    end
+
+    local bottom_line = vim.fn.line('w$')
+    if bottom_line == total_lines then
+        swin_top = viewport_height - swin_height + 1
     end
 
     vim.api.nvim_win_set_height(swin, swin_height)
