@@ -56,7 +56,15 @@ local function fzf(kind)
                     local file = vim.api.nvim_buf_get_lines(0, 0, 1, true)[1]
                     vim.api.nvim_win_close(win, true) -- Close the floating window
                     if file and #file > 0 then
-                        vim.cmd.edit(file)
+                        -- starting to type too fast can cause the first character to be in the fzf output
+                        -- before the command started to output anything
+                        if vim.fn.filereadable(file) == 0 then
+                            if vim.fn.filewritable(file:sub(2)) == 1 then
+                                vim.cmd.edit(file:sub(2))
+                            end
+                        else
+                            vim.cmd.edit(file)
+                        end
                     end
                 else
                     vim.api.nvim_win_close(win, true) -- Close the floating window
