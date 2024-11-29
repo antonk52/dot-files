@@ -58,12 +58,15 @@ function M.setup()
         width = 1,
         height = 1,
         row = 0,
-        col = 0,
+        col = 80,
         style = 'minimal',
     })
 
     -- map highlighting groups in swin to not highlight transparent parts
     vim.api.nvim_set_option_value('winhighlight', 'NormalNC:WinSeparator', { win = swin })
+
+    -- update position for the initial buffer on nvim enter
+    update_swin_position(swin, 0)
 
     -- subscribe to events for window movement
     vim.api.nvim_create_autocmd('BufEnter', {
@@ -73,18 +76,22 @@ function M.setup()
 
             -- no scrollbar for the scrollbar buffer
             if bufnr == sbuf then
-                return
+                return swin_hide(swin)
+            end
+
+            -- check for floating window
+            if vim.api.nvim_win_get_config(0).relative then
+                return swin_hide(swin)
             end
 
             local ft = vim.api.nvim_get_option_value('filetype', { buf = bufnr })
             if string.find(ft, 'telescope') or string.find(ft, 'dirvish') then
-                return
+                return swin_hide(swin)
             end
 
             if vim.api.nvim_get_option_value('buftype', { buf = bufnr }) == 'terminal' then
                 -- hide scrollbar for terminal buffers
-                swin_hide(swin)
-                return
+                return swin_hide(swin)
             end
 
             update_swin_position(swin, bufnr)
