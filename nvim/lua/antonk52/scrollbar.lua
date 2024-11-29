@@ -1,6 +1,17 @@
 local M = {}
 
-local LAST_CONFIG = {}
+--- @type vim.api.keyset.win_config
+local LAST_CONFIG = {
+    relative = 'win',
+    anchor = 'NE',
+    width = 1,
+    height = 1,
+    row = 0,
+    col = 80,
+    style = 'minimal',
+    focusable = false,
+    hide = false,
+}
 
 local function update_swin_position(swin, bufnr)
     local total_lines = vim.api.nvim_buf_line_count(bufnr)
@@ -22,17 +33,10 @@ local function update_swin_position(swin, bufnr)
 
     vim.api.nvim_win_set_height(swin, swin_height)
 
-    LAST_CONFIG = {
-        relative = 'win',
-        anchor = 'NE',
-        width = 1,
-        height = swin_height,
-        row = swin_top,
-        col = win_width,
-        style = 'minimal',
-        focusable = false,
-        hide = false,
-    }
+    LAST_CONFIG.height = swin_height
+    LAST_CONFIG.row = swin_top
+    LAST_CONFIG.col = win_width
+    LAST_CONFIG.hide = false
 
     vim.api.nvim_win_set_config(swin, LAST_CONFIG)
 end
@@ -52,15 +56,7 @@ function M.setup()
     local sbuf = vim.api.nvim_create_buf(false, true)
     vim.api.nvim_buf_set_lines(sbuf, 0, -1, false, swin_buf_lines)
     -- create a popup with scrollbar
-    local swin = vim.api.nvim_open_win(sbuf, false, {
-        relative = 'win',
-        anchor = 'NE',
-        width = 1,
-        height = 1,
-        row = 0,
-        col = 80,
-        style = 'minimal',
-    })
+    local swin = vim.api.nvim_open_win(sbuf, false, LAST_CONFIG)
 
     -- map highlighting groups in swin to not highlight transparent parts
     vim.api.nvim_set_option_value('winhighlight', 'NormalNC:WinSeparator', { win = swin })

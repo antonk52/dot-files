@@ -506,9 +506,9 @@ if not is_vscode then
     -- require('antonk52.treesitter').setup()
     require('antonk52.treesitter_textobjects').setup()
     require('antonk52.fzf').setup()
-    require('antonk52.scrollbar').setup()
 
     vim.defer_fn(function()
+        require('antonk52.scrollbar').setup()
         require('antonk52.debug_nvim').setup()
         require('antonk52.test_js').setup()
         require('antonk52.tsc').setup()
