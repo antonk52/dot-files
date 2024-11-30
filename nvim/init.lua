@@ -423,8 +423,9 @@ keymap.set('v', '>', '>gv')
 keymap.set('n', '<C-_>', 'gcc', { remap = true })
 keymap.set('x', '<C-_>', 'gc', { remap = true })
 
-keymap.set({ 'n', 'x' }, '<Leader>a', '^', { desc = 'go to line start (^ is too far)' })
-keymap.set({ 'n', 'x' }, '<Leader>e', 'g_', { desc = 'go to line end ($ is too far)' })
+keymap.set({ 'n', 'x' }, 'gh', '0', { desc = 'go to line start' })
+keymap.set({ 'n', 'x' }, 'gl', '$', { desc = 'go to line end ($ is too far)' })
+keymap.set({ 'n', 'x' }, '<leader>e', '$', { desc = 'go to line end ($ is too far)' })
 
 keymap.set('n', '<C-t>', '<cmd>tabedit<CR>', { desc = 'Open a new tab' })
 keymap.set('t', '<esc><esc>', '<c-\\><c-n>', { desc = 'exit term buffer' })
