@@ -55,7 +55,8 @@ local function fzf(kind)
         vim.fn.termopen(fzf_cmd, {
             on_stdout = function(_, data, _)
                 if #data == 2 and data[2] == '' then
-                    pick = vim.trim(data[1])
+                    -- strip ANSI escape codes
+                    pick = vim.trim(data[1]):gsub('\27%[[%d;?]*[a-zA-Z]', '')
                 end
             end,
             on_exit = function(_, code, _)
