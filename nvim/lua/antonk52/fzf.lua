@@ -49,25 +49,20 @@ local function fzf(kind)
         local keymap_opts = { buffer = buf, silent = true, nowait = true }
         vim.keymap.set('t', '<esc>', '<c-\\><c-n>:q<cr>', keymap_opts)
 
+        local pick = nil
+
         -- Run fzf in the terminal, use sh as shell to avoid start up cost
         vim.fn.termopen(fzf_cmd, {
+            on_stdout = function(_, data, _)
+                if #data == 2 and data[2] == '' then
+                    pick = vim.trim(data[1])
+                end
+            end,
             on_exit = function(_, code, _)
-                if code == 0 then
-                    local file = vim.api.nvim_buf_get_lines(0, 0, 1, true)[1]
-                    vim.api.nvim_win_close(win, true) -- Close the floating window
-                    if file and #file > 0 then
-                        -- starting to type too fast can cause the first character to be in the fzf output
-                        -- before the command started to output anything
-                        if vim.fn.filereadable(file) == 0 then
-                            if vim.fn.filewritable(file:sub(2)) == 1 then
-                                vim.cmd.edit(file:sub(2))
-                            end
-                        else
-                            vim.cmd.edit(file)
-                        end
-                    end
+                vim.api.nvim_win_close(win, true) -- Close the floating window
+                if code == 0 and pick then
+                    vim.cmd.edit(pick)
                 else
-                    vim.api.nvim_win_close(win, true) -- Close the floating window
                     vim.notify('fzf canceled or failed', vim.log.levels.ERROR)
                 end
 
