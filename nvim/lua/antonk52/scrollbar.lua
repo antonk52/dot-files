@@ -76,7 +76,8 @@ function M.setup()
             end
 
             -- check for floating window
-            if vim.api.nvim_win_get_config(0).relative then
+            local win_config = vim.api.nvim_win_get_config(0)
+            if win_config.relative and win_config.relative ~= '' then
                 return swin_hide(swin)
             end
 
