@@ -31,6 +31,7 @@ brew install fd # modern find
 brew install fzf # cli fuzzy finder written in Go
 brew install gh # github cli
 brew install git # updated version
+brew install git-absorb # just like mercurial absorb, but call with `--and-rebase`
 brew install git-delta # improved diff highlight
 brew install git-lfs # github large file storage
 brew install gnu-sed # used by neovim

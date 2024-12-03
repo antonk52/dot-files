@@ -157,17 +157,19 @@ function M.run_buffer(bufnr, env)
 
     local runner = get_test_runner_bin()
 
-    if runner == nil then
-        vim.notify('Could not find test runner', vim.log.levels.WARN)
-    elseif runner.name == 'vitest' then
-        vim.notify('Running vitest', vim.log.levels.INFO)
-        run_vitest(bufnr, runner.bin, runner.root, env)
-    elseif runner.name == 'jest' then
-        vim.notify('Running jest', vim.log.levels.INFO)
-        run_jest(bufnr, runner.bin, runner.root, env)
-    else
-        vim.notify('Unknown test runner', vim.log.levels.ERROR)
-    end
+    vim.schedule(function()
+        if runner == nil then
+            vim.notify('Could not find test runner', vim.log.levels.WARN)
+        elseif runner.name == 'vitest' then
+            vim.notify('Running vitest', vim.log.levels.INFO)
+            run_vitest(bufnr, runner.bin, runner.root, env)
+        elseif runner.name == 'jest' then
+            vim.notify('Running jest', vim.log.levels.INFO)
+            run_jest(bufnr, runner.bin, runner.root, env)
+        else
+            vim.notify('Unknown test runner', vim.log.levels.ERROR)
+        end
+    end)
 end
 
 ---@param bufnr ?number
