@@ -23,6 +23,17 @@ vim.opt.rtp:prepend(lazypath)
 
 require('lazy').setup({
     {
+        'folke/snacks.nvim',
+        config = function()
+            vim.api.nvim_create_user_command('LazyGit', function()
+                require('snacks.lazygit').open({
+                    -- disable icons
+                    config = { gui = { nerdFontsVersion = '' } },
+                })
+            end, { nargs = 0 })
+        end,
+    },
+    {
         'neovim/nvim-lspconfig', -- types & linting
         dependencies = { 'b0o/schemastore.nvim' }, -- json schemas for json lsp
         main = 'antonk52.lsp',
