@@ -307,47 +307,6 @@ local function git_blame()
     vim.api.nvim_win_set_width(blame_win, max_width)
 end
 
--- TODO use current commit, not branch
-local function git_browse(x)
-    local origin_obj = vim.system({ 'git', 'remote', 'get-url', 'origin' }):wait()
-    assert(origin_obj.code == 0, 'Failed to get git remote url\n' .. origin_obj.stderr)
-
-    local remote_url = vim.trim(origin_obj.stdout)
-    assert(remote_url and (remote_url ~= ''), 'No remote url found')
-
-    local branch_obj = vim.system({ 'git', 'branch', '--show-current' }):wait()
-    assert(branch_obj.code == 0, 'Failed to get current branch\n' .. branch_obj.stderr)
-
-    local branch = vim.trim(branch_obj.stdout)
-    assert(branch and (branch ~= ''), 'No branch found')
-
-    local bufpath = vim.api.nvim_buf_get_name(0)
-    local root = vim.fs.root(bufpath, '.git')
-    assert(root, 'No git root found')
-
-    local filepath = bufpath:sub(1 + #root + 1)
-
-    local url = remote_url
-        :gsub('git@', 'https://')
-        :gsub('ssh://git@', 'https://')
-        :gsub('git:', 'https:')
-        :gsub('.git$', '') .. '/blob/' .. branch .. '/' .. filepath
-
-    if x.range > 0 then
-        if x.line1 == x.line2 then
-            url = url .. '#L' .. x.line1
-        else
-            url = url .. '#L' .. x.line1 .. '-L' .. x.line2
-        end
-    end
-
-    if vim.env.SSH then
-        vim.notify(url, vim.log.levels.INFO)
-    else
-        vim.ui.open(url)
-    end
-end
-
 local function git(x)
     local cmd = vim.list_extend({ 'git' }, x.fargs)
     require('lazy.util').float_term(cmd, { interactive = false })
@@ -419,11 +378,6 @@ function M.setup()
         'GitBlame',
         git_blame,
         { nargs = 0, desc = 'Show blame for current file' }
-    )
-    vim.api.nvim_create_user_command(
-        'GitBrowse',
-        git_browse,
-        { nargs = 0, range = true, desc = 'Open current buffer or selecter range in the browser' }
     )
     vim.api.nvim_create_user_command('Git', git, { nargs = '+', desc = 'Run any git command' })
 end

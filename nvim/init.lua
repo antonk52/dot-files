@@ -25,12 +25,23 @@ require('lazy').setup({
     {
         'folke/snacks.nvim',
         config = function()
-            vim.api.nvim_create_user_command('LazyGit', function()
+            usercmd('LazyGit', function()
                 require('snacks.lazygit').open({
                     -- disable icons
                     config = { gui = { nerdFontsVersion = '' } },
                 })
             end, { nargs = 0 })
+
+            usercmd('GitBrowse', function(x)
+                require('snacks.gitbrowse').open({
+                    line_start = x.range > 0 and x.line1 or nil,
+                    line_end = x.range > 0 and x.line2 or nil,
+                })
+            end, {
+                nargs = 0,
+                range = true,
+                desc = 'Open current buffer or selecter range in browser',
+            })
         end,
     },
     {
