@@ -13,22 +13,33 @@ local LAST_CONFIG = {
     hide = false,
 }
 
+local function swin_hide(swin)
+    LAST_CONFIG.hide = true
+    vim.api.nvim_win_set_config(swin, LAST_CONFIG)
+end
+
 local function update_swin_position(swin, bufnr)
     local total_lines = vim.api.nvim_buf_line_count(bufnr)
+    local win_height = vim.api.nvim_win_get_height(0)
+
+    if win_height > total_lines then
+        return swin_hide(swin)
+    end
     local win_width = vim.api.nvim_win_get_width(0)
-
-    local viewport_height = vim.api.nvim_win_get_height(0)
     local top_line = vim.fn.line('w0')
-    local swin_top = math.floor((top_line / total_lines) * viewport_height)
 
-    local swin_height = math.floor((viewport_height / total_lines) * viewport_height)
+    local swin_top = math.floor((top_line / total_lines) * win_height)
+
+    local swin_height = math.floor((win_height / total_lines) * win_height)
     if swin_height < 1 then
         swin_height = 1
+    elseif swin_height > win_height then
+        swin_height = win_height
     end
 
     local bottom_line = vim.fn.line('w$')
     if bottom_line == total_lines then
-        swin_top = viewport_height - swin_height + 1
+        swin_top = win_height - swin_height + 1
     end
 
     vim.api.nvim_win_set_height(swin, swin_height)
@@ -38,11 +49,6 @@ local function update_swin_position(swin, bufnr)
     LAST_CONFIG.col = win_width
     LAST_CONFIG.hide = false
 
-    vim.api.nvim_win_set_config(swin, LAST_CONFIG)
-end
-
-local function swin_hide(swin)
-    LAST_CONFIG.hide = true
     vim.api.nvim_win_set_config(swin, LAST_CONFIG)
 end
 
