@@ -44,17 +44,8 @@ require('lazy').setup({
             })
         end,
     },
-    {
-        'NeogitOrg/neogit',
-        opts = {
-            kind = 'floating',
-        },
-        dependencies = {
-            'nvim-lua/plenary.nvim',
-            { 'sindrets/diffview.nvim', opts = { use_icons = false } },
-            'nvim-telescope/telescope.nvim',
-        },
-    },
+    { 'tpope/vim-fugitive', event = 'VeryLazy' },
+    { 'sindrets/diffview.nvim', opts = { use_icons = false } },
     {
         'neovim/nvim-lspconfig', -- types & linting
         dependencies = { 'b0o/schemastore.nvim' }, -- json schemas for json lsp

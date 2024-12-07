@@ -269,7 +269,10 @@ function M.setup()
         desc = 'refresh statusline on DiagnosticChanged',
         callback = function()
             M.refresh_diagnostics()
-            vim.cmd.redrawstatus()
+            -- schedule redraw, otherwise throws when exiting fugitive status
+            vim.schedule(function()
+                vim.cmd.redrawstatus()
+            end)
         end,
     })
 
