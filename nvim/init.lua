@@ -57,7 +57,11 @@ require('lazy').setup({
         end,
         event = 'VeryLazy',
     },
-    { 'sindrets/diffview.nvim', opts = { use_icons = false }, event = 'VeryLazy' },
+    {
+        'sindrets/diffview.nvim',
+        opts = { use_icons = false, signs = { fold_closed = ' ', fold_open = ' ' } },
+        event = 'VeryLazy',
+    },
     {
         'neovim/nvim-lspconfig', -- types & linting
         dependencies = { 'b0o/schemastore.nvim' }, -- json schemas for json lsp
