@@ -44,8 +44,14 @@ require('lazy').setup({
             })
         end,
     },
-    { 'tpope/vim-fugitive', event = 'VeryLazy' },
-    { 'sindrets/diffview.nvim', opts = { use_icons = false } },
+    {
+        'tpope/vim-fugitive',
+        init = function()
+            vim.g.fugitive_legacy_commands = 0
+        end,
+        event = 'VeryLazy',
+    },
+    { 'sindrets/diffview.nvim', opts = { use_icons = false }, event = 'VeryLazy' },
     {
         'neovim/nvim-lspconfig', -- types & linting
         dependencies = { 'b0o/schemastore.nvim' }, -- json schemas for json lsp
