@@ -48,6 +48,12 @@ require('lazy').setup({
         'tpope/vim-fugitive',
         init = function()
             vim.g.fugitive_legacy_commands = 0
+            usercmd('GitAddPatch', ':tab G add --patch', { nargs = 0 })
+            usercmd('GitAddPatchFile', ':tab G add --patch %', { nargs = 0 })
+            usercmd('GitCommit', ':tab G commit', { nargs = 0 })
+            usercmd('GitIgnore', function()
+                require('antonk52.git_utils').download_gitignore_file()
+            end, { nargs = 0, desc = 'Download .gitignore from github/gitignore' })
         end,
         event = 'VeryLazy',
     },
@@ -281,7 +287,6 @@ require('lazy').setup({
                 or p == 'nvim-treesitter/nvim-treesitter'
         end or nil,
     },
-    lockfile = vim.fs.normalize('~/dot-files/nvim/lazy-lock.json'),
     performance = {
         rtp = {
             disabled_plugins = {
@@ -557,7 +562,6 @@ if not is_vscode then
         require('antonk52.debug_nvim').setup()
         require('antonk52.test_js').setup()
         require('antonk52.tsc').setup()
-        require('antonk52.git_utils').setup()
         require('antonk52.find_and_replace').setup()
         require('antonk52.bigfile').setup()
     end, 300)

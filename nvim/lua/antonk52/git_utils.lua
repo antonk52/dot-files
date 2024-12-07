@@ -1,6 +1,6 @@
 local M = {}
 
-local function download_gitignore_file()
+function M.download_gitignore_file()
     local ignores_url = 'https://api.github.com/repos/github/gitignore/contents'
     local out = vim.system({ 'curl', '-s', ignores_url }):wait()
     assert(out.code == 0, 'Failed to fetch gitignore files\n' .. out.stderr)
@@ -63,17 +63,6 @@ function M.get_nongit_ignore_patterns()
         'build',
         'dist',
     }
-end
-
-function M.setup()
-    vim.api.nvim_create_user_command('GitAddPatch', ':tab G add --patch', { nargs = 0 })
-    vim.api.nvim_create_user_command('GitAddPatchFile', ':tab G add --patch %', { nargs = 0 })
-    vim.api.nvim_create_user_command('GitCommit', ':tab G commit', { nargs = 0 })
-    vim.api.nvim_create_user_command(
-        'GitIgnore',
-        download_gitignore_file,
-        { nargs = 0, desc = 'Download .gitignore from github/gitignore' }
-    )
 end
 
 return M
