@@ -103,7 +103,7 @@ function M.command_picker()
             if #sub_cmds == 0 then
                 table.insert(items, cmd)
             else
-                if cmd.nargs == '?' then
+                if cmd.nargs == '?' or cmd.nargs == '*' then
                     table.insert(items, cmd)
                 end
                 -- only handle one level deep subcommands

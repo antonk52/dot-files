@@ -45,6 +45,17 @@ require('lazy').setup({
         end,
     },
     {
+        'NeogitOrg/neogit',
+        opts = {
+            kind = 'floating',
+        },
+        dependencies = {
+            'nvim-lua/plenary.nvim',
+            { 'sindrets/diffview.nvim', opts = { use_icons = false } },
+            'nvim-telescope/telescope.nvim',
+        },
+    },
+    {
         'neovim/nvim-lspconfig', -- types & linting
         dependencies = { 'b0o/schemastore.nvim' }, -- json schemas for json lsp
         main = 'antonk52.lsp',
@@ -427,6 +438,8 @@ keymap.set(
     is_vscode and vs_call('workbench.action.terminal.new') or '<cmd>tabnew | terminal<cr>',
     { desc = 'Open new terminal' }
 )
+
+keymap.set('n', '<localleader>tq', '<cmd>tabclose<cr>', { desc = 'Close tab' })
 
 -- nvim 0.6 maps Y to yank till the end of the line,
 -- preserving a legacy behaviour

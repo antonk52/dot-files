@@ -81,13 +81,6 @@ function cdF()
     cd "$(fd --type d --no-ignore --exclude node_modules | fzf)"
 }
 
-function gob()
-{
-    branch_name="$(git branch | fzf-tmux | sed 's/^\(\s\)*\*//g' | sed 's/^ *//g')"
-
-    git go $branch_name
-}
-
 function repo_url()
 {
     # get origin
