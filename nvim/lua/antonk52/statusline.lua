@@ -31,6 +31,37 @@ local hi_next = function(group)
     return '%#' .. group .. '#'
 end
 
+---@type table<string, string> | nil
+local lsp_status_cache = nil
+function M.lsp_init()
+    if not lsp_status_cache then
+        lsp_status_cache = {}
+        for _, client in ipairs(vim.lsp.get_clients()) do
+            for progress in client.progress do
+                local msg = progress.value
+                if type(msg) == 'table' and msg.kind ~= 'end' then
+                    local percentage = ''
+                    if msg.percentage then
+                        percentage = string.format('%2d', msg.percentage) .. '%% '
+                    end
+                    local title = msg.title or ''
+                    local message = msg.message or ''
+                    lsp_status_cache[client.name] = percentage .. title .. ' ' .. message
+                else
+                    lsp_status_cache[client.name] = nil
+                end
+            end
+        end
+    end
+
+    local items = {}
+    for k, v in pairs(lsp_status_cache) do
+        table.insert(items, k .. ': ' .. v)
+    end
+
+    return table.concat(items, ' │ ')
+end
+
 local function infer_colors()
     local norm = vim.api.nvim_get_hl(0, { name = 'Normal' })
     vim.api.nvim_set_hl(0, 'StatusLineModified', {
@@ -181,7 +212,7 @@ function M.render()
         '%<',
         hi_next('Comment') .. ' ' .. _lsp_symbol_cache,
         hi_next('Normal') .. '  %=', -- space and right align
-        hi_next('Comment') .. vim.lsp.status(),
+        hi_next('Comment') .. M.lsp_init(),
         '  ',
         hi_next('Normal'),
         print_extras(),
@@ -193,6 +224,10 @@ function M.render()
     })
 
     return table.concat(elements, '')
+end
+
+function M.refresh_lsp_status()
+    lsp_status_cache = nil
 end
 
 function M.setup()
@@ -208,13 +243,26 @@ function M.setup()
         desc = 'restore statusline when entering window',
         callback = function()
             M.refresh_diagnostics()
+            M.refresh_lsp_status()
             vim.opt.statusline = "%!v:lua.require'antonk52.statusline'.render()"
         end,
     })
+    local throttle_timer = nil
     vim.api.nvim_create_autocmd('LspProgress', {
         pattern = '*',
         desc = 'refresh statusline on LspProgress',
-        command = 'redrawstatus',
+        callback = function()
+            -- LspProgress fires frequently, so we throttle statusline updates.
+            if throttle_timer then
+                throttle_timer:stop()
+            end
+
+            throttle_timer = vim.defer_fn(function()
+                throttle_timer = nil
+                M.refresh_lsp_status()
+                vim.cmd.redrawstatus()
+            end, 60)
+        end,
     })
     vim.api.nvim_create_autocmd('DiagnosticChanged', {
         pattern = '*',
