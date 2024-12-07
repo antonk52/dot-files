@@ -15,10 +15,15 @@ local LAST_CONFIG = {
 
 local function swin_hide(swin)
     LAST_CONFIG.hide = true
-    vim.api.nvim_win_set_config(swin, LAST_CONFIG)
+    if vim.api.nvim_win_is_valid(swin) then
+        vim.api.nvim_win_set_config(swin, LAST_CONFIG)
+    end
 end
 
 local function update_swin_position(swin, bufnr)
+    if not vim.api.nvim_win_is_valid(swin) then
+        return
+    end
     local total_lines = vim.api.nvim_buf_line_count(bufnr)
     local win_height = vim.api.nvim_win_get_height(0)
 
