@@ -43,6 +43,7 @@ require('lazy').setup({
                 desc = 'Open current buffer or selecter range in browser',
             })
         end,
+        event = 'VeryLazy',
     },
     {
         'tpope/vim-fugitive',
@@ -409,7 +410,6 @@ end
 do
     keymap.set('n', 'gD', vim.lsp.buf.declaration, { desc = 'lsp declaration' })
     keymap.set('n', 'gd', vim.lsp.buf.definition, { desc = 'lsp definition' })
-    keymap.set('n', '<leader>t', vim.lsp.buf.hover, { desc = 'lsp hover' })
     keymap.set({ 'i', 'n' }, '<C-s>', vim.lsp.buf.signature_help, { desc = 'lsp signature_help' })
     keymap.set('n', 'gK', vim.lsp.buf.type_definition, { desc = 'lsp type_definition' })
     keymap.set('n', 'gi', vim.lsp.buf.implementation, { desc = 'lsp implemention' })
@@ -445,8 +445,6 @@ keymap.set(
     { desc = 'Open new terminal' }
 )
 
-keymap.set('n', '<localleader>tq', '<cmd>tabclose<cr>', { desc = 'Close tab' })
-
 -- nvim 0.6 maps Y to yank till the end of the line,
 -- preserving a legacy behaviour
 keymap.del('', 'Y')
@@ -481,6 +479,7 @@ keymap.set({ 'n', 'x' }, 'gl', '$', { desc = 'go to line end ($ is too far)' })
 keymap.set({ 'n', 'x' }, '<leader>e', '$', { desc = 'go to line end ($ is too far)' })
 
 keymap.set('n', '<C-t>', '<cmd>tabedit<CR>', { desc = 'Open a new tab' })
+keymap.set('n', '<localleader>T', '<cmd>tabclose<cr>', { desc = 'Close tab' })
 keymap.set('t', '<esc><esc>', '<c-\\><c-n>', { desc = 'exit term buffer' })
 
 -- Commands {{{1
