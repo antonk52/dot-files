@@ -2,7 +2,6 @@
 
 shell-integration-features = no-title
 
-mouse-hide-while-typing = false
 # alacritty has a faster scroll
 mouse-scroll-multiplier = 1.2
 
@@ -19,9 +18,6 @@ cursor-style-blink = false
 
 # bump font size
 font-size = 16
-
-# title bar
-window-decoration = true
 
 window-padding-balance = true
 window-padding-x = 0
