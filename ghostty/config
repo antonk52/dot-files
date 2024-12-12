@@ -1,6 +1,7 @@
 # vim: set ft=config:
 
-shell-integration-features = no-title
+# `no-title` expands alias commands in window title
+shell-integration-features = cursor,no-sudo,no-title
 
 # alacritty has a faster scroll
 mouse-scroll-multiplier = 1.2
@@ -12,7 +13,6 @@ foreground = #f5f7ff
 font-feature = -calt
 font-family = Fira Code
 
-cursor-style = block
 # do not blink
 cursor-style-blink = false
 
@@ -24,5 +24,3 @@ window-padding-x = 0
 window-padding-y = 0
 
 quit-after-last-window-closed = true
-macos-option-as-alt = true
-
