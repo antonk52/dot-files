@@ -46,6 +46,39 @@ require('lazy').setup({
         event = 'VeryLazy',
     },
     {
+        'zbirenbaum/copilot.lua',
+        enabled = vim.env.WORK == nil,
+        config = function()
+            require('copilot').setup({
+                suggestion = {
+                    auto_trigger = true,
+                    keymap = {
+                        accept = false,
+                        accept_word = '<C-e>',
+                        accept_line = '<C-r>',
+                        next = false,
+                        prev = false,
+                        dismiss = '<C-d>',
+                    },
+                },
+                filetypes = {
+                    markdown = true,
+                },
+            })
+            vim.keymap.set('i', '<tab>', function()
+                if require('copilot.suggestion').is_visible() then
+                    require('copilot.suggestion').accept()
+                    return '<Ignore>'
+                end
+                return '<tab>'
+            end, {
+                expr = true,
+                noremap = true,
+            })
+        end,
+        event = 'VeryLazy',
+    },
+    {
         'tpope/vim-fugitive',
         init = function()
             vim.g.fugitive_legacy_commands = 0
@@ -82,25 +115,9 @@ require('lazy').setup({
             'hrsh7th/cmp-path',
             'hrsh7th/cmp-cmdline',
             'hrsh7th/cmp-nvim-lsp',
-            'zbirenbaum/copilot.lua',
         },
-        config = function()
-            local ak_completion = require('antonk52.completion')
-            ak_completion.setup()
-
-            -- ai suggestions
-            if vim.env.WORK == nil then
-                require('copilot').setup({
-                    suggestion = {
-                        auto_trigger = true,
-                    },
-                    filetypes = {
-                        markdown = true,
-                    },
-                })
-                ak_completion.update_ai_completion(require('copilot.suggestion'))
-            end
-        end,
+        main = 'antonk52.completion',
+        opts = {},
         event = 'VeryLazy',
     },
     {
