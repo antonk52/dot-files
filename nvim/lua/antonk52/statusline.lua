@@ -204,9 +204,7 @@ local function print_extras()
 end
 
 function M.render()
-    local elements = vim.tbl_filter(function(v)
-        return #v > 0
-    end, {
+    return table.concat({
         hi_next('StatusLineModified') .. M.modified(),
         hi_next('CursorLineNr') .. ' ' .. M.filename() .. ' ',
         '%<',
@@ -221,9 +219,7 @@ function M.render()
         '%p%%', -- percentage through file
         '  ',
         '%l:%c ', -- 'line:column'
-    })
-
-    return table.concat(elements, '')
+    }, '')
 end
 
 function M.refresh_lsp_status()

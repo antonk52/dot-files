@@ -27,19 +27,6 @@ function M.setup()
             ['<C-k>'] = cmp.mapping.scroll_docs(-4),
             ['<C-j>'] = cmp.mapping.scroll_docs(4),
         }),
-        formatting = {
-            format = function(entry, vim_item)
-                local name_map = {
-                    nvim_lsp = 'lsp',
-                    buffer = 'buf',
-                }
-                if entry.source then
-                    local name = name_map[entry.source.name] or entry.source.name
-                    vim_item.menu = '[' .. name .. ']'
-                end
-                return vim_item
-            end,
-        },
         sources = {
             { name = 'snp', keyword_length = 2 },
             { name = 'nvim_lsp' },
