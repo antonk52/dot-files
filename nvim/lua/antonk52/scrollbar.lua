@@ -81,38 +81,40 @@ function M.setup()
         callback = function(x)
             local bufnr = x.buf
 
-            -- no scrollbar for the scrollbar buffer
-            if bufnr == sbuf then
-                return swin_hide(swin)
-            end
+            vim.schedule(function()
+                -- no scrollbar for the scrollbar buffer
+                if bufnr == sbuf then
+                    return swin_hide(swin)
+                end
 
-            -- check for floating window
-            local win_config = vim.api.nvim_win_get_config(0)
-            if win_config.relative and win_config.relative ~= '' then
-                return swin_hide(swin)
-            end
+                -- check for floating window
+                local win_config = vim.api.nvim_win_get_config(0)
+                if win_config.relative and win_config.relative ~= '' then
+                    return swin_hide(swin)
+                end
 
-            local ft = vim.api.nvim_get_option_value('filetype', { buf = bufnr })
-            if string.find(ft, 'telescope') or string.find(ft, 'dirvish') then
-                return swin_hide(swin)
-            end
+                local ft = vim.api.nvim_get_option_value('filetype', { buf = bufnr })
+                if string.find(ft, 'telescope') or string.find(ft, 'dirvish') then
+                    return swin_hide(swin)
+                end
 
-            if vim.api.nvim_get_option_value('buftype', { buf = bufnr }) == 'terminal' then
-                -- hide scrollbar for terminal buffers
-                return swin_hide(swin)
-            end
+                if vim.api.nvim_get_option_value('buftype', { buf = bufnr }) == 'terminal' then
+                    -- hide scrollbar for terminal buffers
+                    return swin_hide(swin)
+                end
 
-            update_swin_position(swin, bufnr)
+                update_swin_position(swin, bufnr)
 
-            vim.api.nvim_create_autocmd(
-                { 'WinScrolled', 'WinResized', 'FocusGained', 'WinEnter' },
-                {
-                    buffer = bufnr,
-                    callback = function()
-                        update_swin_position(swin, bufnr)
-                    end,
-                }
-            )
+                vim.api.nvim_create_autocmd(
+                    { 'WinScrolled', 'WinResized', 'FocusGained', 'WinEnter' },
+                    {
+                        buffer = bufnr,
+                        callback = function()
+                            update_swin_position(swin, bufnr)
+                        end,
+                    }
+                )
+            end)
         end,
     })
 

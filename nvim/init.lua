@@ -495,6 +495,9 @@ keymap.del('', 'Y')
 
 keymap.set('v', '<leader>c', '"*y', { noremap = false, desc = 'copy to OS clipboard' })
 keymap.set('', '<leader>v', '"*p', { noremap = false, desc = 'paste from OS clipboard' })
+keymap.set('n', '<leader>q', function()
+    vim.cmd(vim.bo.filetype == 'qf' and 'cclose' or 'copen')
+end, { desc = 'toggle quickfix window' })
 keymap.set('n', 'p', ']p', { desc = 'paste under current indentation level' })
 keymap.set('n', '<esc>', function()
     vim.opt.hlsearch = false
