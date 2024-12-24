@@ -91,27 +91,55 @@ require('lazy').setup({
     },
     {
         'neovim/nvim-lspconfig', -- types & linting
-        dependencies = { 'b0o/schemastore.nvim' }, -- json schemas for json lsp
+        dependencies = { 'b0o/schemastore.nvim', 'saghen/blink.cmp' }, -- json schemas for json lsp
         main = 'antonk52.lsp',
         opts = {},
         event = 'BufReadPre',
     },
     {
+        'saghen/blink.cmp',
+        version = 'v0.*',
+        build = 'cargo build --release',
+        opts = {
+            keymap = {
+                ['<C-m>'] = { 'accept', 'fallback' },
+                ['<C-o>'] = { 'select_and_accept', 'snippet_forward', 'fallback' },
+                ['<C-u>'] = { 'snippet_backward', 'fallback' },
+                ['<C-k>'] = { 'scroll_documentation_up' },
+                ['<C-j>'] = { 'scroll_documentation_down' },
+            },
+            completion = {
+                menu = {
+                    draw = {
+                        columns = {
+                            { 'label', 'label_description', gap = 2 },
+                            { 'kind_icon', 'kind', gap = 1 },
+                        },
+                    },
+                },
+                documentation = {
+                    auto_show = true,
+                    window = {
+                        border = 'single',
+                        direction_priority = {
+                            menu_north = { 'e', 'n' },
+                            menu_south = { 'e', 'n' },
+                        },
+                    },
+                },
+                list = {
+                    selection = function(ctx)
+                        return ctx.mode == 'cmdline' and 'auto_insert' or 'preselect'
+                    end,
+                },
+            },
+            signature = { enabled = true },
+        },
+    },
+    {
         'antonk52/markdowny.nvim',
         ft = { 'markdown', 'hgcommit', 'gitcommit' },
         opts = {},
-    },
-    {
-        'hrsh7th/nvim-cmp',
-        dependencies = {
-            'hrsh7th/cmp-buffer',
-            'hrsh7th/cmp-path',
-            'hrsh7th/cmp-cmdline',
-            'hrsh7th/cmp-nvim-lsp',
-        },
-        main = 'antonk52.completion',
-        opts = {},
-        event = 'VeryLazy',
     },
     {
         'stevearc/dressing.nvim',
