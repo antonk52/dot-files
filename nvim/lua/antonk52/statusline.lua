@@ -88,10 +88,20 @@ function M.filename()
     return win_size <= #filename_str and vim.fn.pathshorten(filename_str) or filename_str
 end
 
+local function debounce(func, timeout)
+    local timer = vim.loop.new_timer()
+    return function()
+        timer:start(timeout, 0, function()
+            timer:stop()
+            vim.schedule(func)
+        end)
+    end
+end
+
 local _lsp_symbol_cache = ''
 vim.api.nvim_create_autocmd({ 'CursorHold', 'InsertLeave', 'WinScrolled', 'BufWinEnter' }, {
     pattern = { '*' },
-    callback = function()
+    callback = debounce(function()
         if #vim.lsp.get_clients({ bufnr = 0, method = 'textDocument/documentSymbol' }) == 0 then
             _lsp_symbol_cache = ''
             vim.cmd.redrawstatus()
@@ -100,7 +110,6 @@ vim.api.nvim_create_autocmd({ 'CursorHold', 'InsertLeave', 'WinScrolled', 'BufWi
         local params = { textDocument = vim.lsp.util.make_text_document_params() }
         vim.lsp.buf_request(0, 'textDocument/documentSymbol', params, function(err, result)
             if err then
-                vim.print('Error: ', err)
                 _lsp_symbol_cache = ''
                 vim.cmd.redrawstatus()
                 return
@@ -153,7 +162,7 @@ vim.api.nvim_create_autocmd({ 'CursorHold', 'InsertLeave', 'WinScrolled', 'BufWi
             _lsp_symbol_cache = table.concat(named_symbols, '  ')
             vim.cmd.redrawstatus()
         end)
-    end,
+    end, 50),
     desc = 'Update lsp symbols for status line',
 })
 
