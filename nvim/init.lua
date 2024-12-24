@@ -25,6 +25,16 @@ require('lazy').setup({
     {
         'folke/snacks.nvim',
         config = function()
+            require('snacks').setup({
+                indent = {
+                    indent = {
+                        hl = 'Whitespace',
+                        only_current = false,
+                    },
+                    scope = { hl = 'NonText' },
+                    animate = { enabled = false },
+                },
+            })
             usercmd('GitBrowse', function(x)
                 require('snacks.gitbrowse').open({
                     line_start = x.range > 0 and x.line1 or nil,
@@ -387,11 +397,7 @@ vim.opt.guicursor = 'i-ci-ve:hor24'
 if not is_vscode then
     -- Show “invisible” characters
     vim.opt.list = true
-    vim.opt.listchars = {
-        tab = '∙ ',
-        trail = '∙',
-        leadmultispace = '│   ',
-    }
+    vim.opt.listchars = { trail = '∙' }
 
     vim.cmd.color('lake_contrast')
     vim.opt.termguicolors = vim.env.__CFBundleIdentifier ~= 'com.apple.Terminal'
@@ -592,7 +598,7 @@ if not is_vscode then
 
     require('antonk52.statusline').setup()
     -- vim.opt.statusline = ' %m%r %f %= %p%%  %l:%c  '
-    require('antonk52.indent_lines').setup()
+    require('antonk52.infer_shiftwidth').setup()
     require('antonk52.format_on_save').setup()
     -- require('antonk52.treesitter').setup()
     require('antonk52.treesitter_textobjects').setup()

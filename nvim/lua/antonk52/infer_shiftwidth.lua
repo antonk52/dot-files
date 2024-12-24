@@ -1,24 +1,6 @@
 local M = {}
 
--- update listchars based on shiftwidth
-local function update_listchars()
-    local shiftwidth = vim.bo.shiftwidth
-
-    if shiftwidth == 4 then
-        vim.opt.listchars:append({ leadmultispace = '│   ' })
-    elseif shiftwidth == 2 then
-        vim.opt.listchars:append({ leadmultispace = '│ ' })
-    else
-        vim.opt.listchars:append({ leadmultispace = ' ' })
-    end
-end
-
 function M.setup()
-    vim.api.nvim_create_autocmd('OptionSet', {
-        pattern = { 'tabstop', 'shiftwidth' },
-        callback = update_listchars,
-        desc = 'Update listchars when tabstop or shiftwidth is changed',
-    })
     vim.api.nvim_create_autocmd({
         'BufReadPost',
         -- Reset on each buffer as listchars is a window option
@@ -27,7 +9,7 @@ function M.setup()
         -- This ensures that the current buffer has correct indent levels.
         'BufEnter',
     }, {
-        desc = 'Update listchars based on indent levels',
+        desc = 'Update shiftwidth & expandtab based on indent levels',
         pattern = '*',
         callback = function()
             local lines = vim.api.nvim_buf_get_lines(0, 0, 100, false)
@@ -40,14 +22,14 @@ function M.setup()
                 if first_char == tab then
                     -- do not use spaces in this buffer
                     vim.bo.expandtab = false
-                    return update_listchars()
+                    return
                 elseif first_char == ' ' then
                     local indent_level = vim.fn.indent(lnum)
                     if indent_level == 4 or indent_level == 2 then
                         vim.bo.expandtab = true
                         vim.bo.shiftwidth = indent_level
                         vim.bo.tabstop = indent_level
-                        return update_listchars()
+                        return
                     end
                 end
             end
