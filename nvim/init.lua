@@ -109,7 +109,7 @@ require('lazy').setup({
     {
         'saghen/blink.cmp',
         version = 'v0.*',
-        build = 'cargo build --release',
+        -- build = 'cargo build --release',
         opts = {
             keymap = {
                 ['<C-m>'] = { 'accept', 'fallback' },
@@ -314,7 +314,9 @@ require('lazy').setup({
         end,
     },
     {
-        enabled = vim.env.WORK ~= nil,
+        enabled = vim.env.WORK ~= nil and vim.env.WORK_PLUGIN_PATH ~= nil and vim.uv.fs_stat(
+            vim.fn.expand(vim.env.WORK_PLUGIN_PATH)
+        ) ~= nil,
         dir = vim.fn.expand(vim.env.WORK_PLUGIN_PATH or 'noop'),
         name = 'work', -- otherwise lazy.nvim errors when updates plugins
         config = function()
