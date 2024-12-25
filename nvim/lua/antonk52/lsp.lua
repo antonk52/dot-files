@@ -2,8 +2,6 @@ local lspconfig = require('lspconfig')
 local lsp = vim.lsp
 local usercmd = vim.api.nvim_create_user_command
 
-local SHOW_SIGNATURE_HELP = false
-
 local M = {}
 
 local ts_lang_options = {
@@ -197,29 +195,6 @@ function M.setup()
         lspconfig[server_name].setup(opts)
     end
 
-    vim.api.nvim_create_autocmd('CursorHoldI', {
-        desc = 'Show signature help in insert mode when completion is not visible',
-        callback = function()
-            if not SHOW_SIGNATURE_HELP then
-                return
-            end
-            local has_parser = pcall(vim.treesitter.get_parser, 0, vim.bo.filetype)
-            if not has_parser then
-                return
-            end
-            -- check if current treesitter node is inside arguments node
-            local node = vim.treesitter.get_node()
-            local node_type = node and node:type()
-            if node_type ~= 'argument_list' and node_type ~= 'arguments' then
-                return
-            elseif not require('cmp').visible() then
-                vim.lsp.buf.signature_help()
-            end
-        end,
-    })
-    usercmd('ToggleLSPSignatureHelp', function()
-        SHOW_SIGNATURE_HELP = not SHOW_SIGNATURE_HELP
-    end, { nargs = 0, desc = 'Toggle LSP signature help' })
     usercmd('ToggleLSPInlayHints', function()
         vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled({ bufnr = 0 }))
     end, { nargs = 0, desc = 'Toggle LSP inlay hints' })
