@@ -96,6 +96,11 @@ function M.command_picker()
         if
             cmd.nargs ~= '0' -- no arguments
             and cmd.name ~= 'Man' -- 0 completions, but 200ms to complete the first time
+            -- no fugitive command, completions invoke git, takes a while
+            and not vim.startswith(cmd.definition, ':exe fugitive#')
+            and not vim.startswith(cmd.definition, 'exe fugitive#')
+            -- no diff view completions
+            and not vim.startswith(cmd.name, 'Diffview')
             and cmd.complete -- has completion
             and not vim.list_contains({ 'dir', 'file', 'custom' }, cmd.complete) -- not an interactive completion
         then
