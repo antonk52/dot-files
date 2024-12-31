@@ -6,16 +6,16 @@
   "lake.nvim": { "branch": "main", "commit": "e9104817277682034cf31069fd0f0615743968cd" },
   "lazy.nvim": { "branch": "main", "commit": "7e6c863bc7563efbdd757a310d17ebc95166cef3" },
   "markdowny.nvim": { "branch": "main", "commit": "8ff18e8677cf39821913f387697378fcf3e141a0" },
-  "mini.nvim": { "branch": "main", "commit": "2faada1cffce5609d78ac5e81eaf3754e0476758" },
-  "none-ls.nvim": { "branch": "main", "commit": "6f5473ae9e7feb0b40ca95b8ed92e85b42a3c71b" },
+  "mini.nvim": { "branch": "main", "commit": "e91e854299429c986888711668743711acd8a14b" },
+  "none-ls.nvim": { "branch": "main", "commit": "caf85560cfcfa62ad3a4c15433db4a8f9ddf934a" },
   "npm_scripts.nvim": { "branch": "main", "commit": "2dfa5d3b09564042c65ef8975eb3948b00f95422" },
-  "nvim-lspconfig": { "branch": "master", "commit": "ff2b85abaa810f6611233dbe6d31c07510ebf43d" },
-  "nvim-treesitter": { "branch": "master", "commit": "eb3e850acff4d9f2f2dd8dacd75353043c899753" },
+  "nvim-lspconfig": { "branch": "master", "commit": "8b15a1a597a59f4f5306fad9adfe99454feab743" },
+  "nvim-treesitter": { "branch": "master", "commit": "5f78e989243f9fb0fb55e0cf54820920d86dfd30" },
   "plenary.nvim": { "branch": "master", "commit": "2d9b06177a975543726ce5c73fca176cedbffe9d" },
-  "schemastore.nvim": { "branch": "main", "commit": "562681847dd904485caddd42395db2bb9d6e694a" },
-  "snacks.nvim": { "branch": "main", "commit": "98df370703b3c47a297988f3e55ce99628639590" },
+  "schemastore.nvim": { "branch": "main", "commit": "5145e26892516bbfc6a4352358fb774a1edf48b9" },
+  "snacks.nvim": { "branch": "main", "commit": "d312053f78b4fb55523def179ac502438dd93193" },
   "telescope.nvim": { "branch": "master", "commit": "2eca9ba22002184ac05eddbe47a7fe2d5a384dfc" },
   "ts-comments.nvim": { "branch": "main", "commit": "872dcfa0418f4a33b7437fb4d9f4e89f2f000d74" },
   "vim-dirvish": { "branch": "master", "commit": "c87a8e103f2e8b44b411a38dda9bbe1229547952" },
-  "vim-fugitive": { "branch": "master", "commit": "fcb4db52e7f65b95705aa58f0f2df1312c1f2df2" }
+  "vim-fugitive": { "branch": "master", "commit": "174230d6a7f2df94705a7ffd8d5413e27ec10a80" }
 }

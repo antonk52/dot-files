@@ -24,3 +24,5 @@ window-padding-x = 0
 window-padding-y = 0
 
 quit-after-last-window-closed = true
+
+auto-update-channel = stable
