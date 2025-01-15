@@ -264,27 +264,6 @@ require('lazy').setup({
     },
     { 'antonk52/lake.nvim' },
     {
-        'nvimtools/none-ls.nvim',
-        config = function()
-            local null_ls = require('null-ls')
-            local sources = {}
-            if vim.fn.executable('selene') == 1 then
-                table.insert(sources, null_ls.builtins.diagnostics.selene)
-            else
-                vim.notify('selene not found, skipping lua linting/formatting', vim.log.levels.WARN)
-            end
-            if vim.fn.executable('stylua') == 1 then
-                table.insert(sources, null_ls.builtins.formatting.stylua)
-            else
-                vim.notify('stylua not found, skipping lua linting/formatting', vim.log.levels.WARN)
-            end
-            if #sources > 0 then
-                null_ls.setup({ sources = sources })
-            end
-        end,
-        event = 'VeryLazy',
-    },
-    {
         'nvim-treesitter/nvim-treesitter',
         build = ':TSUpdate',
         config = function()
@@ -326,8 +305,10 @@ require('lazy').setup({
             end
         end,
         dependencies = {
+            'nvim-lua/plenary.nvim',
             'nvim-telescope/telescope.nvim',
             'nvimtools/none-ls.nvim',
+            'neovim/nvim-lspconfig',
         },
         event = 'VeryLazy',
     },

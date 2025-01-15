@@ -59,6 +59,8 @@ M.servers = {
 
     tailwindcss = {},
 
+    selene3p_ls = {},
+    stylua3p_ls = {},
     lua_ls = {
         settings = {
             Lua = {
