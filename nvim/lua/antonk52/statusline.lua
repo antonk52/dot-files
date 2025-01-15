@@ -195,16 +195,16 @@ function M.refresh_diagnostics()
     diagnostics_cache = nil
 end
 
-local extras = {}
+M.extras = {}
 
 ---@param fn function returns {text: string, hi?: string | 'Normal'}
 function M.add_extra(fn)
-    table.insert(extras, fn)
+    table.insert(M.extras, fn)
 end
 
 local function print_extras()
     local res = {}
-    for _, fn in ipairs(extras) do
+    for _, fn in ipairs(M.extras) do
         local v = fn()
         table.insert(res, hi_next(v.hi or 'Normal') .. v.text .. hi_next('Normal') .. '  ')
     end
@@ -223,6 +223,7 @@ function M.render()
         '  ',
         hi_next('Normal'),
         print_extras(),
+        hi_next('Normal'),
         M.diagnostics(),
         '  ',
         '%p%%', -- percentage through file
