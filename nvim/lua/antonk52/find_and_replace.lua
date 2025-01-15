@@ -9,11 +9,20 @@ end
 
 M.find_and_replace = function()
     local input = vim.fn.input('Find and replace: ')
-    local paths = vim.fn.input('In files(comma separated): ')
+    local paths = vim.fn.input('In files(comma separated): ', '', 'file')
 
     local cmd = { 'rg', '--hidden', '--glob', '!.git/*', '--line-number', input }
     if paths ~= '' then
-        vim.list_extend(cmd, vim.split(paths, ','))
+        -- manually expand paths with globbing
+        for _, path in ipairs(vim.split(paths, ',')) do
+            if string.find(path, '%*') then
+                local expanded = vim.fn.expand(path, false, true)
+                ---@diagnostic disable-next-line: param-type-mismatch
+                vim.list_extend(cmd, expanded)
+            else
+                table.insert(cmd, path)
+            end
+        end
     end
 
     vim.system(cmd, { text = true }, function(obj)
@@ -117,8 +126,8 @@ M.find_and_replace = function()
             })
 
             -- by default the first virtual line is not shown, we need to scroll up for it to be displayed
-            local cmd = vim.api.nvim_replace_termcodes('<C-u>', true, false, true)
-            vim.api.nvim_feedkeys(cmd, 'nt', false)
+            local command = vim.api.nvim_replace_termcodes('<C-u>', true, false, true)
+            vim.api.nvim_feedkeys(command, 'nt', false)
         end)
     end)
 end
