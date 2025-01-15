@@ -5,8 +5,11 @@ local ESLINT_CONFIGS = {
     '.eslintrc.mjs',
     '.eslintrc.json',
     'eslint.config.js',
+    'eslint.config.ts',
     'eslint.config.mjs',
+    'eslint.config.mts',
     'eslint.config.cjs',
+    'eslint.config.cts',
 }
 
 function M.run()
