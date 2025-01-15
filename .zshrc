@@ -28,6 +28,8 @@ export PATH="$HOME"/Library/Python/3.9/bin:$PATH
 # homebrew packages
 export PATH=$PATH:/opt/homebrew/bin
 
+export PATH=$PATH:/Users/antonk52/go/bin
+
 # avoid using find if `fd` is installed
 if command -v fd &> /dev/null; then
     export FZF_DEFAULT_COMMAND='fd -t f'
