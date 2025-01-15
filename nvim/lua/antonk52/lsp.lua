@@ -20,6 +20,7 @@ local ts_lang_options = {
 M.servers = {
     flow = {},
     hhvm = {},
+    gopls = {},
 
     -- tsserver
     ts_ls = {
@@ -191,6 +192,7 @@ function M.setup()
     for server_name, opts in pairs(M.servers) do
         opts.capabilities = caps
         opts.flags = { debounce_text_changes = 120 }
+        opts.silent = true
 
         lspconfig[server_name].setup(opts)
     end
