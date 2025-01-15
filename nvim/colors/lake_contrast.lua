@@ -144,6 +144,13 @@ local groups = {
     Type = { fg = 'c0A' },
     Typedef = { fg = 'c0A' },
 
+    -- My custom highlights
+    StatusLineModified = { fg = 'c00', bg = 'c0B', bold = true },
+
+    -- Plugins
+    MiniCursorWord = { link = 'Visual' },
+    MiniCursorWordCurrent = { link = 'CursorLine' },
+
     -- AI Suggestions
     AISuggestion = { fg = 'c03', italic = true },
     CopilotAnnotation = { fg = 'c03', italic = true },

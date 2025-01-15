@@ -5,9 +5,9 @@ vim.g.colors_name = 'lightest'
 vim.opt.background = 'light'
 
 local colors = {
-    light_1 = '#eeeeee',
-    light_2 = '#dddddd',
-    light_3 = '#cacaca',
+    light_1 = '#e5e5e5',
+    light_2 = '#cccccc',
+    light_3 = '#bbbbbb',
     light_4 = '#999999',
     dark_1 = '#888888',
     dark_2 = '#555555',
@@ -59,6 +59,7 @@ local groups = {
 
     Added = { fg = colors.green },
     Changed = { fg = colors.blue_light },
+    Removed = { fg = colors.red },
 
     Statement = { fg = colors.dark_3 },
     Operator = { fg = colors.dark_3 },
@@ -84,6 +85,11 @@ local groups = {
     ['@diff.minus'] = { fg = colors.red },
     ['@lsp.type.decorator'] = { fg = colors.dark_4 },
 
+    -- My custom highlights
+    StatusLineModified = { fg = colors.light_1, bg = colors.blue_light, bold = true },
+
+    -- Plugins
+    MiniCursorWord = { link = 'Visual' },
     MiniCursorwordCurrent = { bg = colors.light_4 },
 
     TelescopeMatching = { reverse = true },

@@ -48,8 +48,9 @@ require('lazy').setup({
             },
         },
         keys = {
-            { '<leader>f', ':lua Snacks.picker.files({hidden = true})<cr>' },
-            { '<leader>F', ':lua Snacks.picker.files({hidden = true, ignored = true})<cr>' },
+            -- FIXME when using splits, selects leftmost split instead of focused one
+            -- { '<leader>f', ':lua Snacks.picker.files({hidden = true})<cr>' },
+            -- { '<leader>F', ':lua Snacks.picker.files({hidden = true, ignored = true})<cr>' },
             { '<leader>b', ':lua Snacks.picker.buffers()<cr>' },
             { '<leader>/', ':lua Snacks.picker.lines({layout= "telescope"})<cr>' },
             -- { '<leader>r', ':lua Snacks.picker.resume()<cr>' },
@@ -256,13 +257,6 @@ require('lazy').setup({
             })
             require('mini.pairs').setup() -- autoclose ([{
             require('mini.cursorword').setup({ delay = 300 })
-            local function set_mini_highlights()
-                -- TODO create an issue for miniCursorWord to supply a highlight group to link to
-                vim.api.nvim_set_hl(0, 'MiniCursorWord', { link = 'Visual' })
-                vim.api.nvim_set_hl(0, 'MiniCursorWordCurrent', { link = 'CursorLine' })
-            end
-            set_mini_highlights()
-            vim.api.nvim_create_autocmd('ColorScheme', { callback = set_mini_highlights })
             require('mini.splitjoin').setup() -- gS to toggle listy things
             require('mini.hipatterns').setup({
                 highlighters = {

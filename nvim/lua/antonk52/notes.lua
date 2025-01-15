@@ -2,7 +2,6 @@ local M = {}
 
 function M.setup()
     vim.cmd.cd(vim.env.NOTES_PATH)
-    M.source_rus_keymap()
     vim.opt.shiftwidth = 2
 
     vim.opt.wrap = false

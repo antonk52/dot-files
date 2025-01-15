@@ -62,17 +62,6 @@ function M.lsp_init()
     return table.concat(items, ' │ ')
 end
 
-local function infer_colors()
-    local norm = vim.api.nvim_get_hl(0, { name = 'Normal' })
-    vim.api.nvim_set_hl(0, 'StatusLineModified', {
-        bg = string.format('#%06x', vim.api.nvim_get_hl(0, { name = 'MoreMsg' }).fg),
-        fg = string.format('#%06x', norm.bg),
-        ctermbg = norm.ctermfg,
-        ctermfg = norm.ctermbg,
-        bold = true,
-    })
-end
-
 function M.modified()
     return vim.bo.modified and ' * ' or '   '
 end
@@ -280,12 +269,6 @@ function M.setup()
                 vim.cmd.redrawstatus()
             end)
         end,
-    })
-
-    infer_colors()
-    vim.api.nvim_create_autocmd('ColorScheme', {
-        pattern = '*',
-        callback = infer_colors,
     })
 end
 
