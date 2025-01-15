@@ -477,11 +477,13 @@ keymap.set('n', '<localleader>T', '<cmd>tabclose<cr>', { desc = 'Close tab' })
 keymap.set('t', '<esc><esc>', '<c-\\><c-n>', { desc = 'exit term buffer' })
 
 -- Commands {{{1
-usercmd('SourceRussianMacKeymap', function()
-    require('antonk52.notes').source_rus_keymap()
+vim.api.nvim_create_user_command('ToggleRusKeymap', function()
+    local x = 'russian-jcukenmac'
+    vim.opt.keymap = vim.o.keymap == x and '' or x
+    vim.notify('Toggle back in insert mode CTRL+SHIFT+6')
 end, { nargs = 0 })
 usercmd('NotesStart', function()
-    require('antonk52.notes').setup()
+    vim.defer_fn(require('antonk52.notes').setup, 5)
 end, { nargs = 0 })
 usercmd('NoteToday', '=require("antonk52.notes").note_month_now()', { nargs = 0 })
 usercmd('ColorLight', function()

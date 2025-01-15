@@ -1,38 +1,13 @@
 local M = {}
 
-function M.source_rus_keymap()
-    local filename = 'keymap/russian-jcukenmac.vim'
-    local rus_keymap = vim.trim(vim.fn.globpath(vim.o.rtp, filename))
-    if vim.uv.fs_stat(rus_keymap) then
-        vim.cmd.source(rus_keymap)
-    else
-        print('Cannot locate Russian keymap file named "' .. filename .. '" in runtime path')
-    end
-end
-
 function M.setup()
     vim.cmd.cd(vim.env.NOTES_PATH)
     M.source_rus_keymap()
     vim.opt.shiftwidth = 2
 
-    vim.api.nvim_create_user_command('ToggleRusKeymap', function()
-        if vim.o.keymap == 'russian-jcukenmac' then
-            vim.opt.keymap = ''
-        else
-            vim.opt.keymap = 'russian-jcukenmac'
-        end
-
-        vim.notify('Toggle back in insert mode CTRL+SHIFT+6')
-    end, {})
-
     vim.opt.wrap = false
     vim.opt.conceallevel = 2
     vim.opt.concealcursor = '' -- current line unconcealed in normal and insert mode
-    vim.opt_local.listchars = {
-        leadmultispace = '│ ',
-        tab = '▸ ',
-        trail = '∙',
-    }
 
     vim.api.nvim_create_autocmd('BufWritePre', {
         desc = 'Create missing directories when writing a buffer',
