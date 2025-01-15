@@ -315,7 +315,6 @@ require('lazy').setup({
             vim.g.dirvish_mode = ':sort ,^\\v(.*[\\/])|\\ze,'
         end,
     },
-    { 'antonk52/lake.nvim' },
     {
         'nvim-treesitter/nvim-treesitter',
         build = ':TSUpdate',
@@ -542,13 +541,8 @@ usercmd('NotesStart', function()
     vim.defer_fn(require('antonk52.notes').setup, 5)
 end, { nargs = 0 })
 usercmd('NoteToday', '=require("antonk52.notes").note_month_now()', { nargs = 0 })
-usercmd('ColorLight', function()
-    vim.o.background = 'light'
-    vim.cmd.color('default')
-    vim.api.nvim_set_hl(0, 'Statement', { fg = '#880000' })
-    vim.api.nvim_set_hl(0, 'Normal', { bg = '#eeeeee' })
-end, { nargs = 0 })
-usercmd('ColorDark', 'set background=dark | color lake_contrast', { nargs = 0 })
+usercmd('ColorLight', ':color lightest', { nargs = 0 })
+usercmd('ColorDark', ':color lake_contrast', { nargs = 0 })
 usercmd('Eslint', function()
     require('antonk52.eslint').run()
 end, { desc = 'Run eslint from the closest eslintrc', nargs = 0 })
