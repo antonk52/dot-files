@@ -23,28 +23,99 @@ vim.opt.rtp:prepend(lazypath)
 require('lazy').setup({
     {
         'folke/snacks.nvim',
-        config = function()
-            require('snacks').setup({
+        opts = {
+            indent = {
                 indent = {
-                    indent = {
-                        hl = 'Whitespace',
-                        only_current = false,
-                    },
-                    scope = { hl = 'NonText' },
-                    animate = { enabled = false },
+                    hl = 'Whitespace',
+                    only_current = false,
                 },
-            })
-            usercmd('GitBrowse', function(x)
-                require('snacks.gitbrowse').open({
-                    line_start = x.range > 0 and x.line1 or nil,
-                    line_end = x.range > 0 and x.line2 or nil,
-                })
-            end, {
-                nargs = 0,
-                range = true,
-                desc = 'Open current buffer or selecter range in browser',
-            })
-        end,
+                scope = { hl = 'NonText' },
+                animate = { enabled = false },
+            },
+            bigfile = { enabled = true },
+            picker = {
+                win = {
+                    input = {
+                        keys = {
+                            ['<esc>'] = { 'close', mode = { 'i', 'n' } },
+                        },
+                    },
+                },
+                layout = { preset = 'telescope' },
+                icons = {
+                    files = { enabled = false },
+                },
+            },
+        },
+        keys = {
+            { '<leader>f', ':lua Snacks.picker.files({hidden = true})<cr>' },
+            { '<leader>F', ':lua Snacks.picker.files({hidden = true, ignored = true})<cr>' },
+            { '<leader>b', ':lua Snacks.picker.buffers()<cr>' },
+            { '<leader>/', ':lua Snacks.picker.lines({layout= "telescope"})<cr>' },
+            -- { '<leader>r', ':lua Snacks.picker.resume()<cr>' },
+            {
+                '<leader>;',
+                function()
+                    local items = {}
+                    for _, cmd in pairs(vim.api.nvim_get_commands({})) do
+                        if
+                            cmd.nargs ~= '0' -- no arguments
+                            and cmd.name ~= 'Man' -- 0 completions, but 200ms to complete the first time
+                            and cmd.name ~= 'GBrowse'
+                            -- no fugitive command, completions invoke git, takes a while
+                            and not vim.startswith(cmd.definition, ':exe fugitive#')
+                            and not vim.startswith(cmd.definition, 'exe fugitive#')
+                            -- no diff view completions
+                            and not vim.startswith(cmd.name, 'Diffview')
+                            and cmd.complete -- has completion
+                            and not vim.list_contains({ 'dir', 'file', 'custom' }, cmd.complete) -- not an interactive completion
+                        then
+                            local sub_cmds = vim.fn.getcompletion(cmd.name .. ' ', 'cmdline')
+                            if #sub_cmds == 0 then
+                                table.insert(items, cmd)
+                            else
+                                if cmd.nargs == '?' or cmd.nargs == '*' then
+                                    table.insert(items, cmd)
+                                end
+                                -- only handle one level deep subcommands
+                                for _, sub_cmd_name in pairs(sub_cmds) do
+                                    local name = cmd.name .. ' ' .. sub_cmd_name
+
+                                    table.insert(items, (vim.tbl_extend('keep', {
+                                        name = name,
+                                        nargs = '0', -- enforce 0 args for sub commands by default
+                                    }, cmd)))
+                                end
+                            end
+                        else
+                            table.insert(items, cmd)
+                        end
+                    end
+
+                    vim.ui.select(items, {
+                        prompt = 'Command picker',
+                        format_item = function(entry)
+                            local padding = string.rep(' ', math.max(32 - #entry.name, 2))
+                            return entry.name .. padding .. (entry.definition or '')
+                        end,
+                    }, function(pick)
+                        if pick then
+                            local cmd = ':' .. pick.name .. ' '
+                            if pick.nargs == '0' then
+                                cmd = cmd
+                                    .. vim.api.nvim_replace_termcodes('<cr>', true, false, true)
+                            end
+                            vim.cmd.stopinsert()
+                            vim.api.nvim_feedkeys(cmd, 'nt', false)
+                        end
+                    end)
+                end,
+            },
+            {
+                '<leader>:',
+                ':lua Snacks.picker.grep_word({layout= "telescope", search=vim.fn.input("Search: ")})<cr>',
+            },
+        },
         event = 'VeryLazy',
     },
     {
@@ -154,26 +225,6 @@ require('lazy').setup({
         'antonk52/markdowny.nvim',
         ft = { 'markdown', 'hgcommit', 'gitcommit' },
         opts = {},
-    },
-    {
-        'stevearc/dressing.nvim',
-        opts = {
-            input = {
-                border = 'single',
-                width = 80,
-            },
-            select = {
-                backend = { 'telescope' },
-                telescope = {
-                    layout_config = {
-                        width = 80,
-                        height = 0.8,
-                        preview_width = 0.6,
-                    },
-                },
-            },
-        },
-        event = 'VeryLazy',
     },
     {
         'antonk52/npm_scripts.nvim',
@@ -501,6 +552,12 @@ usercmd('ColorDark', 'set background=dark | color lake_contrast', { nargs = 0 })
 usercmd('Eslint', function()
     require('antonk52.eslint').run()
 end, { desc = 'Run eslint from the closest eslintrc', nargs = 0 })
+usercmd('GitBrowse', function(x)
+    require('snacks.gitbrowse').open({
+        line_start = x.range > 0 and x.line1 or nil,
+        line_end = x.range > 0 and x.line2 or nil,
+    })
+end, { nargs = 0, range = true, desc = 'Open in browser' })
 
 -- fat fingers
 usercmd('W', ':w', { nargs = 0 })

@@ -90,63 +90,6 @@ function M.git_diff(opts)
         :find()
 end
 
-function M.command_picker()
-    local items = {}
-    for _, cmd in pairs(vim.api.nvim_get_commands({})) do
-        if
-            cmd.nargs ~= '0' -- no arguments
-            and cmd.name ~= 'Man' -- 0 completions, but 200ms to complete the first time
-            -- no fugitive command, completions invoke git, takes a while
-            and not vim.startswith(cmd.definition, ':exe fugitive#')
-            and not vim.startswith(cmd.definition, 'exe fugitive#')
-            -- no diff view completions
-            and not vim.startswith(cmd.name, 'Diffview')
-            and cmd.complete -- has completion
-            and not vim.list_contains({ 'dir', 'file', 'custom' }, cmd.complete) -- not an interactive completion
-        then
-            local sub_cmds = vim.fn.getcompletion(cmd.name .. ' ', 'cmdline')
-            if #sub_cmds == 0 then
-                table.insert(items, cmd)
-            else
-                if cmd.nargs == '?' or cmd.nargs == '*' then
-                    table.insert(items, cmd)
-                end
-                -- only handle one level deep subcommands
-                for _, sub_cmd_name in pairs(sub_cmds) do
-                    local name = cmd.name .. ' ' .. sub_cmd_name
-
-                    table.insert(
-                        items,
-                        vim.tbl_extend('keep', {
-                            name = name,
-                            nargs = '0', -- enforce 0 args for sub commands by default
-                        }, cmd)
-                    )
-                end
-            end
-        else
-            table.insert(items, cmd)
-        end
-    end
-
-    vim.ui.select(items, {
-        prompt = 'Command picker',
-        format_item = function(entry)
-            local padding = string.rep(' ', math.max(32 - #entry.name, 2))
-            return entry.name .. padding .. (entry.definition or '')
-        end,
-    }, function(pick)
-        if pick then
-            local cmd = ':' .. pick.name .. ' '
-            if pick.nargs == '0' then
-                cmd = cmd .. vim.api.nvim_replace_termcodes('<cr>', true, false, true)
-            end
-            vim.cmd.stopinsert()
-            vim.api.nvim_feedkeys(cmd, 'nt', false)
-        end
-    end)
-end
-
 function M.setup()
     ---@diagnostic disable-next-line: redundant-parameter
     require('telescope').setup({
@@ -169,39 +112,6 @@ function M.setup()
             },
         },
     })
-    vim.keymap.set('n', '<leader>b', '<cmd>Telescope buffers<cr>', { desc = 'Buffer picker' })
-    vim.keymap.set('n', '<leader>/', function()
-        require('telescope.builtin').current_buffer_fuzzy_find({
-            skip_empty_lines = true,
-            results_ts_highlight = false, -- no highlighting for results
-        })
-    end, { desc = 'Search in current buffer' })
-    -- Like `:Telescope commands` but shows subcommands and no bang / nargs in fuzzy picker
-    vim.keymap.set('n', '<leader>;', M.command_picker, { desc = 'Command picker' })
-    vim.keymap.set('n', '<leader>r', '<cmd>Telescope resume<cr>', { desc = 'Resume picker' })
-
-    -- Repro of Rg command from fzf.vim
-    vim.api.nvim_create_user_command('Rg', function(a)
-        require('telescope.builtin').grep_string({
-            -- raw string, concatenated multiple args
-            search = a.args,
-            -- when working in a mercurial repo, rg ignores .gitignore files
-            -- here we manually parse and supply what should be ignored
-            additional_args = function()
-                -- default threads is 2
-                local cli_args = { '--threads', '4' }
-                if not require('antonk52.git_utils').is_inside_git_repo() then
-                    local ignore_patterns =
-                        require('antonk52.git_utils').get_nongit_ignore_patterns()
-                    for _, p in ipairs(ignore_patterns) do
-                        table.insert(cli_args, '--iglob')
-                        table.insert(cli_args, '!' .. p)
-                    end
-                end
-                return cli_args
-            end,
-        })
-    end, { nargs = '+', desc = 'Searches exactly for the given string (including spaces)' })
 
     if require('antonk52.git_utils').is_inside_git_repo() then
         vim.api.nvim_create_user_command('TelescopeGitDiff', function()
