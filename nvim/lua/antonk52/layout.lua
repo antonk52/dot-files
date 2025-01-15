@@ -4,22 +4,18 @@ local navigation_map = {
     left = {
         vim = 'h',
         tmux = 'L',
-        vscode = 'Left',
     },
     right = {
         vim = 'l',
         tmux = 'R',
-        vscode = 'Right',
     },
     up = {
         vim = 'k',
         tmux = 'U',
-        vscode = 'Up',
     },
     down = {
         vim = 'j',
         tmux = 'D',
-        vscode = 'Down',
     },
 }
 
@@ -27,11 +23,6 @@ function M.navigate(direction)
     if navigation_map[direction] == nil then
         vim.notify('Unknown direction to navigate to "' .. direction .. '"')
         return
-    end
-    if vim.g.vscode then
-        return require('vscode').call(
-            'workbench.action.navigate' .. navigation_map[direction].vscode
-        )
     end
 
     local win_num_before = vim.fn.winnr()
@@ -63,17 +54,12 @@ function M.setup()
     vim.keymap.set('n', '<C-H>', function()
         M.navigate('left')
     end)
-    local vs_call = function(cmd)
-        return '<cmd>lua require("vscode").call("workbench.action.' .. cmd .. '")<cr>'
-    end
-
-    local is_vscode = vim.g.vscode ~= nil
 
     -- leader + j/k/l/h resize active split by 5
-    vim.keymap.set('n', '<leader>j', is_vscode and vs_call('decreaseViewHeight') or '<C-W>10-')
-    vim.keymap.set('n', '<leader>k', is_vscode and vs_call('increaseViewHeight') or '<C-W>10+')
-    vim.keymap.set('n', '<leader>l', is_vscode and vs_call('increaseViewWidth') or '<C-W>10>')
-    vim.keymap.set('n', '<leader>h', is_vscode and vs_call('decreaseViewWidth') or '<C-W>10<')
+    vim.keymap.set('n', '<leader>j', '<C-W>10-')
+    vim.keymap.set('n', '<leader>k', '<C-W>10+')
+    vim.keymap.set('n', '<leader>l', '<C-W>10>')
+    vim.keymap.set('n', '<leader>h', '<C-W>10<')
 
     vim.keymap.set('n', '<Leader>=', function()
         layout_cmd = vim.fn.winrestcmd()

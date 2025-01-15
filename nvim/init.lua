@@ -4,7 +4,6 @@ vim.g.maplocalleader = ','
 
 local usercmd = vim.api.nvim_create_user_command
 local keymap = vim.keymap
-local is_vscode = vim.g.vscode == 1
 
 -- Bootstrap lazy.nvim plugin manager {{{1
 local PLUGINS_LOCATION = vim.fs.normalize('~/dot-files/nvim/plugged')
@@ -196,31 +195,29 @@ require('lazy').setup({
     {
         'echasnovski/mini.nvim',
         config = function()
-            if not is_vscode then
-                require('mini.bracketed').setup({
-                    file = { suffix = '' }, -- disabled file navigation
-                })
-                require('mini.pairs').setup() -- autoclose ([{
-                require('mini.cursorword').setup({ delay = 300 })
-                local function set_mini_highlights()
-                    -- TODO create an issue for miniCursorWord to supply a highlight group to link to
-                    vim.api.nvim_set_hl(0, 'MiniCursorWord', { link = 'Visual' })
-                    vim.api.nvim_set_hl(0, 'MiniCursorWordCurrent', { link = 'CursorLine' })
-                end
-                set_mini_highlights()
-                vim.api.nvim_create_autocmd('ColorScheme', { callback = set_mini_highlights })
-                require('mini.splitjoin').setup() -- gS to toggle listy things
-                require('mini.hipatterns').setup({
-                    highlighters = {
-                        fixme = { pattern = '%f[%w]()FIXME()%f[%W]', group = 'DiagnosticError' },
-                        todo = { pattern = '%f[%w]()TODO()%f[%W]', group = 'DiagnosticWarn' },
-                        note = { pattern = '%f[%w]()NOTE()%f[%W]', group = 'DiagnosticInfo' },
-                        info = { pattern = '%f[%w]()INFO()%f[%W]', group = 'DiagnosticInfo' },
-                        hex_color = require('mini.hipatterns').gen_highlighter.hex_color(),
-                        tailwind = require('antonk52.tailwind').gen_highlighter(),
-                    },
-                })
+            require('mini.bracketed').setup({
+                file = { suffix = '' }, -- disabled file navigation
+            })
+            require('mini.pairs').setup() -- autoclose ([{
+            require('mini.cursorword').setup({ delay = 300 })
+            local function set_mini_highlights()
+                -- TODO create an issue for miniCursorWord to supply a highlight group to link to
+                vim.api.nvim_set_hl(0, 'MiniCursorWord', { link = 'Visual' })
+                vim.api.nvim_set_hl(0, 'MiniCursorWordCurrent', { link = 'CursorLine' })
             end
+            set_mini_highlights()
+            vim.api.nvim_create_autocmd('ColorScheme', { callback = set_mini_highlights })
+            require('mini.splitjoin').setup() -- gS to toggle listy things
+            require('mini.hipatterns').setup({
+                highlighters = {
+                    fixme = { pattern = '%f[%w]()FIXME()%f[%W]', group = 'DiagnosticError' },
+                    todo = { pattern = '%f[%w]()TODO()%f[%W]', group = 'DiagnosticWarn' },
+                    note = { pattern = '%f[%w]()NOTE()%f[%W]', group = 'DiagnosticInfo' },
+                    info = { pattern = '%f[%w]()INFO()%f[%W]', group = 'DiagnosticInfo' },
+                    hex_color = require('mini.hipatterns').gen_highlighter.hex_color(),
+                    tailwind = require('antonk52.tailwind').gen_highlighter(),
+                },
+            })
             require('mini.surround').setup({
                 mappings = {
                     add = 'ys',
@@ -314,15 +311,6 @@ require('lazy').setup({
     },
 }, {
     root = PLUGINS_LOCATION,
-    defaults = {
-        -- only enable mini.nvim & npm_scripts.nvim in vscode
-        cond = is_vscode and function(plugin)
-            local p = plugin[1]
-            return p == 'echasnovski/mini.nvim'
-                or p == 'antonk52/npm_scripts.nvim'
-                or p == 'nvim-treesitter/nvim-treesitter'
-        end or nil,
-    },
     performance = {
         rtp = {
             disabled_plugins = {
@@ -377,14 +365,12 @@ vim.opt.cursorline = true
 -- insert mode caret is an underline
 vim.opt.guicursor = 'i-ci-ve:hor24'
 
-if not is_vscode then
-    -- Show “invisible” characters
-    vim.opt.list = true
-    vim.opt.listchars = { trail = '∙' }
+-- Show “invisible” characters
+vim.opt.list = true
+vim.opt.listchars = { trail = '∙', tab = '▸ ' }
 
-    vim.cmd.color('lake_contrast')
-    vim.opt.termguicolors = vim.env.__CFBundleIdentifier ~= 'com.apple.Terminal'
-end
+vim.cmd.color('lake_contrast')
+vim.opt.termguicolors = vim.env.__CFBundleIdentifier ~= 'com.apple.Terminal'
 
 -- show search effect as you type
 vim.opt.inccommand = 'split'
@@ -431,9 +417,6 @@ vim.opt.synmaxcol = 300
 -- avoid mapping gx in netrw as for conflict reasons
 vim.g.netrw_nogx = 1
 
-local vs_call = function(cmd)
-    return '<cmd>lua require("vscode").call("' .. cmd .. '")<cr>'
-end
 do
     keymap.set('n', 'gD', vim.lsp.buf.declaration, { desc = 'lsp declaration' })
     keymap.set('n', 'gd', vim.lsp.buf.definition, { desc = 'lsp definition' })
@@ -446,31 +429,17 @@ do
         vim.lsp.buf.document_symbol()
     end, { desc = 'vim.lsp.buf.document_symbol()' })
 
-    if is_vscode then
-        keymap.set('n', '-', vs_call('workbench.files.action.showActiveFileInExplorer'))
-        keymap.set('n', '<leader>b', vs_call('workbench.action.showAllEditorsByMostRecentlyUsed'))
-        keymap.set('n', '<leader>f', vs_call('workbench.action.quickOpen'))
-        keymap.set('n', ']d', vs_call('editor.action.marker.next'))
-        keymap.set('n', '[d', vs_call('editor.action.marker.prev'))
-        keymap.set('n', 'gp', vs_call('workbench.panel.markers.view.focus'))
-    else
-        keymap.set('n', '<leader>L', vim.diagnostic.open_float, { desc = 'show line diagnostic' })
-        keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, { desc = 'lsp code_action' })
-        keymap.set('n', ']e', function()
-            vim.diagnostic.goto_next({ severity = vim.diagnostic.severity.ERROR })
-        end, { desc = 'go to next error diagnostic' })
-        keymap.set('n', '[e', function()
-            vim.diagnostic.goto_prev({ severity = vim.diagnostic.severity.ERROR })
-        end, { desc = 'go to prev error diagnostic' })
-    end
+    keymap.set('n', '<leader>L', vim.diagnostic.open_float, { desc = 'show line diagnostic' })
+    keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, { desc = 'lsp code_action' })
+    keymap.set('n', ']e', function()
+        vim.diagnostic.goto_next({ severity = vim.diagnostic.severity.ERROR })
+    end, { desc = 'go to next error diagnostic' })
+    keymap.set('n', '[e', function()
+        vim.diagnostic.goto_prev({ severity = vim.diagnostic.severity.ERROR })
+    end, { desc = 'go to prev error diagnostic' })
 end
 
-keymap.set(
-    'n',
-    '<localleader>t',
-    is_vscode and vs_call('workbench.action.terminal.new') or '<cmd>tabnew | terminal<cr>',
-    { desc = 'Open new terminal' }
-)
+keymap.set('n', '<localleader>t', '<cmd>tabnew | terminal<cr>', { desc = 'Open new terminal' })
 
 -- nvim 0.6 maps Y to yank till the end of the line,
 -- preserving a legacy behaviour
@@ -489,12 +458,7 @@ end, { desc = 'toggle highlight for last search; exit snippets' })
 keymap.set('n', 'n', '<cmd>set hlsearch<cr>n', { desc = 'highlight search when navigating' })
 keymap.set('n', 'N', '<cmd>set hlsearch<cr>N', { desc = 'highlight search when navigating' })
 
-keymap.set(
-    'n',
-    '<tab>',
-    is_vscode and vs_call('editor.toggleFold') or 'za',
-    { desc = 'toggle folds' }
-)
+keymap.set('n', '<tab>', 'za', { desc = 'toggle folds' })
 
 -- indentation shifts keep selection(`=` should still be preferred)
 keymap.set('v', '<', '<gv')
@@ -538,67 +502,71 @@ usercmd('Ter', ':ter', { nargs = 0 })
 usercmd('Sp', ':sp', { nargs = 0 })
 usercmd('Vs', ':vs', { nargs = 0 })
 
-if not is_vscode then
-    vim.filetype.add({
-        filename = {
-            ['.eslintrc.json'] = 'jsonc',
-        },
-        pattern = {
-            ['jsconfig*.json'] = 'jsonc',
-            ['tsconfig*.json'] = 'jsonc',
-            ['.*/%.vscode/.*%.json'] = 'jsonc',
-        },
-        extension = {
-            mdx = 'markdown',
-            scm = 'scheme',
-            jsonl = 'jsonc',
-        },
-    })
+vim.filetype.add({
+    filename = { ['.eslintrc.json'] = 'jsonc' },
+    pattern = { ['.*/%.vscode/.*%.json'] = 'jsonc' },
+    extension = {
+        mdx = 'markdown',
+        scm = 'scheme',
+        jsonl = 'jsonc',
+    },
+})
 
-    -- Autocommands {{{1
-    vim.api.nvim_create_autocmd('TermOpen', {
-        desc = 'Immediately enter terminal',
-        command = 'startinsert',
-    })
+-- Autocommands {{{1
+vim.api.nvim_create_autocmd('TermOpen', {
+    desc = 'Immediately enter terminal',
+    command = 'startinsert',
+})
 
-    vim.api.nvim_create_autocmd('TextYankPost', {
-        desc = 'Blink yanked text after yanking it',
-        callback = function()
-            if not vim.v.event.visual then
-                vim.highlight.on_yank({ higroup = 'Substitute', timeout = 250 })
-            end
-        end,
-    })
+vim.api.nvim_create_autocmd('TextYankPost', {
+    desc = 'Blink yanked text after yanking it',
+    callback = function()
+        if not vim.v.event.visual then
+            vim.highlight.on_yank({ higroup = 'Substitute', timeout = 250 })
+        end
+    end,
+})
 
-    vim.api.nvim_create_autocmd('FileType', {
-        desc = 'Use treesitter for folding in markdown files',
-        callback = function()
-            if vim.bo.filetype == 'markdown' then
-                vim.wo.foldmethod = 'expr'
-                vim.wo.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
-            else
-                vim.wo.foldmethod = 'indent'
-            end
-        end,
-    })
+vim.api.nvim_create_autocmd('FileType', {
+    desc = 'Use treesitter for folding in markdown files',
+    callback = function()
+        if vim.bo.filetype == 'markdown' then
+            vim.wo.foldmethod = 'expr'
+            vim.wo.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
+        else
+            vim.wo.foldmethod = 'indent'
+        end
+    end,
+})
 
-    require('antonk52.statusline').setup()
-    -- vim.opt.statusline = ' %m%r %f %= %p%%  %l:%c  '
-    require('antonk52.infer_shiftwidth').setup()
-    require('antonk52.format_on_save').setup()
-    -- require('antonk52.treesitter').setup()
+require('antonk52.statusline').setup()
+-- vim.opt.statusline = ' %m%r %f %= %p%%  %l:%c  '
+require('antonk52.infer_shiftwidth').setup()
+require('antonk52.fzf').setup()
+
+vim.defer_fn(function()
+    require('antonk52.scrollbar').setup()
+    require('antonk52.debug_nvim').setup()
+    require('antonk52.test_js').setup()
+    require('antonk52.tsc').setup()
+    require('antonk52.find_and_replace').setup()
     require('antonk52.treesitter_textobjects').setup()
-    require('antonk52.fzf').setup()
+    require('antonk52.easy_motion').setup()
+    require('antonk52.layout').setup()
+    require('antonk52.format_on_save').setup()
 
-    vim.defer_fn(function()
-        require('antonk52.scrollbar').setup()
-        require('antonk52.debug_nvim').setup()
-        require('antonk52.test_js').setup()
-        require('antonk52.tsc').setup()
-        require('antonk52.find_and_replace').setup()
-        require('antonk52.bigfile').setup()
-    end, 300)
-end
+    -- mutate snacks telescope layout
+    -- use telescope layout for vim.ui.select
+    pcall(function()
+        local layouts = require('snacks.picker.config.layouts')
+        local copy = vim.tbl_deep_extend('force', {}, layouts.telescope)
 
-require('antonk52.easy_motion').setup()
-require('antonk52.layout').setup()
+        copy.layout[1][1].border = { '┌', '─', '┐', '│', '│', ' ', '│', '│' }
+        copy.layout[1][2].border = { '├', '─', '┤', '│', '┘', '─', '└', '│' }
+        copy.layout[2].border = 'single'
+
+        layouts.telescope = copy
+
+        layouts.select = vim.tbl_deep_extend('force', {}, copy, { layout = { width = 100 } })
+    end)
+end, 300)
