@@ -137,9 +137,14 @@ require('lazy').setup({
                     },
                 },
                 list = {
-                    selection = function(ctx)
-                        return ctx.mode == 'cmdline' and 'auto_insert' or 'preselect'
-                    end,
+                    selection = {
+                        auto_insert = function(ctx)
+                            return ctx.mode == 'cmdline'
+                        end,
+                        preselect = function(ctx)
+                            return ctx.mode ~= 'cmdline'
+                        end,
+                    },
                 },
             },
             signature = { enabled = true },
