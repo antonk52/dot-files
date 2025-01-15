@@ -39,14 +39,6 @@ function M.download_gitignore_file()
     end)
 end
 
-local _is_inside_git_repo = nil
-function M.is_inside_git_repo()
-    if _is_inside_git_repo == nil then
-        _is_inside_git_repo = vim.fs.root(0, '.git') ~= nil
-    end
-    return _is_inside_git_repo
-end
-
 ---@return string[]
 function M.get_nongit_ignore_patterns()
     local gitignore_path = vim.fs.joinpath(vim.uv.cwd(), '.gitignore')

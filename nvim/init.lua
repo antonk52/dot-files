@@ -286,7 +286,7 @@ require('lazy').setup({
                     ['{'] = { output = { left = '{', right = '}' } },
                 },
             })
-            if require('antonk52.git_utils').is_inside_git_repo() then
+            if vim.fs.root(0, '.git') ~= nil then
                 require('mini.diff').setup({
                     view = {
                         style = 'sign',

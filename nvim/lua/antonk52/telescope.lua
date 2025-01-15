@@ -113,7 +113,7 @@ function M.setup()
         },
     })
 
-    if require('antonk52.git_utils').is_inside_git_repo() then
+    if vim.fs.root(0, '.git') ~= nil then
         vim.api.nvim_create_user_command('TelescopeGitDiff', function()
             M.git_diff()
         end, { desc = 'git diff hunk picker' })

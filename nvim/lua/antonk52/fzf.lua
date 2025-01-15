@@ -2,33 +2,37 @@ local M = {}
 
 ---@param kind 'files' | 'all_files' | 'dot_files'
 local function fzf(kind)
-    local fzf_cmd = 'fzf'
-    if kind == 'files' then
-        if require('antonk52.git_utils').is_inside_git_repo() then
-            fzf_cmd = 'git ls-files | fzf --prompt "GitFiles> "'
-        elseif vim.fs.root(0, '.hg') ~= nil then
-            fzf_cmd = 'hg files . | fzf --prompt "HgFiles> "'
-        else
-            local ignore_patterns = require('antonk52.git_utils').get_nongit_ignore_patterns()
-            local find_command = { 'fd', '--type', 'file', '--hidden' }
-            for _, p in ipairs(ignore_patterns) do
-                table.insert(find_command, '-E')
-                -- globs need surrounding quotes
-                if string.find(p, '{') or string.find(p, '*') then
-                    p = string.format('"%s"', p)
-                end
-                table.insert(find_command, p)
-            end
-            table.insert(find_command, '.')
-
-            fzf_cmd = string.format('%s | fzf', table.concat(find_command, ' '))
-        end
-    elseif kind == 'all_files' then
-        fzf_cmd = 'fd --type f --no-ignore --hidden | fzf --prompt "AllFiles> "'
-    elseif kind == 'dot_files' then
-        fzf_cmd = 'fd --type f --hidden -E .git . ~/dot-files | fzf --prompt "DotFiles> "'
-    end
     return function()
+        local fzf_cmd = 'fzf'
+        if kind == 'files' then
+            if vim.fs.root(0, '.git') ~= nil then
+                fzf_cmd = 'git ls-files | fzf --prompt "GitFiles> "'
+            elseif vim.fs.root(0, '.hg') ~= nil then
+                fzf_cmd = 'hg files . | fzf --prompt "HgFiles> "'
+            else
+                local ignore_patterns = require('antonk52.git_utils').get_nongit_ignore_patterns()
+                local find_command = { 'fd', '--type', 'file', '--hidden' }
+                for _, p in ipairs(ignore_patterns) do
+                    table.insert(find_command, '-E')
+                    -- globs need surrounding quotes
+                    if string.find(p, '{') or string.find(p, '*') then
+                        p = string.format('"%s"', p)
+                    end
+                    table.insert(find_command, p)
+                end
+                table.insert(find_command, '-E')
+                table.insert(find_command, '.DS_Store')
+
+                table.insert(find_command, '.')
+
+                fzf_cmd = string.format('%s | fzf', table.concat(find_command, ' '))
+            end
+        elseif kind == 'all_files' then
+            fzf_cmd = 'fd --type f --no-ignore --hidden | fzf --prompt "AllFiles> "'
+        elseif kind == 'dot_files' then
+            fzf_cmd = 'fd --type f --hidden -E .git . ~/dot-files | fzf --prompt "DotFiles> "'
+        end
+
         -- Define the floating window options
         local width = 100
         local height = math.floor(vim.o.lines * 0.8)
