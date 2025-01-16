@@ -359,7 +359,7 @@ require('lazy').setup({
         end,
     },
     {
-        enabled = vim.env.WORK ~= nil and vim.env.WORK_PLUGIN_PATH ~= nil and vim.uv.fs_stat(
+        cond = vim.env.WORK ~= nil and vim.env.WORK_PLUGIN_PATH ~= nil and vim.uv.fs_stat(
             vim.fn.expand(vim.env.WORK_PLUGIN_PATH)
         ) ~= nil,
         dir = vim.fn.expand(vim.env.WORK_PLUGIN_PATH or 'noop'),
