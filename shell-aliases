@@ -33,18 +33,25 @@ alias gc='git commit -m'
 alias tst='tmux start-server'
 alias tks='tmux kill-server'
 alias tl='tmux list-sessions'
-alias ta='tmux attach -t'
 
-# start a named session by providing a name
+# attach to existing or start a named session by providing a name
 # or a blank session by calling `tm`
-function tm()
-{
-  if [ $# -eq 1 ]
-  then
-    tmux new-session -s "$@"
-  else
-    tmux
-  fi
+tm() {
+    if [ $# -eq 0 ]; then
+        # No arguments provided; start tmux normally
+        tmux
+    else
+        local session_name="$1"
+
+        # Check if the session already exists
+        if tmux has-session -t "$session_name" 2>/dev/null; then
+            # Session exists; attach to it
+            tmux attach-session -t "$session_name"
+        else
+            # Session does not exist; create a new one
+            tmux new-session -s "$session_name"
+        fi
+    fi
 }
 
 # other aliases
