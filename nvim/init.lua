@@ -188,6 +188,10 @@ require('lazy').setup({
                 ['<C-u>'] = { 'snippet_backward', 'fallback' },
                 ['<C-k>'] = { 'scroll_documentation_up' },
                 ['<C-j>'] = { 'scroll_documentation_down' },
+                cmdline = {
+                    ['<tab>'] = { 'select_next', 'fallback' },
+                    ['<s-tab>'] = { 'select_prev', 'fallback' },
+                },
             },
             completion = {
                 menu = {
