@@ -49,11 +49,11 @@ require('lazy').setup({
         },
         keys = {
             -- FIXME when using splits, selects leftmost split instead of focused one
-            -- { '<leader>f', ':lua Snacks.picker.files({hidden = true})<cr>' },
-            -- { '<leader>F', ':lua Snacks.picker.files({hidden = true, ignored = true})<cr>' },
-            { '<leader>b', ':lua Snacks.picker.buffers()<cr>' },
-            { '<leader>/', ':lua Snacks.picker.lines({layout= "telescope"})<cr>' },
-            -- { '<leader>r', ':lua Snacks.picker.resume()<cr>' },
+            -- { '<leader>f', '<cmd>lua Snacks.picker.files({hidden = true})<cr>' },
+            -- { '<leader>F', '<cmd>lua Snacks.picker.files({hidden = true, ignored = true})<cr>' },
+            { '<leader>b', '<cmd>lua Snacks.picker.buffers()<cr>' },
+            { '<leader>/', '<cmd>lua Snacks.picker.lines({layout= "telescope"})<cr>' },
+            -- { '<leader>r', '<cmd>lua Snacks.picker.resume()<cr>' },
             {
                 '<leader>;',
                 function()
@@ -114,7 +114,7 @@ require('lazy').setup({
             },
             {
                 '<leader>:',
-                ':lua Snacks.picker.grep_word({layout= "telescope", search=vim.fn.input("Search: ")})<cr>',
+                '<cmd>lua Snacks.picker.grep_word({layout= "telescope", search=vim.fn.input("Search: ")})<cr>',
             },
         },
         event = 'VeryLazy',
