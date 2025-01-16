@@ -220,6 +220,13 @@ require('lazy').setup({
                 },
             },
             signature = { enabled = true },
+            fuzzy = (vim.env.WORK ~= nil and vim.env.WORK_TS_PROXY ~= nil)
+                    and {
+                        prebuilt_binaries = {
+                            extra_curl_args = { '--proxy', vim.env.WORK_TS_PROXY },
+                        },
+                    }
+                or nil,
         },
     },
     {
