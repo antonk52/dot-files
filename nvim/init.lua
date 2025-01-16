@@ -41,7 +41,7 @@ require('lazy').setup({
                         },
                     },
                 },
-                layout = { preset = 'telescope' },
+                layout = { preset = 'telescope', reverse = true },
                 icons = {
                     files = { enabled = false },
                 },
