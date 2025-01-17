@@ -13,6 +13,7 @@ DOTS="$HOME"/dot-files
 [ ! -L "$XDG_CONFIG_HOME"/karabiner ] && ln -s "$DOTS"/karabiner "$XDG_CONFIG_HOME"/karabiner
 
 [ ! -L "$HOME"/.zshrc ] && ln -s "$DOTS"/.zshrc "$HOME"/.zshrc
+[ ! -L "$HOME"/.hammerspoon ] && ln -s "$DOTS"/hammerspoon "$HOME"/.hammerspoon
 
 echo 'symlinks created'
 
