@@ -97,7 +97,7 @@ require('lazy').setup({
                         prompt = 'Command picker',
                         format_item = function(entry)
                             local padding = string.rep(' ', math.max(32 - #entry.name, 2))
-                            return entry.name .. padding .. (entry.definition or '')
+                            return entry.name .. padding .. (entry.definition or ''):gsub('\n', ' ')
                         end,
                     }, function(pick)
                         if pick then
