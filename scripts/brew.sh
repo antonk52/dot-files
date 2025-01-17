@@ -60,6 +60,7 @@ if [[ -z "${PERSONAL}" ]]; then
 fi
 
 # cask apps
+brew install hammerspoon # macos automation with lua
 brew install karabiner-elements # advanced key mapping
 brew install keycastr # useful for demos
 brew install monitorcontrol # control external monitors brightness via keyboard
