@@ -19,7 +19,7 @@ if [[ -f /.base16_theme && -z "$NVIM" && "$__CFBundleIdentifier" != "com.apple.T
 fi
 
 # global node modules
-export PATH="$HOME"/.npm-global/bin:$PATH
+export PATH="$HOME"/.npm-global/bin:"$HOME"/.yarn/bin:$PATH
 
 # cargo crates
 export PATH="$HOME"/.cargo/bin:"$HOME"/.local/share/cargo/bin:$PATH
