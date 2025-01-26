@@ -1,8 +1,11 @@
 -- Setup
 
 hs.console.clearConsole()
-hs.alert.show('Hammerspoon Loaded <tab>+R to reload')
 local HYPER_KEY = { 'ctrl', 'option', 'shift' }
+
+hs.alert.defaultStyle.fadeInDuration = 0
+hs.alert.defaultStyle.fadeOutDuration = 0
+
 hs.hotkey.bind(HYPER_KEY, 'R', hs.reload)
 
 -- ===================================================
@@ -33,18 +36,23 @@ local function prev_idx(table, value)
 end
 
 local STATE = {
-    currentSpaceWindows = hs.window.filter.new():setCurrentSpace(true):getWindows(),
+    currentSpaceWindows = {},
 }
 -- on window close or open update the list of windows
 
-local function update_current_space_windows()
-    STATE.currentSpaceWindows = hs.window.filter.new():setCurrentSpace(true):getWindows()
-end
+hs.timer.doAfter(0.9, function()
+    local wf = hs.window.filter
+    local filter = wf.new():setDefaultFilter({}):setCurrentSpace(true)
 
-hs.timer.doAfter(0.1, function()
-    local f = hs.window.filter.new():setCurrentSpace(true):subscribe({
-        hs.window.filter.windowsChanged,
-    }, update_current_space_windows)
+    local function update_current_space_windows()
+        STATE.currentSpaceWindows = filter:getWindows()
+    end
+
+    filter:subscribe({ hs.window.filter.windowsChanged }, update_current_space_windows)
+
+    update_current_space_windows()
+
+    hs.alert.show('HS: layout ready', 0.7)
 end)
 
 -- print(hs.inspect(f))
@@ -195,4 +203,4 @@ hs.hotkey.bind(HYPER_KEY, 'o', increase_win_width)
 hs.hotkey.bind(HYPER_KEY, 'i', decrease_win_width)
 
 -- Optional: Display a message when Hammerspoon config is loaded successfully
-hs.alert.show('Hammerspoon config loaded')
+hs.alert('HS: loaded, reload with <tab>+R', 0.7)
