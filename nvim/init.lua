@@ -37,7 +37,7 @@ require('lazy').setup({
                 win = {
                     input = {
                         keys = {
-                            ['<esc>'] = { 'close', mode = { 'i', 'n' } },
+                            ['<Esc>'] = { 'close', mode = { 'i', 'n' } },
                         },
                     },
                 },
@@ -53,7 +53,7 @@ require('lazy').setup({
             -- { '<leader>F', '<cmd>lua Snacks.picker.files({hidden = true, ignored = true})<cr>' },
             { '<leader>b', '<cmd>lua Snacks.picker.buffers()<cr>' },
             { '<leader>/', '<cmd>lua Snacks.picker.lines({layout= "telescope"})<cr>' },
-            -- { '<leader>r', '<cmd>lua Snacks.picker.resume()<cr>' },
+            { '<leader>r', '<cmd>lua Snacks.picker.resume()<cr>' },
             {
                 '<leader>;',
                 function()
