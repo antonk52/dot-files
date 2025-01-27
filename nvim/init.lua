@@ -445,7 +445,7 @@ vim.opt.cursorline = true
 -- insert mode caret is an underline
 vim.opt.guicursor = 'i-ci-ve:hor24'
 
--- Show “invisible” characters
+-- Show "invisible" characters
 vim.opt.list = true
 vim.opt.listchars = { trail = '∙', tab = '▸ ' }
 

@@ -13,7 +13,7 @@ hs.hotkey.bind(HYPER_KEY, 'R', hs.reload)
 -- ===================================================
 local function next_idx(table, value)
     for i, v in ipairs(table) do
-        if v == value then
+        if v:id() == value:id() then
             if i == #table then
                 return 1
             else
@@ -42,10 +42,20 @@ local STATE = {
 
 hs.timer.doAfter(0.9, function()
     local wf = hs.window.filter
-    local filter = wf.new():setDefaultFilter({}):setCurrentSpace(true)
+    local filter = wf.new(wf.defaultCurrentSpace):setOverrideFilter({
+        visible = true,
+        currentSpace = true,
+        fullscreen = false,
+    })
 
     local function update_current_space_windows()
-        STATE.currentSpaceWindows = filter:getWindows()
+        local local_windows = {}
+        for _, v in ipairs(filter:getWindows()) do
+            if v:isMinimized() == false and v:isVisible() == true then
+                table.insert(local_windows, v)
+            end
+        end
+        STATE.currentSpaceWindows = local_windows
     end
 
     filter:subscribe({ hs.window.filter.windowsChanged }, update_current_space_windows)
@@ -72,6 +82,7 @@ local function focusNextWindowInScreen()
     local next_win = STATE.currentSpaceWindows[next_i]
 
     if next_win then
+        hs.alert.show('Next window: ' .. next_win:application():name())
         next_win:focus()
     end
 end
@@ -92,6 +103,7 @@ local function focusPreviousWindowInScreen()
     local prev_win = STATE.currentSpaceWindows[prev_i]
 
     if prev_win then
+        hs.alert.show('Previous window: ' .. prev_win:application():name())
         prev_win:focus()
     end
 end
