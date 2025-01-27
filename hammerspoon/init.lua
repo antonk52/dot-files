@@ -25,7 +25,7 @@ end
 
 local function prev_idx(table, value)
     for i, v in ipairs(table) do
-        if v == value then
+        if v:id() == value:id() then
             if i == 1 then
                 return #table
             else

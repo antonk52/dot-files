@@ -254,6 +254,8 @@ require('lazy').setup({
         event = 'VeryLazy',
     },
     {
+        -- TODO: remove when nvim 0.12 is released
+        -- it merges lsp results from different servers
         'nvim-telescope/telescope.nvim',
         dependencies = { 'nvim-lua/plenary.nvim' },
         opts = {
