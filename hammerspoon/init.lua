@@ -69,6 +69,12 @@ end)
 local function focusNextWindowInScreen()
     local currentWindow = hs.window.frontmostWindow()
     if not currentWindow then
+        local first_win = STATE.currentSpaceWindows[1]
+
+        if first_win then
+            hs.alert.show('Next window: ' .. first_win:application():name())
+            first_win:focus()
+        end
         return
     end
 
@@ -90,6 +96,12 @@ end
 local function focusPreviousWindowInScreen()
     local currentWindow = hs.window.frontmostWindow()
     if not currentWindow then
+        local first_win = STATE.currentSpaceWindows[1]
+
+        if first_win then
+            hs.alert.show('Next window: ' .. first_win:application():name())
+            first_win:focus()
+        end
         return
     end
 
