@@ -65,6 +65,15 @@ hs.timer.doAfter(0.9, function()
     hs.alert.show('HS: layout ready', 0.7)
 end)
 
+---@type ?string
+local nav_alert_id = nil
+
+---@param msg string
+local function nav_alert(msg)
+    hs.alert.closeSpecific(nav_alert_id)
+    nav_alert_id = hs.alert.show(msg)
+end
+
 -- print(hs.inspect(f))
 local function focusNextWindowInScreen()
     local currentWindow = hs.window.frontmostWindow()
@@ -72,14 +81,14 @@ local function focusNextWindowInScreen()
         local first_win = STATE.currentSpaceWindows[1]
 
         if first_win then
-            hs.alert.show('Next window: ' .. first_win:application():name())
+            nav_alert('Next window: ' .. first_win:application():name())
             first_win:focus()
         end
         return
     end
 
     if #STATE.currentSpaceWindows < 2 then
-        hs.alert.show('Nothing to focus')
+        nav_alert('Nothing to focus')
         return
     end
 
@@ -88,7 +97,7 @@ local function focusNextWindowInScreen()
     local next_win = STATE.currentSpaceWindows[next_i]
 
     if next_win then
-        hs.alert.show('Next window: ' .. next_win:application():name())
+        nav_alert('Next window: ' .. next_win:application():name())
         next_win:focus()
     end
 end
@@ -99,14 +108,14 @@ local function focusPreviousWindowInScreen()
         local first_win = STATE.currentSpaceWindows[1]
 
         if first_win then
-            hs.alert.show('Next window: ' .. first_win:application():name())
+            nav_alert('Next window: ' .. first_win:application():name())
             first_win:focus()
         end
         return
     end
 
     if #STATE.currentSpaceWindows < 2 then
-        hs.alert.show('Nothing to focus')
+        nav_alert('Nothing to focus')
         return
     end
 
@@ -115,7 +124,7 @@ local function focusPreviousWindowInScreen()
     local prev_win = STATE.currentSpaceWindows[prev_i]
 
     if prev_win then
-        hs.alert.show('Previous window: ' .. prev_win:application():name())
+        nav_alert('Previous window: ' .. prev_win:application():name())
         prev_win:focus()
     end
 end
