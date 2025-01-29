@@ -45,6 +45,9 @@ require('lazy').setup({
                 icons = {
                     files = { enabled = false },
                 },
+                formatters = {
+                    file = { truncate = 120 },
+                },
             },
         },
         keys = {

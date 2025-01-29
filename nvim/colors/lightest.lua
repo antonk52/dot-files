@@ -92,6 +92,8 @@ local groups = {
     MiniCursorWord = { link = 'Visual' },
     MiniCursorwordCurrent = { bg = colors.light_4 },
 
+    SnacksPickerDir = { link = 'Directory' },
+
     TelescopeMatching = { reverse = true },
 }
 
