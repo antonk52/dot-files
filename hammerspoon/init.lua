@@ -65,7 +65,7 @@ hs.timer.doAfter(0.9, function()
     hs.alert.show('HS: layout ready', 0.7)
 end)
 
----@type ?string
+---@type string | nil
 local nav_alert_id = nil
 
 ---@param msg string
@@ -138,7 +138,12 @@ hs.hotkey.bind(HYPER_KEY, 'k', focusPreviousWindowInScreen)
 -- ===================================================
 
 -- Define the amount to increase the width
-local RESIZE_DELTA = 50
+local function get_win_resize_delta(window)
+    local screen = window:screen()
+
+    -- devidable by 2 and 3
+    return screen:frame().w / 24
+end
 local RESIZE_MIN_WIDTH = 300
 
 local resize_utils = {}
@@ -170,6 +175,8 @@ local function increase_win_width()
 
     -- Get the screen's frame to ensure the window doesn't go off-screen
     local screenFrame = win:screen():frame()
+
+    local RESIZE_DELTA = get_win_resize_delta(win)
 
     -- Calculate the new width
     local new_width = frame.w + RESIZE_DELTA
@@ -208,6 +215,7 @@ local function decrease_win_width()
     local frame = win:frame()
     -- Get the screen's frame to ensure the window doesn't go off-screen
     local screenFrame = win:screen():frame()
+    local RESIZE_DELTA = get_win_resize_delta(win)
 
     -- Calculate the new width
     local new_width = frame.w - RESIZE_DELTA
