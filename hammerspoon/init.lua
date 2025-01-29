@@ -174,24 +174,24 @@ local function increase_win_width()
     local frame = win:frame()
 
     -- Get the screen's frame to ensure the window doesn't go off-screen
-    local screenFrame = win:screen():frame()
+    local screen_frame = win:screen():frame()
 
     local RESIZE_DELTA = get_win_resize_delta(win)
 
     -- Calculate the new width
     local new_width = frame.w + RESIZE_DELTA
 
-    if new_width > screenFrame.w then
+    if new_width >= screen_frame.w then
         -- hs.alert.show('Max width reached', nil, nil, 0.1)
-        new_width = screenFrame.w
+        new_width = screen_frame.w
         frame.x = 0
     else
         -- hs.alert.show('Calling align and resize', nil, nil, 0.1)
-        local align = resize_utils.get_align(frame, screenFrame)
+        local align = resize_utils.get_align(frame, screen_frame)
 
-        if align == 'center' and screenFrame.w - new_width > RESIZE_DELTA then
+        if align == 'center' and screen_frame.w - new_width > RESIZE_DELTA then
             frame.x = frame.x - RESIZE_DELTA / 2
-        elseif align == 'right' and screenFrame.w - new_width > RESIZE_DELTA then
+        elseif align == 'right' then
             frame.x = frame.x - RESIZE_DELTA
         else
             frame.x = 0
