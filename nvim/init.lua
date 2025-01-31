@@ -23,6 +23,7 @@ vim.opt.rtp:prepend(lazypath)
 require('lazy').setup({
     {
         'folke/snacks.nvim',
+        commit = 'bcc0753',
         opts = {
             indent = {
                 indent = {
@@ -51,9 +52,6 @@ require('lazy').setup({
             },
         },
         keys = {
-            -- FIXME when using splits, selects leftmost split instead of focused one
-            -- { '<leader>f', '<cmd>lua Snacks.picker.files({hidden = true})<cr>' },
-            -- { '<leader>F', '<cmd>lua Snacks.picker.files({hidden = true, ignored = true})<cr>' },
             { '<leader>b', '<cmd>lua Snacks.picker.buffers()<cr>' },
             { '<leader>/', '<cmd>lua Snacks.picker.lines({layout= "telescope"})<cr>' },
             { '<leader>r', '<cmd>lua Snacks.picker.resume()<cr>' },
