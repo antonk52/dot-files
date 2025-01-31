@@ -57,6 +57,9 @@ require('lazy').setup({
             { '<leader>b', '<cmd>lua Snacks.picker.buffers()<cr>' },
             { '<leader>/', '<cmd>lua Snacks.picker.lines({layout= "telescope"})<cr>' },
             { '<leader>r', '<cmd>lua Snacks.picker.resume()<cr>' },
+            { '<leader>T', '<cmd>lua Snacks.picker.pick()<cr>' },
+            { '<leader>u', '<cmd>lua Snacks.picker.undo()<cr>' },
+            { '<leader>S', '<cmd>lua Snacks.picker.smart()<cr>' },
             {
                 '<leader>;',
                 function()
@@ -165,6 +168,7 @@ require('lazy').setup({
             usercmd('GitIgnore', function()
                 require('antonk52.git_utils').download_gitignore_file()
             end, { nargs = 0, desc = 'Download .gitignore from github/gitignore' })
+            keymap.set('n', '<leader>g', '<cmd>G<cr>', { desc = 'Version control' })
         end,
         event = 'VeryLazy',
     },
@@ -183,10 +187,8 @@ require('lazy').setup({
     {
         'saghen/blink.cmp',
         version = 'v0.*',
-        -- build = 'cargo build --release',
         opts = {
             keymap = {
-                ['<C-m>'] = { 'accept', 'fallback' },
                 ['<C-o>'] = { 'select_and_accept', 'snippet_forward', 'fallback' },
                 ['<C-u>'] = { 'snippet_backward', 'fallback' },
                 ['<C-k>'] = { 'scroll_documentation_up' },
