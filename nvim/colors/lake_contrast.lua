@@ -152,6 +152,8 @@ local groups = {
     MiniCursorWordCurrent = { link = 'CursorLine' },
 
     SnacksPickerDir = { link = 'Directory' },
+    SnacksPickerCmd = { link = 'Identifier' },
+    SnacksPickerPrompt = { link = 'Identifier' },
 
     -- AI Suggestions
     AISuggestion = { fg = 'c03', italic = true },

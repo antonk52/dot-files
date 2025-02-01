@@ -23,7 +23,7 @@ vim.opt.rtp:prepend(lazypath)
 require('lazy').setup({
     {
         'folke/snacks.nvim',
-        commit = 'bcc0753',
+        commit = '4da7bdb',
         opts = {
             indent = {
                 indent = {
