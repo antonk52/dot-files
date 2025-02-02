@@ -57,72 +57,7 @@ require('lazy').setup({
             { '<leader>T', '<cmd>lua Snacks.picker.pick()<cr>' },
             { '<leader>u', '<cmd>lua Snacks.picker.undo()<cr>' },
             { '<leader>S', '<cmd>lua Snacks.picker.smart()<cr>' },
-            {
-                '<leader>;',
-                function()
-                    local items = {}
-                    for _, cmd in pairs(vim.api.nvim_get_commands({})) do
-                        if (cmd.name == 'Lazy' or cmd.name == 'Telescope') and cmd.nargs ~= '0' then
-                            local sub_cmds = vim.fn.getcompletion(cmd.name .. ' ', 'cmdline')
-                            if #sub_cmds == 0 then
-                                table.insert(items, cmd)
-                            else
-                                if cmd.nargs == '?' or cmd.nargs == '*' then
-                                    table.insert(items, cmd)
-                                end
-                                -- only handle one level deep subcommands
-                                for _, sub_cmd_name in pairs(sub_cmds) do
-                                    local name = cmd.name .. ' ' .. sub_cmd_name
-
-                                    table.insert(items, (vim.tbl_extend('keep', {
-                                        name = name,
-                                        nargs = '0', -- enforce 0 args for sub commands by default
-                                    }, cmd)))
-                                end
-                            end
-                        else
-                            table.insert(items, cmd)
-                        end
-                    end
-
-                    require('snacks').picker.pick({
-                        items = vim.tbl_map(function(x)
-                            local padding = string.rep(' ', math.max(32 - #x.name, 2))
-                            local text = x.name .. padding .. (x.definition or ''):gsub('\n', ' ')
-                            return vim.tbl_extend('force', x, {
-                                text = text,
-                                name = x.name,
-                                definition = x.definition,
-                            })
-                        end, items),
-                        layout = {
-                            preset = 'select',
-                            preview = false,
-                        },
-                        format = function(item)
-                            return {
-                                { item.name, 'Identifier' },
-                                { string.rep(' ', 32 - #item.name), 'Identifier' },
-                                { item.definition, 'Comment' },
-                            }
-                        end,
-                        actions = {
-                            confirm = function(picker, pick, _action)
-                                picker:close()
-                                if pick then
-                                    local cmd = ':' .. pick.name .. ' '
-                                    local replace_termcodes = vim.api.nvim_replace_termcodes
-                                    if pick.nargs == '0' then
-                                        cmd = cmd .. replace_termcodes('<cr>', true, false, true)
-                                    end
-                                    vim.cmd.stopinsert()
-                                    vim.api.nvim_feedkeys(cmd, 'nt', false)
-                                end
-                            end,
-                        },
-                    })
-                end,
-            },
+            { '<leader>;', '<cmd>lua Snacks.picker.commands({layout="select"})<cr>' },
             {
                 '<leader>:',
                 '<cmd>lua Snacks.picker.grep_word({layout= "telescope", search=vim.fn.input("Search: ")})<cr>',
@@ -590,8 +525,10 @@ usercmd('GitBrowse', function(x)
     })
 end, { nargs = 0, range = true, desc = 'Open in browser' })
 
-usercmd('PickerGitDiff', ':lua Snacks.picker.git_diff()<cr>', { nargs = 0 })
-usercmd('PickerSnacks', ':lua Snacks.picker.pick()<cr>', { nargs = 0 })
+usercmd('TelePickerGitDiff', ':lua Snacks.picker.git_diff()<cr>', { nargs = 0 })
+
+usercmd('LazyCheck', ':Lazy check', {})
+usercmd('BunRun', ':!bun run %', { nargs = 0 })
 
 -- fat fingers
 usercmd('W', ':w', { nargs = 0 })
@@ -599,7 +536,6 @@ usercmd('Wq', ':wq', { nargs = 0 })
 usercmd('Ter', ':ter', { nargs = 0 })
 usercmd('Sp', ':sp', { nargs = 0 })
 usercmd('Vs', ':vs', { nargs = 0 })
-usercmd('BunRun', ':!bun run %', { nargs = 0 })
 
 vim.filetype.add({
     filename = { ['.eslintrc.json'] = 'jsonc' },
@@ -666,6 +602,7 @@ vim.defer_fn(function()
 
         layouts.telescope = copy
 
-        layouts.select = vim.tbl_deep_extend('force', {}, copy, { layout = { width = 100 } })
+        local overrides = { layout = { width = 100 }, preview = false }
+        layouts.select = vim.tbl_deep_extend('force', {}, copy, overrides)
     end)
 end, 300)
