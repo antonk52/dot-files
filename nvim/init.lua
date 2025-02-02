@@ -23,7 +23,6 @@ vim.opt.rtp:prepend(lazypath)
 require('lazy').setup({
     {
         'folke/snacks.nvim',
-        commit = '4da7bdb',
         opts = {
             indent = {
                 indent = {
@@ -63,18 +62,7 @@ require('lazy').setup({
                 function()
                     local items = {}
                     for _, cmd in pairs(vim.api.nvim_get_commands({})) do
-                        if
-                            cmd.nargs ~= '0' -- no arguments
-                            and cmd.name ~= 'Man' -- 0 completions, but 200ms to complete the first time
-                            and cmd.name ~= 'GBrowse'
-                            -- no fugitive command, completions invoke git, takes a while
-                            and not vim.startswith(cmd.definition, ':exe fugitive#')
-                            and not vim.startswith(cmd.definition, 'exe fugitive#')
-                            -- no diff view completions
-                            and not vim.startswith(cmd.name, 'Diffview')
-                            and cmd.complete -- has completion
-                            and not vim.list_contains({ 'dir', 'file', 'custom' }, cmd.complete) -- not an interactive completion
-                        then
+                        if (cmd.name == 'Lazy' or cmd.name == 'Telescope') and cmd.nargs ~= '0' then
                             local sub_cmds = vim.fn.getcompletion(cmd.name .. ' ', 'cmdline')
                             if #sub_cmds == 0 then
                                 table.insert(items, cmd)
@@ -97,23 +85,42 @@ require('lazy').setup({
                         end
                     end
 
-                    vim.ui.select(items, {
-                        prompt = 'Command picker',
-                        format_item = function(entry)
-                            local padding = string.rep(' ', math.max(32 - #entry.name, 2))
-                            return entry.name .. padding .. (entry.definition or ''):gsub('\n', ' ')
+                    require('snacks').picker.pick({
+                        items = vim.tbl_map(function(x)
+                            local padding = string.rep(' ', math.max(32 - #x.name, 2))
+                            local text = x.name .. padding .. (x.definition or ''):gsub('\n', ' ')
+                            return vim.tbl_extend('force', x, {
+                                text = text,
+                                name = x.name,
+                                definition = x.definition,
+                            })
+                        end, items),
+                        layout = {
+                            preset = 'select',
+                            preview = false,
+                        },
+                        format = function(item)
+                            return {
+                                { item.name, 'Identifier' },
+                                { string.rep(' ', 32 - #item.name), 'Identifier' },
+                                { item.definition, 'Comment' },
+                            }
                         end,
-                    }, function(pick)
-                        if pick then
-                            local cmd = ':' .. pick.name .. ' '
-                            if pick.nargs == '0' then
-                                cmd = cmd
-                                    .. vim.api.nvim_replace_termcodes('<cr>', true, false, true)
-                            end
-                            vim.cmd.stopinsert()
-                            vim.api.nvim_feedkeys(cmd, 'nt', false)
-                        end
-                    end)
+                        actions = {
+                            confirm = function(picker, pick, _action)
+                                picker:close()
+                                if pick then
+                                    local cmd = ':' .. pick.name .. ' '
+                                    local replace_termcodes = vim.api.nvim_replace_termcodes
+                                    if pick.nargs == '0' then
+                                        cmd = cmd .. replace_termcodes('<cr>', true, false, true)
+                                    end
+                                    vim.cmd.stopinsert()
+                                    vim.api.nvim_feedkeys(cmd, 'nt', false)
+                                end
+                            end,
+                        },
+                    })
                 end,
             },
             {
@@ -592,6 +599,7 @@ usercmd('Wq', ':wq', { nargs = 0 })
 usercmd('Ter', ':ter', { nargs = 0 })
 usercmd('Sp', ':sp', { nargs = 0 })
 usercmd('Vs', ':vs', { nargs = 0 })
+usercmd('BunRun', ':!bun run %', { nargs = 0 })
 
 vim.filetype.add({
     filename = { ['.eslintrc.json'] = 'jsonc' },
