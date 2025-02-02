@@ -49,6 +49,13 @@ require('lazy').setup({
                     file = { truncate = 120 },
                 },
             },
+            scroll = {
+                animate = {
+                    total = 180,
+                    fps = 30,
+                    easing = 'inOutQuad',
+                },
+            },
         },
         keys = {
             { '<leader>b', '<cmd>lua Snacks.picker.buffers()<cr>' },
