@@ -69,6 +69,13 @@ require('lazy').setup({
                 '<leader>:',
                 '<cmd>lua Snacks.picker.grep_word({layout= "telescope", search=vim.fn.input("Search: ")})<cr>',
             },
+            -- override default lsp keymaps as snacks pickers handle multiple servers supporting same methods
+            { 'gd', '<cmd>lua Snacks.picker.lsp_definitions()<CR>' },
+            { 'gD', '<cmd>lua Snacks.picker.lsp_declaraions()<CR>' },
+            { 'gK', '<cmd>lua Snacks.picker.lsp_type_definitions()<CR>' },
+            { 'gi', '<cmd>lua Snacks.picker.lsp_implementations()<CR>' },
+            { 'gr', '<cmd>lua Snacks.picker.lsp_references()<CR>' },
+            { 'gO', '<cmd>lua Snacks.picker.lsp_document_symbols()<CR>' },
         },
         event = 'VeryLazy',
     },

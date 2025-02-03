@@ -140,12 +140,6 @@ M.servers = {
     -- },
 }
 
-local function telescope(method)
-    return function()
-        vim.cmd('Telescope lsp_' .. method)
-    end
-end
-
 function M.setup()
     -- lsp.log.set_level(lsp.log.DEBUG)
     -- set global diagnostic settings to avoid passing them
@@ -170,14 +164,6 @@ function M.setup()
     local float_opts = { border = 'single' }
     lsp.handlers[ms.textDocument_hover] = lsp.with(lsp.handlers.hover, float_opts)
     lsp.handlers[ms.textDocument_signatureHelp] = lsp.with(lsp.handlers.signature_help, float_opts)
-
-    -- Override lsp methods to telescope as it handles multiple servers supporting same methods
-    lsp.handlers[ms.textDocument_definition] = lsp.with(telescope('definitions'), {})
-    lsp.handlers[ms.textDocument_declaration] = lsp.with(telescope('declarations'), {})
-    lsp.handlers[ms.textDocument_typeDefinition] = lsp.with(telescope('type_definitions'), {})
-    lsp.handlers[ms.textDocument_implementation] = lsp.with(telescope('implementations'), {})
-    lsp.handlers[ms.textDocument_references] = lsp.with(telescope('references'), {})
-    lsp.handlers[ms.textDocument_documentSymbol] = lsp.with(telescope('document_symbols'), {})
 
     -- call on CursorHold
     -- vim.lsp.codeLens.refresh()
