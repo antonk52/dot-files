@@ -49,13 +49,13 @@ require('lazy').setup({
                     file = { truncate = 120 },
                 },
             },
-            scroll = {
+            scroll = not vim.env.SSH and {
                 animate = {
                     total = 180,
                     fps = 30,
                     easing = 'inOutQuad',
                 },
-            },
+            } or nil,
         },
         keys = {
             { '<leader>b', '<cmd>lua Snacks.picker.buffers()<cr>' },
@@ -63,6 +63,7 @@ require('lazy').setup({
             { '<leader>r', '<cmd>lua Snacks.picker.resume()<cr>' },
             { '<leader>T', '<cmd>lua Snacks.picker.pick()<cr>' },
             { '<leader>u', '<cmd>lua Snacks.picker.undo()<cr>' },
+            { '<leader>d', '<cmd>lua Snacks.picker.diagnostics()<cr>' },
             { '<leader>S', '<cmd>lua Snacks.picker.smart()<cr>' },
             { '<leader>;', '<cmd>lua Snacks.picker.commands({layout="select"})<cr>' },
             {
@@ -238,6 +239,12 @@ require('lazy').setup({
                 },
             },
         },
+        event = 'VeryLazy',
+    },
+    {
+        'nvimtools/none-ls.nvim',
+        cond = vim.env.WORK ~= nil,
+        dependencies = { 'nvim-lua/plenary.nvim' },
         event = 'VeryLazy',
     },
     {

@@ -213,6 +213,7 @@ local groups = {
     ['@markup.italic'] = { link = 'Italic' },
     ['@markup.link'] = { link = 'Normal' },
     ['@markup.link.label'] = { fg = 'c08' },
+    ['@markup.link.label.tsx'] = { fg = 'c05' },
     ['@markup.link.url'] = { link = 'String' },
     ['@markup.list'] = { fg = 'c05' },
     ['@markup.quote'] = { link = '@text.quote' },
