@@ -89,17 +89,13 @@ function M.setup()
 
                 -- check for floating window
                 local win_config = vim.api.nvim_win_get_config(0)
-                if win_config.relative and win_config.relative ~= '' then
-                    return swin_hide(swin)
-                end
-
+                local is_float = win_config.relative and win_config.relative ~= ''
                 local ft = vim.api.nvim_get_option_value('filetype', { buf = bufnr })
-                if string.find(ft, 'telescope') or string.find(ft, 'dirvish') then
-                    return swin_hide(swin)
-                end
-
-                if vim.api.nvim_get_option_value('buftype', { buf = bufnr }) == 'terminal' then
-                    -- hide scrollbar for terminal buffers
+                if
+                    is_float
+                    or string.find(ft, 'telescope')
+                    or vim.api.nvim_get_option_value('buftype', { buf = bufnr }) == 'terminal'
+                then
                     return swin_hide(swin)
                 end
 
