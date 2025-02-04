@@ -180,8 +180,8 @@ function M.attach_to_buffer(bufnr, env)
         group = ns,
         buffer = 0,
         desc = 'Run tests on save',
-        callback = function(_, _, _, _, buf_nr)
-            M.run_buffer(buf_nr, env)
+        callback = function(x)
+            M.run_buffer(x.buf, env)
         end,
     })
 end

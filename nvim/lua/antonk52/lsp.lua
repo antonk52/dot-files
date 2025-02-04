@@ -160,10 +160,26 @@ function M.setup()
 
     local ms = lsp.protocol.Methods
 
-    -- add border to popups
-    local float_opts = { border = 'single' }
-    lsp.handlers[ms.textDocument_hover] = lsp.with(lsp.handlers.hover, float_opts)
-    lsp.handlers[ms.textDocument_signatureHelp] = lsp.with(lsp.handlers.signature_help, float_opts)
+    if vim.fn.has('nvim-0.11') == 1 then
+        local _hover = vim.lsp.buf.hover
+        vim.lsp.buf.hover = function(opts)
+            opts = opts or {}
+            opts.border = opts.border or 'single'
+            _hover(opts)
+        end
+        local _signature_help = vim.lsp.buf.signature_help
+        vim.lsp.buf.signature_help = function(opts)
+            opts = opts or {}
+            opts.border = opts.border or 'single'
+            _signature_help(opts)
+        end
+    else
+        -- add border to popups
+        local float_opts = { border = 'single' }
+        lsp.handlers[ms.textDocument_hover] = lsp.with(lsp.handlers.hover, float_opts)
+        lsp.handlers[ms.textDocument_signatureHelp] =
+            lsp.with(lsp.handlers.signature_help, float_opts)
+    end
 
     -- call on CursorHold
     -- vim.lsp.codeLens.refresh()

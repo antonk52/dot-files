@@ -465,25 +465,25 @@ vim.opt.synmaxcol = 300
 vim.g.netrw_nogx = 1
 
 do
-    keymap.set('n', 'gD', vim.lsp.buf.declaration, { desc = 'lsp declaration' })
-    keymap.set('n', 'gd', vim.lsp.buf.definition, { desc = 'lsp definition' })
-    keymap.set({ 'i', 'n' }, '<C-s>', vim.lsp.buf.signature_help, { desc = 'lsp signature_help' })
-    keymap.set('n', 'gK', vim.lsp.buf.type_definition, { desc = 'lsp type_definition' })
-    keymap.set('n', 'gi', vim.lsp.buf.implementation, { desc = 'lsp implemention' })
-    keymap.set('n', '<leader>R', vim.lsp.buf.rename, { desc = 'lsp rename' })
-    keymap.set('n', 'gr', vim.lsp.buf.references, { desc = 'lsp references' })
-    vim.keymap.set('n', 'gO', function()
-        vim.lsp.buf.document_symbol()
-    end, { desc = 'vim.lsp.buf.document_symbol()' })
+    if vim.fn.has('nvim-0.11') == 1 then
+        keymap.del({ 'i' }, '<C-s>')
+    end
+    keymap.set(
+        { 'i', 'n' },
+        '<C-s>',
+        '<cmd>lua vim.lsp.buf.signature_help()<cr>',
+        { desc = 'Signature help' }
+    )
+    keymap.set('n', '<leader>R', vim.lsp.buf.rename, { desc = 'Rename' })
 
-    keymap.set('n', '<leader>L', vim.diagnostic.open_float, { desc = 'show line diagnostic' })
-    keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, { desc = 'lsp code_action' })
+    keymap.set('n', '<leader>L', vim.diagnostic.open_float, { desc = 'Line diagnostic' })
+    keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, { desc = 'Code actions' })
     keymap.set('n', ']e', function()
         vim.diagnostic.goto_next({ severity = vim.diagnostic.severity.ERROR })
-    end, { desc = 'go to next error diagnostic' })
+    end, { desc = 'Next error diagnostic' })
     keymap.set('n', '[e', function()
         vim.diagnostic.goto_prev({ severity = vim.diagnostic.severity.ERROR })
-    end, { desc = 'go to prev error diagnostic' })
+    end, { desc = 'Prev error diagnostic' })
 end
 
 keymap.set('n', '<localleader>t', '<cmd>tabnew | terminal<cr>', { desc = 'Open new terminal' })
@@ -547,7 +547,7 @@ end, { nargs = 0, range = true, desc = 'Open in browser' })
 
 usercmd('TelePickerGitDiff', ':lua Snacks.picker.git_diff()<cr>', { nargs = 0 })
 
-usercmd('LazyCheck', ':Lazy check', {})
+usercmd('Check', ':Lazy check', {})
 usercmd('BunRun', ':!bun run %', { nargs = 0 })
 
 -- fat fingers
