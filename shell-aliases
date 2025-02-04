@@ -33,6 +33,7 @@ alias gc='git commit -m'
 alias tst='tmux start-server'
 alias tks='tmux kill-server'
 alias tl='tmux list-sessions'
+alias ta='tm'
 
 # attach to existing or start a named session by providing a name
 # or a blank session by calling `tm`
