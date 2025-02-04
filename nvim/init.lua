@@ -128,11 +128,6 @@ require('lazy').setup({
         event = 'VeryLazy',
     },
     {
-        'sindrets/diffview.nvim',
-        opts = { use_icons = false, signs = { fold_closed = ' ', fold_open = ' ' } },
-        event = 'VeryLazy',
-    },
-    {
         'neovim/nvim-lspconfig', -- types & linting
         dependencies = { 'b0o/schemastore.nvim', 'saghen/blink.cmp' }, -- json schemas for json lsp
         main = 'antonk52.lsp',
@@ -192,6 +187,7 @@ require('lazy').setup({
                     }
                 or nil,
         },
+        event = 'BufReadPre',
     },
     {
         'antonk52/markdowny.nvim',
@@ -239,7 +235,7 @@ require('lazy').setup({
                 },
             },
         },
-        event = 'VeryLazy',
+        event = 'BufReadPre',
     },
     {
         'nvimtools/none-ls.nvim',
@@ -310,6 +306,7 @@ require('lazy').setup({
     {
         'nvim-treesitter/nvim-treesitter',
         build = ':TSUpdate',
+        event = 'BufReadPre',
         config = function()
             if vim.env.WORK and vim.env.WORK_TS_PROXY then
                 require('nvim-treesitter.install').command_extra_args = {
@@ -548,6 +545,7 @@ end, { nargs = 0, range = true, desc = 'Open in browser' })
 usercmd('TelePickerGitDiff', ':lua Snacks.picker.git_diff()<cr>', { nargs = 0 })
 
 usercmd('Check', ':Lazy check', {})
+usercmd('LazyProfile', ':Lazy profile', {})
 usercmd('BunRun', ':!bun run %', { nargs = 0 })
 
 -- fat fingers
