@@ -97,6 +97,7 @@ local groups = {
     DiagnosticWarn = { fg = 'c0A' },
     DiagnosticError = { fg = 'c08' },
     DiagnosticOk = { fg = 'c0B' },
+    DiagnosticDeprecated = { strikethrough = true },
 
     Added = { fg = 'c0B' },
     Removed = { fg = 'c08' },

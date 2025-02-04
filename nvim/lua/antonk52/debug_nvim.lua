@@ -134,7 +134,7 @@ function M.setup()
         end
     end, {})
 
-    usercmd('BufferInfo', function()
+    vim.keymap.set('n', '<C-g>', function()
         vim.notify(table.concat({
             'Buffer info:',
             '* Rel path: ' .. vim.fn.expand('%'),

@@ -56,6 +56,7 @@ local groups = {
     DiagnosticInfo = { fg = colors.blue_dark },
     DiagnosticHint = { fg = colors.blue_dark },
     DiagnosticOk = { fg = colors.green },
+    DiagnosticDeprecated = { strikethrough = true },
 
     Added = { fg = colors.green },
     Changed = { fg = colors.blue_light },
