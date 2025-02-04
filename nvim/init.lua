@@ -409,6 +409,9 @@ vim.opt.cursorline = true
 -- insert mode caret is an underline
 vim.opt.guicursor = 'i-ci-ve:hor24'
 
+vim.opt.hlsearch = false -- enabled by n/N keymaps
+vim.opt.cmdheight = 0 -- hide command line
+
 -- Show "invisible" characters
 vim.opt.list = true
 vim.opt.listchars = { trail = '∙', tab = '▸ ' }
@@ -501,6 +504,8 @@ keymap.set('n', '<esc>', function()
 end, { desc = 'toggle highlight for last search; exit snippets' })
 keymap.set('n', 'n', '<cmd>set hlsearch<cr>n', { desc = 'highlight search when navigating' })
 keymap.set('n', 'N', '<cmd>set hlsearch<cr>N', { desc = 'highlight search when navigating' })
+keymap.set('n', '*', '<cmd>set hlsearch<cr>*', { desc = 'highlight search when navigating' })
+keymap.set('n', '#', '<cmd>set hlsearch<cr>#', { desc = 'highlight search when navigating' })
 
 keymap.set('n', '<tab>', 'za', { desc = 'toggle folds' })
 
