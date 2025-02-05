@@ -20,7 +20,23 @@ local function swin_hide(swin)
     end
 end
 
-local function update_swin_position(swin, bufnr)
+local function throttle(fn, delay)
+    local timer = vim.loop.new_timer()
+    return function(a, b)
+        if timer:is_active() then
+            timer:stop()
+        end
+        timer:start(
+            delay,
+            0,
+            vim.schedule_wrap(function()
+                fn(a, b)
+            end)
+        )
+    end
+end
+
+local update_swin_position = throttle(function(swin, bufnr)
     if not vim.api.nvim_win_is_valid(swin) then
         return
     end
@@ -55,7 +71,7 @@ local function update_swin_position(swin, bufnr)
     LAST_CONFIG.hide = false
 
     vim.api.nvim_win_set_config(swin, LAST_CONFIG)
-end
+end, vim.env.SSH and 32 or 8)
 
 function M.setup()
     local swin_char = '▐'
