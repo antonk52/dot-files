@@ -96,9 +96,7 @@ require('lazy').setup({
                         dismiss = '<C-d>',
                     },
                 },
-                filetypes = {
-                    markdown = true,
-                },
+                filetypes = { markdown = true },
             })
             vim.keymap.set('i', '<tab>', function()
                 if require('copilot.suggestion').is_visible() then
@@ -106,10 +104,7 @@ require('lazy').setup({
                     return '<Ignore>'
                 end
                 return '<tab>'
-            end, {
-                expr = true,
-                noremap = true,
-            })
+            end, { expr = true, noremap = true })
         end,
         event = 'VeryLazy',
     },
@@ -221,9 +216,7 @@ require('lazy').setup({
                     preview = { '─', '│', '─', '│', '┌', '┐', '┘', '└' },
                 },
                 layout_config = {
-                    horizontal = {
-                        width = 180,
-                    },
+                    horizontal = { width = 180 },
                 },
                 disable_devicons = true,
                 mappings = {
@@ -315,9 +308,7 @@ require('lazy').setup({
             end
 
             require('nvim-treesitter.configs').setup({
-                highlight = {
-                    enable = true,
-                },
+                highlight = { enable = true },
                 ensure_installed = {
                     'javascript',
                     'jsdoc',
@@ -530,15 +521,12 @@ vim.api.nvim_create_user_command('ToggleRusKeymap', function()
     vim.opt.keymap = vim.o.keymap == x and '' or x
     vim.notify('Toggle back in insert mode CTRL+SHIFT+6')
 end, { nargs = 0 })
-usercmd('NotesStart', function()
-    vim.defer_fn(require('antonk52.notes').setup, 5)
-end, { nargs = 0 })
-usercmd('NoteToday', '=require("antonk52.notes").note_month_now()', { nargs = 0 })
-usercmd('ColorLight', ':color lightest', { nargs = 0 })
-usercmd('ColorDark', ':color lake_contrast', { nargs = 0 })
-usercmd('Eslint', function()
-    require('antonk52.eslint').run()
-end, { desc = 'Run eslint from the closest eslintrc', nargs = 0 })
+usercmd('NotesStart', "=vim.defer_fn(require('antonk52.notes').setup, 5)", {})
+usercmd('NoteToday', '=require("antonk52.notes").note_month_now()', {})
+usercmd('ColorLight', ':color lightest', {})
+usercmd('ColorDark', ':color lake_contrast', {})
+usercmd('Eslint', '=require("antonk52.eslint").run()', {})
+usercmd('GitDiffPicker', ':lua Snacks.picker.git_diff()<cr>', {})
 usercmd('GitBrowse', function(x)
     require('snacks.gitbrowse').open({
         line_start = x.range > 0 and x.line1 or nil,
@@ -546,18 +534,17 @@ usercmd('GitBrowse', function(x)
     })
 end, { nargs = 0, range = true, desc = 'Open in browser' })
 
-usercmd('TelePickerGitDiff', ':lua Snacks.picker.git_diff()<cr>', { nargs = 0 })
-
 usercmd('Check', ':Lazy check', {})
 usercmd('LazyProfile', ':Lazy profile', {})
-usercmd('BunRun', ':!bun run %', { nargs = 0 })
+usercmd('BunRun', ':!bun run %', {})
+usercmd('NodeRun', ':!node %', {})
 
 -- fat fingers
-usercmd('W', ':w', { nargs = 0 })
-usercmd('Wq', ':wq', { nargs = 0 })
-usercmd('Ter', ':ter', { nargs = 0 })
-usercmd('Sp', ':sp', { nargs = 0 })
-usercmd('Vs', ':vs', { nargs = 0 })
+usercmd('W', ':w', {})
+usercmd('Wq', ':wq', {})
+usercmd('Ter', ':ter', {})
+usercmd('Sp', ':sp', {})
+usercmd('Vs', ':vs', {})
 
 vim.filetype.add({
     filename = { ['.eslintrc.json'] = 'jsonc' },
@@ -624,7 +611,7 @@ vim.defer_fn(function()
 
         layouts.telescope = copy
 
-        local overrides = { layout = { width = 100 }, preview = false }
+        local overrides = { layout = { width = 100, min_height = 28 }, preview = false }
         layouts.select = vim.tbl_deep_extend('force', {}, copy, overrides)
     end)
 end, 300)
