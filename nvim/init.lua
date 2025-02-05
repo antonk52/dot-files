@@ -410,7 +410,6 @@ vim.opt.cursorline = true
 vim.opt.guicursor = 'i-ci-ve:hor24'
 
 vim.opt.hlsearch = false -- enabled by n/N keymaps
-vim.opt.cmdheight = 0 -- hide command line
 
 -- Show "invisible" characters
 vim.opt.list = true

@@ -80,22 +80,13 @@ end
 local function debounce(func, timeout)
     local timer = vim.loop.new_timer()
     return function()
-        timer:start(timeout, 0, function()
-            timer:stop()
-            vim.schedule(func)
-        end)
+        if timer then
+            timer:start(timeout, 0, function()
+                timer:stop()
+                vim.schedule(func)
+            end)
+        end
     end
-end
-
-function M.search_count()
-    if not vim.o.hlsearch then
-        return ''
-    end
-    local search_count = vim.fn.searchcount({ maxcount = 999 })
-    if search_count.total > 0 then
-        return string.format('[%d/%d]', search_count.current, search_count.total)
-    end
-    return ''
 end
 
 local _lsp_symbol_cache = ''
@@ -213,7 +204,6 @@ local function print_extras()
 end
 
 function M.render()
-    local sc = M.search_count()
     return table.concat({
         hi_next('StatusLineModified') .. M.modified(),
         hi_next('CursorLineNr') .. ' ' .. M.filename() .. ' ',
@@ -227,7 +217,6 @@ function M.render()
         hi_next('Normal'),
         M.diagnostics(),
         '  ',
-        sc ~= '' and (sc .. '  ') or '',
         '%p%%', -- percentage through file
         '  ',
         '%l:%c ', -- 'line:column'
