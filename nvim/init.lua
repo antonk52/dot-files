@@ -58,25 +58,21 @@ require('lazy').setup({
             } or nil,
         },
         keys = {
-            { '<leader>b', '<cmd>lua Snacks.picker.buffers()<cr>' },
-            { '<leader>/', '<cmd>lua Snacks.picker.lines({layout= "telescope"})<cr>' },
-            { '<leader>r', '<cmd>lua Snacks.picker.resume()<cr>' },
-            { '<leader>T', '<cmd>lua Snacks.picker.pick()<cr>' },
-            { '<leader>u', '<cmd>lua Snacks.picker.undo()<cr>' },
-            { '<leader>d', '<cmd>lua Snacks.picker.diagnostics()<cr>' },
-            { '<leader>S', '<cmd>lua Snacks.picker.smart()<cr>' },
-            { '<leader>;', '<cmd>lua Snacks.picker.commands({layout="select"})<cr>' },
-            {
-                '<leader>:',
-                '<cmd>lua Snacks.picker.grep_word({layout= "telescope", search=vim.fn.input("Search: ")})<cr>',
-            },
+            { '<leader>b', ':lua Snacks.picker.buffers()<cr>' },
+            { '<leader>/', ':lua Snacks.picker.lines({layout= "telescope"})<cr>' },
+            { '<leader>r', ':lua Snacks.picker.resume()<cr>' },
+            { '<leader>T', ':lua Snacks.picker.pick()<cr>' },
+            { '<leader>u', ':lua Snacks.picker.undo()<cr>' },
+            { '<leader>d', ':lua Snacks.picker.diagnostics()<cr>' },
+            { '<leader>;', ':lua Snacks.picker.commands({layout="select"})<cr>' },
+            { '<leader>:', ':lua Snacks.picker.grep_word({search=vim.fn.input("Search: ")})<cr>' },
             -- override default lsp keymaps as snacks pickers handle multiple servers supporting same methods
-            { 'gd', '<cmd>lua Snacks.picker.lsp_definitions()<CR>' },
-            { 'gD', '<cmd>lua Snacks.picker.lsp_declaraions()<CR>' },
-            { 'gK', '<cmd>lua Snacks.picker.lsp_type_definitions()<CR>' },
-            { 'gi', '<cmd>lua Snacks.picker.lsp_implementations()<CR>' },
-            { 'gr', '<cmd>lua Snacks.picker.lsp_references()<CR>' },
-            { 'gO', '<cmd>lua Snacks.picker.lsp_document_symbols()<CR>' },
+            { 'gd', ':lua Snacks.picker.lsp_definitions()<cr>' },
+            { 'gD', ':lua Snacks.picker.lsp_declaraions()<cr>' },
+            { 'gK', ':lua Snacks.picker.lsp_type_definitions()<cr>' },
+            { 'gi', ':lua Snacks.picker.lsp_implementations()<cr>' },
+            { 'gr', ':lua Snacks.picker.lsp_references()<cr>' },
+            { 'gO', ':lua Snacks.picker.lsp_document_symbols()<cr>' },
         },
         event = 'VeryLazy',
     },
@@ -454,27 +450,24 @@ vim.opt.synmaxcol = 300
 -- avoid mapping gx in netrw as for conflict reasons
 vim.g.netrw_nogx = 1
 
-do
-    if vim.fn.has('nvim-0.11') == 1 then
-        keymap.del({ 'i' }, '<C-s>')
-    end
-    keymap.set(
-        { 'i', 'n' },
-        '<C-s>',
-        '<cmd>lua vim.lsp.buf.signature_help()<cr>',
-        { desc = 'Signature help' }
-    )
-    keymap.set('n', '<leader>R', vim.lsp.buf.rename, { desc = 'Rename' })
-
-    keymap.set('n', '<leader>L', vim.diagnostic.open_float, { desc = 'Line diagnostic' })
-    keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, { desc = 'Code actions' })
-    keymap.set('n', ']e', function()
-        vim.diagnostic.goto_next({ severity = vim.diagnostic.severity.ERROR })
-    end, { desc = 'Next error diagnostic' })
-    keymap.set('n', '[e', function()
-        vim.diagnostic.goto_prev({ severity = vim.diagnostic.severity.ERROR })
-    end, { desc = 'Prev error diagnostic' })
+if vim.fn.has('nvim-0.11') == 1 then
+    keymap.del({ 'i' }, '<C-s>')
 end
+keymap.set(
+    { 'i', 'n' },
+    '<C-s>',
+    '<cmd>lua vim.lsp.buf.signature_help()<cr>',
+    { desc = 'Signature help' }
+)
+keymap.set('n', '<leader>R', vim.lsp.buf.rename, { desc = 'Rename' })
+keymap.set('n', '<leader>L', vim.diagnostic.open_float, { desc = 'Line diagnostic' })
+keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, { desc = 'Code actions' })
+keymap.set('n', ']e', function()
+    vim.diagnostic.goto_next({ severity = vim.diagnostic.severity.ERROR })
+end, { desc = 'Next error diagnostic' })
+keymap.set('n', '[e', function()
+    vim.diagnostic.goto_prev({ severity = vim.diagnostic.severity.ERROR })
+end, { desc = 'Prev error diagnostic' })
 
 keymap.set('n', '<localleader>t', '<cmd>tabnew | terminal<cr>', { desc = 'Open new terminal' })
 
