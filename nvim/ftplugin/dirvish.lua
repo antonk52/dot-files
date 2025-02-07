@@ -10,6 +10,9 @@ end
 local function copy()
     local old_path = _escape(vim.trim(vim.fn.getline('.')))
     local new_path = _escape(vim.fn.input('Copy to: ', old_path, 'file'))
+    if new_path == '' then
+        return vim.notify('Canceled', vim.log.levels.WARN)
+    end
     _prep_dir(new_path)
     vim.system({ 'cp', '-a', old_path, new_path }):wait()
     vim.cmd.edit()
@@ -18,6 +21,9 @@ end
 local function move()
     local old_path = _escape(vim.trim(vim.fn.getline('.')))
     local new_path = _escape(vim.fn.input('New path: ', old_path, 'file'))
+    if new_path == '' then
+        return vim.notify('Canceled', vim.log.levels.WARN)
+    end
     _prep_dir(new_path)
     vim.uv.fs_rename(old_path, new_path)
     vim.cmd.edit()
@@ -47,6 +53,9 @@ end
 local function add()
     -- no need to escape for fn.mkdir or fn.writefile
     local new_path = vim.fn.input('Enter the new node path: ', vim.fn.expand('%'), 'file')
+    if new_path == '' then
+        return vim.notify('Canceled', vim.log.levels.WARN)
+    end
 
     if vim.uv.fs_stat(new_path) then
         return vim.notify('Already exists', vim.log.levels.WARN)
