@@ -314,8 +314,8 @@ require('lazy').setup({
                     'markdown_inline',
                     'tsx',
                     'typescript',
-                    'lua',
-                    'vimdoc',
+                    -- 'lua',
+                    -- 'vimdoc',
                 },
             })
         end,

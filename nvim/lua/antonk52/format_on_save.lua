@@ -33,6 +33,13 @@ function M.setup()
     usercmd('FormatToggle', function()
         M.enabled = not M.enabled
     end, { nargs = 0 })
+    usercmd('TypescriptFormat', function()
+        vim.lsp.buf.format({
+            filter = function(client)
+                return client.name == 'ts_ls'
+            end,
+        })
+    end, { nargs = 0 })
 end
 
 return M
