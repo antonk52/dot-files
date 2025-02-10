@@ -114,7 +114,7 @@ require('lazy').setup({
             usercmd('GitIgnore', function()
                 require('antonk52.git_utils').download_gitignore_file()
             end, { nargs = 0, desc = 'Download .gitignore from github/gitignore' })
-            keymap.set('n', '<leader>g', '<cmd>G<cr>', { desc = 'Version control' })
+            keymap.set('n', '<leader>g', ':G ', { desc = 'Version control' })
         end,
         event = 'VeryLazy',
     },
