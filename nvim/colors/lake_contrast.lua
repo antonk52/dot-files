@@ -42,6 +42,7 @@ local colors = {
     c0F = '#bc8571',
 }
 
+---@type table<string, vim.api.keyset.highlight>
 local groups = {
     Normal = { fg = colors.c05, bg = colors.c00 },
     NormalNC = { link = 'ColorColumn' },

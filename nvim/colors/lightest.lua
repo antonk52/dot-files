@@ -21,6 +21,7 @@ local colors = {
     purple = '#c69cbe',
 }
 
+---@type table<string, vim.api.keyset.highlight>
 local groups = {
     Normal = { fg = colors.dark_4, bg = colors.light_1 },
     NormalNC = { bg = colors.light_2 },

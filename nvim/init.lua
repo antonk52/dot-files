@@ -349,16 +349,22 @@ require('lazy').setup({
                 'getscript',
                 'getscriptPlugin',
                 'gzip',
+                'logipat',
                 'man',
+                'netrw',
                 'netrwFileHandlers',
                 'netrwPlugin',
                 'netrwSettings',
                 'rplugin', -- remote plugins
+                'rrhelper',
+                'spec',
                 'tar',
                 'tarPlugin',
                 'tohtml',
                 'tutor',
                 'tutor_mode_plugin',
+                'vimball',
+                'vimballPlugin',
                 'zip',
                 'zipPlugin',
             },
@@ -528,7 +534,7 @@ usercmd('GitBrowse', function(x)
 end, { nargs = 0, range = true, desc = 'Open in browser' })
 
 usercmd('Check', ':Lazy check', {})
-usercmd('LazyProfile', ':Lazy profile', {})
+usercmd('Profile', ':Lazy profile', {})
 usercmd('BunRun', ':!bun run %', {})
 usercmd('NodeRun', ':!node %', {})
 
@@ -606,5 +612,20 @@ vim.defer_fn(function()
 
         local overrides = { layout = { width = 100, min_height = 28 }, preview = false }
         layouts.select = vim.tbl_deep_extend('force', {}, copy, overrides)
+
+        -- patch command actions to immediately execute the command
+        -- if it doesn't require any arguments
+        require('snacks.picker.actions').cmd = function(picker, item)
+            picker:close()
+            if item and item.cmd then
+                vim.schedule(function()
+                    if item.command and (item.command.nargs ~= '0') then
+                        vim.api.nvim_input(':' .. item.cmd .. ' ')
+                    else
+                        vim.cmd(item.cmd)
+                    end
+                end)
+            end
+        end
     end)
 end, 300)
