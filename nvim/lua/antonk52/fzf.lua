@@ -55,8 +55,8 @@ local function fzf(kind)
 
         local pick = nil
 
-        -- Run fzf in the terminal, use sh as shell to avoid start up cost
-        vim.fn.termopen(fzf_cmd, {
+        local run_fn = vim.fn.jobstart
+        local opts = {
             on_stdout = function(_, data, _)
                 if #data == 2 and data[2] == '' then
                     -- strip ANSI escape codes
@@ -74,7 +74,16 @@ local function fzf(kind)
                 -- delete buffer to clean up
                 vim.api.nvim_buf_delete(buf, { force = true })
             end,
-        })
+            term = true,
+        }
+
+        if vim.fn.has('nvim-0.11') == 0 then
+            run_fn = vim.fn.termopen
+            opts.term = nil
+        end
+
+        -- Run fzf in the terminal, use sh as shell to avoid start up cost
+        run_fn(fzf_cmd, opts)
 
         vim.cmd.startinsert() -- Start in insert mode in the terminal
     end
