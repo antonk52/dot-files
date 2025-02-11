@@ -1,6 +1,6 @@
 {
   "blink.cmp": { "branch": "main", "commit": "b6f11a0aa33e601c469a126e3ed6e35208fe3ea3" },
-  "copilot.lua": { "branch": "master", "commit": "886ee73b6d464b2b3e3e6a7ff55ce87feac423a9" },
+  "copilot.lua": { "branch": "master", "commit": "30321e33b03cb924fdcd6a806a0dc6fa0b0eafb9" },
   "lazy.nvim": { "branch": "main", "commit": "f15a93907ddad3d9139aea465ae18336d87f5ce6" },
   "markdowny.nvim": { "branch": "main", "commit": "8ff18e8677cf39821913f387697378fcf3e141a0" },
   "mini.nvim": { "branch": "main", "commit": "b9440aed49221f0dbcaf481937b73a61f9ef32bf" },
@@ -10,7 +10,7 @@
   "nvim-treesitter": { "branch": "master", "commit": "6108ba7a135ed37e32276ccb877a348af17fe411" },
   "plenary.nvim": { "branch": "master", "commit": "3707cdb1e43f5cea73afb6037e6494e7ce847a66" },
   "schemastore.nvim": { "branch": "main", "commit": "118e563101169e8c5096023bc45c460e4c4fb77c" },
-  "snacks.nvim": { "branch": "main", "commit": "6e45829879da987cb4ed01d3098eb2507da72343" },
+  "snacks.nvim": { "branch": "main", "commit": "a7e442b5ab1c62d97f171b367ea53fa1492fa210" },
   "telescope.nvim": { "branch": "master", "commit": "415af52339215926d705cccc08145f3782c4d132" },
   "ts-comments.nvim": { "branch": "main", "commit": "872dcfa0418f4a33b7437fb4d9f4e89f2f000d74" },
   "vim-dirvish": { "branch": "master", "commit": "5d1d1ef45c6161af14c7d3d3097057e8fb5ac257" },

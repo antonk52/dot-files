@@ -1,21 +1,21 @@
 local lspconfig = require('lspconfig')
 local lsp = vim.lsp
-local usercmd = vim.api.nvim_create_user_command
+-- local usercmd = vim.api.nvim_create_user_command
 
 local M = {}
 
-local ts_lang_options = {
-    inlayHints = {
-        includeInlayParameterNameHints = 'all',
-        includeInlayFunctionParameterTypeHints = true,
-        includeInlayVariableTypeHints = true,
-        includeInlayPropertyDeclarationTypeHints = true,
-        includeInlayFunctionLikeReturnTypeHints = true,
-        includeInlayEnumMemberValueHints = true,
-    },
-    implementationsCodeLens = { enabled = true },
-    referencesCodeLens = { enabled = true, showOnAllFunctions = true },
-}
+-- local ts_lang_options = {
+--     inlayHints = {
+--         includeInlayParameterNameHints = 'all',
+--         includeInlayFunctionParameterTypeHints = true,
+--         includeInlayVariableTypeHints = true,
+--         includeInlayPropertyDeclarationTypeHints = true,
+--         includeInlayFunctionLikeReturnTypeHints = true,
+--         includeInlayEnumMemberValueHints = true,
+--     },
+--     implementationsCodeLens = { enabled = true },
+--     referencesCodeLens = { enabled = true, showOnAllFunctions = true },
+-- }
 
 M.servers = {
     flow = {},
@@ -26,8 +26,8 @@ M.servers = {
     ts_ls = {
         settings = {
             completions = { completeFunctionCalls = true },
-            typescript = ts_lang_options,
-            javascript = ts_lang_options,
+            -- typescript = ts_lang_options,
+            -- javascript = ts_lang_options,
         },
     },
 
@@ -105,7 +105,7 @@ M.servers = {
                 telemetry = { enable = false },
                 completion = { callSnippet = 'Replace' },
                 codeLens = { enable = true },
-                hint = { enable = true, setType = true },
+                -- hint = { enable = true, setType = true },
             },
         },
     },
@@ -201,9 +201,9 @@ function M.setup()
         lspconfig[server_name].setup(opts)
     end
 
-    usercmd('ToggleLSPInlayHints', function()
-        vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled({ bufnr = 0 }))
-    end, { nargs = 0, desc = 'Toggle LSP inlay hints' })
+    -- usercmd('ToggleLSPInlayHints', function()
+    --     vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled({ bufnr = 0 }))
+    -- end, { nargs = 0, desc = 'Toggle LSP inlay hints' })
 end
 
 return M
