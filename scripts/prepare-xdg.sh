@@ -2,15 +2,14 @@
 
 mkdir -p "${XDG_CONFIG_HOME:=$HOME/.config}"
 
-mkdir -p "$XDG_CONFIG_HOME"/{docker,gh,less,zsh}
+mkdir -p "$XDG_CONFIG_HOME"/{docker,gh}
 
 DOTS="$HOME"/dot-files
 
-[ ! -L "$XDG_CONFIG_HOME"/git ] && ln -s "$DOTS"/git "$XDG_CONFIG_HOME"/git
-[ ! -L "$XDG_CONFIG_HOME"/nvim ] && ln -s "$DOTS"/nvim "$XDG_CONFIG_HOME"/nvim
-[ ! -L "$XDG_CONFIG_HOME"/ghostty ] && ln -s "$DOTS"/ghostty "$XDG_CONFIG_HOME"/ghostty
-[ ! -L "$XDG_CONFIG_HOME"/tmux ] && ln -s "$DOTS"/tmux "$XDG_CONFIG_HOME"/tmux
-[ ! -L "$XDG_CONFIG_HOME"/karabiner ] && ln -s "$DOTS"/karabiner "$XDG_CONFIG_HOME"/karabiner
+configs="git nvim ghostty tmux karabiner"
+for config in $configs; do
+    [ ! -L "$XDG_CONFIG_HOME"/"$config" ] && ln -s "$DOTS"/"$config" "$XDG_CONFIG_HOME"/"$config"
+done
 
 [ ! -L "$HOME"/.zshrc ] && ln -s "$DOTS"/.zshrc "$HOME"/.zshrc
 [ ! -L "$HOME"/.hammerspoon ] && ln -s "$DOTS"/hammerspoon "$HOME"/.hammerspoon
