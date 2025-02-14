@@ -7,6 +7,13 @@ local function _escape(path)
     return vim.fn.escape(path, ' ()')
 end
 
+-- no need to update the buffer in `directory` buffer in nvim 0.11 or newer
+local function dirvish_edit()
+    if vim.bo.filetype == 'dirvish' then
+        vim.cmd('edit')
+    end
+end
+
 local function copy()
     local old_path = _escape(vim.trim(vim.fn.getline('.')))
     local new_path = _escape(vim.fn.input('Copy to: ', old_path, 'file'))
@@ -15,7 +22,7 @@ local function copy()
     end
     _prep_dir(new_path)
     vim.system({ 'cp', '-a', old_path, new_path }):wait()
-    vim.cmd.edit()
+    dirvish_edit()
 end
 
 local function move()
@@ -26,7 +33,7 @@ local function move()
     end
     _prep_dir(new_path)
     vim.uv.fs_rename(old_path, new_path)
-    vim.cmd.edit()
+    dirvish_edit()
 end
 
 local function remove()
@@ -47,12 +54,12 @@ local function remove()
     else
         vim.notify('Remove aborted', vim.log.levels.INFO)
     end
-    vim.cmd.edit()
+    dirvish_edit()
 end
 
 local function add()
     -- no need to escape for fn.mkdir or fn.writefile
-    local new_path = vim.fn.input('Enter the new node path: ', vim.fn.expand('%'), 'file')
+    local new_path = vim.fn.input('Enter the new node path: ', vim.fn.expand('%:p'), 'file')
     if new_path == '' then
         return vim.notify('Canceled', vim.log.levels.WARN)
     end
@@ -71,7 +78,7 @@ local function add()
         end
     end
 
-    vim.cmd.edit()
+    dirvish_edit()
 end
 
 vim.keymap.set('n', 'dd', remove, { buffer = 0, silent = true, desc = 'Remove focused item' })

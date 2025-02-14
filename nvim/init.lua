@@ -4,6 +4,7 @@ vim.g.maplocalleader = ','
 
 local usercmd = vim.api.nvim_create_user_command
 local keymap = vim.keymap
+local has_nvim_0_11 = vim.fn.has('nvim-0.11') == 1
 
 -- Bootstrap lazy.nvim plugin manager {{{1
 local PLUGINS_LOCATION = vim.fs.normalize('~/dot-files/nvim/plugged')
@@ -285,6 +286,7 @@ require('lazy').setup({
         event = 'VeryLazy',
     },
     {
+        cond = not has_nvim_0_11,
         'justinmk/vim-dirvish', -- project file viewer
         init = function()
             vim.g.dirvish_relative_paths = 1
@@ -581,6 +583,26 @@ vim.api.nvim_create_autocmd('FileType', {
         end
     end,
 })
+
+if has_nvim_0_11 then
+    vim.api.nvim_create_autocmd('BufWinEnter', {
+        pattern = '*',
+        group = vim.api.nvim_create_augroup('FileExplorer', {}),
+        callback = function(args)
+            if vim.bo.filetype == 'directory' then
+                return
+            end
+
+            local type = (vim.uv.fs_stat(args.file) or {}).type
+            if type == 'directory' then
+                vim.schedule(function()
+                    require('tree').open(args.file)
+                end)
+            end
+        end,
+    })
+    vim.keymap.set('n', '-', '<cmd>lua require("tree").open()<cr>', { desc = 'Open file explorer' })
+end
 
 require('antonk52.statusline').setup()
 -- vim.opt.statusline = ' %m%r %f %= %p%%  %l:%c  '
