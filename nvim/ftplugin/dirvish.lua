@@ -96,20 +96,22 @@ vim.keymap.set('n', 'r', '<nop>', { buffer = true })
 vim.keymap.set('n', 'R', '<nop>', { buffer = true })
 
 -- virtual text for symlinks
-do
+vim.schedule(function()
     local ns = vim.api.nvim_create_namespace('dirvish_symlinks')
     local bufnr = vim.api.nvim_get_current_buf()
+    local buf_path = vim.fs.normalize(vim.api.nvim_buf_get_name(bufnr))
 
     for i, line in ipairs(vim.api.nvim_buf_get_lines(0, 0, -1, false)) do
         if vim.endswith(line, '/') then
             line = line:sub(1, -2)
         end
-        vim.uv.fs_lstat(line, function(err, lstat)
+        local abs_path = vim.fs.joinpath(buf_path, line)
+        vim.uv.fs_lstat(abs_path, function(err, lstat)
             if err then
                 return
             end
             if lstat and lstat.type == 'link' then
-                vim.uv.fs_readlink(line, function(reallink_err, target)
+                vim.uv.fs_readlink(abs_path, function(reallink_err, target)
                     if reallink_err then
                         return
                     end
@@ -125,4 +127,4 @@ do
             end
         end)
     end
-end
+end)
