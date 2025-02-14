@@ -204,6 +204,7 @@ local function print_extras()
 end
 
 function M.render()
+    local diff = vim.b.minidiff_summary_string or ''
     return table.concat({
         hi_next('StatusLineModified') .. M.modified(),
         hi_next('CursorLineNr') .. ' ' .. M.filename() .. ' ',
@@ -212,11 +213,11 @@ function M.render()
         hi_next('Normal') .. '  %=', -- space and right align
         hi_next('Comment') .. M.lsp_init(),
         '  ',
+        #diff > 0 and (diff .. '  ') or '',
         hi_next('Normal'),
         print_extras(),
         hi_next('Normal'),
         M.diagnostics(),
-        '  ',
         '%p%%', -- percentage through file
         '  ',
         '%l:%c ', -- 'line:column'

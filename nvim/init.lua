@@ -69,6 +69,7 @@ require('lazy').setup({
             { '<leader>:', ':lua Snacks.picker.grep_word({search=vim.fn.input("Search: ")})<cr>' },
             -- override default lsp keymaps as snacks pickers handle multiple servers supporting same methods
             { 'gd', ':lua Snacks.picker.lsp_definitions()<cr>' },
+            { '<C-]>', ':lua Snacks.picker.lsp_definitions()<cr>' },
             { 'gD', ':lua Snacks.picker.lsp_declaraions()<cr>' },
             { 'gK', ':lua Snacks.picker.lsp_type_definitions()<cr>' },
             { 'gi', ':lua Snacks.picker.lsp_implementations()<cr>' },
