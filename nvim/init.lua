@@ -589,6 +589,7 @@ require('antonk52.fzf').setup()
 
 vim.defer_fn(function()
     require('antonk52.scrollbar').setup()
+    require('antonk52.snippets').setup()
     require('antonk52.debug_nvim').setup()
     require('antonk52.test_js').setup()
     require('antonk52.tsc').setup()
