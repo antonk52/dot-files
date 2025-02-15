@@ -13,7 +13,7 @@ source_if_exists() { [ -f "$1" ] && . "$1"; }
 has_command() { type "$1" >/dev/null 2>&1; }
 
 # global node modules
-export PATH="$HOME"/.npm-global/bin:"$HOME"/.yarn/bin:$PATH
+export PATH="$HOME"/.npm-global/bin:"$HOME"/.yarn/bin:"$HOME"/.bun/bin:$PATH
 # cargo crates
 export PATH="$HOME"/.cargo/bin:"$HOME"/.local/share/cargo/bin:$PATH
 # pip packages
@@ -21,13 +21,14 @@ export PATH="$HOME"/Library/Python/3.9/bin:$PATH
 # homebrew packages
 export PATH=$PATH:/opt/homebrew/bin
 # go packages
-export PATH=$PATH:/Users/antonk52/go/bin
+export PATH=$PATH:"$HOME"/go/bin
 
 # avoid using find if `fd` is installed
 if has_command fd; then
     export FZF_DEFAULT_COMMAND='fd -t f'
 fi
-# completions {{{1
+
+# ======================= completion
 
 # see https://gist.github.com/ctechols/ca1035271ad134841284
 autoload -Uz compinit;
@@ -80,7 +81,7 @@ bindkey -v
 # reduce the timeout between switching modes
 export KEYTIMEOUT=1
 
-# PURE PROMPT {{{1
+# ======================= PURE PROMPT
 
 fpath+="$DOT_FILES/dependencies/pure"
 
@@ -125,10 +126,3 @@ source_if_exists "$XDG_CONFIG_HOME"/local_shellrc
 
 # autojump with `j`
 ZSHZ_CMD=j source_if_exists "$DOT_FILES"/dependencies/zsh-z/zsh-z.plugin.zsh
-
-# bun completions
-[ -s "/Users/antonk52/.bun/_bun" ] && source "/Users/antonk52/.bun/_bun"
-
-# bun
-export BUN_INSTALL="$HOME/.bun"
-export PATH="$BUN_INSTALL/bin:$PATH"

@@ -1,5 +1,8 @@
 #!/bin/sh
 
+# clone submodules when needed
+git submodule update --init --recursive && echo "git submodules ready"
+
 mkdir -p "$HOME"/.config/{docker,gh}
 mkdir -p "$HOME"/.local/share/{less,zsh,node}
 
