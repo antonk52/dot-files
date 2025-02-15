@@ -7,31 +7,24 @@ export XDG_BIN_HOME=$HOME/.local/bin
 export XDG_LIB_HOME=$HOME/.local/lib
 export XDG_CACHE_HOME=$HOME/.cache
 
-# env setup
-export LESSHISTFILE="$XDG_DATA_HOME/less/history"
-export CARGO_HOME="$XDG_DATA_HOME"/cargo
-
 export DOT_FILES="$HOME"/dot-files
 
-# pick up base16 colortheme
-if [[ -f /.base16_theme && -z "$NVIM" && "$__CFBundleIdentifier" != "com.apple.Terminal" ]]; then
-    . ~/.base16_theme
-fi
+source_if_exists() { [ -f "$1" ] && . "$1"; }
+has_command() { type "$1" >/dev/null 2>&1; }
 
 # global node modules
 export PATH="$HOME"/.npm-global/bin:"$HOME"/.yarn/bin:$PATH
-
 # cargo crates
 export PATH="$HOME"/.cargo/bin:"$HOME"/.local/share/cargo/bin:$PATH
 # pip packages
 export PATH="$HOME"/Library/Python/3.9/bin:$PATH
 # homebrew packages
 export PATH=$PATH:/opt/homebrew/bin
-
+# go packages
 export PATH=$PATH:/Users/antonk52/go/bin
 
 # avoid using find if `fd` is installed
-if command -v fd &> /dev/null; then
+if has_command fd; then
     export FZF_DEFAULT_COMMAND='fd -t f'
 fi
 # completions {{{1
@@ -51,7 +44,7 @@ if [[ -z "${AK_COMPLETION_DISABLE+x}" ]]; then
     [ ! -f "$npm_completions" ] && npm completion >> "$npm_completions";
     source "$npm_completions"
 
-    if command -v docker &> /dev/null; then
+    if has_command docker; then
         zsh_site_functions_path="$XDG_DATA_HOME/zsh/site-functions"
 
         if [ ! -f "$zsh_site_functions_path/_docker" ]; then
@@ -64,9 +57,9 @@ if [[ -z "${AK_COMPLETION_DISABLE+x}" ]]; then
     fi
 fi
 
-source "$DOT_FILES/dependencies/zsh-autosuggestions/zsh-autosuggestions.zsh"
+source_if_exists "$DOT_FILES/dependencies/zsh-autosuggestions/zsh-autosuggestions.zsh"
 
-if command -v yarn &> /dev/null && command -v compdef &> /dev/null; then
+if has_command yarn && has_command compdef; then
     source "$DOT_FILES/dependencies/zsh-yarn-completions/zsh-yarn-completions.plugin.zsh"
 fi
 
@@ -125,16 +118,13 @@ bindkey "^R" history-incremental-search-backward
 bindkey "^v" edit-command-line
 
 # Load local settings
-LOCAL_SHELLRC="$XDG_CONFIG_HOME"/local_shellrc
-[ -f "$LOCAL_SHELLRC" ] && source "$LOCAL_SHELLRC" || :
+source_if_exists "$XDG_CONFIG_HOME"/local_shellrc
 
 # if you need ruby, do use this
 # eval "$(rbenv init -)"
 
-autojump_path="$DOT_FILES"/dependencies/zsh-z/zsh-z.plugin.zsh
-if [ -f "$autojump_path" ]; then
-    ZSHZ_CMD=j source "$autojump_path"
-fi
+# autojump with `j`
+ZSHZ_CMD=j source_if_exists "$DOT_FILES"/dependencies/zsh-z/zsh-z.plugin.zsh
 
 # bun completions
 [ -s "/Users/antonk52/.bun/_bun" ] && source "/Users/antonk52/.bun/_bun"
