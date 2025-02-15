@@ -1,19 +1,9 @@
 #!/bin/bash
-
-# ========================================================
-# by default tun with `./scripts/prepare-macos.sh`
-#
-# to run a specific function, run scripts using
-# `SKIP_ALL=1 RUN_setup_dock=1 ./scripts/prepare-macos.sh`
-# ========================================================
-#
-# TODO
-# - consider applying different settings based on [os version](https://www.cyberciti.biz/faq/mac-osx-find-tell-operating-system-version-from-bash-prompt/)
+set -euo pipefail
 
 # Close any open System Preferences panes, to prevent them from overriding
 # settings we’re about to change
 osascript -e 'tell application "System Preferences" to quit'
-
 
 # install xcode tools
 xcode-select --install || echo 'xcode tools are already installed';
@@ -25,6 +15,7 @@ function setup_screenshots() {
     && echo '✅ Screenshots will be saved to ~/Pictures/Screenshots' \
     || echo '❗️ Could not save screenshots to ~/Pictures/Screenshots';
 }
+setup_screenshots;
 
 # tap to click
 function setup_tap_to_click() {
@@ -33,6 +24,7 @@ function setup_tap_to_click() {
         && echo '✅ Tap to click enabled' \
         || echo '❗️ Could not set up tap to click';
 }
+setup_tap_to_click;
 
 # needed to enable three finger drag
 # enable dragging using tree fingers on touchpad
@@ -44,6 +36,7 @@ function setup_three_finger_drag() {
         && echo '✅ Three finger window dragging enabled' \
         || echo '❗️ Could not set up three finger window dragging';
 }
+setup_three_finger_drag;
 
 # dock settings
 function setup_dock() {
@@ -58,6 +51,7 @@ function setup_dock() {
         && echo '✅ Dock is set up' \
         || echo '❗️ Could not set up dock';
 }
+setup_dock;
 
 # menu
 function setup_menu_clock() {
@@ -70,6 +64,7 @@ function setup_menu_clock() {
         && echo '✅ Menu clock is set up' \
         || echo '❗️ Could not set up menu clock';
 }
+setup_menu_clock;
 
 # disable FN key to avoid acidental language switch
 function setup_noop_fn_key() {
@@ -77,6 +72,7 @@ function setup_noop_fn_key() {
         && echo '✅ FN key tap does not switch languages' \
         || echo '❗️ Could not disable FN key tap';
 }
+setup_noop_fn_key;
 
 # enable keyboard navigation in os applications with tab/shift+tab
 function setup_keyboard_navigation() {
@@ -84,6 +80,7 @@ function setup_keyboard_navigation() {
         && echo '✅ OS wide keyboard navigation is enabled' \
         || echo '❗️ Could not set up keyboard navigation';
 }
+setup_keyboard_navigation;
 
 # repeat keys on hold more often
 function setup_key_repeat() {
@@ -92,7 +89,7 @@ function setup_key_repeat() {
         && echo '✅ key repeat is increased' \
         || echo '❗️ Could not set up key repeat speed';
 }
-
+setup_key_repeat;
 
 function setup_safari() {
     defaults write com.apple.Safari HomePage -string "about:blank" \
@@ -104,33 +101,7 @@ function setup_safari() {
         && echo '✅ safari settings' \
         || echo '❗️ could not set up settings for safari';
 }
-
-
-if [[ "$SKIP_ALL" == "1" ]]; then
-    echo "skipped all"
-
-    [[ "$RUN_setup_screenshots" == "1" ]] && setup_screenshots;
-    [[ "$RUN_setup_tap_to_click" == "1" ]] && setup_tap_to_click;
-    [[ "$RUN_setup_three_finger_drag" == "1" ]] && setup_three_finger_drag;
-    [[ "$RUN_setup_dock" == "1" ]] && setup_dock;
-    [[ "$RUN_setup_menu_clock" == "1" ]] && setup_menu_clock;
-    [[ "$RUN_setup_noop_fn_key" == "1" ]] && setup_noop_fn_key;
-    [[ "$RUN_setup_keyboard_navigation" == "1" ]] && setup_keyboard_navigation;
-    [[ "$RUN_setup_key_repeat" == "1" ]] && setup_key_repeat;
-    [[ "$RUN_setup_safari" == "1" ]] && setup_safari;
-else
-    echo "running all scripts"
-
-    setup_screenshots;
-    setup_tap_to_click;
-    setup_three_finger_drag;
-    setup_dock;
-    setup_menu_clock;
-    setup_noop_fn_key;
-    setup_keyboard_navigation;
-    setup_key_repeat;
-    setup_safari;
-fi
+setup_safari;
 
 echo ''
 echo 'MacOS preparation is done'

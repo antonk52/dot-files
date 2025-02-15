@@ -188,7 +188,7 @@ end
 
 M.extras = {}
 
----@param fn function returns {text: string, hi?: string | 'Normal'}
+---@param fn fun(): {text: string, hi?: string | 'Normal'}
 function M.add_extra(fn)
     table.insert(M.extras, fn)
 end
