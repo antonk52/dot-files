@@ -50,7 +50,7 @@ require('lazy').setup({
                     file = { truncate = 120 },
                 },
             },
-            scroll = not vim.env.SSH and {
+            scroll = not vim.env.SSH_CLIENT and {
                 animate = {
                     total = 180,
                     fps = 30,
@@ -88,8 +88,8 @@ require('lazy').setup({
                     keymap = {
                         accept = false,
                         accept_word = '<C-e>',
-                        accept_line = '<C-r>',
-                        next = false,
+                        accept_line = '<C-l>',
+                        next = '<C-r>',
                         prev = false,
                         dismiss = '<C-d>',
                     },
@@ -208,15 +208,9 @@ require('lazy').setup({
         dependencies = { 'nvim-lua/plenary.nvim' },
         opts = {
             defaults = {
-                borderchars = {
-                    results = { '─', '│', ' ', '│', '┌', '┐', '│', '│' },
-                    prompt = { '─', '│', '─', '│', '├', '┤', '┘', '└' },
-                    preview = { '─', '│', '─', '│', '┌', '┐', '┘', '└' },
-                },
                 layout_config = {
                     horizontal = { width = 180 },
                 },
-                disable_devicons = true,
                 mappings = {
                     i = {
                         ['<esc>'] = function(x)
@@ -226,7 +220,6 @@ require('lazy').setup({
                 },
             },
         },
-        event = 'BufReadPre',
     },
     {
         'nvimtools/none-ls.nvim',
@@ -329,12 +322,8 @@ require('lazy').setup({
         ) ~= nil,
         dir = vim.fn.expand(vim.env.WORK_PLUGIN_PATH or 'noop'),
         name = 'work', -- otherwise lazy.nvim errors when updates plugins
-        config = function()
-            local ok, work = pcall(require, 'antonk52.work')
-            if ok and vim.env.WORK_PLUGIN_PATH then
-                work.setup()
-            end
-        end,
+        main = 'antonk52.work',
+        opts = {},
         dependencies = {
             'nvim-lua/plenary.nvim',
             'nvim-telescope/telescope.nvim',
@@ -398,6 +387,9 @@ vim.g.loaded_node_provider = 0
 vim.g.loaded_ruby_provider = 0
 vim.g.loaded_perl_provider = 0
 
+-- avoid mapping gx in netrw as for conflict reasons
+vim.g.netrw_nogx = 1
+
 -- Defaults {{{1
 -- highlight current cursor line
 vim.opt.cursorline = true
@@ -455,9 +447,6 @@ vim.opt.undofile = true
 
 -- disable syntax highlighting if a line is too long
 vim.opt.synmaxcol = 300
-
--- avoid mapping gx in netrw as for conflict reasons
-vim.g.netrw_nogx = 1
 
 if vim.fn.has('nvim-0.11') == 1 then
     keymap.del({ 'i' }, '<C-s>')
