@@ -20,14 +20,10 @@ xcode-select --install || echo 'xcode tools are already installed';
 
 # Save screenshots to ~/Pictures/Screenshots
 function setup_screenshots() {
-    if [ ! -d "$HOME"/Pictures/Screenshots ]; then
-        mkdir "$HOME"/Pictures/Screenshots
-        defaults write com.apple.screencapture location "$HOME"/Pictures/Screenshots \
-        && echo '✅ Screenshots will be saved to ~/Pictures/Screenshots' \
-        || echo '❗️ Could not save screenshots to ~/Pictures/Screenshots';
-    else
-        echo "~/Pictures/Screenshots already exists"
-    fi
+    mkdir -p "$HOME"/Pictures/Screenshots
+    defaults write com.apple.screencapture location "$HOME"/Pictures/Screenshots \
+    && echo '✅ Screenshots will be saved to ~/Pictures/Screenshots' \
+    || echo '❗️ Could not save screenshots to ~/Pictures/Screenshots';
 }
 
 # tap to click
