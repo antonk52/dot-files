@@ -369,10 +369,6 @@ require('lazy').setup({
         },
     },
     pkg = { enabled = false },
-    ui = {
-        size = { width = 100, height = 0.9 },
-        pills = false,
-    },
     readme = { enabled = false },
 })
 
@@ -393,80 +389,58 @@ vim.g.loaded_node_provider = 0
 vim.g.loaded_ruby_provider = 0
 vim.g.loaded_perl_provider = 0
 
--- avoid mapping gx in netrw as for conflict reasons
+-- netrw: avoid mapping gx in netrw as for conflict reasons
 vim.g.netrw_nogx = 1
 
-vim.g.dirvish_relative_paths = 1
--- folders on top
+-- dirvish: folders on top
 vim.g.dirvish_mode = ':sort ,^\\v(.*[\\/])|\\ze,'
+vim.g.dirvish_relative_paths = 1
 
 -- Defaults {{{1
 -- highlight current cursor line
 vim.opt.cursorline = true
-
 -- insert mode caret is an underline
 vim.opt.guicursor = 'i-ci-ve:hor24'
-
 vim.opt.hlsearch = false -- enabled by n/N keymaps
-
 -- Show "invisible" characters
 vim.opt.list = true
 vim.opt.listchars = { trail = '∙', tab = '▸ ' }
-
-vim.cmd.color('lake_contrast')
 vim.opt.termguicolors = vim.env.__CFBundleIdentifier ~= 'com.apple.Terminal'
-
 -- show search effect as you type
 vim.opt.inccommand = 'split'
-
 -- 1 tab == 4 spaces
 vim.opt.tabstop = 4
 vim.opt.shiftwidth = 4
-
 -- use spaces instead of tabs
 vim.opt.expandtab = true
-
 -- ignore swapfile messages
 vim.opt.shortmess:append('A')
 vim.opt.updatetime = 300
-
 -- indent wrapped lines to match start
 vim.opt.breakindent = true
 -- emphasize broken lines by indenting them
 vim.opt.breakindentopt = 'shift:2'
-
 -- open horizontal splits below current window
 vim.opt.splitbelow = true
 vim.opt.splitright = true
-
 -- folding
 vim.opt.foldlevel = 20
 -- use wider line for folding
 vim.opt.fillchars = { fold = '⏤' }
-
 -- default   +--  7 lines: set foldmethod=indent···············
 -- current   ⏤⏤⏤► [7 lines]: set foldmethod=indent ⏤⏤⏤⏤⏤⏤⏤⏤⏤⏤⏤
 vim.opt.foldtext =
     '"⏤⏤⏤► [".(v:foldend - v:foldstart + 1)." lines] ".trim(getline(v:foldstart))." "'
-
 -- break long lines on breakable chars, instead of the last fitting character
 vim.opt.linebreak = true
-
 -- persistent undo across sessions
 vim.opt.undofile = true
-
 -- disable syntax highlighting if a line is too long
 vim.opt.synmaxcol = 300
 
-if vim.fn.has('nvim-0.11') == 1 then
-    keymap.del({ 'i' }, '<C-s>')
-end
-keymap.set(
-    { 'i', 'n' },
-    '<C-s>',
-    '<cmd>lua vim.lsp.buf.signature_help()<cr>',
-    { desc = 'Signature help' }
-)
+vim.cmd.color('lake_contrast')
+
+keymap.set('n', '<C-s>', '<cmd>lua vim.lsp.buf.signature_help()<cr>', { desc = 'Signature help' })
 keymap.set('n', '<leader>R', vim.lsp.buf.rename, { desc = 'Rename' })
 keymap.set('n', '<leader>L', vim.diagnostic.open_float, { desc = 'Line diagnostic' })
 keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, { desc = 'Code actions' })
@@ -504,12 +478,11 @@ keymap.set('n', '<tab>', 'za', { desc = 'toggle folds' })
 keymap.set('v', '<', '<gv')
 keymap.set('v', '>', '>gv')
 
--- toggle comments
-keymap.set('n', '<C-_>', 'gcc', { remap = true })
-keymap.set('x', '<C-_>', 'gc', { remap = true })
+-- TODO: toggle comments
+-- keymap.set('n', '<C-_>', 'gcc', { remap = true })
+-- keymap.set('x', '<C-_>', 'gc', { remap = true })
 
-keymap.set({ 'n', 'x' }, 'gh', '0', { desc = 'go to line start' })
-keymap.set({ 'n', 'x' }, 'gl', '$', { desc = 'go to line end ($ is too far)' })
+keymap.set({ 'n', 'x' }, '<leader>a', '^', { desc = 'go to line start' })
 keymap.set({ 'n', 'x' }, '<leader>e', '$', { desc = 'go to line end ($ is too far)' })
 
 keymap.set('n', '<C-t>', '<cmd>tabedit<CR>', { desc = 'Open a new tab' })
@@ -534,12 +507,8 @@ usercmd('GitBrowse', function(x)
         line_end = x.range > 0 and x.line2 or nil,
     })
 end, { nargs = 0, range = true, desc = 'Open in browser' })
-
-usercmd('Check', ':Lazy check', {})
-usercmd('Profile', ':Lazy profile', {})
 usercmd('BunRun', ':!bun run %', {})
 usercmd('NodeRun', ':!node %', {})
-
 -- fat fingers
 usercmd('W', ':w', {})
 usercmd('Wq', ':wq', {})
@@ -630,6 +599,7 @@ vim.defer_fn(function()
         copy.layout[1][1].border = { '┌', '─', '┐', '│', '│', ' ', '│', '│' }
         copy.layout[1][2].border = { '├', '─', '┤', '│', '┘', '─', '└', '│' }
         copy.layout[2].border = 'single'
+        copy.layout.width = 160
 
         layouts.telescope = copy
 
