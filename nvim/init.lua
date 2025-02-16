@@ -42,12 +42,27 @@ require('lazy').setup({
                         },
                     },
                 },
-                layout = { preset = 'telescope', reverse = true },
+                layout = { preset = 'telescope' },
                 icons = {
                     files = { enabled = false },
                 },
                 formatters = {
                     file = { truncate = 120 },
+                },
+                actions = {
+                    -- immediately execute the command if it doesn't require any arguments
+                    cmd = function(picker, item)
+                        picker:close()
+                        if item and item.cmd then
+                            vim.schedule(function()
+                                if item.command and (item.command.nargs ~= '0') then
+                                    vim.api.nvim_input(':' .. item.cmd .. ' ')
+                                else
+                                    vim.cmd(item.cmd)
+                                end
+                            end)
+                        end
+                    end,
                 },
             },
             scroll = not vim.env.SSH_CLIENT and {
@@ -136,10 +151,6 @@ require('lazy').setup({
                 ['<C-u>'] = { 'snippet_backward', 'fallback' },
                 ['<C-k>'] = { 'scroll_documentation_up' },
                 ['<C-j>'] = { 'scroll_documentation_down' },
-                cmdline = {
-                    ['<tab>'] = { 'select_next', 'fallback' },
-                    ['<s-tab>'] = { 'select_prev', 'fallback' },
-                },
             },
             completion = {
                 menu = {
@@ -280,13 +291,8 @@ require('lazy').setup({
         event = 'VeryLazy',
     },
     {
-        cond = not has_nvim_0_11,
         'justinmk/vim-dirvish', -- project file viewer
-        init = function()
-            vim.g.dirvish_relative_paths = 1
-            -- folders on top
-            vim.g.dirvish_mode = ':sort ,^\\v(.*[\\/])|\\ze,'
-        end,
+        cond = not has_nvim_0_11,
     },
     {
         'nvim-treesitter/nvim-treesitter',
@@ -389,6 +395,10 @@ vim.g.loaded_perl_provider = 0
 
 -- avoid mapping gx in netrw as for conflict reasons
 vim.g.netrw_nogx = 1
+
+vim.g.dirvish_relative_paths = 1
+-- folders on top
+vim.g.dirvish_mode = ':sort ,^\\v(.*[\\/])|\\ze,'
 
 -- Defaults {{{1
 -- highlight current cursor line
@@ -625,20 +635,5 @@ vim.defer_fn(function()
 
         local overrides = { layout = { width = 100, min_height = 28 }, preview = false }
         layouts.select = vim.tbl_deep_extend('force', {}, copy, overrides)
-
-        -- patch command actions to immediately execute the command
-        -- if it doesn't require any arguments
-        require('snacks.picker.actions').cmd = function(picker, item)
-            picker:close()
-            if item and item.cmd then
-                vim.schedule(function()
-                    if item.command and (item.command.nargs ~= '0') then
-                        vim.api.nvim_input(':' .. item.cmd .. ' ')
-                    else
-                        vim.cmd(item.cmd)
-                    end
-                end)
-            end
-        end
     end)
 end, 300)
