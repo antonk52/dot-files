@@ -4,6 +4,10 @@ function M.setup()
     vim.cmd.cd(vim.env.NOTES_PATH)
     vim.opt.shiftwidth = 2
 
+    if vim.env.TMUX then
+        vim.system({ 'tmux', 'rename-window', 'notes' })
+    end
+
     vim.opt.wrap = false
     vim.opt.conceallevel = 2
     vim.opt.concealcursor = '' -- current line unconcealed in normal and insert mode

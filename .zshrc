@@ -48,12 +48,6 @@ else
     compinit -C;
 fi;
 
-# npm completion
-if has_command npm; then
-    npm_completions="$DOT_FILES/scripts/npm-completions.zsh"
-    [ ! -f "$npm_completions" ] && npm completion >> "$npm_completions";
-    source "$npm_completions"
-fi
 # docker completion
 if has_command docker; then
     zsh_site_functions_path="$XDG_DATA_HOME/zsh/site-functions"
@@ -70,7 +64,7 @@ fi
 source_if_exists "$DOT_FILES/dependencies/zsh-autosuggestions/zsh-autosuggestions.zsh"
 
 if has_command yarn && has_command compdef; then
-    source "$DOT_FILES/dependencies/zsh-yarn-completions/zsh-yarn-completions.plugin.zsh"
+    source_if_exists "$DOT_FILES/dependencies/zsh-yarn-completions/zsh-yarn-completions.plugin.zsh"
 fi
 
 # autojump with `j`

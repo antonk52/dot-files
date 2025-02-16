@@ -607,9 +607,9 @@ end
 require('antonk52.statusline').setup()
 -- vim.opt.statusline = ' %m%r %f %= %p%%  %l:%c  '
 require('antonk52.infer_shiftwidth').setup()
-require('antonk52.fzf').setup()
 
 vim.defer_fn(function()
+    require('antonk52.fzf').setup()
     require('antonk52.scrollbar').setup()
     require('antonk52.snippets').setup()
     require('antonk52.debug_nvim').setup()
@@ -636,4 +636,4 @@ vim.defer_fn(function()
         local overrides = { layout = { width = 100, min_height = 28 }, preview = false }
         layouts.select = vim.tbl_deep_extend('force', {}, copy, overrides)
     end)
-end, 300)
+end, 100)

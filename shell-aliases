@@ -20,6 +20,8 @@ alias ...='cd ../..'
 alias ....='cd ../../..'
 alias .....='cd ../../../..'
 alias compare='diff -rq'
+alias cdf='cd "$(fd --type d --exclude node_modules | fzf)"'
+alias cdF='cd "$(fd --type d --no-ignore --exclude node_modules | fzf)"'
 
 # git
 alias g='git'
@@ -62,101 +64,34 @@ alias ax='chmod a+x'
 alias h='eval $(history | fzf +s --tac --tiebreak=index | sed "s/ *[0-9]* *//")'
 alias q='quit'
 alias chux='chmod u+x'
+alias docker_stop_all='docker stop "$(docker ps -q)"'
 
 export NOTES_PATH="$HOME"/Documents/notes
-function notes()
-{
-  # If there is no "notes" window, rename the current one
-  if [[ -n "$TMUX" ]]; then
-    has_notes_window=$(tmux list-windows | grep notes)
-    [ "$has_notes_window" ] || tmux rename-window "notes"
-  fi
+alias notes="cd $NOTES_PATH && $EDITOR -c NotesStart && cd -"
 
-  eval PWD=$NOTES_PATH $EDITOR -c "NotesStart"
-}
-
-alias colorlight="~/dot-files/scripts/base16-github.sh"
-alias colordark="~/dot-files/scripts/base16-tomorrow-night.sh"
 alias nvi="~/Downloads/nvim-macos-arm64/bin/nvim"
 alias nnvim="~/Downloads/nvim-nightly/bin/nvim"
 
-function cdf()
-{
-    cd "$(fd --type d --exclude node_modules | fzf)"
-}
-function cdF()
-{
-    cd "$(fd --type d --no-ignore --exclude node_modules | fzf)"
-}
+function _download_nvim_impl() {
+    local name=$1
+    local version=$2
 
-function repo_url()
-{
-    # get origin
-    # - git@github.foobar.com:user/repo.git
-    # - https://github.foobar.com:user/repo
-    #
-    # 1. replace `:` between host and user
-    # 2. remove `git@` in the beginning if present
-    # 3. remove `.git` in the end if present
-    # 4. remove `:` in the protocol if it was affected by step 1
-    git config remote.origin.url \
-        | sed 's/:/\//' \
-        | sed -re 's/^git@/https:\/\//g' \
-        | sed 's/\.git$//' \
-        | sed 's/^https\//https:/'
-}
-
-# brew_upgrade_outdated
-function bu() {
-    brew update --quiet
-    # List outdated packages and use fzf to allow the user to select multiple packages
-    local packages_to_upgrade=$(brew outdated --quiet | fzf --multi --border --prompt "Select packages to upgrade: " | awk '{printf "%s ", $1}')
-    # Check if the user selected any packages
-    if [[ -n "$packages_to_upgrade" ]]; then
-        # Upgrade the selected packages in one command
-        echo "Upgrading selected packages: $packages_to_upgrade"
-        eval brew upgrade --quiet "$packages_to_upgrade"
-    else
-        echo "No packages selected for upgrade."
-    fi
-}
-alias bua="brew update --all && brew upgrade && brew cleanup --quiet"
-function docker_stop_all() {
-    docker stop $(docker ps -q)
-}
-
-function get_nvim_nightly() {
     local old_pwd=$(pwd)
     cd ~/Downloads
     # clean up if it exists already
-    rm -rf ./nvim-macos-arm64.tar.gz ./nvim-macos-arm64 ./nvim-nightly
+    rm -rf ./nvim-macos-arm64.tar.gz ./nvim-macos-arm64 ./"$name"
     # download tar with build
-    wget --quiet https://github.com/neovim/neovim/releases/download/nightly/nvim-macos-arm64.tar.gz && echo "- Downloaded"
+    wget --quiet https://github.com/neovim/neovim/releases/download/"$version"/nvim-macos-arm64.tar.gz && echo "- Downloaded"
     # to avoid "unknown developer" warning
     xattr -c ./nvim-macos-arm64.tar.gz > /dev/null 2>&1 && echo "- Removed attributes"
     # extract
     tar xzvf nvim-macos-arm64.tar.gz > /dev/null 2>&1 && echo "- Extracted"
-    mv nvim-macos-arm64 nvim-nightly
-    ~/Downloads/nvim-nightly/bin/nvim --version | grep 'NVIM v'
+    mv nvim-macos-arm64 "$name"
+    ~/Downloads/"$name"/bin/nvim --version | grep 'NVIM v'
     # print archive date
     echo "Build from: $(ls -l ~/Downloads/nvim-macos-arm64.tar.gz | awk '{print $6, $7, $8}')"
     cd $old_pwd
 }
 
-function get_nvim() {
-    local old_pwd=$(pwd)
-    cd ~/Downloads
-    # clean up if it exists already
-    rm -rf ./nvim-macos-arm64.tar.gz ./nvim-macos-arm64 ./nvim
-    # download tar with build
-    wget --quiet https://github.com/neovim/neovim/releases/download/v0.10.0/nvim-macos-arm64.tar.gz && echo "- Downloaded"
-    # to avoid "unknown developer" warning
-    xattr -c ./nvim-macos-arm64.tar.gz > /dev/null 2>&1 && echo "- Removed attributes"
-    # extract
-    tar xzvf nvim-macos-arm64.tar.gz > /dev/null 2>&1 && echo "- Extracted"
-    mv nvim-macos-arm64 nvim
-    ~/Downloads/nvim/bin/nvim --version | grep 'NVIM v'
-    # print archive date
-    echo "Build from: $(ls -l ~/Downloads/nvim-macos-arm64.tar.gz | awk '{print $6, $7, $8}')"
-    cd $old_pwd
-}
+alias get_nvim_nightly="_download_nvim_impl nvim-nightly nightly"
+alias get_nvim="_download_nvim_impl nvim v0.10.4"
