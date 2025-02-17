@@ -38,7 +38,7 @@ require('lazy').setup({
                         },
                     },
                 },
-                layout = { preset = 'telescope' },
+                layout = 'telescope',
                 icons = {
                     files = { enabled = false },
                 },
@@ -147,6 +147,14 @@ require('lazy').setup({
                 ['<C-u>'] = { 'snippet_backward', 'fallback' },
                 ['<C-k>'] = { 'scroll_documentation_up' },
                 ['<C-j>'] = { 'scroll_documentation_down' },
+            },
+            cmdline = {
+                keymap = {
+                    ['<tab>'] = { 'select_next', 'fallback' },
+                    ['<C-n>'] = { 'select_next' },
+                    ['<s-tab>'] = { 'select_prev' },
+                    ['<C-p>'] = { 'select_prev' },
+                },
             },
             completion = {
                 menu = {
