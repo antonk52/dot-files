@@ -26,12 +26,8 @@ require('lazy').setup({
         'folke/snacks.nvim',
         opts = {
             indent = {
-                indent = {
-                    hl = 'Whitespace',
-                    only_current = false,
-                },
-                scope = { hl = 'NonText' },
-                animate = { enabled = false },
+                indent = { hl = 'Whitespace' },
+                scope = { enabled = false },
             },
             bigfile = { enabled = true },
             picker = {
