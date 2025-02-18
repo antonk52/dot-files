@@ -4,7 +4,6 @@ vim.g.maplocalleader = ','
 
 local usercmd = vim.api.nvim_create_user_command
 local keymap = vim.keymap
-local has_nvim_0_11 = vim.fn.has('nvim-0.11') == 1
 
 -- Bootstrap lazy.nvim plugin manager {{{1
 local PLUGINS_LOCATION = vim.fs.normalize('~/dot-files/nvim/plugged')
@@ -298,10 +297,6 @@ require('lazy').setup({
         event = 'VeryLazy',
     },
     {
-        'justinmk/vim-dirvish', -- project file viewer
-        cond = not has_nvim_0_11,
-    },
-    {
         'nvim-treesitter/nvim-treesitter',
         build = ':TSUpdate',
         event = 'BufReadPre',
@@ -356,9 +351,9 @@ require('lazy').setup({
                 'gzip',
                 'logipat',
                 'man',
-                'netrw',
+                -- 'netrw',
                 'netrwFileHandlers',
-                'netrwPlugin',
+                -- 'netrwPlugin',
                 'netrwSettings',
                 'rplugin', -- remote plugins
                 'rrhelper',
@@ -398,10 +393,6 @@ vim.g.loaded_perl_provider = 0
 
 -- netrw: avoid mapping gx in netrw as for conflict reasons
 vim.g.netrw_nogx = 1
-
--- dirvish: folders on top
-vim.g.dirvish_mode = ':sort ,^\\v(.*[\\/])|\\ze,'
-vim.g.dirvish_relative_paths = 1
 
 -- Defaults {{{1
 -- highlight current cursor line
@@ -447,6 +438,7 @@ vim.opt.synmaxcol = 300
 
 vim.cmd.color('lake_contrast')
 
+keymap.set('n', '-', '<cmd>Explore<cr>', { desc = 'Open file explorer' })
 keymap.set('n', '<C-s>', '<cmd>lua vim.lsp.buf.signature_help()<cr>', { desc = 'Signature help' })
 keymap.set('n', '<leader>R', vim.lsp.buf.rename, { desc = 'Rename' })
 keymap.set('n', '<leader>L', vim.diagnostic.open_float, { desc = 'Line diagnostic' })
@@ -485,10 +477,6 @@ keymap.set('n', '<tab>', 'za', { desc = 'toggle folds' })
 keymap.set('v', '<', '<gv')
 keymap.set('v', '>', '>gv')
 
--- TODO: toggle comments
--- keymap.set('n', '<C-_>', 'gcc', { remap = true })
--- keymap.set('x', '<C-_>', 'gc', { remap = true })
-
 keymap.set({ 'n', 'x' }, '<leader>a', '^', { desc = 'go to line start' })
 keymap.set({ 'n', 'x' }, '<leader>e', '$', { desc = 'go to line end ($ is too far)' })
 
@@ -497,7 +485,7 @@ keymap.set('n', '<localleader>T', '<cmd>tabclose<cr>', { desc = 'Close tab' })
 keymap.set('t', '<esc><esc>', '<c-\\><c-n>', { desc = 'exit term buffer' })
 
 -- Commands {{{1
-vim.api.nvim_create_user_command('ToggleRusKeymap', function()
+usercmd('ToggleRusKeymap', function()
     local x = 'russian-jcukenmac'
     vim.opt.keymap = vim.o.keymap == x and '' or x
     vim.notify('Toggle back in insert mode CTRL+SHIFT+6')
@@ -559,26 +547,6 @@ vim.api.nvim_create_autocmd('FileType', {
         end
     end,
 })
-
-if has_nvim_0_11 then
-    vim.api.nvim_create_autocmd('BufWinEnter', {
-        pattern = '*',
-        group = vim.api.nvim_create_augroup('FileExplorer', {}),
-        callback = function(args)
-            if vim.bo.filetype == 'directory' then
-                return
-            end
-
-            local type = (vim.uv.fs_stat(args.file) or {}).type
-            if type == 'directory' then
-                vim.schedule(function()
-                    require('tree').open(args.file)
-                end)
-            end
-        end,
-    })
-    vim.keymap.set('n', '-', '<cmd>lua require("tree").open()<cr>', { desc = 'Open file explorer' })
-end
 
 require('antonk52.statusline').setup()
 -- vim.opt.statusline = ' %m%r %f %= %p%%  %l:%c  '

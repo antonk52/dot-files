@@ -10,9 +10,8 @@
   "nvim-treesitter": { "branch": "master", "commit": "1a6e42bb8c5c23d8e2c0acb842dcacac5ee06761" },
   "plenary.nvim": { "branch": "master", "commit": "857c5ac632080dba10aae49dba902ce3abf91b35" },
   "schemastore.nvim": { "branch": "main", "commit": "6d840a01545b9be71c45843f2aabcc384d4fafbf" },
-  "snacks.nvim": { "branch": "main", "commit": "526896ad3e736786c4520efce6f97c831677ca69" },
+  "snacks.nvim": { "branch": "main", "commit": "2ee64887c2be80c6b7b8fac4bb0617c827fde0d0" },
   "telescope.nvim": { "branch": "master", "commit": "78857db9e8d819d3cc1a9a7bdc1d39d127a36495" },
   "ts-comments.nvim": { "branch": "main", "commit": "872dcfa0418f4a33b7437fb4d9f4e89f2f000d74" },
-  "vim-dirvish": { "branch": "master", "commit": "5d1d1ef45c6161af14c7d3d3097057e8fb5ac257" },
   "vim-fugitive": { "branch": "master", "commit": "b068eaf1e6cbe35d1ac100d435cd7f7b74a5c87d" }
 }
