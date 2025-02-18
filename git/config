@@ -21,7 +21,9 @@
     l = log -n 100
     s = status -s
     p = add -p
-    d = diff -w
+    # highlight diff on word level
+    # change what is a word to either be alphanumeric sequence or every single character is a word
+    d = diff --color-words="([a-zA-Z0-9]+|.)"
     dd = diff
     patch = add -p
     # get origin
@@ -47,8 +49,6 @@
     path = ~/Documents/dev/work/.gitconfig
 [branch]
     sort = -committerdate
-[pager]
-    diff = delta --diff-highlight --tabs 4 # display tabs as 4 spces
 [init]
     defaultBranch = main
 [merge]
