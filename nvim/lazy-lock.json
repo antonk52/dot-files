@@ -7,10 +7,10 @@
   "none-ls.nvim": { "branch": "main", "commit": "f41624ea1a73f020ddbd33438f74abb95ea17d55" },
   "npm_scripts.nvim": { "branch": "main", "commit": "3bade6568f8a698799dc8e5e8da3bd0307ed04b9" },
   "nvim-lspconfig": { "branch": "master", "commit": "1110787f1b464888c59a044c48c5119d14078044" },
-  "nvim-treesitter": { "branch": "master", "commit": "1a6e42bb8c5c23d8e2c0acb842dcacac5ee06761" },
+  "nvim-treesitter": { "branch": "master", "commit": "36bbf518420918e965d11dad3d3f194803c47731" },
   "plenary.nvim": { "branch": "master", "commit": "857c5ac632080dba10aae49dba902ce3abf91b35" },
-  "schemastore.nvim": { "branch": "main", "commit": "6d840a01545b9be71c45843f2aabcc384d4fafbf" },
-  "snacks.nvim": { "branch": "main", "commit": "2ee64887c2be80c6b7b8fac4bb0617c827fde0d0" },
+  "schemastore.nvim": { "branch": "main", "commit": "6c40d8a0874201d7f91599102864573bdd191859" },
+  "snacks.nvim": { "branch": "main", "commit": "08c2eaf369fc6bf84de3cb8da510982c9281d552" },
   "telescope.nvim": { "branch": "master", "commit": "78857db9e8d819d3cc1a9a7bdc1d39d127a36495" },
   "ts-comments.nvim": { "branch": "main", "commit": "872dcfa0418f4a33b7437fb4d9f4e89f2f000d74" },
   "vim-fugitive": { "branch": "master", "commit": "b068eaf1e6cbe35d1ac100d435cd7f7b74a5c87d" }
