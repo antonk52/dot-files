@@ -579,7 +579,7 @@ vim.defer_fn(function()
 
         layouts.telescope = copy
 
-        local overrides = { layout = { width = 100, min_height = 28 }, preview = false }
+        local overrides = { layout = { width = 80, min_height = 9, height = 0.6 }, preview = false }
         layouts.select = vim.tbl_deep_extend('force', {}, copy, overrides)
     end)
 end, 100)

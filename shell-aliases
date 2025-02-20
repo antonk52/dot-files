@@ -59,17 +59,15 @@ tm() {
 
 # other aliases
 alias e='exit'
-alias o='open .'
+alias o='open'
 alias ax='chmod a+x'
 alias h='eval $(history | fzf +s --tac --tiebreak=index | sed "s/ *[0-9]* *//")'
 alias q='quit'
-alias chux='chmod u+x'
 alias docker_stop_all='docker stop "$(docker ps -q)"'
 
 export NOTES_PATH="$HOME"/Documents/notes
 alias notes="cd $NOTES_PATH && $EDITOR -c NotesStart && cd -"
 
-alias nvi="~/Downloads/nvim-macos-arm64/bin/nvim"
 alias nnvim="~/Downloads/nvim-nightly/bin/nvim"
 
 function _download_nvim_impl() {
