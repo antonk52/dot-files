@@ -491,7 +491,7 @@ usercmd('ToggleRusKeymap', function()
     vim.opt.keymap = vim.o.keymap == x and '' or x
     vim.notify('Toggle back in insert mode CTRL+SHIFT+6')
 end, { nargs = 0 })
-usercmd('NotesStart', "=vim.defer_fn(require('antonk52.notes').setup, 5)", {})
+usercmd('NotesStart', "=require('antonk52.notes').setup()", {})
 usercmd('NoteToday', '=require("antonk52.notes").note_month_now()', {})
 usercmd('ColorLight', ':color lightest', {})
 usercmd('ColorDark', ':color lake_contrast', {})

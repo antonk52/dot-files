@@ -1,8 +1,10 @@
 local M = {}
 
 function M.setup()
-    vim.cmd.cd(vim.env.NOTES_PATH)
     vim.opt.shiftwidth = 2
+    vim.cmd.cd(vim.env.NOTES_PATH)
+
+    M.note_month_now()
 
     if vim.env.TMUX then
         vim.system({ 'tmux', 'rename-window', 'notes' })
@@ -22,8 +24,6 @@ function M.setup()
             end
         end,
     })
-
-    M.note_month_now()
 end
 
 function M.note_month_now()
