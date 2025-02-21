@@ -205,16 +205,6 @@ require('lazy').setup({
         opts = {},
     },
     {
-        'antonk52/npm_scripts.nvim',
-        keys = {
-            {
-                '<leader>N',
-                '<cmd>lua require("npm_scripts").run_from_all()<cr>',
-                desc = 'Run npm script',
-            },
-        },
-    },
-    {
         'folke/ts-comments.nvim',
         opts = {},
         event = 'VeryLazy',
@@ -451,6 +441,7 @@ keymap.set('n', '[e', function()
     vim.diagnostic.goto_prev({ severity = vim.diagnostic.severity.ERROR })
 end, { desc = 'Prev error diagnostic' })
 
+keymap.set('n', '<leader>N', '<cmd>lua require("ak_npm").run()<cr>', { desc = 'Run npm scripts' })
 keymap.set('n', '<localleader>t', '<cmd>tabnew | terminal<cr>', { desc = 'Open new terminal' })
 
 -- nvim 0.6 maps Y to yank till the end of the line,
@@ -477,9 +468,6 @@ keymap.set('n', '<tab>', 'za', { desc = 'toggle folds' })
 -- indentation shifts keep selection(`=` should still be preferred)
 keymap.set('v', '<', '<gv')
 keymap.set('v', '>', '>gv')
-
-keymap.set({ 'n', 'x' }, '<leader>a', '^', { desc = 'go to line start' })
-keymap.set({ 'n', 'x' }, '<leader>e', '$', { desc = 'go to line end ($ is too far)' })
 
 keymap.set('n', '<C-t>', '<cmd>tabedit<CR>', { desc = 'Open a new tab' })
 keymap.set('n', '<localleader>T', '<cmd>tabclose<cr>', { desc = 'Close tab' })
