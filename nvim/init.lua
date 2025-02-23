@@ -384,6 +384,8 @@ vim.g.loaded_perl_provider = 0
 -- netrw: avoid mapping gx in netrw as for conflict reasons
 vim.g.netrw_nogx = 1
 vim.g.netrw_banner = 0
+vim.g.netrw_list_hide = '^\\./$,^\\.\\./$'
+vim.g.netrw_hide = 1
 
 -- Defaults {{{1
 -- highlight current cursor line
