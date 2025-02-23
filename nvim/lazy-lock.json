@@ -8,7 +8,7 @@
   "nvim-lspconfig": { "branch": "master", "commit": "9e932edb0af4e20880685ddb96a231669fbe8091" },
   "nvim-treesitter": { "branch": "master", "commit": "f2bd62c6568de54ca1b8fb0a8de04a41442934cb" },
   "plenary.nvim": { "branch": "master", "commit": "857c5ac632080dba10aae49dba902ce3abf91b35" },
-  "schemastore.nvim": { "branch": "main", "commit": "a72f390eafa06abed53427a29bf073d69199d9cf" },
+  "schemastore.nvim": { "branch": "main", "commit": "503f3221543d4fe897d600f66816cc54c4bf825f" },
   "snacks.nvim": { "branch": "main", "commit": "70e7e081ee558eb3756aba02491f1bc84fb72ab0" },
   "telescope.nvim": { "branch": "master", "commit": "78857db9e8d819d3cc1a9a7bdc1d39d127a36495" },
   "ts-comments.nvim": { "branch": "main", "commit": "872dcfa0418f4a33b7437fb4d9f4e89f2f000d74" },
