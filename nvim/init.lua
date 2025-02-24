@@ -212,6 +212,7 @@ require('lazy').setup({
     {
         'nvim-telescope/telescope.nvim',
         cond = vim.env.WORK ~= nil,
+        event = 'VeryLazy',
         dependencies = { 'nvim-lua/plenary.nvim' },
         opts = {
             defaults = {

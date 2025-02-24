@@ -5,8 +5,8 @@ vim.g.colors_name = 'lightest'
 vim.opt.background = 'light'
 
 local colors = {
-    light_1 = '#e5e5e5',
-    light_2 = '#cccccc',
+    light_1 = '#eaeaea',
+    light_2 = '#d0d0d0',
     light_3 = '#bbbbbb',
     light_4 = '#999999',
     dark_1 = '#888888',
@@ -47,7 +47,7 @@ local groups = {
     Conceal = { bg = colors.light_2 },
     Pmenu = { fg = colors.dark_4, bg = colors.light_2 },
     -- TermCursor = { gui = 'reverse' },
-    CursorLine = { bg = colors.light_3 },
+    CursorLine = { bg = colors.light_2 },
     CursorColumn = { link = 'CursorLine' },
     ColorColumn = { link = 'CursorLine' },
     WinSeparator = { fg = colors.dark_1 },
