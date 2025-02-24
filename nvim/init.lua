@@ -541,6 +541,49 @@ vim.api.nvim_create_autocmd('FileType', {
     end,
 })
 
+vim.api.nvim_create_autocmd('FileType', {
+    desc = 'Additional fs manipulation in netrw',
+    pattern = 'netrw',
+    callback = function()
+        keymap.set('n', 'A', function()
+            local current = vim.fn.expand('%:p')
+            if current == '' then
+                current = vim.fn.getcwd()
+            end
+            local new = vim.fn.input('Name: ', current, 'file')
+            if not new or new == '' then
+                return
+            end
+
+            if vim.endswith(new, '/') then
+                vim.fn.mkdir(new, 'p')
+            else
+                vim.fn.mkdir(vim.fs.dirname(new), 'p')
+                vim.fn.writefile({}, new)
+            end
+        end, { desc = 'Add item' })
+        keymap.set('n', 'C', function()
+            local current_dir = vim.api.nvim_buf_get_name(0)
+            if current_dir == '' then
+                current_dir = vim.fn.getcwd()
+            end
+            local line = vim.api.nvim_get_current_line()
+            if line == '' or line == '.' or line == '..' then
+                return
+            end
+            local existing_path = vim.fs.joinpath(current_dir, line)
+
+            local target_path = vim.fn.input('Copy to: ', existing_path, 'file')
+            if not target_path or target_path == '' then
+                return
+            end
+
+            vim.fn.mkdir(vim.fs.dirname(target_path), 'p')
+            vim.system({ 'cp', '-r', existing_path, target_path }):wait()
+        end, { desc = 'Copy item' })
+    end,
+})
+
 require('antonk52.statusline').setup()
 -- vim.opt.statusline = ' %m%r %f %= %p%%  %l:%c  '
 require('antonk52.infer_shiftwidth').setup()
