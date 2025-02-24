@@ -75,6 +75,7 @@ require('lazy').setup({
             { '<leader>T', '<cmd>lua Snacks.picker.pick()<cr>' },
             { '<leader>u', '<cmd>lua Snacks.picker.undo()<cr>' },
             { '<leader>d', '<cmd>lua Snacks.picker.diagnostics()<cr>' },
+            { '<leader>z', '<cmd>lua Snacks.zen.zen({toggles={dim=false},win={width=100}})<cr>' },
             { '<leader>;', '<cmd>lua Snacks.picker.commands({layout="select"})<cr>' },
             {
                 '<leader>:',
