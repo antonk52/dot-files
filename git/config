@@ -9,6 +9,7 @@
 [push]
     default = current
     autoSetupRemote = true
+    followTags = true
 [pull]
     default = current
 [filter "lfs"]
@@ -53,5 +54,26 @@
     defaultBranch = main
 [merge]
     conflictStyle = diff3
+[diff]
+    algorithm = histogram
+    colorMoved = plain
+    mnemonicPrefix = true
+    renames = true
+[fetch]
+    prune = true
+    pruneTags = true
+    all = true
+[help]
+    autocorrect = prompt
+[commit]
+    verbose = true
+# recorded resolutions on long rebases
+[rerere]
+    enabled = true
+    autoupdate = true
+[rebase]
+    autoSquash = true
+    autoStash = true
+    updateRefs = true
 [include]
     path = ~/.config/git/private/config

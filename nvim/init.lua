@@ -561,7 +561,7 @@ vim.api.nvim_create_autocmd('FileType', {
                 vim.fn.mkdir(vim.fs.dirname(new), 'p')
                 vim.fn.writefile({}, new)
             end
-        end, { desc = 'Add item' })
+        end, { buffer = true, desc = 'Add item' })
         keymap.set('n', 'C', function()
             local current_dir = vim.api.nvim_buf_get_name(0)
             if current_dir == '' then
@@ -580,7 +580,7 @@ vim.api.nvim_create_autocmd('FileType', {
 
             vim.fn.mkdir(vim.fs.dirname(target_path), 'p')
             vim.system({ 'cp', '-r', existing_path, target_path }):wait()
-        end, { desc = 'Copy item' })
+        end, { buffer = true, desc = 'Copy item' })
     end,
 })
 
