@@ -148,15 +148,28 @@ local RESIZE_MIN_WIDTH = 300
 
 local resize_utils = {}
 
+---@param value integer
+---@param target integer
+---@return boolean
+local function is_close_to(value, target)
+    local step = 10
+    if value == target then
+        return true
+    elseif value >= (target - step) and value <= (target + step) then
+        return true
+    end
+    return false
+end
+
 ---@param frame {x: number, y: number, w: number, h: number}
 ---@param screenFrame {x: number, y: number, w: number, h: number}
 ---@return 'left' | 'right' | 'center' | nil
 function resize_utils.get_align(frame, screenFrame)
     if frame.x == 0 then
         return 'left'
-    elseif frame.x + frame.w == screenFrame.w then
+    elseif is_close_to(frame.x + frame.w, screenFrame.w) then
         return 'right'
-    elseif frame.x + frame.w == screenFrame.w / 2 then
+    elseif is_close_to(frame.x + frame.w, screenFrame.w / 2) then
         return 'center'
     end
 end
