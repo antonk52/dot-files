@@ -24,11 +24,11 @@ M.servers = {
 
     -- tsserver
     ts_ls = {
-        settings = {
-            completions = { completeFunctionCalls = true },
-            -- typescript = ts_lang_options,
-            -- javascript = ts_lang_options,
-        },
+        -- settings = {
+        --     completions = { completeFunctionCalls = true },
+        --     -- typescript = ts_lang_options,
+        --     -- javascript = ts_lang_options,
+        -- },
     },
 
     -- https://github.com/hrsh7th/vscode-langservers-extracted
@@ -161,17 +161,11 @@ function M.setup()
     local ms = lsp.protocol.Methods
 
     if vim.fn.has('nvim-0.11') == 1 then
-        local _hover = vim.lsp.buf.hover
-        vim.lsp.buf.hover = function(opts)
+        local _open_floating_preview = vim.lsp.util.open_floating_preview
+        vim.lsp.util.open_floating_preview = function(contents, syntax, opts, ...)
             opts = opts or {}
             opts.border = opts.border or 'single'
-            _hover(opts)
-        end
-        local _signature_help = vim.lsp.buf.signature_help
-        vim.lsp.buf.signature_help = function(opts)
-            opts = opts or {}
-            opts.border = opts.border or 'single'
-            _signature_help(opts)
+            return _open_floating_preview(contents, syntax, opts, ...)
         end
     else
         -- add border to popups
