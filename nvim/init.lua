@@ -445,7 +445,14 @@ vim.opt.synmaxcol = 300
 
 vim.cmd.color('lake_contrast')
 
-keymap.set('n', '-', '<cmd>Explore<cr>', { desc = 'Open file explorer' })
+keymap.set('n', '-', function()
+    local basename = vim.fs.basename(vim.api.nvim_buf_get_name(0))
+    vim.cmd('Explore')
+    vim.schedule(function()
+        -- focus current buffer if present
+        vim.fn.search(basename)
+    end)
+end, { silent = true, desc = 'Open netrw, focus current item' })
 keymap.set('n', '<C-s>', '<cmd>lua vim.lsp.buf.signature_help()<cr>', { desc = 'Signature help' })
 keymap.set('n', '<leader>R', vim.lsp.buf.rename, { desc = 'Rename' })
 keymap.set('n', '<leader>L', vim.diagnostic.open_float, { desc = 'Line diagnostic' })
