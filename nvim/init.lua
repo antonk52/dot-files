@@ -121,6 +121,19 @@ require('lazy').setup({
         event = 'VeryLazy',
     },
     {
+        'olimorris/codecompanion.nvim',
+        opts = {},
+        dependencies = {
+            'nvim-lua/plenary.nvim',
+            'nvim-treesitter/nvim-treesitter',
+        },
+        enabled = vim.env.WORK == nil,
+        event = 'VeryLazy',
+        keys = {
+            { '<leader>i', ':CodeCompanion ', mode = { 'n', 'x' } },
+        },
+    },
+    {
         'tpope/vim-fugitive',
         init = function()
             vim.g.fugitive_legacy_commands = 0
@@ -152,11 +165,10 @@ require('lazy').setup({
                 ['<C-j>'] = { 'scroll_documentation_down' },
             },
             cmdline = {
-                keymap = {
-                    ['<tab>'] = { 'select_next', 'fallback' },
-                    ['<C-n>'] = { 'select_next' },
-                    ['<s-tab>'] = { 'select_prev' },
-                    ['<C-p>'] = { 'select_prev' },
+                completion = {
+                    menu = {
+                        auto_show = true,
+                    },
                 },
             },
             completion = {
