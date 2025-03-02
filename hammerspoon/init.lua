@@ -163,14 +163,17 @@ end
 
 ---@param frame {x: number, y: number, w: number, h: number}
 ---@param screenFrame {x: number, y: number, w: number, h: number}
----@return 'left' | 'right' | 'center' | nil
+---@return 'left' | 'right' | 'center'
 function resize_utils.get_align(frame, screenFrame)
-    if frame.x == 0 then
-        return 'left'
-    elseif is_close_to(frame.x + frame.w, screenFrame.w) then
-        return 'right'
-    elseif is_close_to(frame.x + frame.w, screenFrame.w / 2) then
+    local space_left = frame.x
+    local space_right = screenFrame.w - (frame.x + frame.w)
+
+    if is_close_to(space_left, space_right) then
         return 'center'
+    elseif is_close_to(frame.x, 0) then
+        return 'left'
+    else
+        return 'right'
     end
 end
 
@@ -202,8 +205,9 @@ local function increase_win_width()
         -- hs.alert.show('Calling align and resize', nil, nil, 0.1)
         local align = resize_utils.get_align(frame, screen_frame)
 
-        if align == 'center' and screen_frame.w - new_width > RESIZE_DELTA then
-            frame.x = frame.x - RESIZE_DELTA / 2
+        if align == 'center' then
+            -- make sure the window is no lager than current screen
+            frame.x = math.min(frame.x - (RESIZE_DELTA / 2), screen_frame.w)
         elseif align == 'right' then
             frame.x = frame.x - RESIZE_DELTA
         else
