@@ -24,6 +24,7 @@ require('lazy').setup({
     {
         'folke/snacks.nvim',
         opts = {
+            image = {},
             indent = {
                 indent = { hl = 'Whitespace' },
                 scope = { enabled = false },

@@ -35,6 +35,7 @@ brew install git-absorb # just like mercurial absorb, but call with `--and-rebas
 brew install git-lfs # github large file storage
 brew install gnu-sed # used by neovim
 brew install htop # top but better
+brew install imagemagick # image manipulation
 brew install jq # cli for working with json
 brew install lua-language-server
 brew install luacheck # lua linter
@@ -48,6 +49,7 @@ brew install ripgrep
 brew install selene # lua formatter
 brew install tmux # terminal multiplexer
 brew install tree # cli to display directories as trees
+brew install vapoursynth-imwri # vapoursynth image writer
 brew install wget # cli to download stuff
 brew install yarn # npm alternative
 brew install zsh # updated version
