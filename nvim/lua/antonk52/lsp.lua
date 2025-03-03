@@ -18,7 +18,10 @@ local M = {}
 -- }
 
 M.servers = {
-    flow = {},
+    flow = {
+        -- only run globally installed flow
+        cmd = { 'flow', 'lsp' },
+    },
     hhvm = {},
     gopls = {},
 
