@@ -564,6 +564,10 @@ vim.api.nvim_create_autocmd('FileType', {
     desc = 'Additional fs manipulation in netrw',
     pattern = 'netrw',
     callback = function()
+        local function update_netrw()
+            local escaped = vim.api.nvim_replace_termcodes('<C-l>', true, false, true)
+            vim.api.nvim_feedkeys(escaped, 'm', true)
+        end
         keymap.set('n', 'A', function()
             local current = vim.fn.expand('%:p')
             if current == '' then
@@ -580,6 +584,11 @@ vim.api.nvim_create_autocmd('FileType', {
                 vim.fn.mkdir(vim.fs.dirname(new), 'p')
                 vim.fn.writefile({}, new)
             end
+            update_netrw()
+            -- focus added item
+            vim.schedule(function()
+                vim.fn.search(vim.fs.basename(new))
+            end)
         end, { buffer = true, desc = 'Add item' })
         keymap.set('n', 'C', function()
             local current_dir = vim.api.nvim_buf_get_name(0)
@@ -599,6 +608,7 @@ vim.api.nvim_create_autocmd('FileType', {
 
             vim.fn.mkdir(vim.fs.dirname(target_path), 'p')
             vim.system({ 'cp', '-r', existing_path, target_path }):wait()
+            update_netrw()
         end, { buffer = true, desc = 'Copy item' })
     end,
 })
