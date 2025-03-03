@@ -217,7 +217,8 @@ local function increase_win_width()
 
     -- Set the new frame with the increased width
     frame.w = new_width
-    win:setFrame(frame, 0)
+    -- win:setFrame(frame, 0.02)
+    win:setFrameWithWorkarounds(frame, 0.02)
 end
 
 local function decrease_win_width()
@@ -254,7 +255,8 @@ local function decrease_win_width()
 
     -- Set the new frame with the increased width
     frame.w = new_width
-    win:setFrame(frame, 0)
+    -- win:setFrame(frame, 0.02)
+    win:setFrameWithWorkarounds(frame, 0.02)
 end
 
 hs.hotkey.bind(HYPER_KEY, 'o', increase_win_width)
