@@ -8,6 +8,9 @@ hs.alert.defaultStyle.fadeOutDuration = 0
 
 hs.hotkey.bind(HYPER_KEY, 'R', hs.reload)
 
+-- disable window animation (moving or resizing)
+hs.window.animationDuration = 0
+
 -- ===================================================
 --    Focus between windows in the current workspace
 -- ===================================================
@@ -217,8 +220,8 @@ local function increase_win_width()
 
     -- Set the new frame with the increased width
     frame.w = new_width
-    -- win:setFrame(frame, 0.02)
-    win:setFrameWithWorkarounds(frame, 0.02)
+    win:setFrame(frame)
+    -- win:setFrameWithWorkarounds(frame)
 end
 
 local function decrease_win_width()
@@ -255,8 +258,8 @@ local function decrease_win_width()
 
     -- Set the new frame with the increased width
     frame.w = new_width
-    -- win:setFrame(frame, 0.02)
-    win:setFrameWithWorkarounds(frame, 0.02)
+    win:setFrame(frame)
+    -- win:setFrameWithWorkarounds(frame)
 end
 
 hs.hotkey.bind(HYPER_KEY, 'o', increase_win_width)
