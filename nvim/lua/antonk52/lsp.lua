@@ -58,7 +58,7 @@ M.servers = {
     biome = {},
     eslint = {},
 
-    marksman = {},
+    -- marksman = {},
 
     tailwindcss = {},
 

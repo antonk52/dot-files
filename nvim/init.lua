@@ -220,6 +220,8 @@ require('lazy').setup({
     },
     {
         'folke/ts-comments.nvim',
+        -- Can be removed after 0.11 release
+        cond = vim.fn.has('0.11') == 0,
         opts = {},
         event = 'VeryLazy',
     },
