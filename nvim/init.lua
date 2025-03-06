@@ -156,8 +156,11 @@ require('lazy').setup({
         event = 'BufReadPre',
     },
     {
-        'saghen/blink.cmp',
-        version = 'v0.*',
+        -- 'saghen/blink.cmp',
+        -- version = 'v0.*',
+        -- dir = '/Users/antonk52/Documents/dev/personal/blink.cmp',
+        'antonk52/blink.cmp',
+        branch = 'feat/large-buf-lua-async-completion',
         opts = {
             keymap = {
                 ['<C-o>'] = { 'select_and_accept', 'snippet_forward', 'fallback' },
@@ -203,13 +206,7 @@ require('lazy').setup({
                 },
             },
             signature = { enabled = true },
-            fuzzy = (vim.env.WORK ~= nil and vim.env.WORK_TS_PROXY ~= nil)
-                    and {
-                        prebuilt_binaries = {
-                            extra_curl_args = { '--proxy', vim.env.WORK_TS_PROXY },
-                        },
-                    }
-                or nil,
+            fuzzy = { implementation = 'lua' },
         },
         event = 'BufReadPre',
     },
