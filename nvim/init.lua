@@ -251,9 +251,8 @@ require('lazy').setup({
     {
         'echasnovski/mini.nvim',
         config = function()
-            require('mini.bracketed').setup({
-                file = { suffix = '' }, -- disabled file navigation
-            })
+            -- disabled file navigation
+            require('mini.bracketed').setup({ file = { suffix = '' } })
             require('mini.pairs').setup() -- autoclose ([{
             require('mini.cursorword').setup({ delay = 300 })
             require('mini.splitjoin').setup() -- gS to toggle listy things
@@ -283,6 +282,7 @@ require('lazy').setup({
                     ['('] = { output = { left = '(', right = ')' } },
                     ['['] = { output = { left = '[', right = ']' } },
                     ['{'] = { output = { left = '{', right = '}' } },
+                    ['<'] = { output = { left = '<', right = '>' } },
                 },
             })
             if vim.fs.root(0, '.git') ~= nil then
