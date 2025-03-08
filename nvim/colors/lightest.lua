@@ -14,11 +14,11 @@ local colors = {
     dark_3 = '#333333',
     dark_4 = '#111111',
     red = '#aa0000',
-    yellow = '#ae9700',
+    yellow = '#705d00',
     green = '#00651a',
     blue_light = '#00b8c2',
     blue_dark = '#002dc2',
-    purple = '#c69cbe',
+    purple = '#4d1542',
 }
 
 ---@type table<string, vim.api.keyset.highlight>
@@ -63,14 +63,14 @@ local groups = {
     Changed = { fg = colors.blue_light },
     Removed = { fg = colors.red },
 
-    Statement = { fg = colors.dark_3 },
+    Statement = { fg = colors.purple },
     Operator = { fg = colors.dark_3 },
     Comment = { fg = colors.dark_1 },
     Variable = { fg = colors.dark_4 },
     PreProc = { fg = colors.dark_3 },
     Define = { fg = colors.dark_4 },
     Constant = { fg = colors.dark_4 },
-    Function = { fg = colors.dark_4 },
+    Function = { fg = colors.purple },
     Special = { fg = colors.dark_4 },
     String = { fg = colors.green },
     Identifier = { fg = colors.dark_4 },

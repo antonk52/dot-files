@@ -39,12 +39,8 @@ require('lazy').setup({
                     },
                 },
                 layout = 'telescope',
-                icons = {
-                    files = { enabled = false },
-                },
-                formatters = {
-                    file = { truncate = 120 },
-                },
+                icons = { files = { enabled = false } },
+                formatters = { file = { truncate = 120 } },
                 actions = {
                     -- immediately execute the command if it doesn't require any arguments
                     cmd = function(picker, item)
@@ -130,9 +126,7 @@ require('lazy').setup({
         },
         enabled = vim.env.WORK == nil,
         event = 'VeryLazy',
-        keys = {
-            { '<leader>i', ':CodeCompanion ', mode = { 'n', 'x' } },
-        },
+        keys = { { '<leader>i', ':CodeCompanion ', mode = { 'n', 'x' } } },
     },
     {
         'tpope/vim-fugitive',
@@ -168,22 +162,8 @@ require('lazy').setup({
                 ['<C-k>'] = { 'scroll_documentation_up' },
                 ['<C-j>'] = { 'scroll_documentation_down' },
             },
-            cmdline = {
-                completion = {
-                    menu = {
-                        auto_show = true,
-                    },
-                },
-            },
+            cmdline = { completion = { menu = { auto_show = true } } },
             completion = {
-                menu = {
-                    draw = {
-                        columns = {
-                            { 'label', 'label_description', gap = 2 },
-                            { 'kind_icon', 'kind', gap = 1 },
-                        },
-                    },
-                },
                 documentation = {
                     auto_show = true,
                     window = {
@@ -229,9 +209,7 @@ require('lazy').setup({
         dependencies = { 'nvim-lua/plenary.nvim' },
         opts = {
             defaults = {
-                layout_config = {
-                    horizontal = { width = 180 },
-                },
+                layout_config = { horizontal = { width = 180 } },
                 mappings = {
                     i = {
                         ['<esc>'] = function(x)
@@ -322,8 +300,6 @@ require('lazy').setup({
                     'markdown_inline',
                     'tsx',
                     'typescript',
-                    -- 'lua',
-                    -- 'vimdoc',
                 },
             })
         end,
@@ -481,10 +457,10 @@ keymap.set('n', '<esc>', function()
     vim.opt.hlsearch = false
     vim.snippet.stop()
 end, { desc = 'toggle highlight for last search; exit snippets' })
-keymap.set('n', 'n', '<cmd>set hlsearch<cr>n', { desc = 'highlight search when navigating' })
-keymap.set('n', 'N', '<cmd>set hlsearch<cr>N', { desc = 'highlight search when navigating' })
-keymap.set('n', '*', '<cmd>set hlsearch<cr>*', { desc = 'highlight search when navigating' })
-keymap.set('n', '#', '<cmd>set hlsearch<cr>#', { desc = 'highlight search when navigating' })
+keymap.set('n', 'n', '<cmd>set hlsearch<cr>n', { desc = 'highlight search on navigation' })
+keymap.set('n', 'N', '<cmd>set hlsearch<cr>N', { desc = 'highlight search on navigation' })
+keymap.set('n', '*', '<cmd>set hlsearch<cr>*', { desc = 'highlight search on navigation' })
+keymap.set('n', '#', '<cmd>set hlsearch<cr>#', { desc = 'highlight search on navigation' })
 
 keymap.set('n', '<tab>', 'za', { desc = 'toggle folds' })
 

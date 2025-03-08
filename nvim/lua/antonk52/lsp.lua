@@ -58,8 +58,6 @@ M.servers = {
     biome = {},
     eslint = {},
 
-    -- marksman = {},
-
     tailwindcss = {},
 
     selene3p_ls = {},
