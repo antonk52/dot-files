@@ -150,11 +150,9 @@ require('lazy').setup({
         event = 'BufReadPre',
     },
     {
-        -- 'saghen/blink.cmp',
+        'saghen/blink.cmp',
         -- version = 'v0.*',
         -- dir = '/Users/antonk52/Documents/dev/personal/blink.cmp',
-        'antonk52/blink.cmp',
-        branch = 'feat/large-buf-lua-async-completion',
         opts = {
             keymap = {
                 ['<C-o>'] = { 'select_and_accept', 'snippet_forward', 'fallback' },
