@@ -93,3 +93,4 @@ function _download_nvim_impl() {
 
 alias get_nvim_nightly="_download_nvim_impl nvim-nightly nightly"
 alias get_nvim="_download_nvim_impl nvim v0.10.4"
+alias npm_run_script="$DOT_FILES/scripts/npm_run_script.js"
