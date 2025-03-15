@@ -176,6 +176,17 @@ function M.setup()
             lsp.with(lsp.handlers.signature_help, float_opts)
     end
 
+    -- vim.lsp.config('tsgo', {
+    --     cmd = {
+    --         '/Users/antonk52/Documents/dev/personal/typescript-go/built/local/tsgo',
+    --         'lsp',
+    --         '-stdio',
+    --     },
+    --     filetypes = { 'typescript', 'typescriptreact', 'typescript.tsx' },
+    -- })
+    --
+    -- vim.lsp.enable('tsgo')
+
     -- call on CursorHold
     -- vim.lsp.codeLens.refresh()
     --

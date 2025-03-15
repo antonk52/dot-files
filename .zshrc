@@ -23,7 +23,7 @@ else
 fi
 
 # global node modules
-export PATH="$HOME"/.npm-global/bin:"$HOME"/.yarn/bin:"$HOME"/.bun/bin:$PATH
+export PATH="$HOME"/.npm-global/bin:"$HOME"/.yarn/bin:"$HOME"/.bun/bin:"$XDG_CACHE_HOME"/.bun/bin:$PATH
 # cargo crates
 export PATH="$HOME"/.cargo/bin:"$HOME"/.local/share/cargo/bin:$PATH
 # pip packages
