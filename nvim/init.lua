@@ -119,7 +119,7 @@ require('lazy').setup({
     },
     {
         'olimorris/codecompanion.nvim',
-        opts = {},
+        opts = { display = { diff = { provider = 'mini_diff' } } },
         dependencies = {
             'nvim-lua/plenary.nvim',
             'nvim-treesitter/nvim-treesitter',

@@ -218,8 +218,6 @@ function M.render()
         print_extras(),
         hi_next('Normal'),
         M.diagnostics(),
-        '%p%%', -- percentage through file
-        '  ',
         '%l:%c ', -- 'line:column'
     }, '')
 end

@@ -193,7 +193,10 @@ function M.setup()
     -- vim.lsp.codeLens.clear()
 
     -- start language servers
-    local caps = require('blink.cmp').get_lsp_capabilities()
+    local caps = nil
+    if vim.fn.has('nvim-0.11') == 0 then
+        caps = require('blink.cmp').get_lsp_capabilities()
+    end
     if vim.endswith(vim.uv.cwd() or vim.fn.getcwd(), '/www') then
         M.servers.ts_ls = nil
         M.servers.biome = nil
