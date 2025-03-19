@@ -416,6 +416,9 @@ vim.opt.linebreak = true
 vim.opt.undofile = true
 -- disable syntax highlighting if a line is too long
 vim.opt.synmaxcol = 300
+if vim.fn.has('nvim-0.11') == 1 then
+    vim.opt.winborder = 'single'
+end
 
 vim.cmd.color('lake_contrast')
 
@@ -610,7 +613,7 @@ vim.defer_fn(function()
         local layouts = require('snacks.picker.config.layouts')
         local copy = vim.tbl_deep_extend('force', {}, layouts.telescope)
 
-        copy.layout[1][1].border = { '┌', '─', '┐', '│', '│', ' ', '│', '│' }
+        copy.layout[1][1].border = { '┌', '─', '┐', '│', '', '', '', '│' }
         copy.layout[1][2].border = { '├', '─', '┤', '│', '┘', '─', '└', '│' }
         copy.layout[2].border = 'single'
         copy.layout.width = 160

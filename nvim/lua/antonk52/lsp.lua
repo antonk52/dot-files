@@ -184,7 +184,6 @@ function M.setup()
     --     },
     --     filetypes = { 'typescript', 'typescriptreact', 'typescript.tsx' },
     -- })
-    --
     -- vim.lsp.enable('tsgo')
 
     -- call on CursorHold

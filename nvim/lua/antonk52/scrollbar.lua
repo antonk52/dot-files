@@ -9,6 +9,7 @@ local LAST_CONFIG = {
     row = 0,
     col = 80,
     style = 'minimal',
+    border = 'none',
     focusable = false,
     hide = false,
 }
