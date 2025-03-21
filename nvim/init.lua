@@ -162,6 +162,7 @@ require('lazy').setup({
             },
             cmdline = { completion = { menu = { auto_show = true } } },
             completion = {
+                menu = { border = 'none' },
                 documentation = {
                     auto_show = true,
                     window = {
@@ -566,7 +567,7 @@ vim.api.nvim_create_autocmd('FileType', {
             vim.schedule(function()
                 vim.fn.search(vim.fs.basename(new))
             end)
-        end, { buffer = true, desc = 'Add item' })
+        end, { buffer = true, desc = 'Add file or dir/' })
         keymap.set('n', 'C', function()
             local current_dir = vim.api.nvim_buf_get_name(0)
             if current_dir == '' then

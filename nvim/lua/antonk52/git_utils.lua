@@ -24,6 +24,10 @@ function M.download_gitignore_file()
         end
 
         local target_file = vim.api.nvim_buf_get_name(0)
+        if target_file == '' then
+            target_file = vim.uv.cwd() or vim.fn.getcwd()
+        end
+
         if vim.uv.fs_stat(target_file).type == 'directory' then
             target_file = vim.fs.joinpath(target_file, '.gitignore')
         else
@@ -33,8 +37,14 @@ function M.download_gitignore_file()
         end
 
         vim.system({ 'curl', '--output', target_file, '-s', selected.url }):wait()
-        -- update buffer content
-        vim.cmd.edit()
+
+        if vim.bo.filetype == 'netrw' then
+            local escaped = vim.api.nvim_replace_termcodes('<C-l>', true, false, true)
+            vim.api.nvim_feedkeys(escaped, 'm', true)
+        else
+            -- update buffer content
+            vim.cmd.edit()
+        end
         vim.notify('Downloaded ' .. selected.name .. ' to ' .. target_file)
     end)
 end
