@@ -24,6 +24,7 @@ M.servers = {
     },
     hhvm = {},
     gopls = {},
+    golangci_lint_ls = {},
 
     -- tsserver
     ts_ls = {
