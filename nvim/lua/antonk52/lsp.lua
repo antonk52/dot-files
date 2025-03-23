@@ -187,6 +187,13 @@ function M.setup()
     -- })
     -- vim.lsp.enable('tsgo')
 
+    -- vim.lsp.config('emmylua', {
+    --     cmd = { 'emmylua_ls' },
+    --     filetypes = { 'lua' },
+    -- })
+    -- vim.lsp.enable('emmylua')
+    -- M.servers.lua_ls = nil
+
     -- call on CursorHold
     -- vim.lsp.codeLens.refresh()
     --
