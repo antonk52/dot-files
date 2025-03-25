@@ -158,7 +158,12 @@ vim.api.nvim_create_autocmd({ 'CursorHold', 'InsertLeave', 'WinScrolled', 'BufWi
 })
 
 local diagnostics_cache = { error = 0, warn = 0, info = 0, hint = 0 }
-local s = vim.diagnostic.severity
+local s = {
+    ERROR = 1, -- vim.diagnostic.severity.ERROR
+    WARN = 2,
+    INFO = 3,
+    HINT = 4,
+}
 local hi = {
     [s.ERROR] = { hi = 'DiagnosticError', char = 'e' },
     [s.WARN] = { hi = 'DiagnosticWarn', char = 'w' },
