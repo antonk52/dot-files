@@ -1,5 +1,5 @@
 local lspconfig = require('lspconfig')
-local lsp = vim.lsp
+-- local lsp = vim.lsp
 -- local usercmd = vim.api.nvim_create_user_command
 
 local M = {}
@@ -160,21 +160,11 @@ function M.setup()
         severity_sort = true, -- show errors first
     })
 
-    local ms = lsp.protocol.Methods
-
-    if vim.fn.has('nvim-0.11') == 1 then
-        local _open_floating_preview = vim.lsp.util.open_floating_preview
-        vim.lsp.util.open_floating_preview = function(contents, syntax, opts, ...)
-            opts = opts or {}
-            opts.border = opts.border or 'single'
-            return _open_floating_preview(contents, syntax, opts, ...)
-        end
-    else
-        -- add border to popups
-        local float_opts = { border = 'single' }
-        lsp.handlers[ms.textDocument_hover] = lsp.with(lsp.handlers.hover, float_opts)
-        lsp.handlers[ms.textDocument_signatureHelp] =
-            lsp.with(lsp.handlers.signature_help, float_opts)
+    local _open_floating_preview = vim.lsp.util.open_floating_preview
+    vim.lsp.util.open_floating_preview = function(contents, syntax, opts, ...)
+        opts = opts or {}
+        opts.border = opts.border or 'single'
+        return _open_floating_preview(contents, syntax, opts, ...)
     end
 
     -- vim.lsp.config('tsgo', {
@@ -200,17 +190,12 @@ function M.setup()
     -- vim.lsp.codeLens.clear()
 
     -- start language servers
-    local caps = nil
-    if vim.fn.has('nvim-0.11') == 0 then
-        caps = require('blink.cmp').get_lsp_capabilities()
-    end
     if vim.endswith(vim.uv.cwd() or vim.fn.getcwd(), '/www') then
         M.servers.ts_ls = nil
         M.servers.biome = nil
         M.servers.eslint = nil
     end
     for server_name, opts in pairs(M.servers) do
-        opts.capabilities = caps
         opts.flags = { debounce_text_changes = 120 }
         opts.silent = true
 

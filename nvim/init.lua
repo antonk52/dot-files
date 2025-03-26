@@ -195,13 +195,6 @@ require('lazy').setup({
         opts = {},
     },
     {
-        'folke/ts-comments.nvim',
-        -- Can be removed after 0.11 release
-        cond = vim.fn.has('nvim-0.11') == 0,
-        opts = {},
-        event = 'VeryLazy',
-    },
-    {
         'nvim-telescope/telescope.nvim',
         cond = vim.env.WORK ~= nil,
         event = 'VeryLazy',
@@ -418,9 +411,6 @@ vim.opt.linebreak = true
 vim.opt.undofile = true
 -- disable syntax highlighting if a line is too long
 vim.opt.synmaxcol = 300
-if vim.fn.has('nvim-0.11') == 1 then
-    vim.opt.winborder = 'single'
-end
 
 vim.cmd.color('lake_contrast')
 
