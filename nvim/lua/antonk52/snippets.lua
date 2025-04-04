@@ -1,6 +1,7 @@
 local M = {}
 
 ---@param tbl string[]
+---@return string
 local function lines(tbl)
     return table.concat(tbl, '\n')
 end

@@ -24,7 +24,7 @@ end
 local function throttle(fn, delay)
     local timer = vim.loop.new_timer()
     return function(a, b)
-        if timer:is_active() then
+        if timer and timer:is_active() then
             timer:stop()
         end
         timer:start(
@@ -75,6 +75,7 @@ local update_swin_position = throttle(function(swin, bufnr)
 end, vim.env.SSH and 32 or 8)
 
 function M.setup()
+    -- https://en.wikipedia.org/wiki/List_of_Unicode_characters#Block_Elements
     local swin_char = '▐'
     local swin_buf_lines = {}
     while #swin_buf_lines < 100 do

@@ -1,6 +1,7 @@
 local M = {}
 
 ---@param kind 'files' | 'all_files' | 'dot_files'
+---@return fun(): nil
 local function fzf(kind)
     return function()
         local fzf_cmd = 'fzf'

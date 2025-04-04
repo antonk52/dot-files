@@ -97,8 +97,10 @@ function M.run()
                 vim.notify('Failed to parse package.json files: ' .. msg, vim.log.levels.WARN)
             end
 
+            ---@type {label: string, script_name: string, script_value: string, path: string}[]
             local flatten_scripts = {}
             for _, package_json in ipairs(package_jsons) do
+                ---@type table<string, string>
                 local scripts = (package_json or {}).scripts or {}
                 for script_name, script in pairs(scripts) do
                     local label = package_json.name .. ': ' .. script_name
@@ -123,9 +125,9 @@ function M.run()
                     -- no script selected
                     return
                 end
-                local path = script.path
+                local path = script.path --[[@as string]]
                 local package_manager = M.infer_package_manager()
-                local name = script.script_name
+                local name = script.script_name --[[@as string]]
 
                 local cmd = string.format('cd %s && %s run %s', path, package_manager, name)
                 -- run command in a new tab

@@ -46,6 +46,7 @@ local function _get_fn_bounds(outer)
             break
         end
         prev_node = node
+        ---@type TSNode
         node = node:parent()
     end
 

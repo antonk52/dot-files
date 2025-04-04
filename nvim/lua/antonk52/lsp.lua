@@ -1,3 +1,4 @@
+---@diagnostic disable: missing-fields
 local lspconfig = require('lspconfig')
 -- local lsp = vim.lsp
 -- local usercmd = vim.api.nvim_create_user_command
@@ -17,6 +18,7 @@ local M = {}
 --     referencesCodeLens = { enabled = true, showOnAllFunctions = true },
 -- }
 
+---@type table<string, vim.lsp.ClientConfig>
 M.servers = {
     flow = {
         -- only run globally installed flow
@@ -161,6 +163,7 @@ function M.setup()
     })
 
     local _open_floating_preview = vim.lsp.util.open_floating_preview
+    ---@diagnostic disable-next-line: duplicate-set-field
     vim.lsp.util.open_floating_preview = function(contents, syntax, opts, ...)
         opts = opts or {}
         opts.border = opts.border or 'single'
@@ -180,6 +183,7 @@ function M.setup()
     -- vim.lsp.config('emmylua', {
     --     cmd = { 'emmylua_ls' },
     --     filetypes = { 'lua' },
+    --     root_markers = { '.emmyrc.json', '.luarc.json' },
     -- })
     -- vim.lsp.enable('emmylua')
     -- M.servers.lua_ls = nil
@@ -197,6 +201,7 @@ function M.setup()
     end
     for server_name, opts in pairs(M.servers) do
         opts.flags = { debounce_text_changes = 120 }
+        ---@diagnostic disable-next-line: inject-field
         opts.silent = true
 
         lspconfig[server_name].setup(opts)

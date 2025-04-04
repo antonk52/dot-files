@@ -85,7 +85,7 @@ require('lazy').setup({
             { 'gK', '<cmd>lua Snacks.picker.lsp_type_definitions()<cr>' },
             { 'gi', '<cmd>lua Snacks.picker.lsp_implementations()<cr>' },
             { 'gr', '<cmd>lua Snacks.picker.lsp_references()<cr>' },
-            { 'gO', '<cmd>lua Snacks.picker.lsp_document_symbols()<cr>' },
+            { 'gO', '<cmd>lua Snacks.picker.lsp_symbols()<cr>' },
         },
         event = 'VeryLazy',
     },
@@ -173,16 +173,6 @@ require('lazy').setup({
                         },
                     },
                 },
-                list = {
-                    selection = {
-                        auto_insert = function(ctx)
-                            return ctx.mode == 'cmdline'
-                        end,
-                        preselect = function(ctx)
-                            return ctx.mode ~= 'cmdline'
-                        end,
-                    },
-                },
             },
             signature = { enabled = true },
             fuzzy = { implementation = 'lua' },
@@ -248,13 +238,6 @@ require('lazy').setup({
                     suffix_last = '',
                     suffix_next = '',
                 },
-                -- no padding space
-                custom_surroundings = {
-                    ['('] = { output = { left = '(', right = ')' } },
-                    ['['] = { output = { left = '[', right = ']' } },
-                    ['{'] = { output = { left = '{', right = '}' } },
-                    ['<'] = { output = { left = '<', right = '>' } },
-                },
             })
             if vim.fs.root(0, '.git') ~= nil then
                 require('mini.diff').setup({
@@ -313,6 +296,10 @@ require('lazy').setup({
         },
         event = 'VeryLazy',
     },
+    {
+        'jake-stewart/auto-cmdheight.nvim',
+        opts = { max_lines = 15 },
+    },
 }, {
     root = PLUGINS_LOCATION,
     performance = {
@@ -365,7 +352,6 @@ vim.g.loaded_ruby_provider = 0
 vim.g.loaded_perl_provider = 0
 
 -- netrw: avoid mapping gx in netrw as for conflict reasons
-vim.g.netrw_nogx = 1
 vim.g.netrw_banner = 0
 vim.g.netrw_list_hide = '^\\./$,^\\.\\./$'
 vim.g.netrw_hide = 1
@@ -427,10 +413,10 @@ keymap.set('n', '<leader>R', vim.lsp.buf.rename, { desc = 'Rename' })
 keymap.set('n', '<leader>L', vim.diagnostic.open_float, { desc = 'Line diagnostic' })
 keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, { desc = 'Code actions' })
 keymap.set('n', ']e', function()
-    vim.diagnostic.goto_next({ severity = vim.diagnostic.severity.ERROR })
+    vim.diagnostic.jump({ count = 1, severity = 1 })
 end, { desc = 'Next error diagnostic' })
 keymap.set('n', '[e', function()
-    vim.diagnostic.goto_prev({ severity = vim.diagnostic.severity.ERROR })
+    vim.diagnostic.jump({ count = -1, severity = 1 })
 end, { desc = 'Prev error diagnostic' })
 
 keymap.set('n', '<leader>N', '<cmd>lua require("ak_npm").run()<cr>', { desc = 'Run npm scripts' })
@@ -583,7 +569,7 @@ vim.api.nvim_create_autocmd('FileType', {
 })
 
 require('antonk52.statusline').setup()
--- vim.opt.statusline = ' %m%r %f %= %p%%  %l:%c  '
+-- vim.opt.statusline = ' %m%r %f %= %l:%c  '
 require('antonk52.infer_shiftwidth').setup()
 
 vim.defer_fn(function()
@@ -603,6 +589,7 @@ vim.defer_fn(function()
     -- use telescope layout for vim.ui.select
     pcall(function()
         local layouts = require('snacks.picker.config.layouts')
+        ---@type snacks.picker.layout.Config
         local copy = vim.tbl_deep_extend('force', {}, layouts.telescope)
 
         copy.layout[1][1].border = { '┌', '─', '┐', '│', '', '', '', '│' }

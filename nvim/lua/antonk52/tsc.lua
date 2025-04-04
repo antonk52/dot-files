@@ -4,7 +4,7 @@ local TSC_ROOT_FILES = { 'tsconfig.json', 'jsconfig.json', 'package.json' }
 -- from cwd to buffer dir
 ---@return string?
 local function lookdownTSConfigDir()
-    local dirs_from_cwd_to_buf = {}
+    local dirs_from_cwd_to_buf = {} --[[@as string[] ]]
     local stop_dir = vim.uv.cwd()
 
     for dir in vim.fs.parents(vim.api.nvim_buf_get_name(0)) do

@@ -36,17 +36,25 @@ M.find_and_replace = function()
         vim.schedule(function()
             local lines_str = vim.trim(obj.stdout or '')
             local initial_lines = vim.split(lines_str, '\n')
-            local matches = vim.tbl_map(function(line)
-                local file, line_number, text = parse_line(line)
-                return {
-                    file = file,
-                    line_number = line_number,
-                    text = text,
-                }
-            end, initial_lines)
+            ---@type {file: string, line_number: string, text: string}[]
+            local matches = vim.tbl_map(
+                ---@param line string
+                ---@return {file: string, line_number: string, text: string}
+                function(line)
+                    local file, line_number, text = parse_line(line)
+                    return {
+                        file = file,
+                        line_number = line_number,
+                        text = text,
+                    }
+                end,
+                initial_lines
+            )
             local tmp_file = vim.fn.tempname()
 
             vim.fn.writefile(
+                ---@param m {file: string, line_number: string, text: string}
+                ---@return string
                 vim.tbl_map(function(m)
                     return m.text
                 end, matches),
@@ -104,6 +112,7 @@ M.find_and_replace = function()
                             local init_file, init_lnum = parse_line(initial_lines[i])
 
                             if file == init_file and line_number == init_lnum then
+                                ---@type string[]
                                 local og_lines = vim.fn.readfile(file)
 
                                 og_lines[tonumber(line_number)] = new_text

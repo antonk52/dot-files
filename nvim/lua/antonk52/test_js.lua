@@ -12,6 +12,7 @@ local STATUS_TO_ICON = {
 
 ---@param lines string[]
 ---@param needle string
+---@return number
 local function find_line_with_text_in_buffer(lines, needle)
     -- escape special characters in needle
     needle = needle:gsub('+', '%%+'):gsub('-', '%%-') -- :gsub('*', '%%*'):gsub('/', '%%/'):gsub('%%', '%%%'):gsub('^', '%%^'):gsub('#', '%%#'):gsub('&', '%%&'):gsub('~', '%%~'):gsub('|', '%%|')
@@ -20,6 +21,8 @@ local function find_line_with_text_in_buffer(lines, needle)
             return i
         end
     end
+
+    return -1
 end
 
 local function get_test_runner_bin()
@@ -38,6 +41,8 @@ local function get_test_runner_bin()
     end
 end
 
+---@param bufnr number
+---@param parsed_output any
 local function mark_parsed_json_output(bufnr, parsed_output)
     local parsed_results = {}
     for _, test_result in ipairs(parsed_output.testResults) do

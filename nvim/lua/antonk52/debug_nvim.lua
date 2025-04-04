@@ -17,6 +17,7 @@ function M.setup()
         local keymaps_local = vim.api.nvim_buf_get_keymap(0, 'n')
 
         -- Filter keymaps by the given prefix
+        ---@type table<string, boolean>
         local filtered_maps = {}
         for _, map in ipairs(keymaps) do
             if vim.startswith(map.lhs, prefix) then
@@ -81,6 +82,7 @@ function M.setup()
                     line = line .. ' ' .. key:upper() .. ' '
                 end
             end
+            ---@type integer
             max_line = math.max(max_line, #line)
             table.insert(lines, line)
         end
