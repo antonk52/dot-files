@@ -92,29 +92,20 @@ require('lazy').setup({
     {
         'zbirenbaum/copilot.lua',
         enabled = vim.env.WORK == nil,
-        config = function()
-            require('copilot').setup({
-                suggestion = {
-                    auto_trigger = true,
-                    keymap = {
-                        accept = false,
-                        accept_word = '<C-e>',
-                        accept_line = '<C-l>',
-                        next = '<C-r>',
-                        prev = false,
-                        dismiss = '<C-d>',
-                    },
+        opts = {
+            suggestion = {
+                auto_trigger = true,
+                keymap = {
+                    accept = '<tab>',
+                    accept_word = '<C-e>',
+                    accept_line = '<C-l>',
+                    next = '<C-r>',
+                    prev = false,
+                    dismiss = '<C-d>',
                 },
-                filetypes = { markdown = true },
-            })
-            vim.keymap.set('i', '<tab>', function()
-                if require('copilot.suggestion').is_visible() then
-                    require('copilot.suggestion').accept()
-                    return '<Ignore>'
-                end
-                return '<tab>'
-            end, { expr = true, noremap = true })
-        end,
+            },
+            filetypes = { markdown = true },
+        },
         event = 'VeryLazy',
     },
     {
