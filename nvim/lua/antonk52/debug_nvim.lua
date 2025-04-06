@@ -2,6 +2,7 @@ local M = {}
 local usercmd = vim.api.nvim_create_user_command
 
 function M.setup()
+    local ns = vim.api.nvim_create_namespace('debug_nvim')
     usercmd('Mappings', function(x)
         local prefix = x.args
         if prefix == '' then
@@ -111,9 +112,9 @@ function M.setup()
 
         vim.api.nvim_set_hl(0, 'MyMapsUsed', { bg = 'NONE', fg = 'Yellow', bold = true })
         for _, pos in ipairs(KEYS.used) do
-            vim.api.nvim_buf_add_highlight(buf, -1, 'MyMapsUsed', pos[1] - 1, pos[2], pos[2] + 1)
+            vim.hl.range(buf, ns, 'MyMapsUsed', { pos[1] - 1, pos[2] }, { pos[1] - 1, pos[2] + 1 })
         end
-        vim.api.nvim_buf_add_highlight(buf, -1, 'MyMapsUsed', 1, 1, 2)
+        vim.hl.range(buf, ns, 'MyMapsUsed', { 1, 1 }, { 1, 2 })
     end, { desc = 'Print mappings for provided prefix', nargs = '?' })
 
     usercmd('ListLSPSupportedCommands', function()

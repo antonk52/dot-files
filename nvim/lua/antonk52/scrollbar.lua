@@ -22,9 +22,9 @@ local function swin_hide(swin)
 end
 
 local function throttle(fn, delay)
-    local timer = vim.loop.new_timer()
+    local timer = vim.loop.new_timer() --[[ @as uv.uv_timer_t ]]
     return function(a, b)
-        if timer and timer:is_active() then
+        if timer:is_active() then
             timer:stop()
         end
         timer:start(

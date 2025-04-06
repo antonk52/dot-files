@@ -200,12 +200,19 @@ function M.setup()
         M.servers.eslint = nil
     end
     for server_name, opts in pairs(M.servers) do
-        opts.flags = { debounce_text_changes = 120 }
         ---@diagnostic disable-next-line: inject-field
         opts.silent = true
 
         lspconfig[server_name].setup(opts)
     end
+
+    -- INFO once lspconfig supports native vim.lsp.config
+    -- for server_name, opts in pairs(M.servers) do
+    --     if #opts > 0 then
+    --         vim.lsp.config(server_name, opts)
+    --     end
+    --     vim.lsp.enable(server_name)
+    -- end
 
     -- usercmd('ToggleLSPInlayHints', function()
     --     vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled({ bufnr = 0 }))

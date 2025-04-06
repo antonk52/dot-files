@@ -50,7 +50,7 @@ local function easy_motion()
 
     -- otherwise setting extmarks and waiting for next char is on the same frame
     vim.schedule(function()
-        local next_char = vim.fn.nr2char(vim.fn.getchar())
+        local next_char = vim.fn.nr2char(vim.fn.getchar() --[[@as number]])
         if extmarks[next_char] then
             local pos = extmarks[next_char]
             -- to make <C-o> work

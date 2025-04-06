@@ -4,13 +4,12 @@ local usercmd = vim.api.nvim_create_user_command
 M.enabled = true
 
 function M.format()
-    if not M.enabled then
-        return
-    elseif
+    if
+        M.enabled
         -- Json is cursed, package*.json shall not be autoformatted
         -- there is no single formatter for tsconfig*.json either.
         -- Leaving it to unless calls FormatLsp explicitly
-        vim.bo.ft ~= 'json'
+        and vim.bo.ft ~= 'json'
         and vim.bo.ft ~= 'jsonc'
         and #vim.lsp.get_clients({ method = 'textDocument/formatting' }) > 0
     then
@@ -34,11 +33,7 @@ function M.setup()
         M.enabled = not M.enabled
     end, { nargs = 0 })
     usercmd('TypescriptFormat', function()
-        vim.lsp.buf.format({
-            filter = function(client)
-                return client.name == 'ts_ls'
-            end,
-        })
+        vim.lsp.buf.format({ name = 'ts_ls' })
     end, { nargs = 0 })
 end
 
