@@ -514,11 +514,15 @@ vim.api.nvim_create_autocmd('FileType', {
             local escaped = vim.api.nvim_replace_termcodes('<C-l>', true, false, true)
             vim.api.nvim_feedkeys(escaped, 'm', true)
         end
-        keymap.set('n', 'A', function()
-            local current = vim.fn.expand('%:p')
+        local function get_current_dir()
+            local current = vim.api.nvim_buf_get_name(0)
             if current == '' then
                 current = vim.fn.getcwd()
             end
+            return current
+        end
+        keymap.set('n', 'A', function()
+            local current = get_current_dir()
             local new = vim.fn.input('Name: ', current, 'file')
             if not new or new == '' then
                 return
@@ -536,11 +540,31 @@ vim.api.nvim_create_autocmd('FileType', {
                 vim.fn.search(vim.fs.basename(new))
             end)
         end, { buffer = true, desc = 'Add file or dir/' })
-        keymap.set('n', 'C', function()
-            local current_dir = vim.api.nvim_buf_get_name(0)
-            if current_dir == '' then
-                current_dir = vim.fn.getcwd()
+        keymap.set('n', 'D', function()
+            local current_dir = get_current_dir()
+            local line = vim.api.nvim_get_current_line()
+            if line == '' or line == '.' or line == '..' then
+                return
             end
+            local is_dir = vim.endswith(line, '/')
+            if is_dir then
+                line = line:sub(1, -2)
+            end
+
+            vim.notify('Are you sure you want to delete it? [y/N]')
+            local choice = vim.fn.nr2char(vim.fn.getchar() --[[@as integer]])
+            local confirmed = choice == 'y'
+
+            if not confirmed then
+                return
+            end
+
+            vim.fs.rm(vim.fs.joinpath(current_dir, line), { force = true, recursive = is_dir })
+
+            update_netrw()
+        end, { buffer = true, desc = 'Delete item' })
+        keymap.set('n', 'C', function()
+            local current_dir = get_current_dir()
             local line = vim.api.nvim_get_current_line()
             if line == '' or line == '.' or line == '..' then
                 return
