@@ -298,7 +298,6 @@ require('lazy').setup({
             disabled_plugins = {
                 '2html_plugin',
                 'gzip',
-                'man',
                 -- 'netrw',
                 'netrwFileHandlers',
                 -- 'netrwPlugin',

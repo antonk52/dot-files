@@ -18,6 +18,8 @@ has_command() { type "$1" >/dev/null 2>&1; }
 # Preferred editor for local and remote sessions
 if has_command nvim; then
     export EDITOR='nvim'
+    # use nvim to read man pages
+    export MANPAGER='nvim +Man!'
 else
     export EDITOR='vim'
 fi
