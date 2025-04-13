@@ -170,6 +170,7 @@ function M.setup()
         return _open_floating_preview(contents, syntax, opts, ...)
     end
 
+    -- M.servers.ts_ls = nil
     -- vim.lsp.config('tsgo', {
     --     cmd = {
     --         '/Users/antonk52/Documents/dev/personal/typescript-go/built/local/tsgo',

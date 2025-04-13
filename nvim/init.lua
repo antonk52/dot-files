@@ -136,6 +136,7 @@ require('lazy').setup({
     {
         'neovim/nvim-lspconfig', -- types & linting
         dependencies = { 'b0o/schemastore.nvim', 'saghen/blink.cmp' }, -- json schemas for json lsp
+        tag = 'v1.8.0',
         main = 'antonk52.lsp',
         opts = {},
         event = 'BufReadPre',
@@ -515,7 +516,7 @@ vim.api.nvim_create_autocmd('FileType', {
         end
         keymap.set('n', 'A', function()
             local current = get_current_dir()
-            local new = vim.fn.input('Name: ', current, 'file')
+            local new = vim.fn.input('Name: ', current .. '/', 'file')
             if not new or new == '' then
                 return
             end
