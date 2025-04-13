@@ -260,6 +260,7 @@ require('lazy').setup({
             require('nvim-treesitter.configs').setup({
                 highlight = { enable = true },
                 ensure_installed = {
+                    'go',
                     'javascript',
                     'jsdoc',
                     'json',
@@ -319,8 +320,6 @@ require('lazy').setup({
 })
 
 -- Avoid startup work {{{1
--- Skip loading menu.vim, saves ~100ms
-vim.g.did_install_default_menus = 1
 
 -- Set them directly if they are installed, otherwise disable them. To avoid the
 -- runtime check cost, which can be slow.
