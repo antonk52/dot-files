@@ -136,7 +136,6 @@ require('lazy').setup({
     {
         'neovim/nvim-lspconfig', -- types & linting
         dependencies = { 'b0o/schemastore.nvim', 'saghen/blink.cmp' }, -- json schemas for json lsp
-        tag = 'v1.8.0',
         main = 'antonk52.lsp',
         opts = {},
         event = 'BufReadPre',
@@ -393,7 +392,7 @@ keymap.set('n', '-', function()
 end, { silent = true, desc = 'Open netrw, focus current item' })
 keymap.set('n', '<C-s>', '<cmd>lua vim.lsp.buf.signature_help()<cr>', { desc = 'Signature help' })
 keymap.set('n', '<leader>R', vim.lsp.buf.rename, { desc = 'Rename' })
-keymap.set('n', '<leader>L', vim.diagnostic.open_float, { desc = 'Line diagnostic' })
+keymap.set('n', '<leader>L', '<cmd>lua vim.diagnostic.open_float()<cr>', { desc = 'Line errors' })
 keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, { desc = 'Code actions' })
 keymap.set('n', ']e', function()
     vim.diagnostic.jump({ count = 1, severity = 1 })

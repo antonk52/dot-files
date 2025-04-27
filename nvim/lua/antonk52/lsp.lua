@@ -1,5 +1,4 @@
 ---@diagnostic disable: missing-fields
-local lspconfig = require('lspconfig')
 -- local lsp = vim.lsp
 -- local usercmd = vim.api.nvim_create_user_command
 
@@ -36,6 +35,8 @@ M.servers = {
 
     -- tsserver
     ts_ls = {
+        workspace_required = true,
+        root_markers = { 'tsconfig.json', 'jsconfig.json', 'package.json' },
         -- settings = {
         --     completions = { completeFunctionCalls = true },
         --     -- typescript = ts_lang_options,
@@ -64,8 +65,8 @@ M.servers = {
         init_options = { camelCase = 'dashes' },
     },
 
-    biome = {},
-    eslint = {},
+    biome = { workspace_required = true },
+    eslint = { workspace_required = true },
 
     tailwindcss = {},
 
@@ -101,8 +102,8 @@ M.servers = {
                         vim.env.VIMRUNTIME, -- nvim core, no 3rd party plugins
                         'lua',
                         'nvim-test',
+                        -- TODO remove after 0.12
                         '${3rd}/luv/library', -- docs for uv
-                        '${3rd}/luaassert/library', -- docs for assert
                         '${3rd}/busted/library',
                     }, vim.split(
                         vim.fn.glob(vim.env.HOME .. '/dot-files/nvim/plugged/*'),
@@ -119,35 +120,6 @@ M.servers = {
             },
         },
     },
-
-    -- basics_ls = {
-    --     settings = {
-    --         buffer = {
-    --             enable = true,
-    --             minCompletionLength = 6,
-    --         },
-    --         path = {
-    --             enable = true,
-    --         },
-    --         snippet = {
-    --             enable = false,
-    --             -- enable = true,
-    --             -- sources = {
-    --             -- path to snippets package ✅
-    --             -- '/Users/antonk52/Documents/dev/personal/friendly-snippets',
-    --             --
-    --             -- path to snippets package.json file ✅
-    --             -- '/Users/antonk52/Documents/dev/personal/friendly-snippets/package.json',
-    --             --
-    --             -- path to snippet lang.json file ✅
-    --             -- '/Users/antonk52/Documents/dev/personal/friendly-snippets/snippets/javascript/javascript.json',
-    --             --
-    --             -- path to snippet dir containing lang.json files ✅
-    --             -- '/Users/antonk52/Documents/dev/personal/friendly-snippets/snippets/javascript',
-    --             -- },
-    --         },
-    --     },
-    -- },
 }
 
 function M.setup()
@@ -187,11 +159,6 @@ function M.setup()
     -- })
     -- vim.lsp.enable('tsgo')
 
-    -- vim.lsp.config('emmylua', {
-    --     cmd = { 'emmylua_ls' },
-    --     filetypes = { 'lua' },
-    --     root_markers = { '.emmyrc.json', '.luarc.json' },
-    -- })
     -- vim.lsp.enable('emmylua')
     -- M.servers.lua_ls = nil
 
@@ -207,19 +174,9 @@ function M.setup()
         M.servers.eslint = nil
     end
     for server_name, opts in pairs(M.servers) do
-        ---@diagnostic disable-next-line: inject-field
-        opts.silent = true
-
-        lspconfig[server_name].setup(opts)
+        vim.lsp.config(server_name, opts)
+        vim.lsp.enable(server_name)
     end
-
-    -- INFO once lspconfig supports native vim.lsp.config
-    -- for server_name, opts in pairs(M.servers) do
-    --     if #opts > 0 then
-    --         vim.lsp.config(server_name, opts)
-    --     end
-    --     vim.lsp.enable(server_name)
-    -- end
 
     -- usercmd('ToggleLSPInlayHints', function()
     --     vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled({ bufnr = 0 }))
