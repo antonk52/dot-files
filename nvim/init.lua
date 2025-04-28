@@ -402,7 +402,7 @@ keymap.set('n', '[e', function()
 end, { desc = 'Prev error diagnostic' })
 
 keymap.set('n', '<leader>N', '<cmd>lua require("ak_npm").run()<cr>', { desc = 'Run npm scripts' })
-keymap.set('n', '<localleader>t', '<cmd>tabnew | terminal<cr>', { desc = 'Open new terminal' })
+keymap.set('n', '<C-`>', '<cmd>tabnew | terminal<cr>', { desc = 'Open new terminal' })
 
 -- nvim 0.6 maps Y to yank till the end of the line,
 -- preserving a legacy behaviour

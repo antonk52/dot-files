@@ -713,17 +713,16 @@
                         ]
                     },
                     {
-                        "description": "left_command + § is left_command + `",
+                        "description": "§ (above tab on eu keyboard) is backtick `",
                         "manipulators": [
                             {
                                 "from": {
                                     "key_code": "non_us_backslash",
-                                    "modifiers": { "mandatory": ["left_command"] }
+                                    "modifiers": { "optional": ["left_command", "left_control", "left_option", "left_shift"] }
                                 },
                                 "to": [
                                     {
-                                        "key_code": "grave_accent_and_tilde",
-                                        "modifiers": ["left_command"]
+                                        "key_code": "grave_accent_and_tilde"
                                     }
                                 ],
                                 "type": "basic"
