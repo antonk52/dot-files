@@ -574,8 +574,60 @@ vim.api.nvim_create_autocmd('FileType', {
     end,
 })
 
-require('antonk52.statusline').setup()
+-- TODO test 0.12 status line
+vim.o.statusline =
+    "%<%f %h%w%m%r %=%{% &showcmdloc == 'statusline' ? '%-10.S ' : '' %}%{% exists('b:keymap_name') ? '<'..b:keymap_name..'> ' : '' %}%{% exists('b:buffer_diagnostics') ? b:buffer_diagnostics..' ' : '' %}%{% &ruler ? ( &rulerformat == '' ? '%-14.(%l,%c%V%) %P' : &rulerformat ) : '' %}"
+
+vim.api.nvim_create_autocmd('DiagnosticChanged', {
+    pattern = '*',
+    desc = 'Update buffer diagnostics in the statusline',
+    group = vim.api.nvim_create_augroup('nvim.statusline', {}),
+    callback = function()
+        local bufnr = vim.api.nvim_get_current_buf()
+        local diagnostics = vim.diagnostic.get(bufnr)
+
+        local counts = { errors = 0, warnings = 0, info = 0, hints = 0 }
+        local severity = vim.diagnostic.severity
+
+        for _, d in ipairs(diagnostics) do
+            if d.severity == severity.ERROR then
+                counts.errors = counts.errors + 1
+            elseif d.severity == severity.WARN then
+                counts.warnings = counts.warnings + 1
+            elseif d.severity == severity.INFO then
+                counts.info = counts.info + 1
+            elseif d.severity == severity.HINT then
+                counts.hints = counts.hints + 1
+            end
+        end
+
+        local result = {}
+        if counts.errors > 0 then
+            table.insert(result, 'e:' .. counts.errors)
+        end
+        if counts.warnings > 0 then
+            table.insert(result, 'w:' .. counts.warnings)
+        end
+        if counts.info > 0 then
+            table.insert(result, 'i:' .. counts.info)
+        end
+        if counts.hints > 0 then
+            table.insert(result, 'h:' .. counts.hints)
+        end
+
+        local result_str = table.concat(result, ' ')
+
+        vim.b[bufnr].buffer_diagnostics = result_str
+
+        vim.schedule(function()
+            vim.cmd.redrawstatus()
+        end)
+    end,
+})
+
+-- require('antonk52.statusline').setup()
 -- vim.opt.statusline = ' %m%r %f %= %l:%c  '
+-- vim.o.statusline = ' %f%m %= %{&filetype} │ %l:%c '
 require('antonk52.infer_shiftwidth').setup()
 
 vim.defer_fn(function()
