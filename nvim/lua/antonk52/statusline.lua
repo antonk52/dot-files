@@ -157,38 +157,45 @@ vim.api.nvim_create_autocmd({ 'CursorHold', 'InsertLeave', 'WinScrolled', 'BufWi
     desc = 'Update lsp symbols for status line',
 })
 
-local diagnostics_cache = { error = 0, warn = 0, info = 0, hint = 0 }
-local s = {
-    ERROR = 1, -- vim.diagnostic.severity.ERROR
-    WARN = 2,
-    INFO = 3,
-    HINT = 4,
-}
-local hi = {
-    [s.ERROR] = { hi = 'DiagnosticError', char = 'e' },
-    [s.WARN] = { hi = 'DiagnosticWarn', char = 'w' },
-    [s.HINT] = { hi = 'DiagnosticHint', char = 'h' },
-    [s.INFO] = { hi = 'DiagnosticInfo', char = 'i' },
-}
-function M.diagnostics()
-    diagnostics_cache = diagnostics_cache or vim.diagnostic.count(0)
+function M.refresh_diagnostics()
+    local bufnr = vim.api.nvim_get_current_buf()
+    local diagnostics = vim.diagnostic.get(bufnr)
 
-    if #diagnostics_cache == 0 then
-        return ''
-    end
+    local counts = { errors = 0, warnings = 0, info = 0, hints = 0 }
 
-    local items = {}
-    for _, k in ipairs({ s.ERROR, s.WARN, s.HINT, s.INFO }) do
-        if diagnostics_cache[k] and diagnostics_cache[k] > 0 then
-            table.insert(items, hi_next(hi[k].hi) .. hi[k].char .. diagnostics_cache[k])
+    for _, d in ipairs(diagnostics) do
+        if d.severity == vim.diagnostic.severity.ERROR then
+            counts.errors = counts.errors + 1
+        elseif d.severity == vim.diagnostic.severity.WARN then
+            counts.warnings = counts.warnings + 1
+        elseif d.severity == vim.diagnostic.severity.INFO then
+            counts.info = counts.info + 1
+        elseif d.severity == vim.diagnostic.severity.HINT then
+            counts.hints = counts.hints + 1
         end
     end
 
-    return table.concat(items, ' ') .. hi_next('Normal') .. '  '
-end
+    local result = {}
+    if counts.errors > 0 then
+        table.insert(result, 'e:' .. counts.errors)
+    end
+    if counts.warnings > 0 then
+        table.insert(result, 'w:' .. counts.warnings)
+    end
+    if counts.info > 0 then
+        table.insert(result, 'i:' .. counts.info)
+    end
+    if counts.hints > 0 then
+        table.insert(result, 'h:' .. counts.hints)
+    end
 
-function M.refresh_diagnostics()
-    diagnostics_cache = nil
+    local result_str = table.concat(result, ' ')
+
+    if #result_str > 0 then
+        result_str = result_str .. '  '
+    end
+
+    vim.b[bufnr].buffer_diagnostics = result_str
 end
 
 M.extras = {}
@@ -211,18 +218,16 @@ end
 function M.render()
     local diff = vim.b.minidiff_summary_string or ''
     return table.concat({
-        hi_next('StatusLineModified') .. M.modified(),
-        hi_next('CursorLineNr') .. ' ' .. M.filename() .. ' ',
-        '%<',
-        hi_next('Comment') .. ' ' .. _lsp_symbol_cache,
-        hi_next('Normal') .. '  %=', -- space and right align
-        hi_next('Comment') .. M.lsp_init(),
+        ' ' .. M.filename() .. '%m ',
+        '%< ',
+        hi_next('StatusLineFaded') .. _lsp_symbol_cache,
+        '  %=', -- space and right align
+        M.lsp_init(),
         '  ',
         #diff > 0 and (diff .. '  ') or '',
-        hi_next('Normal'),
         print_extras(),
-        hi_next('Normal'),
-        M.diagnostics(),
+        hi_next('StatusLine'),
+        '%{get(b:, "buffer_diagnostics", "")} ', -- diagnostics
         '%l:%c ', -- 'line:column'
     }, '')
 end
