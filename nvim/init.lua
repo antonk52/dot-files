@@ -574,47 +574,7 @@ vim.api.nvim_create_autocmd('FileType', {
     end,
 })
 
--- TODO test 0.12 status line
-vim.o.statusline =
-    "%<%f %h%w%m%r %=%{% &showcmdloc == 'statusline' ? '%-10.S ' : '' %}%{% exists('b:keymap_name') ? '<'..b:keymap_name..'> ' : '' %}%{% exists('b:buffer_diagnostics') ? b:buffer_diagnostics..' ' : '' %}%{% &ruler ? ( &rulerformat == '' ? '%-14.(%l,%c%V%) %P' : &rulerformat ) : '' %}"
-
-vim.api.nvim_create_autocmd('DiagnosticChanged', {
-    pattern = '*',
-    desc = 'Update buffer diagnostics in the statusline',
-    group = vim.api.nvim_create_augroup('nvim.statusline', {}),
-    callback = function(args)
-        local bufnr = args.buf
-
-        local severity = vim.diagnostic.severity
-
-        local result = {}
-        local count = vim.diagnostic.count(bufnr)
-        if count[severity.ERROR] and count[1] > 0 then
-            table.insert(result, 'e:' .. count[severity.ERROR])
-        end
-        if count[severity.WARN] and count[2] > 0 then
-            table.insert(result, 'w:' .. count[severity.WARN])
-        end
-        if count[severity.INFO] and count[3] > 0 then
-            table.insert(result, 'i:' .. count[severity.INFO])
-        end
-        if count[severity.HINT] and count[4] > 0 then
-            table.insert(result, 'h:' .. count[severity.HINT])
-        end
-
-        local result_str = table.concat(result, ' ')
-
-        vim.b[bufnr].buffer_diagnostics = result_str
-
-        vim.schedule(function()
-            vim.cmd.redrawstatus()
-        end)
-    end,
-})
-
--- require('antonk52.statusline').setup()
--- vim.opt.statusline = ' %m%r %f %= %l:%c  '
--- vim.o.statusline = ' %f%m %= %{&filetype} │ %l:%c '
+require('antonk52.statusline').setup()
 require('antonk52.infer_shiftwidth').setup()
 
 vim.defer_fn(function()
