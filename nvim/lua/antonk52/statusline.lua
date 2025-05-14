@@ -42,7 +42,7 @@ function M.lsp_init()
                 if type(msg) == 'table' and msg.kind ~= 'end' then
                     local percentage = ''
                     if msg.percentage then
-                        percentage = string.format('%2d', msg.percentage) .. '%% '
+                        percentage = string.format('%2d', msg.percentage) .. '% '
                     end
                     local title = msg.title or ''
                     local message = msg.message or ''
@@ -155,10 +155,12 @@ function _G.print_statusline_extras()
     local res = {}
     for _, fn in ipairs(M.extras) do
         local v = fn()
-        table.insert(res, hi_next(v.hi or 'StatusLine') .. v.text .. hi_next('StatusLine') .. '  ')
+        if #v.text > 0 then
+            table.insert(res, v.text)
+        end
     end
 
-    return table.concat(res, '')
+    return table.concat(res, ' │ ')
 end
 
 function M.refresh_lsp_status()
@@ -185,17 +187,15 @@ function M.setup()
         end
     end
     vim.opt.statusline = table.concat({
-        ' ',
-        '%f%m%r', -- filename, modified, readonly
-        ' ',
-        '%<',
-        '%#Comment#',
+        ' %f%m%r ', -- filename, modified, readonly
+        '%<', -- conceal marker
+        hi_next('Comment'),
         '%{get(b:, "lsp_location", "")}', -- lsp symbols
         '%= ',
-        '%#StatusLine#',
-        '%(%{v:lua.ak_lsp_init()} | %)', -- lsp status
+        hi_next('StatusLine'),
+        '%(%{v:lua.ak_lsp_init()} │ %)', -- lsp status
         '%(%{v:lua.vim.diagnostic.status()} │ %)', -- diagnostics
-        '%(%{get(b:, "minidiff_summary_string", "")} | %)', -- git diff
+        '%(%{get(b:, "minidiff_summary_string", "")} │ %)', -- git diff
         '%(%{v:lua.print_statusline_extras()} │ %)', -- work extras
         '%l:%c ', -- 'line:column'
     }, '')
