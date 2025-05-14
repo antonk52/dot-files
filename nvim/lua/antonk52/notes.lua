@@ -1,7 +1,6 @@
 local M = {}
 
 function M.setup()
-    vim.opt.shiftwidth = 2
     vim.cmd.cd(vim.env.NOTES_PATH)
 
     M.note_month_now()
@@ -24,6 +23,8 @@ function M.setup()
             end
         end,
     })
+
+    vim.cmd('color default')
 end
 
 function M.note_month_now()
