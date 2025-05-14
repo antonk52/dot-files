@@ -31,39 +31,6 @@ local hi_next = function(group)
     return '%#' .. group .. '#'
 end
 
----@type table<string, string> | nil
-local lsp_status_cache = nil
-function M.lsp_init()
-    if not lsp_status_cache then
-        lsp_status_cache = {}
-        for _, client in ipairs(vim.lsp.get_clients()) do
-            for progress in client.progress do
-                local msg = progress.value
-                if type(msg) == 'table' and msg.kind ~= 'end' then
-                    local percentage = ''
-                    if msg.percentage then
-                        percentage = string.format('%2d', msg.percentage) .. '% '
-                    end
-                    local title = msg.title or ''
-                    local message = msg.message or ''
-                    lsp_status_cache[client.name] = percentage .. title .. ' ' .. message
-                else
-                    lsp_status_cache[client.name] = nil
-                end
-            end
-        end
-    end
-
-    local items = {}
-    for k, v in pairs(lsp_status_cache) do
-        table.insert(items, k .. ': ' .. v)
-    end
-
-    return table.concat(items, ' │ ')
-end
-
-_G.ak_lsp_init = M.lsp_init
-
 local function debounce(func, timeout)
     local timer = vim.loop.new_timer()
     return function()
@@ -75,6 +42,37 @@ local function debounce(func, timeout)
         end
     end
 end
+
+-- Like `vim.lsp.status()` but debounced and only initial start up progress
+M.lsp_update_status = debounce(function()
+    ---@type table<string, string>
+    local lsp_status_by_client = {}
+    for _, client in ipairs(vim.lsp.get_clients()) do
+        for progress in client.progress do
+            local msg = progress.value
+            if type(msg) == 'table' and msg.kind ~= 'end' then
+                local percentage = ''
+                if msg.percentage then
+                    percentage = string.format('%2d', msg.percentage) .. '% '
+                end
+                local title = msg.title or ''
+                local message = msg.message or ''
+                lsp_status_by_client[client.name] = percentage .. title .. ' ' .. message
+            else
+                lsp_status_by_client[client.name] = nil
+            end
+        end
+    end
+
+    local items = {}
+    for k, v in pairs(lsp_status_by_client) do
+        table.insert(items, k .. ': ' .. v)
+    end
+
+    vim.g.lsp_status = table.concat(items, ' │ ')
+    vim.cmd.redrawstatus()
+end, 50)
+vim.g.lsp_status = ''
 
 vim.api.nvim_create_autocmd({ 'CursorHold', 'InsertLeave', 'WinScrolled', 'BufWinEnter' }, {
     pattern = { '*' },
@@ -163,10 +161,6 @@ function _G.print_statusline_extras()
     return table.concat(res, ' │ ')
 end
 
-function M.refresh_lsp_status()
-    lsp_status_cache = nil
-end
-
 function M.setup()
     if vim.fn.has('nvim-0.12') == 0 then
         vim.diagnostic.status = function()
@@ -193,38 +187,47 @@ function M.setup()
         '%{get(b:, "lsp_location", "")}', -- lsp symbols
         '%= ',
         hi_next('StatusLine'),
-        '%(%{v:lua.ak_lsp_init()} │ %)', -- lsp status
+        '%(%{get(g:, "lsp_status")} │ %)', -- lsp status
         '%(%{v:lua.vim.diagnostic.status()} │ %)', -- diagnostics
         '%(%{get(b:, "minidiff_summary_string", "")} │ %)', -- git diff
         '%(%{v:lua.print_statusline_extras()} │ %)', -- work extras
         '%l:%c ', -- 'line:column'
     }, '')
 
-    local throttle_timer = nil
     vim.api.nvim_create_autocmd('LspProgress', {
         pattern = '*',
-        desc = 'refresh statusline on LspProgress',
-        callback = function()
-            -- LspProgress fires frequently, so we throttle statusline updates.
-            if throttle_timer then
-                throttle_timer:stop()
-            end
-
-            throttle_timer = vim.defer_fn(function()
-                throttle_timer = nil
-                M.refresh_lsp_status()
-                vim.cmd.redrawstatus()
-            end, 60)
-        end,
+        desc = 'Refresh statusline on LspProgress',
+        callback = M.lsp_update_status,
     })
     vim.api.nvim_create_autocmd('DiagnosticChanged', {
         pattern = '*',
-        desc = 'refresh statusline on DiagnosticChanged',
-        callback = function()
-            -- schedule redraw, otherwise throws when exiting fugitive status
-            vim.schedule(function()
-                vim.cmd.redrawstatus()
-            end)
+        desc = 'Refresh statusline on DiagnosticChanged',
+        -- schedule redraw, otherwise throws when exiting fugitive status
+        callback = debounce(function()
+            vim.cmd.redrawstatus()
+        end, 30),
+    })
+
+    vim.api.nvim_create_autocmd('User', {
+        pattern = 'MiniDiffUpdated',
+        desc = 'Do not print changed lines, only added and removed',
+        callback = function(data)
+            local summary = vim.b[data.buf].minidiff_summary or {}
+            local t = {
+                add = (summary.add or 0) + (summary.change or 0),
+                delete = (summary.delete or 0) + (summary.change or 0),
+            }
+            local res = {}
+            if (summary.n_ranges or 0) > 0 then
+                table.insert(res, '#' .. summary.n_ranges)
+            end
+            if t.add > 0 then
+                table.insert(res, '+' .. t.add)
+            end
+            if t.delete > 0 then
+                table.insert(res, '-' .. t.delete)
+            end
+            vim.b[data.buf].minidiff_summary_string = table.concat(res, ' ')
         end,
     })
 end
