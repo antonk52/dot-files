@@ -23,8 +23,6 @@ function M.setup()
             end
         end,
     })
-
-    vim.cmd('color default')
 end
 
 function M.note_month_now()

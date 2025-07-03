@@ -64,6 +64,7 @@ if [[ -z "${PERSONAL}" ]]; then
 fi
 
 # cask apps
+brew install ghostty # terminal emulator
 brew install hammerspoon # macos automation with lua
 brew install karabiner-elements # advanced key mapping
 brew install keycastr # useful for demos

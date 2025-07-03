@@ -1,17 +1,17 @@
 {
-  "auto-cmdheight.nvim": { "branch": "main", "commit": "07180b2d14743fb0bfefed227c1b0407f425ae7c" },
-  "blink.cmp": { "branch": "main", "commit": "ef037d0cd90e038c19877b110742cd606b5eeb34" },
+  "auto-cmdheight.nvim": { "branch": "main", "commit": "82619eab0268f27024e1e0981ec3721a003ab2b7" },
+  "blink.cmp": { "branch": "main", "commit": "6d6b0092cfe570ade9b183cd53bb1a620290d02b" },
   "codecompanion.nvim": { "branch": "main", "commit": "d19670a44c35e9ba0674cc7a25ff3b8f22bbf062" },
   "copilot.lua": { "branch": "master", "commit": "2fe34db04570f6c47db0b752ca421a49b7357c03" },
   "lazy.nvim": { "branch": "main", "commit": "6c3bda4aca61a13a9c63f1c1d1b16b9d3be90d7a" },
   "markdowny.nvim": { "branch": "main", "commit": "8ff18e8677cf39821913f387697378fcf3e141a0" },
-  "mini.nvim": { "branch": "main", "commit": "009435c6c3653d54bc62997ca6b2e8513bc52cf4" },
-  "none-ls.nvim": { "branch": "main", "commit": "90e4a27ccaa25979a6b732b9f06dfa43b54957b7" },
-  "nvim-lspconfig": { "branch": "master", "commit": "5a137448fd921a0c5d3939cb75e60d21f64e4606" },
-  "nvim-treesitter": { "branch": "master", "commit": "066fd6505377e3fd4aa219e61ce94c2b8bdb0b79" },
+  "mini.nvim": { "branch": "main", "commit": "48f48e4b3f317e9da34ee7a01958b4c5018e2d34" },
+  "none-ls.nvim": { "branch": "main", "commit": "db2a48b79cfcdab8baa5d3f37f21c78b6705c62e" },
+  "nvim-lspconfig": { "branch": "master", "commit": "1ddc1a2e692b120cda6d33c890461e49cb85d6bf" },
+  "nvim-treesitter": { "branch": "master", "commit": "42fc28ba918343ebfd5565147a42a26580579482" },
   "plenary.nvim": { "branch": "master", "commit": "857c5ac632080dba10aae49dba902ce3abf91b35" },
-  "schemastore.nvim": { "branch": "main", "commit": "df87d16fc4ea7c2c67cfc00b513861738693fe07" },
+  "schemastore.nvim": { "branch": "main", "commit": "1ec3867f463dfe4ca37001348953d810c716d4d9" },
   "snacks.nvim": { "branch": "main", "commit": "bc0630e43be5699bb94dadc302c0d21615421d93" },
   "telescope.nvim": { "branch": "master", "commit": "b4da76be54691e854d3e0e02c36b0245f945c2c7" },
-  "vim-fugitive": { "branch": "master", "commit": "4a745ea72fa93bb15dd077109afbb3d1809383f2" }
+  "vim-fugitive": { "branch": "master", "commit": "593f831d6f6d779cbabb70a4d1e6b1b1936a88af" }
 }
