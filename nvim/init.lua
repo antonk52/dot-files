@@ -1,26 +1,96 @@
+local now = vim.uv.now()
+for _, ev in ipairs({ 'VimEnter', 'UIEnter', 'BufEnter' }) do
+    vim.api.nvim_create_autocmd(ev, {
+        once = true,
+        callback = function()
+            local elapsed = vim.uv.now() - now
+            vim.schedule(function()
+                vim.print(string.format('%s in %.2f ms', ev, elapsed / 1000))
+            end)
+        end,
+    })
+end
+
 -- these mappings have to be set before lazy.nvim plugins
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ','
 
+vim.loader.enable()
+
 local usercmd = vim.api.nvim_create_user_command
 local keymap = vim.keymap
 
--- Bootstrap lazy.nvim plugin manager {{{1
-local PLUGINS_LOCATION = vim.fs.normalize('~/dot-files/nvim/plugged')
-local lazypath = PLUGINS_LOCATION .. '/lazy.nvim'
-if not vim.uv.fs_stat(lazypath) then
-    vim.system({
-        'git',
-        'clone',
-        '--filter=blob:none',
-        'https://github.com/folke/lazy.nvim.git',
-        '--branch=stable',
-        lazypath,
-    }):wait()
-end
-vim.opt.rtp:prepend(lazypath)
+---@class Plugin_key_mapping
+---@field [1] string Left-hand side of the mapping
+---@field [2] string|function Right-hand side of the mapping
+---@field mode? string[] Modes of the mapping, defaults to {'n'}
+---@field opts? vim.keymap.set.Opts
 
-require('lazy').setup({
+---@class Plugin_spec
+---@field [1] string Plugin handle, e.g. 'user/plugin_name'
+---@field main? string Main module of the plugin, defaults to the plugin name
+---@field cond? boolean
+---@field enabled? boolean
+---@field dependencies? string[] List of plugin handles to load before this plugin
+---@field init? function Function to call before loading the plugin
+---@field config? function Function to call after loading the plugin
+---@field opts? table Options to pass to the `require('plugin_name').setup()`
+---@field keys? Plugin_key_mapping[]
+
+-- Wrapper function for vim.pack.add with config support {{{1
+---@param plugin_specs Plugin_spec[]
+---@param _? unknown package manager options
+local function load_plugins(plugin_specs, _)
+    local plugins_to_setup = {} --[[@type Plugin_spec[] ]]
+    local plugins_to_load = {} --[[@type string[] ]]
+
+    for _, plugin in ipairs(plugin_specs) do
+        if plugin.cond ~= false and plugin.enabled ~= false then
+            -- load deps if any
+            for _, dep in ipairs(plugin.dependencies or {}) do
+                table.insert(plugins_to_load, 'https://github.com/' .. dep)
+            end
+
+            -- load this plugin
+            table.insert(plugins_to_load, 'https://github.com/' .. plugin[1])
+
+            if plugin.config or plugin.opts or plugin.keys then
+                table.insert(plugins_to_setup, plugin)
+            end
+
+            if plugin.init then
+                -- call init before loading the plugin
+                plugin.init()
+                -- TODO ft/event handling
+            end
+        end
+    end
+
+    -- load plugins
+    vim.pack.add(plugins_to_load)
+
+    -- `config` functions
+    for _, plugin in pairs(plugins_to_setup) do
+        if plugin.config then
+            plugin.config()
+        elseif plugin.opts then
+            local name = plugin.main
+                or plugin[1]:gsub('^.*/', ''):gsub('[.-]nvim$', ''):gsub('[.-]lua$', '')
+            require(name).setup(plugin.opts)
+        end
+
+        for _, map in ipairs(plugin.keys or {}) do
+            for _, mode in ipairs(map.mode or { 'n' }) do
+                keymap.set(mode, map[1], map[2], map.opts or {})
+            end
+        end
+    end
+end
+
+usercmd('PackList', 'lua vim.pack.update()', { nargs = 0, desc = 'List plugins' })
+usercmd('PackUpdate', 'lua vim.pack.update(nil, { force = true })', { nargs = 0 })
+
+load_plugins({
     {
         'folke/snacks.nvim',
         opts = {
@@ -290,33 +360,24 @@ require('lazy').setup({
     },
     {
         'jake-stewart/auto-cmdheight.nvim',
-        opts = { max_lines = 15 },
+        opts = { max_lines = 20 },
     },
-}, {
-    root = PLUGINS_LOCATION,
-    performance = {
-        rtp = {
-            disabled_plugins = {
-                '2html_plugin',
-                'gzip',
-                -- 'netrw',
-                'netrwFileHandlers',
-                -- 'netrwPlugin',
-                'netrwSettings',
-                'rplugin', -- remote plugins
-                'tar',
-                'tarPlugin',
-                'tohtml',
-                'tutor',
-                'tutor_mode_plugin',
-                'zip',
-                'zipPlugin',
-            },
-        },
-    },
-    pkg = { enabled = false },
-    readme = { enabled = false },
 })
+
+vim.g.loaded_2html_plugin = 1
+vim.g.loaded_gzip = 1
+-- vim.g.loaded_netrw = 1
+vim.g.loaded_netrwFileHandlers = 1
+-- vim.g.loaded_netrwPlugin = 1
+vim.g.loaded_netrwSettings = 1
+vim.g.loaded_rplugin = 1
+vim.g.loaded_tar = 1
+vim.g.loaded_tarPlugin = 1
+vim.g.loaded_tohtml = 1
+vim.g.loaded_tutor = 1
+vim.g.loaded_tutor_mode_plugin = 1
+vim.g.loaded_zip = 1
+vim.g.loaded_zipPlugin = 1
 
 -- Avoid startup work {{{1
 
