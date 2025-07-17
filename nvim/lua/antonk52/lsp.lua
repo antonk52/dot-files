@@ -19,11 +19,11 @@ local M = {}
 
 ---@type table<string, vim.lsp.ClientConfig>
 M.servers = {
-    flow = {
-        -- only run globally installed flow
-        cmd = { 'flow', 'lsp' },
-    },
-    hhvm = {},
+    -- flow = {
+    --     -- only run globally installed flow
+    --     cmd = { 'flow', 'lsp' },
+    -- },
+    -- hhvm = {},
     gopls = {},
     golangci_lint_ls = {},
 
