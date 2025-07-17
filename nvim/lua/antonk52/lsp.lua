@@ -31,14 +31,7 @@ function M.setup()
         root_markers = { 'tsconfig.json', 'jsconfig.json', 'package.json' },
     })
 
-    vim.lsp.config('cssmodules_ls', {
-        -- cmd = {
-        --     'node',
-        --     '/Users/antonk52/Documents/dev/personal/cssmodules-language-server/lib/cli.js',
-        --     '--stdio',
-        -- },
-        init_options = { camelCase = 'dashes' },
-    })
+    vim.lsp.config('cssmodules_ls', { init_options = { camelCase = 'dashes' } })
 
     vim.lsp.config('biome', { workspace_required = true })
     vim.lsp.config('eslint', { workspace_required = true })
