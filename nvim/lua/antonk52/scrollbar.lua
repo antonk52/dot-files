@@ -101,7 +101,7 @@ function M.setup()
 
             vim.schedule(function()
                 -- no scrollbar for the scrollbar buffer
-                if bufnr == sbuf then
+                if not vim.api.nvim_buf_is_valid(bufnr) or bufnr == sbuf then
                     return swin_hide(swin)
                 end
 
@@ -124,6 +124,9 @@ function M.setup()
                     {
                         buffer = bufnr,
                         callback = function()
+                            if not vim.api.nvim_buf_is_valid(bufnr) then
+                                return swin_hide(swin)
+                            end
                             update_swin_position(swin, bufnr)
                         end,
                     }

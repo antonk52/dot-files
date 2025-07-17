@@ -162,7 +162,7 @@ function _G.print_statusline_extras()
 end
 
 function M.setup()
-    if vim.fn.has('nvim-0.12') == 0 then
+    if not vim.diagnostic.status then
         vim.diagnostic.status = function()
             local counts = vim.diagnostic.count(0)
             local user_signs = vim.tbl_get(

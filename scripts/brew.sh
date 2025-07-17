@@ -43,7 +43,6 @@ brew install imagemagick # image manipulation
 brew install jq # cli for working with json
 brew install lua-language-server
 brew install luacheck # lua linter
-brew install luarocks # lua package manager
 brew install neovim # vim but better
 brew install node # nodejs & npm
 brew install openssl
@@ -59,8 +58,6 @@ brew install zsh # updated version
 
 if [[ -z "${PERSONAL}" ]]; then
     brew install freetype # library to render fonts
-    brew install python
-    brew install python3
 fi
 
 # cask apps

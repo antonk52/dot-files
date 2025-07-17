@@ -25,13 +25,7 @@ M.servers = {
     },
     hhvm = {},
     gopls = {},
-    golangci_lint_ls = {
-        cmd = { 'golangci-lint-langserver' },
-        init_options = {
-            command = { 'golangci-lint', 'run', '--out-format', 'json', '--issues-exit-code=1' },
-            -- command = { 'golangci-lint', 'run', '--output.json.path=stdout', '--show-stats=false' },
-        },
-    },
+    golangci_lint_ls = {},
 
     -- tsserver
     ts_ls = {

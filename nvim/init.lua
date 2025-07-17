@@ -571,6 +571,26 @@ vim.api.nvim_create_autocmd('FileType', {
             vim.system({ 'cp', '-r', existing_path, target_path }):wait()
             update_netrw()
         end, { buffer = true, desc = 'Copy item' })
+        keymap.set('n', 'M', function()
+            local current_dir = get_current_dir()
+            local line = vim.api.nvim_get_current_line()
+            if line == '' or line == '.' or line == '..' then
+                return
+            end
+            local existing_path = vim.fs.joinpath(current_dir, line)
+
+            local target_path = vim.fn.input('Move to: ', existing_path, 'file')
+            if not target_path or target_path == '' then
+                return
+            end
+
+            vim.fn.mkdir(vim.fs.dirname(target_path), 'p')
+            vim.system({ 'mv', existing_path, target_path }):wait()
+            update_netrw()
+        end, {
+            buffer = true,
+            desc = 'Move item',
+        })
     end,
 })
 

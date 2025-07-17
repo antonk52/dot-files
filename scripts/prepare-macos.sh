@@ -103,5 +103,16 @@ function setup_safari() {
 }
 setup_safari;
 
+function setup_keyrepeat_vscody_apps() {
+    defaults write com.microsoft.VSCode ApplePressAndHoldEnabled -bool false \
+        && defaults write com.microsoft.VSCodeInsiders ApplePressAndHoldEnabled -bool false \
+        && defaults write com.visualstudio.code ApplePressAndHoldEnabled -bool false \
+        # cursor app
+        && defaults write com.todesktop.230313mzl4w4u92 ApplePressAndHoldEnabled -bool false \
+        && echo '✅ key repeat is enabled for vscody apps' \
+        || echo '❗️ could not set up key repeat for vscody apps';
+}
+setup_keyrepeat_vscody_apps;
+
 echo ''
 echo 'MacOS preparation is done'

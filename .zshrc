@@ -118,5 +118,8 @@ fi
 # Load local settings
 source_if_exists "$XDG_CONFIG_HOME"/local_shellrc
 
+export NVIM_DEV="/Users/antonk52/Documents/dev/personal/neovim"
+alias dvim='VIMRUNTIME="$NVIM_DEV/runtime" $NVIM_DEV/build/bin/nvim --luamod-dev'
+
 # if you need ruby, do use this
 # eval "$(rbenv init -)"
