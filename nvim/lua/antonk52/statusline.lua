@@ -190,7 +190,7 @@ function M.setup()
         '%(%{get(g:, "lsp_status")} │ %)', -- lsp status
         '%(%{v:lua.vim.diagnostic.status()} │ %)', -- diagnostics
         '%(%{get(b:, "minidiff_summary_string", "")} │ %)', -- git diff
-        '%(%{v:lua.print_statusline_extras()} │ %)', -- work extras
+        '%(%{% v:lua.print_statusline_extras()%} │ %)', -- work extras
         '%l:%c ', -- 'line:column'
     }, '')
 
