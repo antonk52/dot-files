@@ -391,9 +391,9 @@ keymap.set('n', '-', function()
     end)
 end, { silent = true, desc = 'Open netrw, focus current item' })
 keymap.set('n', '<C-s>', '<cmd>lua vim.lsp.buf.signature_help()<cr>', { desc = 'Signature help' })
-keymap.set('n', '<leader>R', vim.lsp.buf.rename, { desc = 'Rename' })
+keymap.set('n', '<leader>R', 'grr', { desc = 'Rename' })
 keymap.set('n', '<leader>L', '<cmd>lua vim.diagnostic.open_float()<cr>', { desc = 'Line errors' })
-keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, { desc = 'Code actions' })
+keymap.set('n', '<leader>ca', 'gra', { desc = 'Code actions' })
 keymap.set('n', ']e', function()
     vim.diagnostic.jump({ count = 1, severity = 1 })
 end, { desc = 'Next error diagnostic' })
@@ -471,10 +471,7 @@ vim.filetype.add({
 })
 
 -- Autocommands {{{1
-vim.api.nvim_create_autocmd('TermOpen', {
-    desc = 'Immediately enter terminal',
-    command = 'startinsert',
-})
+vim.api.nvim_create_autocmd('TermOpen', { command = 'startinsert' })
 
 vim.api.nvim_create_autocmd('TextYankPost', {
     desc = 'Blink yanked text after yanking it',
