@@ -185,8 +185,8 @@ function M.setup()
         '%<', -- conceal marker
         hi_next('Comment'),
         '%{get(b:, "lsp_location", "")}', -- lsp symbols
-        '%= ',
-        hi_next('StatusLine'),
+        '%= ', -- left align
+        '%*', -- reset highlight
         '%(%{get(g:, "lsp_status")} │ %)', -- lsp status
         '%(%{v:lua.vim.diagnostic.status()} │ %)', -- diagnostics
         '%(%{get(b:, "minidiff_summary_string", "")} │ %)', -- git diff
@@ -218,9 +218,6 @@ function M.setup()
                 delete = (summary.delete or 0) + (summary.change or 0),
             }
             local res = {}
-            if (summary.n_ranges or 0) > 0 then
-                table.insert(res, '#' .. summary.n_ranges)
-            end
             if t.add > 0 then
                 table.insert(res, '+' .. t.add)
             end
