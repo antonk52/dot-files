@@ -329,6 +329,7 @@ load_plugins({
             require('nvim-treesitter.configs').setup({
                 highlight = { enable = true },
                 ensure_installed = {
+                    'diff', -- preview commits in vim.pack output
                     'go',
                     'javascript',
                     'jsdoc',
