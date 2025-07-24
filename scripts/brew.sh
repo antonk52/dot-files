@@ -31,15 +31,16 @@ brew install fd # modern find
 brew install fzf # cli fuzzy finder written in Go
 brew install gh # github cli
 brew install go # golang
-brew install gopls # go language server
-brew install golangci-lint # go linter
-brew install golangci-lint-langserver # go linter server
 brew install git # updated version
 brew install git-absorb # just like mercurial absorb, but call with `--and-rebase`
 brew install git-lfs # github large file storage
 brew install gnu-sed # used by neovim
+brew install golangci-lint # go linter
+brew install golangci-lint-langserver # go linter server
+brew install gopls # go language server
 brew install htop # top but better
 brew install imagemagick # image manipulation
+brew install jj # modern version control system
 brew install jq # cli for working with json
 brew install lua-language-server
 brew install luacheck # lua linter

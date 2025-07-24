@@ -35,11 +35,6 @@ export PATH=$PATH:/opt/homebrew/bin
 # go packages
 export PATH=$PATH:"$HOME"/go/bin
 
-# avoid using find if `fd` is installed
-if has_command fd; then
-    export FZF_DEFAULT_COMMAND='fd -t f'
-fi
-
 # ============================================== completion
 
 _setup_completion() {
@@ -128,6 +123,12 @@ run_once_after_first_prompt() {
 
     export NVIM_DEV="/Users/antonk52/Documents/dev/personal/neovim"
     alias dvim='VIMRUNTIME="$NVIM_DEV/runtime" $NVIM_DEV/build/bin/nvim --luamod-dev'
+
+    # avoid using find if `fd` is installed
+    if has_command fd; then
+        export FZF_DEFAULT_COMMAND='fd -t f'
+    fi
+
 
     # remove itself so it doesn't run again
     precmd_functions=("${(@)precmd_functions:#run_once_after_first_prompt}")

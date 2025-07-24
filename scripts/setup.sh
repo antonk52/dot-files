@@ -15,7 +15,7 @@ function link() {
 
 DOTS="$HOME"/dot-files
 
-for config in git nvim ghostty tmux karabiner; do
+for config in git jj nvim ghostty tmux karabiner; do
     link "$DOTS"/"$config" "$HOME"/.config/"$config"
 done
 

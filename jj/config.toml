@@ -1,0 +1,24 @@
+"$schema" = "https://jj-vcs.github.io/jj/latest/config-schema.json"
+
+[user]
+name = "antonk52"
+email = "halloy52@gmail.com"
+
+[ui]
+default-command = "log"
+
+[aliases]
+amend = ["squash"]
+c = ["commit"]
+ci = ["commit", "--interactive"]
+cm = ["commit", "-m"]
+d = ["diff", "--ignore-all-space"]
+go = ["edit"]
+hide = ["abandon"]
+s = ["status"]
+
+[colors]
+timestamp = "bright black"
+"working_copy" = { bold = false }
+"working_copy timestamp" = "bright black"
+
