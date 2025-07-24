@@ -42,49 +42,54 @@ fi
 
 # ============================================== completion
 
-# see https://gist.github.com/ctechols/ca1035271ad134841284
-autoload -Uz compinit;
-if [[ -n ${ZDOTDIR}/.zcompdump(#qN.mh+24) ]]; then
-    compinit;
-else
-    compinit -C;
-fi;
+_setup_completion() {
+    # see https://gist.github.com/ctechols/ca1035271ad134841284
+    autoload -Uz compinit;
+    if [[ -n ${ZDOTDIR}/.zcompdump(#qN.mh+24) ]]; then
+        compinit;
+    else
+        compinit -C;
+    fi;
 
-# docker completion
-if has_command docker; then
-    zsh_site_functions_path="$XDG_DATA_HOME/zsh/site-functions"
+    # docker completion
+    if has_command docker; then
+        zsh_site_functions_path="$XDG_DATA_HOME/zsh/site-functions"
 
-    if [ ! -f "$zsh_site_functions_path/_docker" ]; then
-        mkdir -p "$zsh_site_functions_path"
-        docker_etc="/Applications/Docker.app/Contents/Resources/etc/"
-        ln -s "$docker_etc/docker.zsh-completion" "$zsh_site_functions_path/_docker"
-        ln -s "$docker_etc/docker-machine.zsh-completion" "$zsh_site_functions_path/_docker-machine"
-        ln -s "$docker_etc/docker-compose.zsh-completion" "$zsh_site_functions_path/_docker-compose"
+        if [ ! -f "$zsh_site_functions_path/_docker" ]; then
+            mkdir -p "$zsh_site_functions_path"
+            docker_etc="/Applications/Docker.app/Contents/Resources/etc/"
+            ln -s "$docker_etc/docker.zsh-completion" "$zsh_site_functions_path/_docker"
+            ln -s "$docker_etc/docker-machine.zsh-completion" "$zsh_site_functions_path/_docker-machine"
+            ln -s "$docker_etc/docker-compose.zsh-completion" "$zsh_site_functions_path/_docker-compose"
+        fi
     fi
-fi
 
-source_if_exists "$DOT_FILES/dependencies/zsh-autosuggestions/zsh-autosuggestions.zsh"
 
-if has_command yarn && has_command compdef; then
-    source_if_exists "$DOT_FILES/dependencies/zsh-yarn-completions/zsh-yarn-completions.plugin.zsh"
-fi
+    source_if_exists "$DOT_FILES/dependencies/zsh-autosuggestions/zsh-autosuggestions.zsh"
 
-# autojump with `j`
-ZSHZ_CMD=j source_if_exists "$DOT_FILES"/dependencies/zsh-z/zsh-z.plugin.zsh
+    if has_command yarn && has_command compdef; then
+        source_if_exists "$DOT_FILES/dependencies/zsh-yarn-completions/zsh-yarn-completions.plugin.zsh"
+    fi
 
-# load edit-command-line widget
-autoload -U edit-command-line
-zle -N edit-command-line
+    # autojump with `j`
+    ZSHZ_CMD=j source_if_exists "$DOT_FILES"/dependencies/zsh-z/zsh-z.plugin.zsh
 
-bindkey "^R" history-incremental-search-backward
-# ctrl+v to edit command in vim
-bindkey "^v" edit-command-line
+    # load edit-command-line widget
+    autoload -U edit-command-line
+    zle -N edit-command-line
 
-# source personal aliases
-source "$DOT_FILES/shell-aliases"
+    bindkey "^R" history-incremental-search-backward
+    # ctrl+v to edit command in vim
+    bindkey "^v" edit-command-line
 
-# Vi mode for command line
-bindkey -v
+    # source personal aliases
+    source "$DOT_FILES/shell-aliases"
+
+    # Vi mode for command line
+    bindkey -v
+
+    unfunction _setup_completion
+}
 
 # ============================================== PURE PROMPT
 
@@ -115,11 +120,17 @@ fi
 
 # ============================================== Misc
 
-# Load local settings
-source_if_exists "$XDG_CONFIG_HOME"/local_shellrc
+run_once_after_first_prompt() {
+    _setup_completion
 
-export NVIM_DEV="/Users/antonk52/Documents/dev/personal/neovim"
-alias dvim='VIMRUNTIME="$NVIM_DEV/runtime" $NVIM_DEV/build/bin/nvim --luamod-dev'
+    # Load local settings
+    source_if_exists "$XDG_CONFIG_HOME"/local_shellrc
 
-# if you need ruby, do use this
-# eval "$(rbenv init -)"
+    export NVIM_DEV="/Users/antonk52/Documents/dev/personal/neovim"
+    alias dvim='VIMRUNTIME="$NVIM_DEV/runtime" $NVIM_DEV/build/bin/nvim --luamod-dev'
+
+    # remove itself so it doesn't run again
+    precmd_functions=("${(@)precmd_functions:#run_once_after_first_prompt}")
+}
+
+precmd_functions+=run_once_after_first_prompt
