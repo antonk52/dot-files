@@ -142,8 +142,6 @@ require('lazy').setup({
     },
     {
         'saghen/blink.cmp',
-        -- version = 'v0.*',
-        -- dir = '/Users/antonk52/Documents/dev/personal/blink.cmp',
         opts = {
             keymap = {
                 ['<C-o>'] = { 'select_and_accept', 'snippet_forward', 'fallback' },
@@ -153,7 +151,6 @@ require('lazy').setup({
             },
             cmdline = { completion = { menu = { auto_show = true } } },
             completion = {
-                menu = { border = 'none' },
                 documentation = {
                     auto_show = true,
                     window = {
