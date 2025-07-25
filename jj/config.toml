@@ -13,7 +13,9 @@ c = ["commit"]
 ci = ["commit", "--interactive"]
 cm = ["commit", "-m"]
 d = ["diff", "--ignore-all-space"]
-go = ["edit"]
+logr = ["log", "-r=all()"]
+go = ["edit", "--ignore-immutable"]
+h = ["-h"]
 hide = ["abandon"]
 s = ["status"]
 
@@ -22,3 +24,7 @@ timestamp = "bright black"
 "working_copy" = { bold = false }
 "working_copy timestamp" = "bright black"
 
+[git]
+# when available fetch from upstream too, default is only from origin
+# see https://jj-vcs.github.io/jj/latest/github/#using-several-remotes
+fetch = ["upstream", "origin"]

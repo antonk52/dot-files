@@ -259,6 +259,7 @@ require('lazy').setup({
             require('nvim-treesitter.configs').setup({
                 highlight = { enable = true },
                 ensure_installed = {
+                    'diff', -- used in vim.pack
                     'go',
                     'javascript',
                     'jsdoc',
