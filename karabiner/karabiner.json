@@ -655,7 +655,7 @@
                                     "key_code": "h",
                                     "modifiers": {
                                         "mandatory": ["fn"],
-                                        "optional": ["left_shift", "left_control", "left_alt", "left_command"]
+                                        "optional": ["left_shift", "left_control", "left_alt", "left_command", "right_command", "right_option"]
                                     }
                                 },
                                 "to": [{ "key_code": "left_arrow" }],
@@ -666,7 +666,7 @@
                                     "key_code": "j",
                                     "modifiers": {
                                         "mandatory": ["fn"],
-                                        "optional": ["left_shift", "left_control", "left_alt", "left_command"]
+                                        "optional": ["left_shift", "left_control", "left_alt", "left_command", "right_command", "right_option"]
                                     }
                                 },
                                 "to": [{ "key_code": "down_arrow" }],
@@ -677,7 +677,7 @@
                                     "key_code": "k",
                                     "modifiers": {
                                         "mandatory": ["fn"],
-                                        "optional": ["left_shift", "left_control", "left_alt", "left_command"]
+                                        "optional": ["left_shift", "left_control", "left_alt", "left_command", "right_command", "right_option"]
                                     }
                                 },
                                 "to": [{ "key_code": "up_arrow" }],
@@ -688,7 +688,7 @@
                                     "key_code": "l",
                                     "modifiers": {
                                         "mandatory": ["fn"],
-                                        "optional": ["left_shift", "left_control", "left_alt", "left_command"]
+                                        "optional": ["left_shift", "left_control", "left_alt", "left_command", "right_command", "right_option"]
                                     }
                                 },
                                 "to": [{ "key_code": "right_arrow" }],
@@ -708,6 +708,17 @@
                                         "modifiers": ["left_control"]
                                     }
                                 ],
+                                "type": "basic"
+                            }
+                        ]
+                    },
+                    {
+                        "description": "right_command tap is enter",
+                        "manipulators": [
+                            {
+                                "from": { "key_code": "right_command" },
+                                "to_if_alone": [{ "key_code": "return_or_enter" }],
+                                "to": [{ "key_code": "right_command" }],
                                 "type": "basic"
                             }
                         ]
