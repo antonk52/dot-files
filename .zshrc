@@ -1,4 +1,3 @@
-#!/bin/sh
 # ============================================== ENVIRONMENT
 export XDG_CONFIG_HOME=$HOME/.config
 export XDG_DATA_HOME=$HOME/.local/share
@@ -14,15 +13,6 @@ export KEYTIMEOUT=1
 
 source_if_exists() { [ -f "$1" ] && . "$1"; return 0; }
 has_command() { type "$1" >/dev/null 2>&1; }
-
-# Preferred editor for local and remote sessions
-if has_command nvim; then
-    export EDITOR='nvim'
-    # use nvim to read man pages
-    export MANPAGER='nvim +Man!'
-else
-    export EDITOR='vim'
-fi
 
 # global node modules
 export PATH="$HOME"/.npm-global/bin:"$HOME"/.yarn/bin:"$HOME"/.bun/bin:"$XDG_CACHE_HOME"/.bun/bin:$PATH
@@ -58,7 +48,6 @@ _setup_completion() {
             ln -s "$docker_etc/docker-compose.zsh-completion" "$zsh_site_functions_path/_docker-compose"
         fi
     fi
-
 
     source_if_exists "$DOT_FILES/dependencies/zsh-autosuggestions/zsh-autosuggestions.zsh"
 
@@ -97,6 +86,9 @@ if prompt -l | grep pure &> /dev/null; then
     export PURE_PROMPT_VICMD_SYMBOL="✔︎" # tick
     export PURE_GIT_DOWN_ARROW="↓"
     export PURE_GIT_UP_ARROW="↑"
+    export PURE_GIT_PULL=0
+    export PURE_GIT_UNTRACKED_DIRTY=1
+    export PURE_RPROMPT=""
 
     zstyle :prompt:pure:path color blue
     zstyle :prompt:pure:git:branch color green
@@ -108,15 +100,20 @@ if prompt -l | grep pure &> /dev/null; then
     zstyle ':vcs_info:*:*' actionformats "$FX[bold]%r$FX[no-bold]/%S" "%s/%b" "%u%c (%a)"
 
     prompt pure
-elif prompt -l | grep oliver &> /dev/null; then
-    # when pure is not installed but a basic fallback is needed
-    prompt oliver
 fi
 
 # ============================================== Misc
 
 run_once_after_first_prompt() {
     _setup_completion
+
+    # Preferred editor for local and remote sessions
+    if has_command nvim; then
+        export EDITOR='nvim'
+        export MANPAGER='nvim +Man!'
+    else
+        export EDITOR='vim'
+    fi
 
     # Load local settings
     source_if_exists "$XDG_CONFIG_HOME"/local_shellrc
@@ -129,9 +126,10 @@ run_once_after_first_prompt() {
         export FZF_DEFAULT_COMMAND='fd -t f'
     fi
 
-
     # remove itself so it doesn't run again
     precmd_functions=("${(@)precmd_functions:#run_once_after_first_prompt}")
+    unfunction run_once_after_first_prompt
 }
 
 precmd_functions+=run_once_after_first_prompt
+# vim syntax=zsh
