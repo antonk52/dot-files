@@ -222,6 +222,7 @@ local groups = {
     ['@markup.quote'] = { link = '@text.quote' },
     ['@markup.raw'] = { link = 'String' },
     ['@markup.raw.block'] = { link = 'Normal' },
+    ['@markup.raw.block.markdown'] = { link = 'String' },
     ['@markup.raw.delimeter'] = { link = 'Normal' },
     ['@markup.strong'] = { link = 'Bold' },
 }
