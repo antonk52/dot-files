@@ -544,7 +544,7 @@
                         ]
                     },
                     {
-                        "description": "TAB to shift+option+control (Amethyst mod2) or TAB (If Alone)",
+                        "description": "TAB to shift+option+control (hyper) or TAB (If Alone)",
                         "manipulators": [
                             {
                                 "from": {
@@ -558,6 +558,35 @@
                                     }
                                 ],
                                 "to_if_alone": [{ "key_code": "tab" }],
+                                "type": "basic"
+                            }
+                        ]
+                    },
+                    {
+                        "description": "TAB + W to open browser; TAB + E to open Ghostty",
+                        "manipulators": [
+                            {
+                                "from": {
+                                    "key_code": "w",
+                                    "modifiers": { "mandatory": ["left_control", "left_option", "left_shift"] }
+                                },
+                                "to": [
+                                    {
+                                        "shell_command": "open -a 'Google Chrome'"
+                                    }
+                                ],
+                                "type": "basic"
+                            },
+                            {
+                                "from": {
+                                    "key_code": "e",
+                                    "modifiers": { "mandatory": ["left_control", "left_option", "left_shift"] }
+                                },
+                                "to": [
+                                    {
+                                        "shell_command": "open -a 'Ghostty'"
+                                    }
+                                ],
                                 "type": "basic"
                             }
                         ]
