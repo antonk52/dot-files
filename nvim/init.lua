@@ -57,13 +57,7 @@ require('lazy').setup({
                     end,
                 },
             },
-            scroll = not vim.env.SSH_CLIENT and {
-                animate = {
-                    total = 180,
-                    fps = 30,
-                    easing = 'inOutQuad',
-                },
-            } or nil,
+            scroll = { animate = { total = 180, fps = 30, easing = 'inOutQuad' } },
         },
         keys = {
             { '<leader>b', '<cmd>lua Snacks.picker.buffers()<cr>' },
@@ -385,6 +379,7 @@ vim.opt.synmaxcol = 300
 
 vim.cmd.color('lake_contrast')
 
+keymap.set('n', '-', '<cmd>Explore<cr>', { desc = 'Open netrw' })
 keymap.set('n', '<C-s>', '<cmd>lua vim.lsp.buf.signature_help()<cr>', { desc = 'Signature help' })
 keymap.set('n', '<leader>R', 'grr', { desc = 'Rename' })
 keymap.set('n', '<leader>L', '<cmd>lua vim.diagnostic.open_float()<cr>', { desc = 'Line errors' })

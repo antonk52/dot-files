@@ -106,8 +106,6 @@ M.servers = {
                     maxPreload = 10000,
                     checkThirdParty = false,
                 },
-                -- Do not send telemetry data containing a randomized but unique identifier
-                telemetry = { enable = false },
                 completion = { callSnippet = 'Replace' },
                 codeLens = { enable = true },
                 -- hint = { enable = true, setType = true },

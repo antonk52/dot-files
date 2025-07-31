@@ -85,12 +85,7 @@ vim.api.nvim_create_autocmd({ 'CursorHold', 'InsertLeave', 'WinScrolled', 'BufWi
         end
         local params = { textDocument = vim.lsp.util.make_text_document_params() }
         vim.lsp.buf_request(bufnr, 'textDocument/documentSymbol', params, function(err, result)
-            if err then
-                vim.b[bufnr].lsp_location = ''
-                vim.cmd.redrawstatus()
-                return
-            end
-            if not result then
+            if err or not result then
                 vim.b[bufnr].lsp_location = ''
                 vim.cmd.redrawstatus()
                 return
@@ -181,7 +176,7 @@ function M.setup()
         end
     end
     vim.opt.statusline = table.concat({
-        ' %f%m%r ', -- filename, modified, readonly
+        ' %f%m ', -- filename, modified, readonly
         '%<', -- conceal marker
         hi_next('Comment'),
         '%{get(b:, "lsp_location", "")}', -- lsp symbols

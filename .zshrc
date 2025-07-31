@@ -105,8 +105,6 @@ fi
 # ============================================== Misc
 
 run_once_after_first_prompt() {
-    _setup_completion
-
     # Preferred editor for local and remote sessions
     if has_command nvim; then
         export EDITOR='nvim'
@@ -114,6 +112,8 @@ run_once_after_first_prompt() {
     else
         export EDITOR='vim'
     fi
+
+    _setup_completion
 
     # Load local settings
     source_if_exists "$XDG_CONFIG_HOME"/local_shellrc
