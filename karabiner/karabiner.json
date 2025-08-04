@@ -592,6 +592,37 @@
                         ]
                     },
                     {
+                        "description": "TAB + c/v to screen shot or capture",
+                        "manipulators": [
+                            {
+                                "from": {
+                                    "key_code": "c",
+                                    "modifiers": { "mandatory": ["left_control", "left_option", "left_shift"] }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "4",
+                                        "modifiers": ["left_command", "left_shift"]
+                                    }
+                                ],
+                                "type": "basic"
+                            },
+                            {
+                                "from": {
+                                    "key_code": "v",
+                                    "modifiers": { "mandatory": ["left_control", "left_option", "left_shift"] }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "5",
+                                        "modifiers": ["left_command", "left_shift"]
+                                    }
+                                ],
+                                "type": "basic"
+                            }
+                        ]
+                    },
+                    {
                         "description": "TAB + [] to navigate workspaces",
                         "manipulators": [
                             {
