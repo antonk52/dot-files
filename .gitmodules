@@ -1,6 +1,3 @@
-[submodule "dependencies/pure"]
-	path = dependencies/pure
-	url = https://github.com/sindresorhus/pure
 [submodule "dependencies/zsh-yarn-completions"]
 	path = dependencies/zsh-yarn-completions
 	url = https://github.com/chrisands/zsh-yarn-completions.git

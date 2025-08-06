@@ -25,6 +25,8 @@ export PATH=$PATH:/opt/homebrew/bin
 # go packages
 export PATH=$PATH:"$HOME"/go/bin
 
+source $DOT_FILES/scripts/prompt-pure-min.zsh
+
 # ============================================== completion
 
 _setup_completion() {
@@ -74,33 +76,6 @@ _setup_completion() {
 
     unfunction _setup_completion
 }
-
-# ============================================== PURE PROMPT
-
-fpath+="$DOT_FILES/dependencies/pure"
-
-autoload -U promptinit; promptinit
-
-if prompt -l | grep pure &> /dev/null; then
-    export PURE_PROMPT_SYMBOL="▲" # triangle
-    export PURE_PROMPT_VICMD_SYMBOL="✔︎" # tick
-    export PURE_GIT_DOWN_ARROW="↓"
-    export PURE_GIT_UP_ARROW="↑"
-    export PURE_GIT_PULL=0
-    export PURE_GIT_UNTRACKED_DIRTY=1
-    export PURE_RPROMPT=""
-
-    zstyle :prompt:pure:path color blue
-    zstyle :prompt:pure:git:branch color green
-    zstyle :prompt:pure:git:arrow color default
-    zstyle :prompt:pure:prompt:success color default
-    zstyle :prompt:pure:prompt:error color red
-    zstyle ':vcs_info:*:*' unstagedstr '!'
-    zstyle ':vcs_info:*:*' stagedstr '+'
-    zstyle ':vcs_info:*:*' actionformats "$FX[bold]%r$FX[no-bold]/%S" "%s/%b" "%u%c (%a)"
-
-    prompt pure
-fi
 
 # ============================================== Misc
 
