@@ -57,6 +57,10 @@ _setup_completion() {
         source_if_exists "$DOT_FILES/dependencies/zsh-yarn-completions/zsh-yarn-completions.plugin.zsh"
     fi
 
+    if has_command jj; then
+        source <(jj util completion zsh)
+    fi
+
     # autojump with `j`
     ZSHZ_CMD=j source_if_exists "$DOT_FILES"/dependencies/zsh-z/zsh-z.plugin.zsh
 
