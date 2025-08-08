@@ -19,11 +19,6 @@ local M = {}
 
 ---@type table<string, vim.lsp.ClientConfig>
 M.servers = {
-    flow = {
-        -- only run globally installed flow
-        cmd = { 'flow', 'lsp' },
-    },
-    hhvm = {},
     gopls = {},
     golangci_lint_ls = {},
 
@@ -151,7 +146,7 @@ function M.setup()
     -- })
     -- vim.lsp.enable('tsgo')
 
-    -- vim.lsp.enable('emmylua')
+    -- vim.lsp.enable('emmylua_ls')
     -- M.servers.lua_ls = nil
 
     -- call on CursorHold
