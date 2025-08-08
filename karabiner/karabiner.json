@@ -910,7 +910,7 @@
                             {
                                 "type": "basic",
                                 "from": { "key_code": "s" },
-                                "to": [{ "key_code": "open_bracket", "modifiers": ["left_shift"] }],
+                                "to": [{ "key_code": "period", "modifiers": ["left_shift"] }],
                                 "conditions": [
                                     {
                                         "type": "variable_if",
@@ -922,7 +922,7 @@
                             {
                                 "type": "basic",
                                 "from": { "key_code": "d" },
-                                "to": [{ "key_code": "open_bracket" }],
+                                "to": [{ "key_code": "open_bracket", "modifiers": ["left_shift"] }],
                                 "conditions": [
                                     {
                                         "type": "variable_if",
@@ -934,42 +934,6 @@
                             {
                                 "type": "basic",
                                 "from": { "key_code": "f" },
-                                "to": [{ "key_code": "9", "modifiers": ["left_shift"] }],
-                                "conditions": [
-                                    {
-                                        "type": "variable_if",
-                                        "name": "symbol_layer",
-                                        "value": 1
-                                    }
-                                ]
-                            },
-                            {
-                                "type": "basic",
-                                "from": { "key_code": "j" },
-                                "to": [{ "key_code": "0", "modifiers": ["left_shift"] }],
-                                "conditions": [
-                                    {
-                                        "type": "variable_if",
-                                        "name": "symbol_layer",
-                                        "value": 1
-                                    }
-                                ]
-                            },
-                            {
-                                "type": "basic",
-                                "from": { "key_code": "k" },
-                                "to": [{ "key_code": "close_bracket" }],
-                                "conditions": [
-                                    {
-                                        "type": "variable_if",
-                                        "name": "symbol_layer",
-                                        "value": 1
-                                    }
-                                ]
-                            },
-                            {
-                                "type": "basic",
-                                "from": { "key_code": "l" },
                                 "to": [{ "key_code": "close_bracket", "modifiers": ["left_shift"] }],
                                 "conditions": [
                                     {
@@ -981,8 +945,44 @@
                             },
                             {
                                 "type": "basic",
+                                "from": { "key_code": "j" },
+                                "to": [{ "key_code": "9", "modifiers": ["left_shift"] }],
+                                "conditions": [
+                                    {
+                                        "type": "variable_if",
+                                        "name": "symbol_layer",
+                                        "value": 1
+                                    }
+                                ]
+                            },
+                            {
+                                "type": "basic",
+                                "from": { "key_code": "k" },
+                                "to": [{ "key_code": "0", "modifiers": ["left_shift"] }],
+                                "conditions": [
+                                    {
+                                        "type": "variable_if",
+                                        "name": "symbol_layer",
+                                        "value": 1
+                                    }
+                                ]
+                            },
+                            {
+                                "type": "basic",
+                                "from": { "key_code": "l" },
+                                "to": [{ "key_code": "open_bracket" }],
+                                "conditions": [
+                                    {
+                                        "type": "variable_if",
+                                        "name": "symbol_layer",
+                                        "value": 1
+                                    }
+                                ]
+                            },
+                            {
+                                "type": "basic",
                                 "from": { "key_code": "semicolon" },
-                                "to": [{ "key_code": "period", "modifiers": ["left_shift"] }],
+                                "to": [{ "key_code": "close_bracket" }],
                                 "conditions": [
                                     {
                                         "type": "variable_if",
@@ -1020,7 +1020,7 @@
                             {
                                 "type": "basic",
                                 "from": { "key_code": "e" },
-                                "to": [{ "key_code": "backslash" }],
+                                "to": [{ "key_code": "backslash", "modifiers": ["left_shift"] }],
                                 "conditions": [
                                     {
                                         "type": "variable_if",
@@ -1032,7 +1032,7 @@
                             {
                                 "type": "basic",
                                 "from": { "key_code": "r" },
-                                "to": [{ "key_code": "backslash", "modifiers": ["left_shift"] }],
+                                "to": [{ "key_code": "backslash" }],
                                 "conditions": [
                                     {
                                         "type": "variable_if",
