@@ -145,10 +145,10 @@ require('lazy').setup({
             },
             cmdline = { completion = { menu = { auto_show = true } } },
             completion = {
+                menu = { border = 'none' },
                 documentation = {
                     auto_show = true,
                     window = {
-                        border = 'single',
                         direction_priority = {
                             menu_north = { 'e', 'n' },
                             menu_south = { 'e', 'n' },
@@ -376,6 +376,7 @@ vim.opt.linebreak = true
 vim.opt.undofile = true
 -- disable syntax highlighting if a line is too long
 vim.opt.synmaxcol = 300
+vim.opt.winborder = 'single'
 
 vim.cmd.color('lake_contrast')
 

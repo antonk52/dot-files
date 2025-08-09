@@ -94,7 +94,6 @@ function M.setup()
         vim.api.nvim_open_win(buf, true, {
             relative = 'editor',
             width = max_line + 2,
-            border = 'single',
             height = #lines,
             col = 5,
             row = 2,

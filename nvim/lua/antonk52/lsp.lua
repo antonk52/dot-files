@@ -119,7 +119,6 @@ function M.setup()
             header = 'Line diagnostics:',
             prefix = ' ',
             scope = 'line',
-            border = 'single',
         },
         signs = {
             severity = vim.diagnostic.severity.WARN,

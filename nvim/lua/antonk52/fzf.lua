@@ -43,7 +43,6 @@ local function fzf(kind)
         -- Open the floating window
         local win = vim.api.nvim_open_win(buf, true, {
             style = 'minimal',
-            border = 'single',
             relative = 'editor',
             width = width,
             height = height,
