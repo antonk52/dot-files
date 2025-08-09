@@ -12,20 +12,20 @@ typeset -g _PURE_PROMPT_SYMBOL='▲'        # insert mode symbol
 typeset -g _PURE_PROMPT_VICMD_SYMBOL='∆'  # vicmd symbol
 
 # Colors (zsh color names or 0-255)
-typeset -gr _C_EXECUTION_TIME='yellow'
-typeset -gr _C_PATH='blue'
-typeset -gr _C_SUCCESS='white'
-typeset -gr _C_ERROR='red'
-typeset -gr _C_CONTINUATION='242'
-typeset -gr _C_SUSPENDED='red'
-typeset -gr _C_USER='242'
-typeset -gr _C_USER_ROOT='default'
-typeset -gr _C_HOST='242'
+typeset -g _C_EXECUTION_TIME='yellow'
+typeset -g _C_PATH='blue'
+typeset -g _C_SUCCESS='white'
+typeset -g _C_ERROR='red'
+typeset -g _C_CONTINUATION='yellow'
+typeset -g _C_SUSPENDED='yellow'
+typeset -g _C_USER='242'
+typeset -g _C_USER_ROOT='default'
+typeset -g _C_HOST='242'
 ########## End config ##########
 
 # ---- util: human readable time ----
 prompt_pure_human_time_to_var() {
-  local human total_seconds=$1 var=$2
+  local human total_seconds=$1
   local days=$(( total_seconds / 60 / 60 / 24 ))
   local hours=$(( total_seconds / 60 / 60 % 24 ))
   local minutes=$(( total_seconds / 60 % 60 ))
@@ -34,20 +34,19 @@ prompt_pure_human_time_to_var() {
   (( hours > 0 )) && human+="${hours}h "
   (( minutes > 0 )) && human+="${minutes}m "
   human+="${seconds}s"
-  typeset -g "${var}"="${human}"
+  typeset -g "prompt_pure_cmd_exec_time"="${human}"
 }
 
 prompt_pure_check_cmd_exec_time() {
   integer elapsed
   (( elapsed = EPOCHSECONDS - ${prompt_pure_cmd_timestamp:-$EPOCHSECONDS} ))
   typeset -g prompt_pure_cmd_exec_time=
-  (( elapsed > _PURE_CMD_MAX_EXEC_TIME )) && prompt_pure_human_time_to_var $elapsed "prompt_pure_cmd_exec_time"
+  (( elapsed > _PURE_CMD_MAX_EXEC_TIME )) && prompt_pure_human_time_to_var $elapsed
 }
 
 # ---- title handling ----
 prompt_pure_set_title() {
   setopt localoptions noshwordsplit
-  (( ${+EMACS} || ${+INSIDE_EMACS} )) && return
   case $TTY in (/dev/ttyS[0-9]*) return;; esac
 
   local hostname=
@@ -69,45 +68,25 @@ prompt_pure_preexec() {
 # ---- render preprompt (top line) ----
 prompt_pure_preprompt_render() {
   setopt localoptions noshwordsplit
-  local -a preprompt_parts
+  local pre="$prompt_newline"
 
-  # Suspended jobs
+  # suspended jobs (remove if not needed)
   if ((${(M)#jobstates:#suspended:*} != 0)); then
-    preprompt_parts+='%F{${_C_SUSPENDED}}✦%f'
+    pre+='%F{'${_C_SUSPENDED}'}&%f '
   fi
 
-  # user@host (ssh/root/container)
-  [[ -n $prompt_pure_state[username] ]] && preprompt_parts+=($prompt_pure_state[username])
+  # user@host (only set for root in your setup)
+  [[ -n $prompt_pure_state[username] ]] && pre+="${prompt_pure_state[username]} "
 
   # cwd
-  preprompt_parts+=('%F{${_C_PATH}}%~%f')
+  pre+='%F{'${_C_PATH}'}%~%f'
 
-  # exec time
-  [[ -n $prompt_pure_cmd_exec_time ]] && preprompt_parts+=('%F{${_C_EXECUTION_TIME}}${prompt_pure_cmd_exec_time}%f')
+  # exec time (remove this block if you dropped timing)
+  [[ -n $prompt_pure_cmd_exec_time ]] && pre+=' %F{'${_C_EXECUTION_TIME}'}'${prompt_pure_cmd_exec_time}'%f'
 
-  # keep user's main prompt content (after newline marker), if any
-  local cleaned_ps1=$PROMPT
-  local -H MATCH MBEGIN MEND
-  if [[ $PROMPT = *$prompt_newline* ]]; then
-    cleaned_ps1=${PROMPT##*${prompt_newline}}
-  fi
-  unset MATCH MBEGIN MEND
-
-  local -ah ps1
-  ps1=(
-    $prompt_newline
-    ${(j. .)preprompt_parts}
-    $prompt_newline
-    $cleaned_ps1
-  )
-  PROMPT="${(j..)ps1}"
-
-  local expanded_prompt="${(S%%)PROMPT}"
-
-  if [[ $prompt_pure_last_prompt != $expanded_prompt ]]; then
-    prompt_pure_reset_prompt
-  fi
-  typeset -g prompt_pure_last_prompt=$expanded_prompt
+  # final two-line prompt
+  PROMPT="$pre$prompt_newline$_PROMPT_INDICATOR"
+  prompt_pure_reset_prompt
 }
 
 prompt_pure_precmd() {
@@ -188,11 +167,11 @@ if (( $+functions[add-zle-hook-widget] )); then
 fi
 
 # Main prompt line (success/error color + symbol)
-typeset -gr _PROMPT_INDICATOR='%(?.%F{${_C_SUCCESS}}.%F{${_C_ERROR}})${prompt_pure_state[prompt]}%f '
+typeset -g _PROMPT_INDICATOR='%(?.%F{${_C_SUCCESS}}.%F{${_C_ERROR}})${prompt_pure_state[prompt]}%f '
 PROMPT=$_PROMPT_INDICATOR
 
 # Continuation prompt
-PROMPT2='%F{${_C_CONTINUATION}}… %(1_.%_ .%_)%f'"$prompt_indicator"
+PROMPT2='%F{${_C_CONTINUATION}}… %f'
 
 # Shows up in tracing; to toggle `set -x` or `set +x`
 PROMPT4='+ '
