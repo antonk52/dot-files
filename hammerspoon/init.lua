@@ -1,4 +1,14 @@
 -- Setup
+---@diagnostic disable-next-line: undefined-field
+local hs = _G.hs
+    or {
+        console = require('hs.console'),
+        alert = require('hs.alert'),
+        hotkey = require('hs.hotkey'),
+        window = require('hs.window'),
+        timer = require('hs.timer'),
+        inspect = require('hs.inspect'),
+    }
 
 hs.console.clearConsole()
 local HYPER_KEY = { 'ctrl', 'option', 'shift' }
