@@ -759,7 +759,7 @@
                             {
                                 "type": "basic",
                                 "from": { "key_code": "h" },
-                                "to": [{ "mouse_key": { "x": -1000 } }],
+                                "to": [{ "mouse_key": { "x": -1200 } }],
                                 "conditions": [
                                     {
                                         "type": "variable_if",
@@ -771,7 +771,7 @@
                             {
                                 "type": "basic",
                                 "from": { "key_code": "j" },
-                                "to": [{ "mouse_key": { "y": 1000 } }],
+                                "to": [{ "mouse_key": { "y": 1200 } }],
                                 "conditions": [
                                     {
                                         "type": "variable_if",
@@ -783,7 +783,7 @@
                             {
                                 "type": "basic",
                                 "from": { "key_code": "k" },
-                                "to": [{ "mouse_key": { "y": -1000 } }],
+                                "to": [{ "mouse_key": { "y": -1200 } }],
                                 "conditions": [
                                     {
                                         "type": "variable_if",
@@ -795,7 +795,7 @@
                             {
                                 "type": "basic",
                                 "from": { "key_code": "l" },
-                                "to": [{ "mouse_key": { "x": 1000 } }],
+                                "to": [{ "mouse_key": { "x": 1200 } }],
                                 "conditions": [
                                     {
                                         "type": "variable_if",
