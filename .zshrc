@@ -30,6 +30,7 @@ source $DOT_FILES/scripts/prompt-pure-min.zsh
 # ============================================== completion
 
 _setup_completion() {
+    setopt complete_aliases
     # see https://gist.github.com/ctechols/ca1035271ad134841284
     autoload -Uz compinit;
     if [[ -n ${ZDOTDIR}/.zcompdump(#qN.mh+24) ]]; then
