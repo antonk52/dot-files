@@ -61,52 +61,7 @@ M.servers = {
 
     selene3p_ls = {},
     stylua3p_ls = {},
-    lua_ls = {
-        settings = {
-            Lua = {
-                runtime = {
-                    -- Tell the language server which version of Lua you're using
-                    -- (most likely LuaJIT in the case of Neovim)
-                    version = 'LuaJIT',
-                    -- Setup your lua path, where files are sourced by default
-                    path = vim.list_extend(
-                        vim.split(package.path, ';'),
-                        { 'lua/?.lua', 'lua/?/init.lua' }
-                    ),
-                },
-                diagnostics = {
-                    -- Get the language server to recognize the `vim` global
-                    globals = { 'vim' },
-                    unusedLocalExclude = { '_*' },
-                    disable = {
-                        'missing-fields',
-                        'duplicate-set-field',
-                        'undefined-field',
-                        'inject-field',
-                    },
-                },
-                workspace = {
-                    -- Make the server aware of Neovim runtime files
-                    library = vim.list_extend({
-                        vim.env.VIMRUNTIME, -- nvim core, no 3rd party plugins
-                        'lua',
-                        'nvim-test',
-                        -- TODO remove after 0.12
-                        '${3rd}/luv/library', -- docs for uv
-                        '${3rd}/busted/library',
-                    }, vim.split(
-                        vim.fn.glob(vim.env.HOME .. '/dot-files/nvim/plugged/*'),
-                        '\n'
-                    )),
-                    maxPreload = 10000,
-                    checkThirdParty = false,
-                },
-                completion = { callSnippet = 'Replace' },
-                codeLens = { enable = true },
-                -- hint = { enable = true, setType = true },
-            },
-        },
-    },
+    lua_ls = {},
 }
 
 function M.setup()
