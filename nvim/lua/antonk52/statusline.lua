@@ -176,7 +176,7 @@ function M.setup()
         end
     end
     vim.opt.statusline = table.concat({
-        ' %f %m', -- filename, modified, readonly
+        ' %f %(%m %)', -- filename, modified, readonly
         '%<', -- conceal marker
         hi_next('Comment'),
         '%{get(b:, "lsp_location", "")}', -- lsp symbols

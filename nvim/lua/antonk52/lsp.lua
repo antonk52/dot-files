@@ -35,6 +35,15 @@ function M.setup()
     --
     -- vim.lsp.codeLens.clear()
 
+    vim.lsp.config('jsonls', {
+        settings = {
+            json = {
+                schemas = require('schemastore').json.schemas(),
+                validate = { enable = true },
+            },
+        },
+    })
+
     vim.lsp.config('ts_ls', {
         workspace_required = true,
         root_markers = { 'tsconfig.json', 'jsconfig.json', 'package.json' },
