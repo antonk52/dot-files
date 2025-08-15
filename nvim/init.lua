@@ -167,24 +167,6 @@ require('lazy').setup({
         opts = {},
     },
     {
-        'nvim-telescope/telescope.nvim',
-        cond = vim.env.WORK ~= nil,
-        event = 'VeryLazy',
-        dependencies = { 'nvim-lua/plenary.nvim' },
-        opts = {
-            defaults = {
-                layout_config = { horizontal = { width = 180 } },
-                mappings = {
-                    i = {
-                        ['<esc>'] = function(x)
-                            require('telescope.actions').close(x)
-                        end,
-                    },
-                },
-            },
-        },
-    },
-    {
         'nvimtools/none-ls.nvim',
         cond = vim.env.WORK ~= nil,
         dependencies = { 'nvim-lua/plenary.nvim' },
@@ -279,7 +261,6 @@ require('lazy').setup({
         opts = {},
         dependencies = {
             'nvim-lua/plenary.nvim',
-            'nvim-telescope/telescope.nvim',
             'nvimtools/none-ls.nvim',
             'neovim/nvim-lspconfig',
         },
