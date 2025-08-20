@@ -1,6 +1,11 @@
 -- A copy  https://github.com/neovim/neovim/pull/32430
 -- which was abandoned but I like this minimal implementation
 -- original author: @saccarosium
+--
+-- Minor changes:
+-- * normalize path before setting buffer name (can edit ~/foo without it appending to cwd)
+-- * remove ctrl+[6^] mappings to quit
+
 local M = {}
 
 ---@class vim._tree.Explorer
@@ -102,10 +107,6 @@ local function map_open()
     end
 end
 
-local function map_goto_parent()
-    M.open(vim.fs.dirname(vim.b.cwd))
-end
-
 ---@param buf integer
 local function init_mappings(buf)
     local map = function(mode, lhs, rhs)
@@ -113,10 +114,7 @@ local function init_mappings(buf)
     end
 
     map('n', '<CR>', map_open)
-    map('n', '-', map_goto_parent)
     map('n', 'q', map_quit)
-    map('n', '<C-6>', map_quit)
-    map('n', '<C-^>', map_quit)
 end
 
 ---@param path string
@@ -124,8 +122,12 @@ end
 local function create_buffer(path)
     local buf = vim.api.nvim_create_buf(false, true)
     init_mappings(buf)
-    local relpath = path:gsub(uv.os_homedir() or '', '~')
-    vim.api.nvim_buf_set_name(buf, relpath)
+    local npath = vim.fs.normalize(path)
+    local home = uv.os_homedir() or vim.fn.getcwd()
+    if npath:sub(1, #home) == home then
+        npath = '~' .. npath:sub(#home + 1)
+    end
+    vim.api.nvim_buf_set_name(buf, npath)
     vim.bo[buf].modifiable = false
     vim.bo[buf].filetype = 'directory'
     vim.b[buf].cwd = path
