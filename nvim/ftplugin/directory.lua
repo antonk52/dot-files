@@ -1,7 +1,3 @@
-local function update_netrw()
-    local escaped = vim.api.nvim_replace_termcodes('<C-l>', true, false, true)
-    vim.api.nvim_feedkeys(escaped, 'm', true)
-end
 local function get_current_dir()
     local current = vim.api.nvim_buf_get_name(0)
     if current == '' then
@@ -22,7 +18,6 @@ vim.keymap.set('n', 'A', function()
         vim.fn.mkdir(vim.fs.dirname(new), 'p')
         vim.fn.writefile({}, new)
     end
-    update_netrw()
     -- focus added item
     vim.schedule(function()
         vim.fn.search(vim.fs.basename(new))
@@ -48,8 +43,6 @@ vim.keymap.set('n', 'D', function()
     end
 
     vim.fs.rm(vim.fs.joinpath(current_dir, line), { force = true, recursive = is_dir })
-
-    update_netrw()
 end, { buffer = true, desc = 'Delete item' })
 vim.keymap.set('n', 'C', function()
     local current_dir = get_current_dir()
@@ -66,7 +59,6 @@ vim.keymap.set('n', 'C', function()
 
     vim.fn.mkdir(vim.fs.dirname(target_path), 'p')
     vim.system({ 'cp', '-r', existing_path, target_path }):wait()
-    update_netrw()
 end, { buffer = true, desc = 'Copy item' })
 vim.keymap.set('n', 'M', function()
     local current_dir = get_current_dir()
@@ -83,5 +75,38 @@ vim.keymap.set('n', 'M', function()
 
     vim.fn.mkdir(vim.fs.dirname(target_path), 'p')
     local _err, _ok = vim.uv.fs_rename(existing_path, target_path)
-    update_netrw()
 end, { buffer = true, desc = 'Move item' })
+
+-- virtual text for symlinks
+vim.schedule(function()
+    local ns = vim.api.nvim_create_namespace('dirvish_symlinks')
+    local bufnr = vim.api.nvim_get_current_buf()
+    local buf_path = vim.fs.normalize(vim.api.nvim_buf_get_name(bufnr))
+
+    for i, line in ipairs(vim.api.nvim_buf_get_lines(0, 0, -1, false)) do
+        if vim.endswith(line, '/') then
+            line = line:sub(1, -2)
+        end
+        local abs_path = vim.fs.joinpath(buf_path, line)
+        vim.uv.fs_lstat(abs_path, function(err, lstat)
+            if err then
+                return
+            end
+            if lstat and lstat.type == 'link' then
+                vim.uv.fs_readlink(abs_path, function(reallink_err, target)
+                    if reallink_err then
+                        return
+                    end
+                    local linenr = i - 1
+                    local col = 0
+                    vim.schedule(function()
+                        vim.api.nvim_buf_set_extmark(bufnr, ns, linenr, col, {
+                            virt_text = { { '⏤⏤► ' .. target, 'Comment' } },
+                            hl_mode = 'combine',
+                        })
+                    end)
+                end)
+            end
+        end)
+    end
+end)

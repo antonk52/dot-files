@@ -277,9 +277,9 @@ require('lazy').setup({
             disabled_plugins = {
                 '2html_plugin',
                 'gzip',
-                -- 'netrw',
+                'netrw',
                 'netrwFileHandlers',
-                -- 'netrwPlugin',
+                'netrwPlugin',
                 'netrwSettings',
                 'rplugin', -- remote plugins
                 'tar',
@@ -361,7 +361,6 @@ vim.opt.winborder = 'single'
 
 vim.cmd.color('lake_contrast')
 
-keymap.set('n', '-', '<cmd>Explore<cr>', { desc = 'Open netrw' })
 keymap.set('n', '<C-s>', '<cmd>lua vim.lsp.buf.signature_help()<cr>', { desc = 'Signature help' })
 keymap.set('n', '<leader>R', 'grr', { desc = 'Rename' })
 keymap.set('n', '<leader>L', '<cmd>lua vim.diagnostic.open_float()<cr>', { desc = 'Line errors' })
@@ -465,6 +464,7 @@ vim.api.nvim_create_autocmd('FileType', {
     end,
 })
 
+require('antonk52.dir_explorer').setup()
 require('antonk52.statusline').setup()
 require('antonk52.infer_shiftwidth').setup()
 
