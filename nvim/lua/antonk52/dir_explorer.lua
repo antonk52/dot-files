@@ -7,6 +7,7 @@
 -- * remove ctrl+[6^] mappings to quit
 -- * add symlinks decoration via extmarks
 -- * add maps to manipulate fs (add, delete, copy, move)
+-- * case sensitive sorting
 
 local M = {}
 
@@ -201,7 +202,7 @@ local function create_buffer(path)
     local buf = vim.api.nvim_create_buf(false, true)
     init_mappings(buf)
     local npath = vim.fs.normalize(path)
-    local home = uv.os_homedir() or vim.fn.getcwd()
+    local home = uv.os_homedir() or vim.env.HOME
     if npath:sub(1, #home) == home then
         npath = '~' .. npath:sub(#home + 1)
     end
@@ -329,6 +330,18 @@ local function create_explorer(path)
     end)
 
     explorers[path] = explorer
+
+    vim.api.nvim_create_autocmd('BufWipeout', {
+        buffer = explorer.buf,
+        callback = function()
+            if watcher then
+                watcher:stop()
+                watcher:close()
+            end
+            explorers[path] = nil
+        end,
+    })
+
     return explorer
 end
 
@@ -361,8 +374,8 @@ function M.sort(path1, path2)
         return false
     end
 
-    -- Otherwise order alphabetically ignoring case
-    return path1:lower() < path2:lower()
+    -- Otherwise order alphabetically
+    return path1 < path2
 end
 
 ---@param path string
