@@ -6,6 +6,7 @@
 -- * normalize path before setting buffer name (can edit ~/foo without it appending to cwd)
 -- * remove ctrl+[6^] mappings to quit
 -- * add symlinks decoration via extmarks
+-- * add maps to manipulate fs (add, delete, copy, move)
 
 local M = {}
 
@@ -112,6 +113,73 @@ local function map_goto_parent()
     M.open(vim.fs.dirname(vim.b.cwd))
 end
 
+local function map_add()
+    local new = vim.fn.input('Name: ', vim.b.cwd .. '/', 'file')
+    if not new or new == '' then
+        return
+    end
+
+    if vim.endswith(new, '/') then
+        vim.fn.mkdir(new, 'p')
+    else
+        vim.fn.mkdir(vim.fs.dirname(new), 'p')
+        vim.fn.writefile({}, new)
+    end
+    -- focus added item
+    vim.defer_fn(function()
+        vim.fn.search(vim.fs.basename(new))
+    end, 20)
+end
+
+local function map_delete()
+    local current_path = get_current_path()
+    if not current_path then
+        return
+    end
+    local is_dir = vim.endswith(current_path, '/')
+    if is_dir then
+        current_path = current_path:sub(1, -2)
+    end
+
+    vim.notify('Are you sure you want to delete it? [y/N]')
+    local choice = vim.fn.nr2char(vim.fn.getchar() --[[@as integer]])
+    local confirmed = choice == 'y'
+
+    if confirmed then
+        vim.fs.rm(current_path, { force = true, recursive = is_dir })
+    end
+end
+
+local function map_copy()
+    local current_path = get_current_path()
+    if not current_path then
+        return
+    end
+
+    local target_path = vim.fn.input('Copy to: ', current_path, 'file')
+    if not target_path or target_path == '' then
+        return
+    end
+
+    vim.fn.mkdir(vim.fs.dirname(target_path), 'p')
+    vim.system({ 'cp', '-r', current_path, target_path }):wait()
+end
+
+local function map_move()
+    local current_path = get_current_path()
+    if not current_path then
+        return
+    end
+
+    local target_path = vim.fn.input('Move to: ', current_path, 'file')
+    if not target_path or target_path == '' then
+        return
+    end
+
+    vim.fn.mkdir(vim.fs.dirname(target_path), 'p')
+    vim.uv.fs_rename(current_path, target_path)
+end
+
 ---@param buf integer
 local function init_mappings(buf)
     local map = function(mode, lhs, rhs)
@@ -120,6 +188,10 @@ local function init_mappings(buf)
 
     map('n', '<CR>', map_open)
     map('n', 'q', map_quit)
+    map('n', 'A', map_add)
+    map('n', 'D', map_delete)
+    map('n', 'C', map_copy)
+    map('n', 'M', map_move)
 end
 
 ---@param path string
