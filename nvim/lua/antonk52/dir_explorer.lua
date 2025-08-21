@@ -5,6 +5,7 @@
 -- Minor changes:
 -- * normalize path before setting buffer name (can edit ~/foo without it appending to cwd)
 -- * remove ctrl+[6^] mappings to quit
+-- * add symlinks decoration via extmarks
 
 local M = {}
 
@@ -107,6 +108,10 @@ local function map_open()
     end
 end
 
+local function map_goto_parent()
+    M.open(vim.fs.dirname(vim.b.cwd))
+end
+
 ---@param buf integer
 local function init_mappings(buf)
     local map = function(mode, lhs, rhs)
@@ -132,6 +137,39 @@ local function create_buffer(path)
     vim.bo[buf].filetype = 'directory'
     vim.b[buf].cwd = path
     return buf
+end
+
+---@param bufnr integer
+---@param lines string[]
+local function decorate_symlinks(bufnr, lines)
+    local buf_path = vim.fs.normalize(vim.api.nvim_buf_get_name(bufnr))
+
+    for i, line in ipairs(lines) do
+        if vim.endswith(line, '/') then
+            line = line:sub(1, -2)
+        end
+        local abs_path = vim.fs.joinpath(buf_path, line)
+        vim.uv.fs_lstat(abs_path, function(err, lstat)
+            if err then
+                return
+            end
+            if lstat and lstat.type == 'link' then
+                vim.uv.fs_readlink(abs_path, function(reallink_err, target)
+                    if reallink_err then
+                        return
+                    end
+                    local linenr = i - 1
+                    local col = 0
+                    vim.schedule(function()
+                        vim.api.nvim_buf_set_extmark(bufnr, ns_id, linenr, col, {
+                            virt_text = { { '⏤⏤► ' .. target, 'Comment' } },
+                            hl_mode = 'combine',
+                        })
+                    end)
+                end)
+            end
+        end)
+    end
 end
 
 ---@param self vim._tree.Explorer
@@ -185,6 +223,8 @@ local function explorer_refresh(self, lines)
     end
 
     vim.bo[self.buf].modifiable = false
+
+    decorate_symlinks(self.buf, lines)
 end
 
 local on_fs_event = vim.schedule_wrap(function(explorer, events)
@@ -294,7 +334,7 @@ function M.setup()
             end
         end,
     })
-    vim.keymap.set('n', '-', M.open, { desc = 'Open file explorer' })
+    vim.keymap.set('n', '-', map_goto_parent, { desc = 'Open file explorer' })
 end
 
 return M
