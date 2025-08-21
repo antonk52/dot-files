@@ -18,6 +18,7 @@ local M = {}
 -- Costants
 local uv = vim.uv
 local ns_id = vim.api.nvim_create_namespace('tree')
+local ns_id_symlinks = vim.api.nvim_create_namespace('tree:symlinks')
 local sysname = uv.os_uname().sysname:lower()
 local iswin = not not (sysname:find('windows') or sysname:find('mingw'))
 local os_sep = iswin and '\\' or '/'
@@ -214,6 +215,7 @@ end
 ---@param bufnr integer
 ---@param lines string[]
 local function decorate_symlinks(bufnr, lines)
+    vim.api.nvim_buf_clear_namespace(bufnr, ns_id_symlinks, 0, -1)
     local buf_path = vim.fs.normalize(vim.api.nvim_buf_get_name(bufnr))
 
     for i, line in ipairs(lines) do
@@ -233,7 +235,7 @@ local function decorate_symlinks(bufnr, lines)
                     local linenr = i - 1
                     local col = 0
                     vim.schedule(function()
-                        vim.api.nvim_buf_set_extmark(bufnr, ns_id, linenr, col, {
+                        vim.api.nvim_buf_set_extmark(bufnr, ns_id_symlinks, linenr, col, {
                             virt_text = { { '⏤⏤► ' .. target, 'Comment' } },
                             hl_mode = 'combine',
                         })
