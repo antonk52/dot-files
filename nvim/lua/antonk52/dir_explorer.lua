@@ -8,6 +8,7 @@
 -- * add symlinks decoration via extmarks
 -- * add maps to manipulate fs (add, delete, copy, move)
 -- * case sensitive sorting
+-- * delete same name buffers when creating new explorer buffer
 
 local M = {}
 
@@ -199,6 +200,15 @@ end
 ---@param path string
 ---@return integer
 local function create_buffer(path)
+    -- remove buffer with the same name if exists
+    -- otherwise it will error out when trying to create buffer with the same name
+    -- happens when opening nvim outside of home directory
+    for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+        if vim.api.nvim_buf_get_name(buf) == path then
+            vim.api.nvim_buf_delete(buf, { force = true })
+        end
+    end
+
     local buf = vim.api.nvim_create_buf(false, true)
     init_mappings(buf)
     local npath = vim.fs.normalize(path)
@@ -411,10 +421,7 @@ function M.setup()
         callback = function(args)
             if vim.bo.filetype == 'directory' then
                 return
-            end
-
-            local type = (vim.uv.fs_stat(args.file) or {}).type
-            if type == 'directory' then
+            elseif fs_is_dir(args.file) then
                 vim.schedule(function()
                     M.open(args.file)
                 end)
