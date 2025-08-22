@@ -26,7 +26,6 @@ do
         table.insert(plugins, 'https://github.com/nvimtools/none-ls.nvim')
     else
         table.insert(plugins, 'https://github.com/olimorris/codecompanion.nvim')
-        table.insert(plugins, 'https://github.com/zbirenbaum/copilot.lua')
     end
 
     vim.g.fugitive_legacy_commands = 0
@@ -220,21 +219,6 @@ do
         end
         require('antonk52.work').setup()
     else
-	-- setup copilot
-	require('copilot').setup({
-	    suggestion = {
-		auto_trigger = true,
-		keymap = {
-		    accept = '<tab>',
-		    accept_word = '<C-e>',
-		    accept_line = '<C-l>',
-		    next = '<C-r>',
-		    prev = false,
-		    dismiss = '<C-d>',
-		},
-	    },
-	    filetypes = { markdown = true },
-	})
         -- setup codecompanion
         require('codecompanion').setup()
         keymap.set({ 'n', 'x' }, '<leader>i', ':CodeCompanion ')
