@@ -20,7 +20,7 @@ typeset -g _C_CONTINUATION='yellow'
 typeset -g _C_SUSPENDED='yellow'
 typeset -g _C_USER='242'
 typeset -g _C_USER_ROOT='default'
-typeset -g _C_HOST='242'
+typeset -g _C_HOST='yellow'
 ########## End config ##########
 
 # ---- util: human readable time ----
@@ -124,12 +124,9 @@ prompt_pure_state_setup() {
   setopt localoptions noshwordsplit
 
   # Only show username@host when root; otherwise keep it empty
-  local username hostname
-  hostname='%F{'${_C_HOST}'}@%m%f'
-  if [[ $UID -eq 0 ]]; then
-    username='%F{'${_C_USER_ROOT}'}%n%f'"$hostname"
-  else
-    username=''  # non-root: no identity segment
+  local username=''
+  if [[ $UID -eq 0 || -n $SSH_CONNECTION ]]; then
+    username='%F{'${_C_HOST}'}%n@%M%f'
   fi
 
   typeset -gA prompt_pure_state
