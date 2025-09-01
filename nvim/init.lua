@@ -20,68 +20,84 @@ if not vim.uv.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
+vim.g.fugitive_legacy_commands = 0
+
 require('lazy').setup({
     {
         'folke/snacks.nvim',
-        opts = {
-            image = {},
-            indent = {
-                indent = { hl = 'Whitespace' },
-                scope = { enabled = false },
-            },
-            bigfile = { enabled = true },
-            picker = {
-                win = {
-                    input = {
-                        keys = {
-                            ['<Esc>'] = { 'close', mode = { 'i', 'n' } },
+        config = function()
+            require('snacks').setup({
+                image = {},
+                indent = {
+                    indent = { hl = 'Whitespace' },
+                    scope = { enabled = false },
+                },
+                bigfile = { enabled = true },
+                picker = {
+                    win = {
+                        input = {
+                            keys = {
+                                ['<Esc>'] = { 'close', mode = { 'i', 'n' } },
+                            },
                         },
                     },
+                    layout = 'telescope',
+                    icons = { files = { enabled = false } },
+                    formatters = { file = { truncate = 120 } },
+                    actions = {
+                        -- immediately execute the command if it doesn't require any arguments
+                        cmd = function(picker, item)
+                            picker:close()
+                            if item and item.cmd then
+                                vim.schedule(function()
+                                    if item.command and (item.command.nargs ~= '0') then
+                                        vim.api.nvim_input(':' .. item.cmd .. ' ')
+                                    else
+                                        vim.cmd(item.cmd)
+                                    end
+                                end)
+                            end
+                        end,
+                    },
                 },
-                layout = 'telescope',
-                icons = { files = { enabled = false } },
-                formatters = { file = { truncate = 120 } },
-                actions = {
-                    -- immediately execute the command if it doesn't require any arguments
-                    cmd = function(picker, item)
-                        picker:close()
-                        if item and item.cmd then
-                            vim.schedule(function()
-                                if item.command and (item.command.nargs ~= '0') then
-                                    vim.api.nvim_input(':' .. item.cmd .. ' ')
-                                else
-                                    vim.cmd(item.cmd)
-                                end
-                            end)
-                        end
-                    end,
-                },
-            },
-            scroll = { animate = { total = 180, fps = 30, easing = 'inOutQuad' } },
-        },
-        keys = {
-            { '<leader>b', '<cmd>lua Snacks.picker.buffers()<cr>' },
-            { '<leader>/', '<cmd>lua Snacks.picker.lines({layout= "telescope"})<cr>' },
-            { '<leader>r', '<cmd>lua Snacks.picker.resume()<cr>' },
-            { '<leader>T', '<cmd>lua Snacks.picker.pick()<cr>' },
-            { '<leader>u', '<cmd>lua Snacks.picker.undo()<cr>' },
-            { '<leader>d', '<cmd>lua Snacks.picker.diagnostics()<cr>' },
-            { '<leader>z', '<cmd>lua Snacks.zen.zen({toggles={dim=false},win={width=100}})<cr>' },
-            { '<leader>;', '<cmd>lua Snacks.picker.commands({layout="select"})<cr>' },
-            {
-                '<leader>:',
-                '<cmd>lua Snacks.picker.grep_word({search=vim.fn.input("Search: ")})<cr>',
-            },
-            -- override default lsp keymaps as snacks pickers handle multiple servers supporting same methods
-            { 'gd', '<cmd>lua Snacks.picker.lsp_definitions()<cr>' },
-            { '<C-]>', '<cmd>lua Snacks.picker.lsp_definitions()<cr>' },
-            { 'gD', '<cmd>lua Snacks.picker.lsp_declaraions()<cr>' },
-            { 'gK', '<cmd>lua Snacks.picker.lsp_type_definitions()<cr>' },
-            { 'gi', '<cmd>lua Snacks.picker.lsp_implementations()<cr>' },
-            { 'gr', '<cmd>lua Snacks.picker.lsp_references()<cr>' },
-            { 'gO', '<cmd>lua Snacks.picker.lsp_symbols()<cr>' },
-        },
-        event = 'VeryLazy',
+                scroll = { animate = { total = 180, fps = 30, easing = 'inOutQuad' } },
+            })
+
+            -- mutate snacks telescope layout
+            local layouts = require('snacks.picker.config.layouts')
+            ---@type snacks.picker.layout.Config
+            local t = layouts.telescope
+
+            t.layout[1][1].border = { '┌', '─', '┐', '│', '', '', '', '│' }
+            t.layout[1][2].border = { '├', '─', '┤', '│', '┘', '─', '└', '│' }
+            t.layout[2].border = 'single'
+            t.layout.width = 160
+
+            -- use telescope layout for vim.ui.select
+            layouts.select = vim.tbl_deep_extend('force', {}, t, {
+                layout = { width = 80, min_height = 9, height = 0.6 },
+                preview = false,
+            })
+
+            keymap.set('n', '<leader>b', '<cmd>lua Snacks.picker.buffers()<cr>')
+            keymap.set('n', '<leader>/', '<cmd>lua Snacks.picker.lines({layout= "telescope"})<cr>')
+            keymap.set('n', '<leader>r', '<cmd>lua Snacks.picker.resume()<cr>')
+            keymap.set('n', '<leader>T', '<cmd>lua Snacks.picker.pick()<cr>')
+            keymap.set('n', '<leader>u', '<cmd>lua Snacks.picker.undo()<cr>')
+            keymap.set('n', '<leader>d', '<cmd>lua Snacks.picker.diagnostics()<cr>')
+            --stylua: ignore
+            keymap.set('n', '<leader>z', '<cmd>lua Snacks.zen.zen({toggles={dim=false},win={width=100}})<cr>')
+            keymap.set('n', '<leader>;', '<cmd>lua Snacks.picker.commands({layout="select"})<cr>')
+            --stylua: ignore
+            keymap.set('n', '<leader>:', '<cmd>lua Snacks.picker.grep_word({search=vim.fn.input("Search: ")})<cr>')
+            -- override lsp keymaps as snacks handles go to one results or picker for multiple
+            keymap.set('n', '<C-]>', '<cmd>lua Snacks.picker.lsp_definitions()<cr>')
+            keymap.set('n', 'gD', '<cmd>lua Snacks.picker.lsp_declaraions()<cr>')
+            keymap.set('n', 'gK', '<cmd>lua Snacks.picker.lsp_type_definitions()<cr>')
+            keymap.set('n', 'gi', '<cmd>lua Snacks.picker.lsp_implementations()<cr>')
+            keymap.set('n', 'gr', '<cmd>lua Snacks.picker.lsp_references()<cr>')
+            keymap.set('n', 'gO', '<cmd>lua Snacks.picker.lsp_symbols()<cr>')
+        end,
     },
     {
         'zbirenbaum/copilot.lua',
@@ -100,23 +116,19 @@ require('lazy').setup({
             },
             filetypes = { markdown = true },
         },
-        event = 'VeryLazy',
     },
     {
         'olimorris/codecompanion.nvim',
-        opts = { display = { diff = { provider = 'mini_diff' } } },
-        dependencies = {
-            'nvim-lua/plenary.nvim',
-            'nvim-treesitter/nvim-treesitter',
-        },
+        config = function()
+            require('codecompanion').setup()
+            keymap.set({ 'n', 'x' }, '<leader>i', ':CodeCompanion ')
+        end,
+        dependencies = { 'nvim-lua/plenary.nvim' },
         enabled = vim.env.WORK == nil,
-        event = 'VeryLazy',
-        keys = { { '<leader>i', ':CodeCompanion ', mode = { 'n', 'x' } } },
     },
     {
         'tpope/vim-fugitive',
-        init = function()
-            vim.g.fugitive_legacy_commands = 0
+        config = function()
             usercmd('GitAddPatch', ':tab G add --patch', { nargs = 0 })
             usercmd('GitAddPatchFile', ':tab G add --patch %', { nargs = 0 })
             usercmd('GitCommit', ':tab G commit', { nargs = 0 })
@@ -125,14 +137,13 @@ require('lazy').setup({
             end, { nargs = 0, desc = 'Download .gitignore from github/gitignore' })
             keymap.set('n', '<leader>g', ':G ', { desc = 'Version control' })
         end,
-        event = 'VeryLazy',
     },
     {
         'neovim/nvim-lspconfig', -- types & linting
         dependencies = { 'b0o/schemastore.nvim', 'saghen/blink.cmp' }, -- json schemas for json lsp
-        main = 'antonk52.lsp',
-        opts = {},
-        event = 'BufReadPre',
+        config = function()
+            require('antonk52.lsp').setup()
+        end,
     },
     {
         'saghen/blink.cmp',
@@ -159,24 +170,15 @@ require('lazy').setup({
             signature = { enabled = true },
             fuzzy = { implementation = 'lua' },
         },
-        event = 'BufReadPre',
     },
     {
         'antonk52/markdowny.nvim',
-        ft = { 'markdown', 'hgcommit', 'gitcommit' },
         opts = {},
     },
     {
-        'nvimtools/none-ls.nvim',
-        cond = vim.env.WORK ~= nil,
-        dependencies = { 'nvim-lua/plenary.nvim' },
-        event = 'VeryLazy',
-    },
-    {
-        'echasnovski/mini.nvim',
+        'nvim-mini/mini.nvim',
         config = function()
-            -- disabled file navigation
-            require('mini.bracketed').setup({ file = { suffix = '' } })
+            require('mini.bracketed').setup()
             require('mini.pairs').setup() -- autoclose ([{
             require('mini.cursorword').setup({ delay = 300 })
             require('mini.splitjoin').setup() -- gS to toggle listy things
@@ -221,12 +223,10 @@ require('lazy').setup({
                 keymap.set('n', 'gha', 'ghgh', { desc = 'Apply hunk under cursor', remap = true })
             end
         end,
-        event = 'VeryLazy',
     },
     {
         'nvim-treesitter/nvim-treesitter',
         build = ':TSUpdate',
-        event = 'BufReadPre',
         config = function()
             if vim.env.WORK and vim.env.WORK_TS_PROXY then
                 require('nvim-treesitter.install').command_extra_args = {
@@ -252,19 +252,22 @@ require('lazy').setup({
         end,
     },
     {
+        'nvimtools/none-ls.nvim',
+        cond = vim.env.WORK ~= nil,
+    },
+    {
         cond = vim.env.WORK ~= nil and vim.env.WORK_PLUGIN_PATH ~= nil and vim.uv.fs_stat(
             vim.fn.expand(vim.env.WORK_PLUGIN_PATH)
         ) ~= nil,
         dir = vim.fn.expand(vim.env.WORK_PLUGIN_PATH or 'noop'),
         name = 'work', -- otherwise lazy.nvim errors when updates plugins
-        main = 'antonk52.work',
-        opts = {},
+        config = function()
+            require('antonk52.work').setup()
+        end,
         dependencies = {
             'nvim-lua/plenary.nvim',
             'nvimtools/none-ls.nvim',
-            'neovim/nvim-lspconfig',
         },
-        event = 'VeryLazy',
     },
     {
         'jake-stewart/auto-cmdheight.nvim',
@@ -298,23 +301,11 @@ require('lazy').setup({
 
 -- Avoid startup work {{{1
 
--- Set them directly if they are installed, otherwise disable them. To avoid the
--- runtime check cost, which can be slow.
--- Python This must be here becasue it makes loading vim VERY SLOW otherwise
-vim.g.python_host_skip_check = 1
--- Disable python2 provider
-vim.g.loaded_python_provider = 0
--- Disable python3 provider
 vim.g.loaded_python3_provider = 0
 vim.g.python3_host_skip_check = 1
 vim.g.loaded_node_provider = 0
 vim.g.loaded_ruby_provider = 0
 vim.g.loaded_perl_provider = 0
-
--- netrw: avoid mapping gx in netrw as for conflict reasons
-vim.g.netrw_banner = 0
-vim.g.netrw_list_hide = '^\\./$,^\\.\\./$'
-vim.g.netrw_hide = 1
 
 -- Defaults {{{1
 -- highlight current cursor line
@@ -358,6 +349,9 @@ vim.opt.undofile = true
 -- disable syntax highlighting if a line is too long
 vim.opt.synmaxcol = 300
 vim.opt.winborder = 'single'
+
+vim.opt.ignorecase = true
+vim.opt.smartcase = true
 
 vim.cmd.color('lake_contrast')
 
@@ -405,9 +399,7 @@ keymap.set('t', '<esc><esc>', '<c-\\><c-n>', { desc = 'exit term buffer' })
 
 -- Commands {{{1
 usercmd('ToggleRusKeymap', function()
-    local x = 'russian-jcukenmac'
-    vim.opt.keymap = vim.o.keymap == x and '' or x
-    vim.notify('Toggle back in insert mode CTRL+SHIFT+6')
+    vim.opt.keymap = vim.o.keymap == '' and 'russian-jcukenmac' or ''
 end, { nargs = 0 })
 usercmd('NotesStart', "=require('antonk52.notes').setup()", {})
 usercmd('NoteToday', '=require("antonk52.notes").note_month_now()', {})
@@ -480,22 +472,4 @@ vim.defer_fn(function()
     require('antonk52.easy_motion').setup()
     require('antonk52.layout').setup()
     require('antonk52.format_on_save').setup()
-
-    -- mutate snacks telescope layout
-    -- use telescope layout for vim.ui.select
-    pcall(function()
-        local layouts = require('snacks.picker.config.layouts')
-        ---@type snacks.picker.layout.Config
-        local copy = vim.tbl_deep_extend('force', {}, layouts.telescope)
-
-        copy.layout[1][1].border = { '┌', '─', '┐', '│', '', '', '', '│' }
-        copy.layout[1][2].border = { '├', '─', '┤', '│', '┘', '─', '└', '│' }
-        copy.layout[2].border = 'single'
-        copy.layout.width = 160
-
-        layouts.telescope = copy
-
-        local overrides = { layout = { width = 80, min_height = 9, height = 0.6 }, preview = false }
-        layouts.select = vim.tbl_deep_extend('force', {}, copy, overrides)
-    end)
 end, 20)

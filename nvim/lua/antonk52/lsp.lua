@@ -1,18 +1,5 @@
 local M = {}
 
--- local ts_lang_options = {
---     inlayHints = {
---         includeInlayParameterNameHints = 'all',
---         includeInlayFunctionParameterTypeHints = true,
---         includeInlayVariableTypeHints = true,
---         includeInlayPropertyDeclarationTypeHints = true,
---         includeInlayFunctionLikeReturnTypeHints = true,
---         includeInlayEnumMemberValueHints = true,
---     },
---     implementationsCodeLens = { enabled = true },
---     referencesCodeLens = { enabled = true, showOnAllFunctions = true },
--- }
-
 function M.setup()
     -- lsp.log.set_level(lsp.log.DEBUG)
     -- set global diagnostic settings to avoid passing them
@@ -30,11 +17,6 @@ function M.setup()
         severity_sort = true, -- show errors first
     })
 
-    -- call on CursorHold
-    -- vim.lsp.codeLens.refresh()
-    --
-    -- vim.lsp.codeLens.clear()
-
     vim.lsp.config('jsonls', {
         settings = {
             json = {
@@ -47,11 +29,6 @@ function M.setup()
     vim.lsp.config('ts_ls', {
         workspace_required = true,
         root_markers = { 'tsconfig.json', 'jsconfig.json', 'package.json' },
-        -- settings = {
-        --     completions = { completeFunctionCalls = true },
-        --     -- typescript = ts_lang_options,
-        --     -- javascript = ts_lang_options,
-        -- },
     })
 
     vim.lsp.config('cssmodules_ls', {
@@ -88,10 +65,6 @@ function M.setup()
         'lua_ls',
         -- 'emmylua_ls',
     })
-
-    -- usercmd('ToggleLSPInlayHints', function()
-    --     vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled({ bufnr = 0 }))
-    -- end, { nargs = 0, desc = 'Toggle LSP inlay hints' })
 end
 
 return M
