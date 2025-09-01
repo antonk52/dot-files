@@ -67,7 +67,7 @@ end
 ---@param path string
 ---@return boolean
 local function fs_is_dir(path)
-    return (uv.fs_stat(path) or {}).type == 'directory'
+    return fs_type(path) == 'directory'
 end
 
 ---@param path string
@@ -149,7 +149,7 @@ local function map_delete()
     local confirmed = choice == 'y'
 
     if confirmed then
-        vim.fs.rm(current_path, { force = true, recursive = is_dir })
+        vim.fs.rm(current_path, { force = true, recursive = true })
     end
 end
 
@@ -237,8 +237,7 @@ local function decorate_symlinks(bufnr, lines)
         vim.uv.fs_lstat(abs_path, function(err, lstat)
             if err then
                 return
-            end
-            if lstat and lstat.type == 'link' then
+            elseif lstat and lstat.type == 'link' then
                 vim.uv.fs_readlink(abs_path, function(reallink_err, target)
                     if reallink_err then
                         return
@@ -419,9 +418,7 @@ function M.setup()
         pattern = '*',
         group = vim.api.nvim_create_augroup('FileExplorer', {}),
         callback = function(args)
-            if vim.bo.filetype == 'directory' then
-                return
-            elseif fs_is_dir(args.file) then
+            if vim.bo.filetype ~= 'directory' and fs_is_dir(args.file) then
                 vim.schedule(function()
                     M.open(args.file)
                 end)
