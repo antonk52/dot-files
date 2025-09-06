@@ -40,6 +40,8 @@ end
 local update_swin_position = throttle(function(swin, bufnr)
     if not vim.api.nvim_win_is_valid(swin) then
         return
+    elseif not vim.api.nvim_buf_is_valid(bufnr) then
+        return swin_hide(swin)
     end
     local total_lines = vim.api.nvim_buf_line_count(bufnr)
     local win_height = vim.api.nvim_win_get_height(0)
