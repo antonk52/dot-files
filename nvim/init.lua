@@ -97,6 +97,13 @@ require('lazy').setup({
             keymap.set('n', 'gi', '<cmd>lua Snacks.picker.lsp_implementations()<cr>')
             keymap.set('n', 'gr', '<cmd>lua Snacks.picker.lsp_references()<cr>')
             keymap.set('n', 'gO', '<cmd>lua Snacks.picker.lsp_symbols()<cr>')
+            usercmd('GitDiffPicker', ':lua Snacks.picker.git_diff()<cr>', {})
+            usercmd('GitBrowse', function(x)
+                require('snacks.gitbrowse').open({
+                    line_start = x.range > 0 and x.line1 or nil,
+                    line_end = x.range > 0 and x.line2 or nil,
+                })
+            end, { nargs = 0, range = true, desc = 'Open in browser' })
         end,
     },
     {
@@ -316,7 +323,6 @@ vim.opt.hlsearch = false -- enabled by n/N keymaps
 -- Show "invisible" characters
 vim.opt.list = true
 vim.opt.listchars = { trail = '∙', tab = '▸ ' }
-vim.opt.termguicolors = vim.env.__CFBundleIdentifier ~= 'com.apple.Terminal'
 -- show search effect as you type
 vim.opt.inccommand = 'split'
 -- 1 tab == 4 spaces
@@ -356,9 +362,7 @@ vim.opt.smartcase = true
 vim.cmd.color('lake_contrast')
 
 keymap.set('n', '<C-s>', '<cmd>lua vim.lsp.buf.signature_help()<cr>', { desc = 'Signature help' })
-keymap.set('n', '<leader>R', 'grr', { desc = 'Rename' })
 keymap.set('n', '<leader>L', '<cmd>lua vim.diagnostic.open_float()<cr>', { desc = 'Line errors' })
-keymap.set('n', '<leader>ca', 'gra', { desc = 'Code actions' })
 keymap.set('n', ']e', function()
     vim.diagnostic.jump({ count = 1, severity = 1 })
 end, { desc = 'Next error diagnostic' })
@@ -394,7 +398,6 @@ keymap.set('v', '<', '<gv')
 keymap.set('v', '>', '>gv')
 
 keymap.set('n', '<C-t>', '<cmd>tabedit<CR>', { desc = 'Open a new tab' })
-keymap.set('n', '<localleader>T', '<cmd>tabclose<cr>', { desc = 'Close tab' })
 keymap.set('t', '<esc><esc>', '<c-\\><c-n>', { desc = 'exit term buffer' })
 
 -- Commands {{{1
@@ -406,13 +409,6 @@ usercmd('NoteToday', '=require("antonk52.notes").note_month_now()', {})
 usercmd('ColorLight', ':color lightest', {})
 usercmd('ColorDark', ':color lake_contrast', {})
 usercmd('Eslint', '=require("antonk52.eslint").run()', {})
-usercmd('GitDiffPicker', ':lua Snacks.picker.git_diff()<cr>', {})
-usercmd('GitBrowse', function(x)
-    require('snacks.gitbrowse').open({
-        line_start = x.range > 0 and x.line1 or nil,
-        line_end = x.range > 0 and x.line2 or nil,
-    })
-end, { nargs = 0, range = true, desc = 'Open in browser' })
 usercmd('BunRun', ':!bun run %', {})
 usercmd('NodeRun', ':!node %', {})
 -- fat fingers

@@ -2,9 +2,10 @@ local M = {}
 local NS = vim.api.nvim_create_namespace('find_and_replace')
 
 ---@param line string
----@return string, string, string
+---@return {file: string, line_number: string}
 local function parse_line(line)
-    return string.match(line, '^(.*):(%d*):(.*)$')
+    local file, line_nr, _rest = string.match(line, '^(.*):(%d*):(.*)$')
+    return { file = file, line_number = line_nr }
 end
 
 M.find_and_replace = function()
@@ -26,30 +27,15 @@ M.find_and_replace = function()
     end
 
     vim.system(cmd, { text = true }, function(obj)
-        if vim.trim(obj.stdout) == '' then
-            return vim.schedule(function()
-                vim.notify('No results found', vim.log.levels.INFO)
-            end)
-        end
-        assert(obj.code == 0, 'Rg command failed; stderr:\n' .. obj.stderr)
-
         vim.schedule(function()
+            if vim.trim(obj.stdout) == '' then
+                return vim.notify('No results found', vim.log.levels.INFO)
+            end
+            assert(obj.code == 0, 'Rg command failed; stderr:\n' .. obj.stderr)
+
             local lines_str = vim.trim(obj.stdout or '')
             local initial_lines = vim.split(lines_str, '\n')
-            ---@type {file: string, line_number: string, text: string}[]
-            local matches = vim.tbl_map(
-                ---@param line string
-                ---@return {file: string, line_number: string, text: string}
-                function(line)
-                    local file, line_number, text = parse_line(line)
-                    return {
-                        file = file,
-                        line_number = line_number,
-                        text = text,
-                    }
-                end,
-                initial_lines
-            )
+            local matches = vim.tbl_map(parse_line, initial_lines)
             local tmp_file = vim.fn.tempname()
 
             vim.fn.writefile(
@@ -109,22 +95,15 @@ M.find_and_replace = function()
                     for i, new_text in ipairs(new_lines) do
                         if new_text ~= matches[i].text then
                             local file, line_number = matches[i].file, matches[i].line_number
-                            local init_file, init_lnum = parse_line(initial_lines[i])
+                            local og_lines = vim.fn.readfile(file) --[[@as string[] ]]
 
-                            if file == init_file and line_number == init_lnum then
-                                ---@type string[]
-                                local og_lines = vim.fn.readfile(file)
+                            og_lines[tonumber(line_number)] = new_text
 
-                                og_lines[tonumber(line_number)] = new_text
+                            vim.fn.writefile(og_lines, file)
 
-                                vim.fn.writefile(og_lines, file)
+                            matches[i].text = new_text
 
-                                matches[i].text = new_text
-
-                                changes_count = changes_count + 1
-                            else
-                                return undo('Do not change file paths or line numbers, aborting')
-                            end
+                            changes_count = changes_count + 1
                         end
                     end
 
