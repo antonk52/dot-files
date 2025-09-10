@@ -78,20 +78,21 @@ local function fs_is_link_dir(path)
 end
 
 ---@param path string
----@return string[]
+---@return {abspath: string, name: string, type: string}[]
 local function fs_read_dir(path)
-    local paths = {}
+    local entries = {}
 
     local dirname = vim.fs.abspath(path)
-    for name in vim.fs.dir(path) do
-        table.insert(paths, vim.fs.joinpath(dirname, name))
+    for name, type in vim.fs.dir(path) do
+        local abspath = vim.fs.joinpath(dirname, name)
+        table.insert(entries, { abspath = abspath, name = name, type = type })
     end
 
-    vim.tbl_filter(M.filter, paths)
+    vim.tbl_filter(M.filter, entries)
 
-    table.sort(paths, M.sort)
+    table.sort(entries, M.sort)
 
-    return paths
+    return entries
 end
 
 local function map_quit()
@@ -223,42 +224,9 @@ local function create_buffer(path)
     return buf
 end
 
----@param bufnr integer
----@param lines string[]
-local function decorate_symlinks(bufnr, lines)
-    vim.api.nvim_buf_clear_namespace(bufnr, ns_id_symlinks, 0, -1)
-    local buf_path = vim.fs.normalize(vim.api.nvim_buf_get_name(bufnr))
-
-    for i, line in ipairs(lines) do
-        if vim.endswith(line, '/') then
-            line = line:sub(1, -2)
-        end
-        local abs_path = vim.fs.joinpath(buf_path, line)
-        vim.uv.fs_lstat(abs_path, function(err, lstat)
-            if err then
-                return
-            elseif lstat and lstat.type == 'link' then
-                vim.uv.fs_readlink(abs_path, function(reallink_err, target)
-                    if reallink_err then
-                        return
-                    end
-                    local linenr = i - 1
-                    local col = 0
-                    vim.schedule(function()
-                        vim.api.nvim_buf_set_extmark(bufnr, ns_id_symlinks, linenr, col, {
-                            virt_text = { { '⏤⏤► ' .. target, 'Comment' } },
-                            hl_mode = 'combine',
-                        })
-                    end)
-                end)
-            end
-        end)
-    end
-end
-
 ---@param self vim._tree.Explorer
----@param lines string[]
-local function explorer_refresh(self, lines)
+---@param entries {abspath: string, type: string}[]
+local function explorer_refresh(self, entries)
     if not vim.api.nvim_buf_is_valid(self.buf) then
         return
     end
@@ -268,32 +236,46 @@ local function explorer_refresh(self, lines)
     ---@type table<string, any>[]
     local ranges = {}
 
-    lines = vim.iter(lines)
+    local lines = vim.iter(entries)
         :enumerate()
-        :map(function(i, path)
-            local basename = vim.fs.basename(path)
+        :map(function(i, p)
+            local basename = p.name
 
             local range = {
                 { i - 1, 0 },
                 { i - 1, #basename },
             }
 
-            local type = fs_type(path)
-
-            if type == 'directory' then
+            if p.type == 'directory' then
                 ---@type string
                 basename = basename .. os_sep
                 -- include trailing slash
                 range[2][2] = range[2][2] + 1
                 table.insert(ranges, { 'Directory', range })
-            elseif type == 'link' then
-                if fs_is_link_dir(path) then
+            elseif p.type == 'link' then
+                if fs_is_link_dir(p.abspath) then
                     ---@type string
                     basename = basename .. os_sep
                     -- include trailing slash
                     range[2][2] = range[2][2] + 1
                 end
                 table.insert(ranges, { 'Question', range })
+
+                vim.schedule(function()
+                    vim.uv.fs_readlink(p.abspath, function(reallink_err, target)
+                        if reallink_err then
+                            return
+                        end
+                        local linenr = i - 1
+                        local col = 0
+                        vim.schedule(function()
+                            vim.api.nvim_buf_set_extmark(self.buf, ns_id_symlinks, linenr, col, {
+                                virt_text = { { '⏤⏤► ' .. target, 'Comment' } },
+                                hl_mode = 'combine',
+                            })
+                        end)
+                    end)
+                end)
             end
 
             return basename
@@ -307,8 +289,6 @@ local function explorer_refresh(self, lines)
     end
 
     vim.bo[self.buf].modifiable = false
-
-    decorate_symlinks(self.buf, lines)
 end
 
 local on_fs_event = vim.schedule_wrap(function(explorer, events)
@@ -371,20 +351,20 @@ function M.filter(_)
     return true
 end
 
----@param path1 string
----@param path2 string
+---@param p1 {abspath: string, name: string}
+---@param p2 {abspath: string, name: string}
 ---@return boolean
-function M.sort(path1, path2)
-    if fs_is_dir(path1) and not fs_is_dir(path2) then
+function M.sort(p1, p2)
+    if fs_is_dir(p1.abspath) and not fs_is_dir(p2.abspath) then
         return true
     end
 
-    if not fs_is_dir(path1) and fs_is_dir(path2) then
+    if not fs_is_dir(p1.abspath) and fs_is_dir(p2.abspath) then
         return false
     end
 
     -- Otherwise order alphabetically
-    return path1 < path2
+    return p1.name < p2.name
 end
 
 ---@param path string
@@ -406,10 +386,10 @@ function M.open(path)
         path = current_file == '' and uv.cwd() or vim.fs.dirname(current_file)
     end
 
-    local paths = fs_read_dir(path)
+    local entries = fs_read_dir(path)
     local explorer = get_explorer(path)
 
-    explorer:refresh(paths)
+    explorer:refresh(entries)
     edit(explorer.buf)
 end
 
@@ -419,9 +399,7 @@ function M.setup()
         group = vim.api.nvim_create_augroup('FileExplorer', {}),
         callback = function(args)
             if vim.bo.filetype ~= 'directory' and fs_is_dir(args.file) then
-                vim.schedule(function()
-                    M.open(args.file)
-                end)
+                M.open(args.file)
             end
         end,
     })
