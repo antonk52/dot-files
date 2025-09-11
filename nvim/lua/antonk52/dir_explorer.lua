@@ -9,6 +9,7 @@
 -- * add maps to manipulate fs (add, delete, copy, move)
 -- * case sensitive sorting
 -- * delete same name buffers when creating new explorer buffer
+-- * open dir on file from which navigated using `-`
 
 local M = {}
 
@@ -114,7 +115,9 @@ local function map_open()
 end
 
 local function map_goto_parent()
+    local prev_name = vim.fs.basename(vim.api.nvim_buf_get_name(0))
     M.open(vim.fs.dirname(vim.b.cwd))
+    vim.fn.search(prev_name)
 end
 
 local function map_add()
