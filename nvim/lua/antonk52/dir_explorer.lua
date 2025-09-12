@@ -86,6 +86,8 @@ local function fs_read_dir(path)
     local dirname = vim.fs.abspath(path)
     for name, type in vim.fs.dir(path) do
         local abspath = vim.fs.joinpath(dirname, name)
+        -- fs.dir does not return type for network volumes
+        type = type or (vim.uv.fs_stat(abspath) or {}).type
         table.insert(entries, { abspath = abspath, name = name, type = type })
     end
 
