@@ -61,7 +61,7 @@ function M.setup()
         'cssmodules_ls',
         'tailwindcss',
         'selene3p_ls',
-        'stylua3p_ls',
+        'stylua',
         'lua_ls',
         -- 'emmylua_ls',
     })
