@@ -272,8 +272,43 @@ local function decrease_win_width()
     -- win:setFrameWithWorkarounds(frame)
 end
 
+local function center_or_toggle_resize()
+    local win = hs.window.focusedWindow()
+    if not win then
+        hs.alert.show('No focused window')
+        return
+    end
+
+    local frame = win:frame()
+    local screen_frame = win:screen():frame()
+    local align = resize_utils.get_align(frame, screen_frame)
+
+    if align ~= 'center' then
+        frame.x = (screen_frame.w - frame.w) / 2
+        win:setFrame(frame)
+    else
+        local third = screen_frame.w / 3
+        local half = screen_frame.w / 2
+        local two_thirds = screen_frame.w * 2 / 3
+
+        local new_width = third
+        if is_close_to(frame.w, third) then
+            new_width = half
+        elseif is_close_to(frame.w, half) then
+            new_width = two_thirds
+        elseif is_close_to(frame.w, two_thirds) then
+            new_width = third
+        end
+
+        frame.w = new_width
+        frame.x = (screen_frame.w - new_width) / 2
+        win:setFrame(frame)
+    end
+end
+
 hs.hotkey.bind(HYPER_KEY, 'o', increase_win_width)
 hs.hotkey.bind(HYPER_KEY, 'i', decrease_win_width)
+hs.hotkey.bind(HYPER_KEY, 'c', center_or_toggle_resize)
 
 -- Optional: Display a message when Hammerspoon config is loaded successfully
 hs.alert('HS: loaded, reload with <tab>+R', 0.7)
