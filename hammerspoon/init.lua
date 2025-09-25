@@ -50,6 +50,7 @@ end
 
 local STATE = {
     currentSpaceWindows = {},
+    last_focused_window_by_screen = {}, -- track last focused window for each screen
 }
 -- on window close or open update the list of windows
 
@@ -306,9 +307,81 @@ local function center_or_toggle_resize()
     end
 end
 
+
+local function focus_frontmost_window_on_other_monitor()
+    local current_window = hs.window.focusedWindow()
+    local current_screen = hs.screen.mainScreen()
+    local all_screens = hs.screen.allScreens()
+
+    -- Store the current window as the last focused for this screen
+    if current_window then
+        STATE.last_focused_window_by_screen[current_screen:id()] = current_window
+    end
+
+    local other_screens = {}
+    for _, screen in ipairs(all_screens) do
+        if screen:id() ~= current_screen:id() then
+            table.insert(other_screens, screen)
+        end
+    end
+
+    if #other_screens == 0 then
+        nav_alert('Single screen detected')
+        return
+    end
+
+    -- Find the other screen (not the current one)
+    local other_screen = other_screens[1]
+    if not other_screen then
+        nav_alert('Could not find other monitor')
+        return
+    end
+
+    -- Check if we have a previously focused window for the target screen
+    local last_focused_on_target = STATE.last_focused_window_by_screen[other_screen:id()]
+    local target_window = nil
+
+    -- If we have a previously focused window and it's still valid, use it
+    if
+        last_focused_on_target
+        and last_focused_on_target:screen():id() == other_screen:id()
+        and not last_focused_on_target:isMinimized()
+    then
+        target_window = last_focused_on_target
+    else
+        -- Fall back to finding any available window on the other screen
+        local windows_on_other_screen = {}
+        for _, window in ipairs(hs.window.visibleWindows()) do
+            if
+                window:screen():id() == other_screen:id()
+                and not window:isMinimized()
+                and window:application():name() ~= 'Finder'
+            then
+                table.insert(windows_on_other_screen, window)
+            end
+        end
+
+        if #windows_on_other_screen == 0 then
+            nav_alert('No windows found on other monitor')
+            return
+        end
+
+        target_window = windows_on_other_screen[1]
+    end
+
+    -- Focus the target window
+    if target_window then
+        target_window:focus()
+        nav_alert(target_window:application():name())
+    else
+        nav_alert('No window found on other monitor')
+    end
+end
+
 hs.hotkey.bind(HYPER_KEY, 'o', increase_win_width)
 hs.hotkey.bind(HYPER_KEY, 'i', decrease_win_width)
 hs.hotkey.bind(HYPER_KEY, 'c', center_or_toggle_resize)
+hs.hotkey.bind(HYPER_KEY, 'n', focus_frontmost_window_on_other_monitor)
 
 -- Optional: Display a message when Hammerspoon config is loaded successfully
 hs.alert('HS: loaded, reload with <tab>+R', 0.7)
