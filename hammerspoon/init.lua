@@ -307,7 +307,6 @@ local function center_or_toggle_resize()
     end
 end
 
-
 local function focus_frontmost_window_on_other_monitor()
     local current_window = hs.window.focusedWindow()
     local current_screen = hs.screen.mainScreen()
@@ -372,7 +371,9 @@ local function focus_frontmost_window_on_other_monitor()
     -- Focus the target window
     if target_window then
         target_window:focus()
-        nav_alert(target_window:application():name())
+        hs.timer.doAfter(0.05, function()
+            nav_alert(target_window:application():name())
+        end)
     else
         nav_alert('No window found on other monitor')
     end
