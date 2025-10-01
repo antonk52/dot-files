@@ -284,6 +284,10 @@ local function center_or_toggle_resize()
     local screen_frame = win:screen():frame()
     local align = resize_utils.get_align(frame, screen_frame)
 
+    -- Always make window full height
+    frame.y = screen_frame.y
+    frame.h = screen_frame.h
+
     if align ~= 'center' then
         frame.x = (screen_frame.w - frame.w) / 2
         win:setFrame(frame)
