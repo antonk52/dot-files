@@ -3,11 +3,11 @@
 if ! hash brew 2>/dev/null
 then
     # Prompt the user for confirmation
-    read -p "Brew is not installed. Do you want to install it globally? (y/n) " choice
+    read -p "Brew is not installed. Do you want to install it globally? (y/N) " choice
     # Convert the input to lowercase (optional)
     choice=$(echo "$choice" | tr '[:upper:]' '[:lower:]')
-    if [[ "$choice" == "y" || "$choice" == "yes" ]]; then
-        echo 'Installing globally...'
+    if [[ "$choice" == "y" ]]; then
+        echo 'Installing homebrew...'
         /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
     else
         echo 'Aborting...'
@@ -23,10 +23,7 @@ brew upgrade
 
 brew tap clementtsang/bottom
 
-brew install bat # modern cat
-brew install bottom # top/htop alternative
 brew install dust # like du but more intuitive.
-brew install eza # modern ls
 brew install fd # modern find
 brew install fzf # cli fuzzy finder written in Go
 brew install gh # github cli
@@ -47,7 +44,6 @@ brew install luacheck # lua linter
 brew install neovim # vim but better
 brew install node # nodejs & npm
 brew install openssl
-brew install procs # ps in rust
 brew install ripgrep
 brew install selene # lua formatter
 brew install tmux # terminal multiplexer
@@ -57,10 +53,6 @@ brew install wget # cli to download stuff
 brew install yarn # npm alternative
 brew install zsh # updated version
 
-if [[ -z "${PERSONAL}" ]]; then
-    brew install freetype # library to render fonts
-fi
-
 # cask apps
 brew install ghostty # terminal emulator
 brew install hammerspoon # macos automation with lua
@@ -69,10 +61,6 @@ brew install keycastr # useful for demos
 brew install monitorcontrol # control external monitors brightness via keyboard
 brew install raycast # spotlight with window management
 brew install vlc # media player
-
-if [[ -z "${PERSONAL}" ]]; then
-    brew install telegram # chats
-fi
 
 # fonts
 brew tap homebrew/cask-fonts

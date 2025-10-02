@@ -5,12 +5,7 @@ alias :sp='test -n "$TMUX" && tmux split-window'
 alias :vs='test -n "$TMUX" && tmux split-window -h'
 alias :q='exit'
 
-# ls
-if command -v eza &> /dev/null;
-then
-    alias ls='eza --color=never'
-fi
-alias ll='ls -alF'
+alias ll='ls -lAhF'
 
 alias cl='clear'
 
@@ -93,4 +88,3 @@ function _download_nvim_impl() {
 
 alias get_nvim_nightly="_download_nvim_impl nvim-nightly nightly"
 alias get_nvim="_download_nvim_impl nvim v0.11.0"
-alias npm_run_script="$DOT_FILES/scripts/npm_run_script.js"
