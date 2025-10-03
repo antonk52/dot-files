@@ -120,7 +120,7 @@ vim.api.nvim_create_autocmd({ 'CursorHold', 'InsertLeave', 'WinScrolled', 'BufWi
                         )
                     then
                         local icon = LSP_KIND_TO_ICON[vim.lsp.protocol.SymbolKind[symbol.kind]]
-                        table.insert(named_symbols, icon .. ' ' .. symbol.name)
+                        table.insert(named_symbols, ' ' .. icon .. ' ' .. symbol.name)
                         if symbol.children then
                             process_symbols(symbol.children)
                         end
@@ -130,7 +130,7 @@ vim.api.nvim_create_autocmd({ 'CursorHold', 'InsertLeave', 'WinScrolled', 'BufWi
             end
             process_symbols(result)
 
-            vim.b[bufnr].lsp_location = table.concat(named_symbols, '  ')
+            vim.b[bufnr].lsp_location = table.concat(named_symbols, '')
             vim.cmd.redrawstatus()
         end)
     end, 50),
@@ -176,7 +176,7 @@ function M.setup()
         end
     end
     vim.opt.statusline = table.concat({
-        ' %f %(%m %)', -- filename, modified, readonly
+        ' %f%( %m%)', -- filename, modified, readonly
         '%<', -- conceal marker
         hi_next('Comment'),
         '%{get(b:, "lsp_location", "")}', -- lsp symbols
