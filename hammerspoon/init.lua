@@ -175,12 +175,12 @@ end
 ---@param screenFrame {x: number, y: number, w: number, h: number}
 ---@return 'left' | 'right' | 'center'
 function resize_utils.get_align(frame, screenFrame)
-    local space_left = frame.x
-    local space_right = screenFrame.w - (frame.x + frame.w)
+    local space_left = frame.x - screenFrame.x
+    local space_right = screenFrame.w - (space_left + frame.w)
 
     if is_close_to(space_left, space_right) then
         return 'center'
-    elseif is_close_to(frame.x, 0) then
+    elseif is_close_to(frame.x, screenFrame.x) then
         return 'left'
     else
         return 'right'
@@ -209,7 +209,7 @@ local function increase_win_width()
     if new_width >= screen_frame.w then
         -- hs.alert.show('Max width reached', nil, nil, 0.1)
         new_width = screen_frame.w
-        frame.x = 0
+        frame.x = screen_frame.x
     else
         -- hs.alert.show('Calling align and resize', nil, nil, 0.1)
         local align = resize_utils.get_align(frame, screen_frame)
@@ -220,7 +220,7 @@ local function increase_win_width()
         elseif align == 'right' then
             frame.x = frame.x - RESIZE_DELTA
         else
-            frame.x = 0
+            frame.x = screen_frame.x
         end
     end
 
@@ -282,7 +282,7 @@ local function center_or_toggle_resize()
     frame.h = screen_frame.h
 
     if align ~= 'center' then
-        frame.x = (screen_frame.w - frame.w) / 2
+        frame.x = screen_frame.x + (screen_frame.w - frame.w) / 2
         win:setFrame(frame)
     else
         local third = screen_frame.w / 3
@@ -299,7 +299,7 @@ local function center_or_toggle_resize()
         end
 
         frame.w = new_width
-        frame.x = (screen_frame.w - new_width) / 2
+        frame.x = screen_frame.x + (screen_frame.w - new_width) / 2
         win:setFrame(frame)
     end
 end
