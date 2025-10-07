@@ -125,15 +125,6 @@ require('lazy').setup({
         },
     },
     {
-        'olimorris/codecompanion.nvim',
-        config = function()
-            require('codecompanion').setup()
-            keymap.set({ 'n', 'x' }, '<leader>i', ':CodeCompanion ')
-        end,
-        dependencies = { 'nvim-lua/plenary.nvim' },
-        enabled = vim.env.WORK == nil,
-    },
-    {
         'tpope/vim-fugitive',
         config = function()
             usercmd('GitAddPatch', ':tab G add --patch', { nargs = 0 })
@@ -259,10 +250,6 @@ require('lazy').setup({
         end,
     },
     {
-        'nvimtools/none-ls.nvim',
-        cond = vim.env.WORK ~= nil,
-    },
-    {
         cond = vim.env.WORK ~= nil and vim.env.WORK_PLUGIN_PATH ~= nil and vim.uv.fs_stat(
             vim.fn.expand(vim.env.WORK_PLUGIN_PATH)
         ) ~= nil,
@@ -271,10 +258,7 @@ require('lazy').setup({
         config = function()
             require('antonk52.work').setup()
         end,
-        dependencies = {
-            'nvim-lua/plenary.nvim',
-            'nvimtools/none-ls.nvim',
-        },
+        dependencies = { 'nvim-lua/plenary.nvim' },
     },
     {
         'jake-stewart/auto-cmdheight.nvim',
@@ -436,18 +420,6 @@ vim.api.nvim_create_autocmd('TextYankPost', {
     callback = function()
         if not vim.v.event.visual then
             vim.highlight.on_yank({ higroup = 'Substitute', timeout = 250 })
-        end
-    end,
-})
-
-vim.api.nvim_create_autocmd('FileType', {
-    desc = 'Use treesitter for folding in markdown files',
-    callback = function()
-        if vim.bo.filetype == 'markdown' then
-            vim.wo.foldmethod = 'expr'
-            vim.wo.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
-        else
-            vim.wo.foldmethod = 'indent'
         end
     end,
 })
