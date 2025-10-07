@@ -1003,20 +1003,6 @@
                         ]
                     },
                     {
-                        "description": "right_command tap is enter",
-                        "manipulators": [
-                            {
-                                "from": {
-                                    "key_code": "right_command",
-                                    "modifiers": { "optional": ["left_command", "left_control", "left_option", "left_shift"] }
-                                },
-                                "to_if_alone": [{ "key_code": "return_or_enter" }],
-                                "to": [{ "key_code": "right_command" }],
-                                "type": "basic"
-                            }
-                        ]
-                    },
-                    {
                         "description": "§ (above tab on eu keyboard) is backtick `",
                         "manipulators": [
                             {

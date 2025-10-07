@@ -102,8 +102,7 @@ local function focusNextWindowInScreen()
     end
 
     if #STATE.currentSpaceWindows < 2 then
-        nav_alert('Nothing to focus')
-        return
+        return nav_alert('Nothing to focus')
     end
 
     local next_i = next_idx(STATE.currentSpaceWindows, currentWindow)
@@ -111,7 +110,7 @@ local function focusNextWindowInScreen()
     local next_win = STATE.currentSpaceWindows[next_i]
 
     if next_win then
-        nav_alert('Next window: ' .. next_win:application():name())
+        nav_alert(next_win:application():name())
         next_win:focus()
     end
 end
@@ -129,8 +128,7 @@ local function focusPreviousWindowInScreen()
     end
 
     if #STATE.currentSpaceWindows < 2 then
-        nav_alert('Nothing to focus')
-        return
+        return nav_alert('Nothing to focus')
     end
 
     local prev_i = prev_idx(STATE.currentSpaceWindows, currentWindow)
@@ -138,7 +136,7 @@ local function focusPreviousWindowInScreen()
     local prev_win = STATE.currentSpaceWindows[prev_i]
 
     if prev_win then
-        nav_alert('Previous window: ' .. prev_win:application():name())
+        nav_alert(prev_win:application():name())
         prev_win:focus()
     end
 end
@@ -167,12 +165,10 @@ local resize_utils = {}
 ---@return boolean
 local function is_close_to(value, target)
     local step = 10
-    if value == target then
-        return true
-    elseif value >= (target - step) and value <= (target + step) then
-        return true
-    end
-    return false
+    local is_same = value == target
+    local is_close = value >= (target - step) and value <= (target + step)
+
+    return is_same or is_close
 end
 
 ---@param frame {x: number, y: number, w: number, h: number}
@@ -196,8 +192,7 @@ local function increase_win_width()
     -- Get the currently focused window
     local win = hs.window.focusedWindow()
     if not win then
-        hs.alert.show('No focused window')
-        return
+        return hs.alert.show('No focused window')
     end
 
     -- Get the current frame of the window
@@ -239,8 +234,7 @@ local function decrease_win_width()
     -- Get the currently focused window
     local win = hs.window.focusedWindow()
     if not win then
-        hs.alert.show('No focused window')
-        return
+        return hs.alert.show('No focused window')
     end
 
     -- Get the current frame of the window
@@ -276,8 +270,7 @@ end
 local function center_or_toggle_resize()
     local win = hs.window.focusedWindow()
     if not win then
-        hs.alert.show('No focused window')
-        return
+        return hs.alert.show('No focused window')
     end
 
     local frame = win:frame()
@@ -329,15 +322,13 @@ local function focus_frontmost_window_on_other_monitor()
     end
 
     if #other_screens == 0 then
-        nav_alert('Single screen detected')
-        return
+        return nav_alert('Single screen detected')
     end
 
     -- Find the other screen (not the current one)
     local other_screen = other_screens[1]
     if not other_screen then
-        nav_alert('Could not find other monitor')
-        return
+        return nav_alert('Could not find other monitor')
     end
 
     -- Check if we have a previously focused window for the target screen
@@ -365,22 +356,21 @@ local function focus_frontmost_window_on_other_monitor()
         end
 
         if #windows_on_other_screen == 0 then
-            nav_alert('No windows found on other monitor')
-            return
+            return nav_alert('No windows found on other monitor')
         end
 
         target_window = windows_on_other_screen[1]
     end
 
-    -- Focus the target window
-    if target_window then
-        target_window:focus()
-        hs.timer.doAfter(0.05, function()
-            nav_alert(target_window:application():name())
-        end)
-    else
-        nav_alert('No window found on other monitor')
+    if not target_window then
+        return nav_alert('No window found on other monitor')
     end
+
+    -- Focus the target window
+    target_window:focus()
+    hs.timer.doAfter(0.05, function()
+        nav_alert(target_window:application():name())
+    end)
 end
 
 hs.hotkey.bind(HYPER_KEY, 'o', increase_win_width)

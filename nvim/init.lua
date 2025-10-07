@@ -93,9 +93,9 @@ require('lazy').setup({
             -- override lsp keymaps as snacks handles go to one results or picker for multiple
             keymap.set('n', '<C-]>', '<cmd>lua Snacks.picker.lsp_definitions()<cr>')
             keymap.set('n', 'gD', '<cmd>lua Snacks.picker.lsp_declaraions()<cr>')
-            keymap.set('n', 'gK', '<cmd>lua Snacks.picker.lsp_type_definitions()<cr>')
-            keymap.set('n', 'gi', '<cmd>lua Snacks.picker.lsp_implementations()<cr>')
-            keymap.set('n', 'gr', '<cmd>lua Snacks.picker.lsp_references()<cr>')
+            keymap.set('n', 'grt', '<cmd>lua Snacks.picker.lsp_type_definitions()<cr>')
+            keymap.set('n', 'gri', '<cmd>lua Snacks.picker.lsp_implementations()<cr>')
+            keymap.set('n', 'grr', '<cmd>lua Snacks.picker.lsp_references()<cr>')
             keymap.set('n', 'gO', '<cmd>lua Snacks.picker.lsp_symbols()<cr>')
             usercmd('GitDiffPicker', ':lua Snacks.picker.git_diff()<cr>', {})
             usercmd('GitBrowse', function(x)
@@ -332,6 +332,7 @@ vim.opt.fillchars = { fold = '⏤' }
 -- current   ⏤⏤⏤► [7 lines]: set foldmethod=indent ⏤⏤⏤⏤⏤⏤⏤⏤⏤⏤⏤
 vim.opt.foldtext =
     '"⏤⏤⏤► [".(v:foldend - v:foldstart + 1)." lines] ".trim(getline(v:foldstart))." "'
+vim.opt.foldmethod = 'indent'
 -- break long lines on breakable chars, instead of the last fitting character
 vim.opt.linebreak = true
 -- persistent undo across sessions
