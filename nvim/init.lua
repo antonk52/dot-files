@@ -186,6 +186,9 @@ require('lazy').setup({
                     todo = { pattern = '%f[%w]()TODO()%f[%W]', group = 'DiagnosticWarn' },
                     note = { pattern = '%f[%w]()NOTE()%f[%W]', group = 'DiagnosticInfo' },
                     info = { pattern = '%f[%w]()INFO()%f[%W]', group = 'DiagnosticInfo' },
+                    high = { pattern = '%f[%w]()HIGH()%f[%W]', group = 'DiagnosticError' },
+                    mid = { pattern = '%f[%w]()MID()%f[%W]', group = 'DiagnosticWarn' },
+                    low = { pattern = '%f[%w]()LOW()%f[%W]', group = 'DiagnosticInfo' },
                     url = { pattern = '%f[%w]()https*://[^%s]+()%f[%W]', group = 'String' },
                     hex_color = require('mini.hipatterns').gen_highlighter.hex_color(),
                     tailwind = require('antonk52.tailwind').gen_highlighter(),
@@ -197,11 +200,13 @@ require('lazy').setup({
                     delete = 'ds',
                     replace = 'cs',
                     find = '',
+                    find_left = '',
                     highlight = '',
                     update_n_lines = '',
                     suffix_last = '',
                     suffix_next = '',
                 },
+                search_method = 'cover_or_next',
             })
             if vim.fs.root(0, '.git') ~= nil then
                 require('mini.diff').setup({

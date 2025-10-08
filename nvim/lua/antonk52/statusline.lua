@@ -120,7 +120,7 @@ vim.api.nvim_create_autocmd({ 'CursorHold', 'InsertLeave', 'WinScrolled', 'BufWi
                         )
                     then
                         local icon = LSP_KIND_TO_ICON[vim.lsp.protocol.SymbolKind[symbol.kind]]
-                        table.insert(named_symbols, ' ' .. icon .. ' ' .. symbol.name)
+                        table.insert(named_symbols, '  ' .. icon .. ' ' .. symbol.name)
                         if symbol.children then
                             process_symbols(symbol.children)
                         end
