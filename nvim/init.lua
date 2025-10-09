@@ -170,10 +170,6 @@ require('lazy').setup({
         },
     },
     {
-        'antonk52/markdowny.nvim',
-        opts = {},
-    },
-    {
         'nvim-mini/mini.nvim',
         config = function()
             require('mini.bracketed').setup()
