@@ -167,7 +167,7 @@ local groups = {
     ['@keyword.conditional.tsx'] = { link = 'Conditional' },
     ['@keyword.function'] = { fg = colors.c0E },
     ['@keyword.return'] = { fg = colors.c08, bold = true },
-    ['@markup.strikethrough'] = { link = 'Conceal' },
+    ['@markup.strikethrough'] = { fg = colors.c04, strikethrough = true },
     ['@method'] = { fg = colors.c05 },
     ['@namespace'] = { fg = colors.c05 },
     ['@exception'] = { fg = colors.c0C },

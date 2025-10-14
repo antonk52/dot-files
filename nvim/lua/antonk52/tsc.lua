@@ -76,8 +76,11 @@ local function callTSC(cwd)
                     end
                 end
 
+                vim.print('Found ' .. #errors .. ' errors')
                 vim.fn.setqflist({}, ' ', { title = 'TSC Errors', items = errors })
-                require('telescope.builtin').quickfix({})
+                if #errors > 0 then
+                    vim.cmd('copen')
+                end
             end)
         end
     )

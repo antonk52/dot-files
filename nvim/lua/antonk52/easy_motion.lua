@@ -63,7 +63,7 @@ local function easy_motion()
 end
 
 function M.setup()
-    vim.keymap.set({ 'n', 'x' }, '<leader>s', easy_motion, { desc = 'Jump to 2 characters' })
+    vim.keymap.set({ 'n', 'x' }, 'S', easy_motion, { desc = 'Jump to 2 characters' })
 end
 
 return M

@@ -9,10 +9,6 @@ function M.setup()
         vim.system({ 'tmux', 'rename-window', 'notes' })
     end
 
-    vim.opt.wrap = false
-    vim.opt.conceallevel = 2
-    vim.opt.concealcursor = '' -- current line unconcealed in normal and insert mode
-
     vim.api.nvim_create_autocmd('BufWritePre', {
         desc = 'Create missing directories when writing a buffer',
         callback = function()

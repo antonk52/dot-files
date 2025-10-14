@@ -12,6 +12,10 @@ function M.setup()
         desc = 'Update shiftwidth & expandtab based on indent levels',
         pattern = '*',
         callback = function()
+            local ec = vim.b.editorconfig
+            if ec and (ec.indent_size or ec.indent_style) then
+                return
+            end
             local lines = vim.api.nvim_buf_get_lines(0, 0, 100, false)
             local tab = '\t'
 

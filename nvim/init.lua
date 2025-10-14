@@ -60,7 +60,9 @@ require('lazy').setup({
                         end,
                     },
                 },
-                scroll = { animate = { total = 180, fps = 30, easing = 'inOutQuad' } },
+                scroll = {
+                    animate = { total = 180, fps = 44, easing = 'inOutQuad' },
+                },
             })
 
             -- mutate snacks telescope layout
@@ -185,7 +187,8 @@ require('lazy').setup({
                     high = { pattern = '%f[%w]()HIGH()%f[%W]', group = 'DiagnosticError' },
                     mid = { pattern = '%f[%w]()MID()%f[%W]', group = 'DiagnosticWarn' },
                     low = { pattern = '%f[%w]()LOW()%f[%W]', group = 'DiagnosticInfo' },
-                    url = { pattern = '%f[%w]()https*://[^%s]+()%f[%W]', group = 'String' },
+                    ids = { pattern = '%f[%w]()[DTPSNCX]%d+()%f[%W]', group = 'DiagnosticInfo' },
+                    url = { pattern = '%f[%w]()https*://[^%s]+/*()', group = 'DiagnosticInfo' },
                     hex_color = require('mini.hipatterns').gen_highlighter.hex_color(),
                     tailwind = require('antonk52.tailwind').gen_highlighter(),
                 },
@@ -259,7 +262,6 @@ require('lazy').setup({
         config = function()
             require('antonk52.work').setup()
         end,
-        dependencies = { 'nvim-lua/plenary.nvim' },
     },
     {
         'jake-stewart/auto-cmdheight.nvim',

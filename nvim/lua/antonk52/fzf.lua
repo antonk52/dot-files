@@ -8,21 +8,17 @@ local function fzf(kind)
         if kind == 'files' then
             if vim.fs.root(0, '.git') ~= nil then
                 fzf_cmd = 'git ls-files | fzf --prompt "GitFiles> "'
+            -- fd is faster than `hg files .`
             elseif vim.fs.root(0, '.hg') ~= nil then
                 fzf_cmd = 'hg files . | fzf --prompt "HgFiles> "'
             else
                 local ignore_patterns = require('antonk52.git_utils').get_nongit_ignore_patterns()
-                local find_command = { 'fd', '--type', 'file', '--hidden' }
+                local find_command = { 'fd', '--type', 'file', '--hidden', '-E', '.DS_Store' }
                 for _, p in ipairs(ignore_patterns) do
                     table.insert(find_command, '-E')
                     -- globs need surrounding quotes
-                    if string.find(p, '{') or string.find(p, '*') then
-                        p = string.format('"%s"', p)
-                    end
-                    table.insert(find_command, p)
+                    table.insert(find_command, string.format('"%s"', p))
                 end
-                table.insert(find_command, '-E')
-                table.insert(find_command, '.DS_Store')
 
                 table.insert(find_command, '.')
 

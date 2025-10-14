@@ -94,8 +94,7 @@ vim.api.nvim_create_autocmd({ 'CursorHold', 'InsertLeave', 'WinScrolled', 'BufWi
             local cursor_line = cursor_pos[1] - 1 -- Convert to 0-based index
             local cursor_col = cursor_pos[2] -- 0 based
 
-            ---@type string[]
-            local named_symbols = {}
+            local named_symbols = ''
 
             -- Recursively traverses symbols
             -- Gets the named nodes surrounding current cursor
@@ -120,7 +119,7 @@ vim.api.nvim_create_autocmd({ 'CursorHold', 'InsertLeave', 'WinScrolled', 'BufWi
                         )
                     then
                         local icon = LSP_KIND_TO_ICON[vim.lsp.protocol.SymbolKind[symbol.kind]]
-                        table.insert(named_symbols, '  ' .. icon .. ' ' .. symbol.name)
+                        named_symbols = named_symbols .. '  ' .. icon .. ' ' .. symbol.name
                         if symbol.children then
                             process_symbols(symbol.children)
                         end
@@ -130,7 +129,7 @@ vim.api.nvim_create_autocmd({ 'CursorHold', 'InsertLeave', 'WinScrolled', 'BufWi
             end
             process_symbols(result)
 
-            vim.b[bufnr].lsp_location = table.concat(named_symbols, '')
+            vim.b[bufnr].lsp_location = named_symbols
             vim.cmd.redrawstatus()
         end)
     end, 50),
