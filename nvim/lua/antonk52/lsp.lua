@@ -2,20 +2,6 @@ local M = {}
 
 function M.setup()
     -- lsp.log.set_level(lsp.log.DEBUG)
-    -- set global diagnostic settings to avoid passing them
-    -- to every vim.diagnostic method explicitly
-    vim.diagnostic.config({
-        float = {
-            source = true,
-            header = 'Line diagnostics:',
-            prefix = ' ',
-            scope = 'line',
-        },
-        signs = {
-            severity = vim.diagnostic.severity.WARN,
-        },
-        severity_sort = true, -- show errors first
-    })
 
     vim.lsp.config('jsonls', {
         settings = {
@@ -61,7 +47,7 @@ function M.setup()
         'cssmodules_ls',
         'tailwindcss',
         'selene3p_ls',
-        'stylua',
+        'stylua3p_ls',
         'lua_ls',
         -- 'emmylua_ls',
     })

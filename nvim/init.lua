@@ -441,4 +441,19 @@ vim.defer_fn(function()
     require('antonk52.easy_motion').setup()
     require('antonk52.layout').setup()
     require('antonk52.format_on_save').setup()
+
+    -- set global diagnostic settings to avoid passing them
+    -- to every vim.diagnostic method explicitly
+    vim.diagnostic.config({
+        float = {
+            source = true,
+            header = 'Line diagnostics:',
+            prefix = ' ',
+            scope = 'line',
+        },
+        signs = {
+            severity = vim.diagnostic.severity.WARN,
+        },
+        severity_sort = true, -- show errors first
+    })
 end, 20)
