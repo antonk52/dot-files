@@ -442,8 +442,6 @@ vim.defer_fn(function()
     require('antonk52.layout').setup()
     require('antonk52.format_on_save').setup()
 
-    -- set global diagnostic settings to avoid passing them
-    -- to every vim.diagnostic method explicitly
     vim.diagnostic.config({
         float = {
             source = true,

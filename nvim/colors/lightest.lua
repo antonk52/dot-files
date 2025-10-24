@@ -87,9 +87,6 @@ local groups = {
     ['@diff.minus'] = { fg = colors.red },
     ['@lsp.type.decorator'] = { fg = colors.dark_4 },
 
-    -- My custom highlights
-    StatusLineModified = { fg = colors.light_1, bg = colors.blue_light, bold = true },
-
     -- Plugins
     MiniCursorWord = { link = 'Visual' },
     MiniCursorwordCurrent = { bg = colors.light_4 },

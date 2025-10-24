@@ -2,27 +2,6 @@ vim.cmd('hi clear')
 vim.opt.background = 'dark'
 vim.g.colors_name = 'lake_contrast'
 
----@class LakeColors
-local _colors_default = {
-    c00 = '#2b303b',
-    c01 = '#343d46',
-    c02 = '#4f5b66',
-    c03 = '#65737e',
-    c04 = '#a7adba',
-    c05 = '#c0c5ce',
-    c06 = '#dfe1e8',
-    c07 = '#eff1f5',
-    c08 = '#bf616a',
-    c09 = '#d08770',
-    c0A = '#ebcb8b',
-    c0B = '#a3be8c',
-    c0C = '#96b5b4',
-    c0D = '#8fa1b3',
-    c0E = '#b48ead',
-    c0F = '#ab7967',
-}
-
----@type LakeColors
 local colors = {
     c00 = '#272b35',
     c01 = '#2f373f',
@@ -146,9 +125,6 @@ local groups = {
     Todo = { fg = colors.c0A, bg = colors.c01 },
     Type = { fg = colors.c0A },
     Typedef = { fg = colors.c0A },
-
-    -- My custom highlights
-    StatusLineModified = { fg = colors.c00, bg = colors.c0B, bold = true },
 
     -- Plugins
     MiniCursorWord = { link = 'Visual' },

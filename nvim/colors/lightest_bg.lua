@@ -94,9 +94,6 @@ local groups = {
     ['@_label.markdown_inline'] = { bg = colors.blue },
     ['@markup.link.label.markdown_inline'] = { bg = colors.blue },
 
-    -- My custom highlights
-    StatusLineModified = { fg = colors.light_1, bg = colors.blue_light, bold = true },
-
     -- Plugins
     MiniCursorWord = { link = 'Visual' },
     MiniCursorwordCurrent = { bg = colors.light_4 },
