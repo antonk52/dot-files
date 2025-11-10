@@ -1,38 +1,15 @@
 # Setup
 
-## Instructions
+## Quick Start
 
 1. Clone repository
     <br>`cd ~ && git clone --recurse-submodules git://github.com/antonk52/dot-files.git && cd dot-files`
-1. Create symlinks before installing applications
-    <br>`./scripts/setup.sh`
-1. Prepare macOS(xcode) if on a mac
-    <br>`./scripts/prepare-macos.sh`
-1. Install `brew`
-    <br>`./scripts/brew.sh`
-1. Change shell to zsh if it's not zsh already([how to get correct version on M1](https://stackoverflow.com/questions/31034870/making-zsh-default-shell-in-macosx#answer-44549662))
-    <br>`chsh -s $(which zsh)`
-1. Install global npm deps
-    <br>`./scripts/prepare-npm.sh`
+1. Run setup script (creates symlinks, configures macOS, installs brew & npm packages)
+    <br>`./scripts/setup.sh` (or `./scripts/setup.sh [links|mac|brew|npm]`)
 
-## Macos system preferences (TODO: move to `prepare-mac.sh`)
+## Macos system preferences
 
-- dock(open Settings/Dock, it should be similar to below)
-    - [ ] Minimize windows into application icon
-    - [x] Automatically hide and show the Dock
-    - [x] Show indicators for open applications
-    - remove all items from it by default, but finder; downloads; trash
-
-- increase key repeat: fastest
-- key delay until repeat: shortest
-- [x] enable three finger drag
-- [x] tap to click
-- [x] use keyboard to navigate
-- [ ] adjust keyboard brightness automatically
-
-- keyboard/shortcuts
-    - "input sourtces" - enable select next to ctrl + space
-    - "spotlight" - disable all
+- dock remove all items, but finder; downloads; trash
 
 ## Manual permissions
 
