@@ -63,7 +63,7 @@ local update_swin_position = throttle(function(swin, bufnr)
 
     local bottom_line = vim.fn.line('w$')
     if bottom_line == total_lines then
-        swin_top = win_height - swin_height + 1
+        swin_top = win_height - swin_height
     end
 
     vim.api.nvim_win_set_height(swin, swin_height)

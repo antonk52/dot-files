@@ -1,8 +1,6 @@
 local M = {}
 
 function M.setup()
-    vim.cmd.cd(vim.env.NOTES_PATH)
-
     M.note_month_now()
 
     if vim.env.TMUX then
@@ -22,7 +20,7 @@ function M.setup()
 end
 
 function M.note_month_now()
-    vim.cmd.edit(vim.env.NOTES_PATH .. os.date('/%Y/%m.md'))
+    vim.cmd.edit(os.date('$NOTES_PATH/%Y/%m.md'))
 end
 
 return M

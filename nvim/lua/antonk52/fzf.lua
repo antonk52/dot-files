@@ -8,9 +8,9 @@ local function fzf(kind)
         if kind == 'files' then
             if vim.fs.root(0, '.git') ~= nil then
                 fzf_cmd = 'git ls-files | fzf --prompt "GitFiles> "'
-            -- fd is faster than `hg files .`
-            elseif vim.fs.root(0, '.hg') ~= nil then
-                fzf_cmd = 'hg files . | fzf --prompt "HgFiles> "'
+            -- fd is faster than `hg files .` even though less accurate
+            -- elseif vim.fs.root(0, '.hg') ~= nil then
+            --     fzf_cmd = 'hg files . | fzf --prompt "HgFiles> "'
             else
                 local ignore_patterns = require('antonk52.git_utils').get_nongit_ignore_patterns()
                 local find_command = { 'fd', '--type', 'file', '--hidden', '-E', '.DS_Store' }
