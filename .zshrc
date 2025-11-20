@@ -11,6 +11,21 @@ export LANG=en_US.UTF-8
 # reduce the timeout between switching modes
 export KEYTIMEOUT=1
 
+# ============================================== HISTORY
+export HISTFILE="$HOME"/.zsh_history
+export HISTSIZE=10000
+export SAVEHIST=10000
+setopt SHARE_HISTORY          # share history across all sessions
+setopt INC_APPEND_HISTORY     # write to history immediately, not on shell exit
+setopt EXTENDED_HISTORY       # save timestamp and duration with each command
+setopt HIST_IGNORE_DUPS       # don't record duplicate consecutive commands
+setopt HIST_FIND_NO_DUPS      # don't show duplicates when searching
+setopt HIST_IGNORE_SPACE      # don't record commands starting with space
+setopt HIST_REDUCE_BLANKS     # remove superfluous blanks from history
+
+# ============================================== SHELL BEHAVIOR
+setopt AUTO_CD                # type directory name to cd into it
+
 source_if_exists() { [ -f "$1" ] && . "$1"; return 0; }
 has_command() { type "$1" >/dev/null 2>&1; }
 
@@ -53,6 +68,7 @@ _setup_completion() {
     fi
 
     source_if_exists "$DOT_FILES/dependencies/zsh-autosuggestions/zsh-autosuggestions.zsh"
+    source_if_exists "$DOT_FILES/scripts/npm-completions.zsh"
 
     if has_command yarn && has_command compdef; then
         source_if_exists "$DOT_FILES/dependencies/zsh-yarn-completions/zsh-yarn-completions.plugin.zsh"
