@@ -73,12 +73,12 @@ function _download_nvim_impl() {
     cd ~/Downloads
     # clean up if it exists already
     rm -rf ./nvim-macos-arm64.tar.gz ./nvim-macos-arm64 ./"$name"
-    # download tar with build
-    wget --quiet https://github.com/neovim/neovim/releases/download/"$version"/nvim-macos-arm64.tar.gz && echo "- Downloaded"
-    # to avoid "unknown developer" warning
-    xattr -c ./nvim-macos-arm64.tar.gz > /dev/null 2>&1 && echo "- Removed attributes"
-    # extract
-    tar xzvf nvim-macos-arm64.tar.gz > /dev/null 2>&1 && echo "- Extracted"
+    echo -n "Downloading Neovim $version... "
+    wget --quiet https://github.com/neovim/neovim/releases/download/"$version"/nvim-macos-arm64.tar.gz && echo " - done"
+    echo -n "Removing extended attributes... " # to avoid "unknown developer" warning
+    xattr -c ./nvim-macos-arm64.tar.gz > /dev/null 2>&1 && echo " - done"
+    echo -n "Extracting... "
+    tar xzvf nvim-macos-arm64.tar.gz > /dev/null 2>&1 && echo " - done"
     mv nvim-macos-arm64 "$name"
     ~/Downloads/"$name"/bin/nvim --version | grep 'NVIM v'
     # print archive date

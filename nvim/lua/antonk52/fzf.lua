@@ -80,7 +80,7 @@ end
 function M.setup()
     vim.keymap.set('n', '<leader>f', fzf('files'), { desc = 'fzf' })
     vim.keymap.set('n', '<leader>F', fzf('all_files'), { desc = 'fzf all files' })
-    vim.keymap.set('n', '<leader>D', fzf('dot_files'), { desc = 'fzf dot files' })
+    vim.keymap.set('n', '<localleader>d', fzf('dot_files'), { desc = 'fzf dot files' })
 end
 
 return M

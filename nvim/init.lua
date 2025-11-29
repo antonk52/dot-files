@@ -86,7 +86,8 @@ require('lazy').setup({
             keymap.set('n', '<leader>r', '<cmd>lua Snacks.picker.resume()<cr>')
             keymap.set('n', '<leader>T', '<cmd>lua Snacks.picker.pick()<cr>')
             keymap.set('n', '<leader>u', '<cmd>lua Snacks.picker.undo()<cr>')
-            keymap.set('n', '<leader>d', '<cmd>lua Snacks.picker.diagnostics()<cr>')
+            keymap.set('n', '<leader>d', '<cmd>lua Snacks.picker.diagnostics_buffer()<cr>')
+            keymap.set('n', '<leader>D', '<cmd>lua Snacks.picker.diagnostics()<cr>')
             --stylua: ignore
             keymap.set('n', '<leader>z', '<cmd>lua Snacks.zen.zen({toggles={dim=false},win={width=100}})<cr>')
             keymap.set('n', '<leader>;', '<cmd>lua Snacks.picker.commands({layout="select"})<cr>')
