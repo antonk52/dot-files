@@ -94,7 +94,11 @@ require('lazy').setup({
             keymap.set('n', '<leader>:', '<cmd>lua Snacks.picker.grep_word({search=vim.fn.input("Search: ")})<cr>')
             -- override lsp keymaps as snacks handles go to one results or picker for multiple
             keymap.set('n', '<C-]>', '<cmd>lua Snacks.picker.lsp_definitions()<cr>')
-            keymap.set('n', 'gD', '<cmd>lua Snacks.picker.lsp_declaraions()<cr>')
+            keymap.set('n', 'gD', function()
+                local opts = { bufnr = 0, method = 'textDocument/declaration' }
+                local cmd = '<cmd>lua Snacks.picker.lsp_declarations()<cr>'
+                return #vim.lsp.get_clients(opts) > 0 and cmd or 'gD'
+            end, { expr = true, desc = 'LSP Declarations with fallback' })
             keymap.set('n', 'grt', '<cmd>lua Snacks.picker.lsp_type_definitions()<cr>')
             keymap.set('n', 'gri', '<cmd>lua Snacks.picker.lsp_implementations()<cr>')
             keymap.set('n', 'grr', '<cmd>lua Snacks.picker.lsp_references()<cr>')

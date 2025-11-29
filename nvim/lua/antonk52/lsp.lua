@@ -3,52 +3,17 @@ local M = {}
 function M.my_hover()
     local util = require('vim.lsp.util')
     local bufnr = vim.api.nvim_get_current_buf()
-    local cursor = vim.api.nvim_win_get_cursor(0)
-    local cursor_line = cursor[1] - 1
-    local cursor_col = cursor[2]
-
-    local function is_diagnostic_at_cursor(diagnostic)
-        local start_line = diagnostic.lnum or 0
-        local end_line = diagnostic.end_lnum or start_line
-        if cursor_line < start_line or cursor_line > end_line then
-            return false
-        end
-        local start_col = diagnostic.col or 0
-        local end_col = diagnostic.end_col
-        if start_line == end_line then
-            if end_col then
-                return cursor_col >= start_col and cursor_col < end_col
-            else
-                return cursor_col >= start_col
-            end
-        end
-        if cursor_line == start_line then
-            return cursor_col >= start_col
-        end
-        if cursor_line == end_line then
-            if not end_col then
-                return true
-            end
-            return cursor_col < end_col
-        end
-        return true
-    end
-
-    local function collect_diagnostics()
-        local lines = {}
-        for _, diagnostic in ipairs(vim.diagnostic.get(bufnr)) do
-            if diagnostic.message and is_diagnostic_at_cursor(diagnostic) then
-                local source = diagnostic.source or 'diagnostic'
-                local message = diagnostic.message:gsub('\n', ' ')
-                local severity = vim.diagnostic.severity[diagnostic.severity] or 'UNKNOWN SEVERITY'
-                lines[#lines + 1] = string.format('**%s %s** %s', severity, source, message)
-            end
-        end
-        return lines
-    end
-
     local win = vim.api.nvim_get_current_win()
-    vim.lsp.buf_request_all(0, 'textDocument/hover', function(client)
+    local cursor_line = vim.api.nvim_win_get_cursor(win)[1] - 1
+
+    local line_diagnostics = vim.tbl_map(function(diagnostic)
+        local source = diagnostic.source or 'diagnostic'
+        local message = diagnostic.message:gsub('\n', ' ')
+        local severity = vim.diagnostic.severity[diagnostic.severity] or 'UNKNOWN SEVERITY'
+        return string.format('**%s %s** %s', severity, source, message)
+    end, vim.diagnostic.get(bufnr, { lnum = cursor_line }))
+
+    vim.lsp.buf_request_all(bufnr, 'textDocument/hover', function(client)
         return util.make_position_params(win, client.offset_encoding)
     end, function(results, ctx)
         if not ctx or ctx.bufnr ~= bufnr then
@@ -63,11 +28,6 @@ function M.my_hover()
                 local result = resp.result
                 if result and result.contents then
                     local converted = util.convert_input_to_markdown_lines(result.contents)
-                    converted = vim.split(
-                        table.concat(converted or {}, '\n'),
-                        '\n',
-                        { plain = true, trimempty = true }
-                    )
                     if #converted > 0 then
                         vim.list_extend(hover_lines, converted)
                     end
@@ -75,19 +35,18 @@ function M.my_hover()
             end
         end
 
-        local contents = collect_diagnostics()
         if #hover_lines > 0 then
-            if #contents > 0 then
-                contents[#contents + 1] = '---'
+            if #line_diagnostics > 0 then
+                line_diagnostics[#line_diagnostics + 1] = '---'
             end
-            vim.list_extend(contents, hover_lines)
+            vim.list_extend(line_diagnostics, hover_lines)
         end
 
-        if #contents == 0 then
+        if #line_diagnostics == 0 then
             return vim.notify('No information available', vim.log.levels.INFO)
         end
 
-        util.open_floating_preview(contents, 'markdown', { focus_id = 'ak_hover' })
+        util.open_floating_preview(line_diagnostics, 'markdown', { focus_id = 'ak_hover' })
     end)
 end
 
@@ -121,13 +80,9 @@ function M.setup()
     vim.lsp.config('eslint', { workspace_required = true })
     -- start language servers
     if not vim.endswith(vim.uv.cwd() or vim.fn.getcwd(), '/www') then
-        vim.lsp.enable({
-            'ts_ls',
-            -- `npm install @typescript/native-preview`.
-            -- 'tsgo',
-            'biome',
-            'eslint',
-        })
+        -- `npm install @typescript/native-preview`.
+        -- 'tsgo',
+        vim.lsp.enable({ 'ts_ls', 'biome', 'eslint' })
     end
     vim.lsp.enable({
         'gopls',
