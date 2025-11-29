@@ -27,6 +27,8 @@ local LSP_KIND_TO_ICON = {
     Operator = '',
     TypeParameter = '',
 }
+local SPACER = ' │ '
+---@param group string pass empty string to reset
 local hi_next = function(group)
     return '%#' .. group .. '#'
 end
@@ -51,10 +53,7 @@ M.lsp_update_status = debounce(function()
         for progress in client.progress do
             local msg = progress.value
             if type(msg) == 'table' and msg.kind ~= 'end' then
-                local percentage = ''
-                if msg.percentage then
-                    percentage = string.format('%2d', msg.percentage) .. '% '
-                end
+                local percentage = msg.percentage and string.format('%2d%% ', msg.percentage) or ''
                 local title = msg.title or ''
                 local message = msg.message or ''
                 lsp_status_by_client[client.name] = percentage .. title .. ' ' .. message
@@ -69,7 +68,7 @@ M.lsp_update_status = debounce(function()
         table.insert(items, k .. ': ' .. v)
     end
 
-    vim.g.lsp_status = table.concat(items, ' │ ')
+    vim.g.lsp_status = table.concat(items, SPACER)
     vim.cmd.redrawstatus()
 end, 50)
 vim.g.lsp_status = ''
@@ -129,7 +128,9 @@ vim.api.nvim_create_autocmd({ 'CursorHold', 'InsertLeave', 'WinScrolled', 'BufWi
             end
             process_symbols(result)
 
-            vim.b[bufnr].lsp_location = named_symbols
+            vim.b[bufnr].lsp_location = #named_symbols > 0
+                    and hi_next('Comment') .. named_symbols .. hi_next('')
+                or ''
             vim.cmd.redrawstatus()
         end)
     end, 50),
@@ -152,11 +153,21 @@ function _G.print_statusline_extras()
         end
     end
 
-    return table.concat(res, ' │ ')
+    local str = table.concat(res, SPACER)
+    return str .. (str ~= '' and SPACER or '')
 end
 
 function M.setup()
-    if not vim.diagnostic.status then
+    if vim.diagnostic.status then
+        local status = vim.diagnostic.status
+        -- wrap vim.diagnostic.status to append separator if there are diagnostics,
+        -- you cannot wrap statusline evals `%{%` with `%(` if eval has color reset string
+        vim.diagnostic.status = function()
+            local res = status()
+            return res .. (res ~= '' and SPACER or '')
+        end
+    else
+        local hl_map = { 'Error', 'Warn', 'Info', 'Hint' }
         vim.diagnostic.status = function()
             local counts = vim.diagnostic.count(0)
             local user_signs = vim.tbl_get(
@@ -167,24 +178,35 @@ function M.setup()
             local signs = vim.tbl_extend('keep', user_signs, { 'E', 'W', 'I', 'H' })
             local result_str = vim.iter(pairs(counts))
                 :map(function(severity, count)
-                    return ('%s:%s'):format(signs[severity], count)
+                    if count == 0 then
+                        return ''
+                    end
+                    return hi_next('DiagnosticSign' .. hl_map[severity])
+                        .. ('%s:%s'):format(signs[severity], count)
+                        .. hi_next('')
                 end)
                 :join(' ')
 
-            return result_str
+            return result_str .. (result_str ~= '' and SPACER or '')
         end
+        vim.api.nvim_create_autocmd('DiagnosticChanged', {
+            pattern = '*',
+            desc = 'Refresh statusline on DiagnosticChanged',
+            -- schedule redraw, otherwise throws when exiting fugitive status
+            callback = debounce(function()
+                vim.cmd.redrawstatus()
+            end, 30),
+        })
     end
     vim.opt.statusline = table.concat({
         ' %f%( %m%)', -- filename, modified, readonly
         '%<', -- conceal marker
-        hi_next('Comment'),
-        '%{get(b:, "lsp_location", "")}', -- lsp symbols
+        '%{%get(b:, "lsp_location", "")%}', -- lsp symbols
         '%= ', -- left align
-        '%*', -- reset highlight
         '%(%{get(g:, "lsp_status")} │ %)', -- lsp status
-        '%(%{v:lua.vim.diagnostic.status()} │ %)', -- diagnostics
-        '%(%{get(b:, "minidiff_summary_string", "")} │ %)', -- git diff
-        '%(%{% v:lua.print_statusline_extras()%} │ %)', -- work extras
+        '%{%v:lua.vim.diagnostic.status()%}', -- diagnostics
+        '%{%get(b:, "minidiff_summary_string", "")%}', -- git diff
+        '%{%v:lua.print_statusline_extras()%}', -- work extras
         '%l:%c ', -- 'line:column'
     }, '')
 
@@ -192,14 +214,6 @@ function M.setup()
         pattern = '*',
         desc = 'Refresh statusline on LspProgress',
         callback = M.lsp_update_status,
-    })
-    vim.api.nvim_create_autocmd('DiagnosticChanged', {
-        pattern = '*',
-        desc = 'Refresh statusline on DiagnosticChanged',
-        -- schedule redraw, otherwise throws when exiting fugitive status
-        callback = debounce(function()
-            vim.cmd.redrawstatus()
-        end, 30),
     })
 
     vim.api.nvim_create_autocmd('User', {
@@ -213,12 +227,14 @@ function M.setup()
             }
             local res = {}
             if t.add > 0 then
-                table.insert(res, '+' .. t.add)
+                table.insert(res, hi_next('@diff.plus') .. '+' .. t.add)
             end
             if t.delete > 0 then
-                table.insert(res, '-' .. t.delete)
+                table.insert(res, hi_next('@diff.minus') .. '-' .. t.delete)
             end
-            vim.b[data.buf].minidiff_summary_string = table.concat(res, ' ')
+            local str = table.concat(res, ' ')
+            vim.b[data.buf].minidiff_summary_string = str
+                .. (#str > 0 and (hi_next('') .. SPACER) or '')
         end,
     })
 end
