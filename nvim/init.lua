@@ -60,9 +60,7 @@ require('lazy').setup({
                         end,
                     },
                 },
-                scroll = {
-                    animate = { total = 180, fps = 44, easing = 'inOutQuad' },
-                },
+                scroll = { animate = { fps = 60, easing = 'inOutQuad' } },
             })
 
             -- mutate snacks telescope layout
@@ -73,7 +71,7 @@ require('lazy').setup({
             t.layout[1][1].border = { '┌', '─', '┐', '│', '', '', '', '│' }
             t.layout[1][2].border = { '├', '─', '┤', '│', '┘', '─', '└', '│' }
             t.layout[2].border = 'single'
-            t.layout.width = 160
+            t.layout.width = 190
 
             -- use telescope layout for vim.ui.select
             layouts.select = vim.tbl_deep_extend('force', {}, t, {

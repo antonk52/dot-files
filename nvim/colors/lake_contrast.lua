@@ -69,6 +69,7 @@ local groups = {
     QuickFixLine = { bg = colors.c01 },
     PMenu = { fg = colors.c05, bg = colors.c01 },
     PMenuSel = { fg = colors.c01, bg = colors.c05 },
+    PMenuMatchSel = { fg = colors.c01, bg = colors.c05, bold = true },
     TabLine = { fg = colors.c03, bg = colors.c01 },
     TabLineFill = { fg = colors.c03, bg = colors.c01 },
     TabLineSel = { fg = colors.c0B, bg = colors.c01 },
