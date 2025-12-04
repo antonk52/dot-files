@@ -254,16 +254,6 @@ require('lazy').setup({
         end,
     },
     {
-        cond = vim.env.WORK ~= nil and vim.env.WORK_PLUGIN_PATH ~= nil and vim.uv.fs_stat(
-            vim.fn.expand(vim.env.WORK_PLUGIN_PATH)
-        ) ~= nil,
-        dir = vim.fn.expand(vim.env.WORK_PLUGIN_PATH or 'noop'),
-        name = 'work', -- otherwise lazy.nvim errors when updates plugins
-        config = function()
-            require('antonk52.work').setup()
-        end,
-    },
-    {
         'jake-stewart/auto-cmdheight.nvim',
         opts = { max_lines = 15 },
     },
@@ -344,7 +334,10 @@ vim.opt.undofile = true
 vim.opt.synmaxcol = 300
 vim.opt.winborder = 'single'
 vim.opt.pumheight = 10 -- max completion menu height
+vim.opt.signcolumn = 'auto:2' -- show both diff and diagnostics
 
+vim.opt.grepprg = 'rg --vimgrep'
+vim.opt.grepformat = '%f:%l:%c:%m,%f:%l:%m'
 vim.opt.ignorecase = true
 vim.opt.smartcase = true
 
@@ -452,4 +445,6 @@ vim.defer_fn(function()
         },
         severity_sort = true, -- show errors first
     })
+
+    pcall(require, 'antonk52.work') -- loads and sets up work plugin if available
 end, 20)
