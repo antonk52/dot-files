@@ -3,9 +3,8 @@ local EASYMOTION_NS = vim.api.nvim_create_namespace('EASYMOTION_NS')
 local EM_CHARS = vim.split('fjdkslgha;rueiwotyqpvbcnxmzFJDKSLGHARUEIWOTYQPVBCNXMZ', '')
 
 local function easy_motion()
-    local char_code1, char_code2 = vim.fn.getchar(), vim.fn.getchar()
-    local char1 = type(char_code1) == 'number' and vim.fn.nr2char(char_code1) or char_code1
-    local char2 = type(char_code2) == 'number' and vim.fn.nr2char(char_code2) or char_code2
+    local char1 = vim.fn.nr2char(vim.fn.getchar() --[[@as number]])
+    local char2 = vim.fn.nr2char(vim.fn.getchar() --[[@as number]])
     local line_idx_start, line_idx_end = vim.fn.line('w0'), vim.fn.line('w$')
     local bufnr = vim.api.nvim_get_current_buf()
     vim.api.nvim_buf_clear_namespace(bufnr, EASYMOTION_NS, 0, -1)
@@ -23,13 +22,10 @@ local function easy_motion()
             line_text = string.lower(line_text)
         end
         local line_idx = lines_i + line_idx_start - 1
-        if char_idx > #EM_CHARS then
-            break
-        end
         -- skip folded lines
         if vim.fn.foldclosed(line_idx) == -1 then
             for i = 1, #line_text do
-                if line_text:sub(i, i + 1) == needle and char_idx <= #EM_CHARS then
+                if line_text:sub(i, i + 1) == needle then
                     local overlay_char = EM_CHARS[char_idx]
                     local linenr = line_idx_start + lines_i - 2
                     local col = i - 1
@@ -40,11 +36,14 @@ local function easy_motion()
                     })
                     extmarks[overlay_char] = { line = linenr, col = col, id = id }
                     char_idx = char_idx + 1
-                end
-                if char_idx > #EM_CHARS then
-                    break
+                    if char_idx > #EM_CHARS then
+                        break
+                    end
                 end
             end
+        end
+        if char_idx > #EM_CHARS then
+            break
         end
     end
 

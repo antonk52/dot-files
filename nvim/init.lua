@@ -57,7 +57,7 @@ vim.opt.smartcase = true
 vim.cmd.color('lake_contrast')
 
 keymap.set('n', '<C-s>', '<cmd>lua vim.lsp.buf.signature_help()<cr>', { desc = 'Signature help' })
-keymap.set('n', '<leader>L', '<cmd>echo "use <C-w>d instead"<cr>', { desc = 'Line errors' })
+keymap.set('n', '<leader>L', '<cmd>lua vim.diagnostic.open_float()<cr>', { desc = 'Line errors' })
 keymap.set('n', ']e', function()
     vim.diagnostic.jump({ count = 1, severity = 1 })
 end, { desc = 'Next error diagnostic' })
