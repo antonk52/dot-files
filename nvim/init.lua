@@ -159,7 +159,7 @@ require('lazy').setup({
                 ['<C-k>'] = { 'scroll_documentation_up' },
                 ['<C-j>'] = { 'scroll_documentation_down' },
             },
-            cmdline = { completion = { menu = { auto_show = true } } },
+            cmdline = { enabled = false }, -- let's try mini.cmdline
             completion = {
                 menu = { border = 'none' },
                 documentation = {
@@ -182,6 +182,7 @@ require('lazy').setup({
             require('mini.bracketed').setup()
             require('mini.pairs').setup() -- autoclose ([{
             require('mini.cursorword').setup({ delay = 300 })
+            require('mini.cmdline').setup({})
             require('mini.splitjoin').setup() -- gS to toggle listy things
             require('mini.hipatterns').setup({
                 highlighters = {
@@ -344,6 +345,7 @@ vim.opt.undofile = true
 -- disable syntax highlighting if a line is too long
 vim.opt.synmaxcol = 300
 vim.opt.winborder = 'single'
+vim.opt.pumheight = 10 -- max completion menu height
 
 vim.opt.ignorecase = true
 vim.opt.smartcase = true
@@ -403,12 +405,6 @@ usercmd('Tsc', ':botright sp | term npx tsc --noEmit', {})
 usercmd('TestBuffer', ':botright sp | term npm run test -- %', {})
 usercmd('BunRun', ':!bun run %', {})
 usercmd('NodeRun', ':!node %', {})
--- fat fingers
-usercmd('W', ':w', {})
-usercmd('Wq', ':wq', {})
-usercmd('Ter', ':ter', {})
-usercmd('Sp', ':sp', {})
-usercmd('Vs', ':vs', {})
 
 vim.filetype.add({
     filename = { ['.eslintrc.json'] = 'jsonc' },
