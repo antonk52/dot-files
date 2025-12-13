@@ -1,7 +1,6 @@
 {
   "auto-cmdheight.nvim": { "branch": "main", "commit": "82619eab0268f27024e1e0981ec3721a003ab2b7" },
   "blink.cmp": { "branch": "main", "commit": "57d900e6982f63c7cde689aa06d8af76c8da083e" },
-  "copilot.lua": { "branch": "master", "commit": "efe563802a550b7f1b7743b007987e97cba22718" },
   "lazy.nvim": { "branch": "main", "commit": "85c7ff3711b730b4030d03144f6db6375044ae82" },
   "mini.nvim": { "branch": "main", "commit": "6f11e41a137590e4a5f13624a2a9a845686e719f" },
   "nvim-lspconfig": { "branch": "master", "commit": "a2bd1cf7b0446a7414aaf373cea5e4ca804c9c69" },
