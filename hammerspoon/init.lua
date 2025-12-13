@@ -18,6 +18,10 @@ hs.alert.defaultStyle.fadeOutDuration = 0
 
 hs.hotkey.bind(HYPER_KEY, 'R', hs.reload)
 
+-- Setup grid for window management
+hs.grid.setGrid('24x2')
+hs.grid.setMargins({0, 0})  -- no margins, full screen coverage
+
 -- disable window animation (moving or resizing)
 hs.window.animationDuration = 0
 
@@ -95,7 +99,7 @@ local function focusNextWindowInScreen()
         local first_win = STATE.currentSpaceWindows[1]
 
         if first_win then
-            nav_alert('Next window: ' .. first_win:application():name())
+            nav_alert('First window: ' .. first_win:application():name())
             first_win:focus()
         end
         return
@@ -121,7 +125,7 @@ local function focusPreviousWindowInScreen()
         local first_win = STATE.currentSpaceWindows[1]
 
         if first_win then
-            nav_alert('Next window: ' .. first_win:application():name())
+            nav_alert('First window: ' .. first_win:application():name())
             first_win:focus()
         end
         return
@@ -149,159 +153,85 @@ hs.hotkey.bind(HYPER_KEY, 'k', focusPreviousWindowInScreen)
 --   resize windows
 -- ===================================================
 
--- Define the amount to increase the width
-local function get_win_resize_delta(window)
-    local screen = window:screen()
-
-    -- devidable by 2 and 3
-    return screen:frame().w / 24
-end
-local RESIZE_MIN_WIDTH = 300
-
-local resize_utils = {}
-
----@param value integer
----@param target integer
----@return boolean
-local function is_close_to(value, target)
-    local step = 10
-    local is_same = value == target
-    local is_close = value >= (target - step) and value <= (target + step)
-
-    return is_same or is_close
-end
-
----@param frame {x: number, y: number, w: number, h: number}
----@param screenFrame {x: number, y: number, w: number, h: number}
----@return 'left' | 'right' | 'center'
-function resize_utils.get_align(frame, screenFrame)
-    local space_left = frame.x - screenFrame.x
-    local space_right = screenFrame.w - (space_left + frame.w)
-
-    if is_close_to(space_left, space_right) then
-        return 'center'
-    elseif is_close_to(frame.x, screenFrame.x) then
+-- Grid-based window resizing (preserves alignment)
+local function get_alignment(cell)
+    if cell.x == 0 then
         return 'left'
-    else
+    elseif cell.x + cell.w == 24 then
         return 'right'
+    else
+        return 'center'
     end
 end
 
--- Function to increase the width of the focused window by 100 pixels
 local function increase_win_width()
-    -- Get the currently focused window
     local win = hs.window.focusedWindow()
     if not win then
         return hs.alert.show('No focused window')
     end
-
-    -- Get the current frame of the window
-    local frame = win:frame()
-
-    -- Get the screen's frame to ensure the window doesn't go off-screen
-    local screen_frame = win:screen():frame()
-
-    local RESIZE_DELTA = get_win_resize_delta(win)
-
-    -- Calculate the new width
-    local new_width = frame.w + RESIZE_DELTA
-
-    if new_width >= screen_frame.w then
-        -- hs.alert.show('Max width reached', nil, nil, 0.1)
-        new_width = screen_frame.w
-        frame.x = screen_frame.x
-    else
-        -- hs.alert.show('Calling align and resize', nil, nil, 0.1)
-        local align = resize_utils.get_align(frame, screen_frame)
-
-        if align == 'center' then
-            -- make sure the window is no lager than current screen
-            frame.x = math.min(frame.x - (RESIZE_DELTA / 2), screen_frame.w)
+    local cell_before = hs.grid.get(win)
+    if not cell_before then return end
+    local align = get_alignment(cell_before)
+    hs.grid.resizeWindowWider(win)
+    -- Re-align after resize
+    local cell_after = hs.grid.get(win)
+    if cell_after then
+        if align == 'left' then
+            cell_after.x = 0
         elseif align == 'right' then
-            frame.x = frame.x - RESIZE_DELTA
-        else
-            frame.x = screen_frame.x
+            cell_after.x = 24 - cell_after.w
+        else  -- center
+            cell_after.x = math.floor((24 - cell_after.w) / 2)
         end
+        hs.grid.set(win, cell_after)
     end
-
-    -- Set the new frame with the increased width
-    frame.w = new_width
-    win:setFrame(frame)
-    -- win:setFrameWithWorkarounds(frame)
 end
 
 local function decrease_win_width()
-    -- Get the currently focused window
     local win = hs.window.focusedWindow()
     if not win then
         return hs.alert.show('No focused window')
     end
-
-    -- Get the current frame of the window
-    local frame = win:frame()
-    -- Get the screen's frame to ensure the window doesn't go off-screen
-    local screenFrame = win:screen():frame()
-    local RESIZE_DELTA = get_win_resize_delta(win)
-
-    -- Calculate the new width
-    local new_width = frame.w - RESIZE_DELTA
-
-    local align = resize_utils.get_align(frame, screenFrame)
-
-    if new_width < RESIZE_MIN_WIDTH then
-        hs.alert.show('Min width reached', nil, nil, 0.1)
-        new_width = RESIZE_MIN_WIDTH
-    else
-        if align == 'center' then
-            frame.x = frame.x + RESIZE_DELTA / 2
+    local cell_before = hs.grid.get(win)
+    if not cell_before then return end
+    local align = get_alignment(cell_before)
+    hs.grid.resizeWindowThinner(win)
+    -- Re-align after resize
+    local cell_after = hs.grid.get(win)
+    if cell_after then
+        if align == 'left' then
+            cell_after.x = 0
         elseif align == 'right' then
-            frame.x = frame.x + RESIZE_DELTA
-        else
-            frame.x = 0
+            cell_after.x = 24 - cell_after.w
+        else  -- center
+            cell_after.x = math.floor((24 - cell_after.w) / 2)
         end
+        hs.grid.set(win, cell_after)
     end
-
-    -- Set the new frame with the increased width
-    frame.w = new_width
-    win:setFrame(frame)
-    -- win:setFrameWithWorkarounds(frame)
 end
 
-local function center_or_toggle_resize()
+-- Grid-based resize presets (full height)
+local resize_widths = {12, 16, 8}  -- half -> two-thirds -> third
+local resize_idx = 1
+local function cycle_resize(align)
     local win = hs.window.focusedWindow()
     if not win then
         return hs.alert.show('No focused window')
     end
-
-    local frame = win:frame()
-    local screen_frame = win:screen():frame()
-    local align = resize_utils.get_align(frame, screen_frame)
-
-    -- Always make window full height
-    frame.y = screen_frame.y
-    frame.h = screen_frame.h
-
-    if align ~= 'center' then
-        frame.x = screen_frame.x + (screen_frame.w - frame.w) / 2
-        win:setFrame(frame)
-    else
-        local third = screen_frame.w / 3
-        local half = screen_frame.w / 2
-        local two_thirds = screen_frame.w * 2 / 3
-
-        local new_width = third
-        if is_close_to(frame.w, third) then
-            new_width = half
-        elseif is_close_to(frame.w, half) then
-            new_width = two_thirds
-        elseif is_close_to(frame.w, two_thirds) then
-            new_width = third
-        end
-
-        frame.w = new_width
-        frame.x = screen_frame.x + (screen_frame.w - new_width) / 2
-        win:setFrame(frame)
+    local w = resize_widths[resize_idx]
+    resize_idx = resize_idx % #resize_widths + 1
+    local cell
+    if align == 'left' then
+        cell = { x=0, y=0, w=w, h=2 }
+    elseif align == 'right' then
+        cell = { x=24-w, y=0, w=w, h=2 }
+    else  -- center
+        cell = { x=(24-w)/2, y=0, w=w, h=2 }
     end
+    hs.grid.set(win, cell)
+end
+local function center_or_toggle_resize()
+    cycle_resize('center')
 end
 
 local function focus_frontmost_window_on_other_monitor()
@@ -377,6 +307,21 @@ hs.hotkey.bind(HYPER_KEY, 'o', increase_win_width)
 hs.hotkey.bind(HYPER_KEY, 'i', decrease_win_width)
 hs.hotkey.bind(HYPER_KEY, 'c', center_or_toggle_resize)
 hs.hotkey.bind(HYPER_KEY, 'n', focus_frontmost_window_on_other_monitor)
+
+-- Additional grid-based bindings
+hs.hotkey.bind(HYPER_KEY, 'h', function() cycle_resize('left') end)
+hs.hotkey.bind(HYPER_KEY, 'l', function() cycle_resize('right') end)
+hs.hotkey.bind(HYPER_KEY, 'm', function()
+    local win = hs.window.focusedWindow()
+    if not win then return end
+    local currentScreen = win:screen()
+    local nextScreen = currentScreen:next()
+    if nextScreen then
+        win:moveToScreen(nextScreen)
+    end
+end)
+hs.hotkey.bind(HYPER_KEY, 's', function() hs.grid.snap() end)
+hs.hotkey.bind(HYPER_KEY, 'g', hs.grid.show)
 
 -- Timers - open with HYPER+T
 do
