@@ -5,284 +5,6 @@ vim.g.maplocalleader = ','
 local usercmd = vim.api.nvim_create_user_command
 local keymap = vim.keymap
 
--- Bootstrap lazy.nvim plugin manager {{{1
-local PLUGINS_LOCATION = vim.fs.normalize('~/dot-files/nvim/plugged')
-local lazypath = PLUGINS_LOCATION .. '/lazy.nvim'
-if not vim.uv.fs_stat(lazypath) then
-    vim.system({
-        'git',
-        'clone',
-        '--filter=blob:none',
-        'https://github.com/folke/lazy.nvim.git',
-        '--branch=stable',
-        lazypath,
-    }):wait()
-end
-vim.opt.rtp:prepend(lazypath)
-
-vim.g.fugitive_legacy_commands = 0
-
-require('lazy').setup({
-    {
-        'folke/snacks.nvim',
-        config = function()
-            require('snacks').setup({
-                image = {},
-                indent = {
-                    indent = { hl = 'Whitespace' },
-                    scope = { enabled = false },
-                },
-                bigfile = { enabled = true },
-                picker = {
-                    win = {
-                        input = {
-                            keys = {
-                                ['<Esc>'] = { 'close', mode = { 'i', 'n' } },
-                            },
-                        },
-                    },
-                    layout = 'telescope',
-                    icons = { files = { enabled = false } },
-                    formatters = { file = { truncate = 120 } },
-                    actions = {
-                        -- immediately execute the command if it doesn't require any arguments
-                        cmd = function(picker, item)
-                            picker:close()
-                            if item and item.cmd then
-                                vim.schedule(function()
-                                    if item.command and (item.command.nargs ~= '0') then
-                                        vim.api.nvim_input(':' .. item.cmd .. ' ')
-                                    else
-                                        vim.cmd(item.cmd)
-                                    end
-                                end)
-                            end
-                        end,
-                    },
-                },
-                scroll = { animate = { fps = 60, easing = 'inOutQuad' } },
-            })
-
-            -- mutate snacks telescope layout
-            local layouts = require('snacks.picker.config.layouts')
-            ---@type snacks.picker.layout.Config
-            local t = layouts.telescope
-
-            t.layout[1][1].border = { '┌', '─', '┐', '│', '', '', '', '│' }
-            t.layout[1][2].border = { '├', '─', '┤', '│', '┘', '─', '└', '│' }
-            t.layout[2].border = 'single'
-            t.layout.width = 190
-
-            -- use telescope layout for vim.ui.select
-            layouts.select = vim.tbl_deep_extend('force', {}, t, {
-                layout = { width = 80, min_height = 9, height = 0.6 },
-                preview = false,
-            })
-
-            keymap.set('n', '<leader>b', '<cmd>lua Snacks.picker.buffers()<cr>')
-            keymap.set('n', '<leader>/', '<cmd>lua Snacks.picker.lines({layout= "telescope"})<cr>')
-            keymap.set('n', '<leader>r', '<cmd>lua Snacks.picker.resume()<cr>')
-            keymap.set('n', '<leader>T', '<cmd>lua Snacks.picker.pick()<cr>')
-            keymap.set('n', '<leader>u', '<cmd>lua Snacks.picker.undo()<cr>')
-            keymap.set('n', '<leader>d', '<cmd>lua Snacks.picker.diagnostics_buffer()<cr>')
-            keymap.set('n', '<leader>D', '<cmd>lua Snacks.picker.diagnostics()<cr>')
-            --stylua: ignore
-            keymap.set('n', '<leader>z', '<cmd>lua Snacks.zen.zen({toggles={dim=false},win={width=100}})<cr>')
-            keymap.set('n', '<leader>;', '<cmd>lua Snacks.picker.commands({layout="select"})<cr>')
-            --stylua: ignore
-            keymap.set('n', '<leader>:', '<cmd>lua Snacks.picker.grep_word({search=vim.fn.input("Search: ")})<cr>')
-            -- override lsp keymaps as snacks handles go to one results or picker for multiple
-            keymap.set('n', '<C-]>', '<cmd>lua Snacks.picker.lsp_definitions()<cr>')
-            keymap.set('n', 'gD', function()
-                local opts = { bufnr = 0, method = 'textDocument/declaration' }
-                local cmd = '<cmd>lua Snacks.picker.lsp_declarations()<cr>'
-                return #vim.lsp.get_clients(opts) > 0 and cmd or 'gD'
-            end, { expr = true, desc = 'LSP Declarations with fallback' })
-            keymap.set('n', 'grt', '<cmd>lua Snacks.picker.lsp_type_definitions()<cr>')
-            keymap.set('n', 'gri', '<cmd>lua Snacks.picker.lsp_implementations()<cr>')
-            keymap.set('n', 'grr', '<cmd>lua Snacks.picker.lsp_references()<cr>')
-            keymap.set('n', 'gO', '<cmd>lua Snacks.picker.lsp_symbols()<cr>')
-            usercmd('GitDiffPicker', ':lua Snacks.picker.git_diff()<cr>', {})
-            usercmd('GitBrowse', function(x)
-                require('snacks.gitbrowse').open({
-                    line_start = x.range > 0 and x.line1 or nil,
-                    line_end = x.range > 0 and x.line2 or nil,
-                })
-            end, { nargs = 0, range = true, desc = 'Open in browser' })
-        end,
-    },
-    {
-        'zbirenbaum/copilot.lua',
-        enabled = vim.env.WORK == nil,
-        opts = {
-            suggestion = {
-                auto_trigger = true,
-                keymap = {
-                    accept = '<tab>',
-                    accept_word = '<C-e>',
-                    accept_line = '<C-l>',
-                    next = '<C-r>',
-                    prev = false,
-                    dismiss = '<C-d>',
-                },
-            },
-            filetypes = { markdown = true },
-        },
-    },
-    {
-        'tpope/vim-fugitive',
-        config = function()
-            usercmd('GitAddPatch', ':tab G add --patch', { nargs = 0 })
-            usercmd('GitAddPatchFile', ':tab G add --patch %', { nargs = 0 })
-            usercmd('GitCommit', ':tab G commit', { nargs = 0 })
-            usercmd('GitIgnore', function()
-                require('antonk52.git_utils').download_gitignore_file()
-            end, { nargs = 0, desc = 'Download .gitignore from github/gitignore' })
-            keymap.set('n', '<leader>g', ':G ', { desc = 'Version control' })
-        end,
-    },
-    {
-        'neovim/nvim-lspconfig', -- types & linting
-        dependencies = { 'b0o/schemastore.nvim', 'saghen/blink.cmp' }, -- json schemas for json lsp
-        config = function()
-            require('antonk52.lsp').setup()
-        end,
-    },
-    {
-        'saghen/blink.cmp',
-        opts = {
-            keymap = {
-                ['<C-o>'] = { 'select_and_accept', 'snippet_forward', 'fallback' },
-                ['<C-u>'] = { 'snippet_backward', 'fallback' },
-                ['<C-k>'] = { 'scroll_documentation_up' },
-                ['<C-j>'] = { 'scroll_documentation_down' },
-            },
-            cmdline = { enabled = false }, -- let's try mini.cmdline
-            completion = {
-                menu = { border = 'none' },
-                documentation = {
-                    auto_show = true,
-                    window = {
-                        direction_priority = {
-                            menu_north = { 'e', 'n' },
-                            menu_south = { 'e', 'n' },
-                        },
-                    },
-                },
-            },
-            signature = { enabled = true },
-            fuzzy = { implementation = 'lua' },
-        },
-    },
-    {
-        'nvim-mini/mini.nvim',
-        config = function()
-            require('mini.bracketed').setup()
-            require('mini.pairs').setup() -- autoclose ([{
-            require('mini.cursorword').setup({ delay = 300 })
-            require('mini.cmdline').setup({})
-            require('mini.splitjoin').setup() -- gS to toggle listy things
-            require('mini.hipatterns').setup({
-                highlighters = {
-                    fixme = { pattern = '%f[%w]()FIXME()%f[%W]', group = 'DiagnosticError' },
-                    todo = { pattern = '%f[%w]()TODO()%f[%W]', group = 'DiagnosticWarn' },
-                    note = { pattern = '%f[%w]()NOTE()%f[%W]', group = 'DiagnosticInfo' },
-                    info = { pattern = '%f[%w]()INFO()%f[%W]', group = 'DiagnosticInfo' },
-                    high = { pattern = '%f[%w]()HIGH()%f[%W]', group = 'DiagnosticError' },
-                    mid = { pattern = '%f[%w]()MID()%f[%W]', group = 'DiagnosticWarn' },
-                    low = { pattern = '%f[%w]()LOW()%f[%W]', group = 'DiagnosticInfo' },
-                    ids = { pattern = '%f[%w]()[DTPSNCX]%d+()%f[%W]', group = 'DiagnosticInfo' },
-                    url = { pattern = '%f[%w]()https*://[^%s]+/*()', group = 'DiagnosticInfo' },
-                    hex_color = require('mini.hipatterns').gen_highlighter.hex_color(),
-                    tailwind = require('antonk52.tailwind').gen_highlighter(),
-                },
-            })
-            require('mini.surround').setup({
-                mappings = {
-                    add = 'ys',
-                    delete = 'ds',
-                    replace = 'cs',
-                    find = '',
-                    find_left = '',
-                    highlight = '',
-                    update_n_lines = '',
-                    suffix_last = '',
-                    suffix_next = '',
-                },
-                search_method = 'cover_or_next',
-            })
-            if vim.fs.root(0, '.git') ~= nil then
-                require('mini.diff').setup({
-                    view = {
-                        style = 'sign',
-                        signs = { add = '+', change = '+', delete = '_' },
-                    },
-                })
-                usercmd('MiniDiffToggleBufferOverlay', function()
-                    require('mini.diff').toggle_overlay(0)
-                end, { nargs = 0, desc = 'Toggle diff overlay' })
-                keymap.set('n', 'ghr', 'gHgh', { desc = 'Reset hunk under cursor', remap = true })
-                keymap.set('n', 'gha', 'ghgh', { desc = 'Apply hunk under cursor', remap = true })
-            end
-        end,
-    },
-    {
-        'nvim-treesitter/nvim-treesitter',
-        build = ':TSUpdate',
-        config = function()
-            if vim.env.WORK and vim.env.WORK_TS_PROXY then
-                require('nvim-treesitter.install').command_extra_args = {
-                    curl = { '--proxy', vim.env.WORK_TS_PROXY },
-                }
-            end
-
-            require('nvim-treesitter.configs').setup({
-                highlight = { enable = true },
-                ensure_installed = {
-                    'diff', -- used in vim.pack
-                    'go',
-                    'javascript',
-                    'jsdoc',
-                    'json',
-                    'jsonc',
-                    'markdown',
-                    'markdown_inline',
-                    'tsx',
-                    'typescript',
-                },
-            })
-        end,
-    },
-    {
-        'jake-stewart/auto-cmdheight.nvim',
-        opts = { max_lines = 15 },
-    },
-}, {
-    root = PLUGINS_LOCATION,
-    performance = {
-        rtp = {
-            disabled_plugins = {
-                '2html_plugin',
-                'gzip',
-                'netrw',
-                'netrwFileHandlers',
-                'netrwPlugin',
-                'netrwSettings',
-                'rplugin', -- remote plugins
-                'tar',
-                'tarPlugin',
-                'tohtml',
-                'tutor',
-                'tutor_mode_plugin',
-                'zip',
-                'zipPlugin',
-            },
-        },
-    },
-    pkg = { enabled = false },
-    readme = { enabled = false },
-})
-
 -- Avoid startup work {{{1
 
 vim.g.loaded_python3_provider = 0
@@ -448,3 +170,247 @@ vim.defer_fn(function()
 
     pcall(require, 'antonk52.work') -- loads and sets up work plugin if available
 end, 20)
+
+-- Bootstrap lazy.nvim plugin manager {{{1
+local PLUGINS_LOCATION = vim.fs.normalize('~/dot-files/nvim/plugged')
+local lazypath = PLUGINS_LOCATION .. '/lazy.nvim'
+if not vim.uv.fs_stat(lazypath) then
+    vim.system({
+        'git',
+        'clone',
+        '--filter=blob:none',
+        'https://github.com/folke/lazy.nvim.git',
+        '--branch=stable',
+        lazypath,
+    }):wait()
+end
+vim.opt.rtp:prepend(lazypath)
+
+vim.g.fugitive_legacy_commands = 0
+
+require('lazy').setup({
+    'folke/snacks.nvim',
+    'tpope/vim-fugitive',
+    'b0o/schemastore.nvim',
+    'neovim/nvim-lspconfig',
+    'saghen/blink.cmp',
+    'nvim-mini/mini.nvim',
+    'nvim-treesitter/nvim-treesitter',
+    'jake-stewart/auto-cmdheight.nvim',
+}, {
+    root = PLUGINS_LOCATION,
+    performance = {
+        rtp = {
+            disabled_plugins = {
+                '2html_plugin',
+                'gzip',
+                'netrw',
+                'netrwFileHandlers',
+                'netrwPlugin',
+                'netrwSettings',
+                'rplugin', -- remote plugins
+                'tar',
+                'tarPlugin',
+                'tohtml',
+                'tutor',
+                'tutor_mode_plugin',
+                'zip',
+                'zipPlugin',
+            },
+        },
+    },
+    pkg = { enabled = false },
+    readme = { enabled = false },
+})
+
+require('blink.cmp').setup({
+    keymap = {
+        ['<C-o>'] = { 'select_and_accept', 'snippet_forward', 'fallback' },
+        ['<C-u>'] = { 'snippet_backward', 'fallback' },
+        ['<C-k>'] = { 'scroll_documentation_up' },
+        ['<C-j>'] = { 'scroll_documentation_down' },
+    },
+    cmdline = { enabled = false }, -- let's try mini.cmdline
+    completion = {
+        menu = { border = 'none' },
+        documentation = {
+            auto_show = true,
+            window = {
+                direction_priority = {
+                    menu_north = { 'e', 'n' },
+                    menu_south = { 'e', 'n' },
+                },
+            },
+        },
+    },
+    signature = { enabled = true },
+    fuzzy = { implementation = 'lua' },
+})
+
+require('antonk52.lsp').setup()
+
+-- git & fugitive --
+usercmd('GitAddPatch', ':tab G add --patch', { nargs = 0 })
+usercmd('GitAddPatchFile', ':tab G add --patch %', { nargs = 0 })
+usercmd('GitCommit', ':tab G commit', { nargs = 0 })
+usercmd('GitIgnore', function()
+    require('antonk52.git_utils').download_gitignore_file()
+end, { nargs = 0, desc = 'Download .gitignore from github/gitignore' })
+keymap.set('n', '<leader>g', ':G ', { desc = 'Version control' })
+
+-- mini.nvim --
+require('mini.bracketed').setup()
+require('mini.pairs').setup() -- autoclose ([{
+require('mini.cursorword').setup({ delay = 300 })
+require('mini.cmdline').setup({})
+require('mini.splitjoin').setup() -- gS to toggle listy things
+require('mini.hipatterns').setup({
+    highlighters = {
+        fixme = { pattern = '%f[%w]()FIXME()%f[%W]', group = 'DiagnosticError' },
+        todo = { pattern = '%f[%w]()TODO()%f[%W]', group = 'DiagnosticWarn' },
+        note = { pattern = '%f[%w]()NOTE()%f[%W]', group = 'DiagnosticInfo' },
+        info = { pattern = '%f[%w]()INFO()%f[%W]', group = 'DiagnosticInfo' },
+        high = { pattern = '%f[%w]()HIGH()%f[%W]', group = 'DiagnosticError' },
+        mid = { pattern = '%f[%w]()MID()%f[%W]', group = 'DiagnosticWarn' },
+        low = { pattern = '%f[%w]()LOW()%f[%W]', group = 'DiagnosticInfo' },
+        ids = { pattern = '%f[%w]()[DTPSNCX]%d+()%f[%W]', group = 'DiagnosticInfo' },
+        url = { pattern = '%f[%w]()https*://[^%s]+/*()', group = 'DiagnosticInfo' },
+        hex_color = require('mini.hipatterns').gen_highlighter.hex_color(),
+        tailwind = require('antonk52.tailwind').gen_highlighter(),
+    },
+})
+require('mini.surround').setup({
+    mappings = {
+        add = 'ys',
+        delete = 'ds',
+        replace = 'cs',
+        find = '',
+        find_left = '',
+        highlight = '',
+        update_n_lines = '',
+        suffix_last = '',
+        suffix_next = '',
+    },
+    search_method = 'cover_or_next',
+})
+if vim.fs.root(0, '.git') ~= nil then
+    require('mini.diff').setup({
+        view = {
+            style = 'sign',
+            signs = { add = '+', change = '+', delete = '_' },
+        },
+    })
+    usercmd('MiniDiffToggleBufferOverlay', function()
+        require('mini.diff').toggle_overlay(0)
+    end, { nargs = 0, desc = 'Toggle diff overlay' })
+    keymap.set('n', 'ghr', 'gHgh', { desc = 'Reset hunk under cursor', remap = true })
+    keymap.set('n', 'gha', 'ghgh', { desc = 'Apply hunk under cursor', remap = true })
+end
+
+-- nvim-treesitter -- NOTE to build run `:TSUpdate`
+if vim.env.WORK and vim.env.WORK_TS_PROXY then
+    require('nvim-treesitter.install').command_extra_args = {
+        curl = { '--proxy', vim.env.WORK_TS_PROXY },
+    }
+end
+require('nvim-treesitter.configs').setup({
+    highlight = { enable = true },
+    ensure_installed = {
+        'diff', -- used in vim.pack
+        'go',
+        'javascript',
+        'jsdoc',
+        'json',
+        'jsonc',
+        'markdown',
+        'markdown_inline',
+        'tsx',
+        'typescript',
+    },
+})
+
+require('auto-cmdheight').setup({ max_lines = 15 })
+
+-- snacks.nvim --
+require('snacks').setup({
+    image = {},
+    indent = {
+        indent = { hl = 'Whitespace' },
+        scope = { enabled = false },
+    },
+    bigfile = { enabled = true },
+    picker = {
+        win = {
+            input = {
+                keys = {
+                    ['<Esc>'] = { 'close', mode = { 'i', 'n' } },
+                },
+            },
+        },
+        layout = 'telescope',
+        icons = { files = { enabled = false } },
+        formatters = { file = { truncate = 120 } },
+        actions = {
+            -- immediately execute the command if it doesn't require any arguments
+            cmd = function(picker, item)
+                picker:close()
+                if item and item.cmd then
+                    vim.schedule(function()
+                        if item.command and (item.command.nargs ~= '0') then
+                            vim.api.nvim_input(':' .. item.cmd .. ' ')
+                        else
+                            vim.cmd(item.cmd)
+                        end
+                    end)
+                end
+            end,
+        },
+    },
+    scroll = { animate = { fps = 60, easing = 'inOutQuad' } },
+})
+
+-- mutate snacks telescope layout
+local layouts = require('snacks.picker.config.layouts')
+---@type snacks.picker.layout.Config
+local t = layouts.telescope
+
+t.layout[1][1].border = { '┌', '─', '┐', '│', '', '', '', '│' }
+t.layout[1][2].border = { '├', '─', '┤', '│', '┘', '─', '└', '│' }
+t.layout[2].border = 'single'
+t.layout.width = 190
+
+-- use telescope layout for vim.ui.select
+layouts.select = vim.tbl_deep_extend('force', {}, t, {
+    layout = { width = 80, min_height = 9, height = 0.6 },
+    preview = false,
+})
+
+keymap.set('n', '<leader>b', '<cmd>lua Snacks.picker.buffers()<cr>')
+keymap.set('n', '<leader>/', '<cmd>lua Snacks.picker.lines({layout= "telescope"})<cr>')
+keymap.set('n', '<leader>r', '<cmd>lua Snacks.picker.resume()<cr>')
+keymap.set('n', '<leader>T', '<cmd>lua Snacks.picker.pick()<cr>')
+keymap.set('n', '<leader>u', '<cmd>lua Snacks.picker.undo()<cr>')
+keymap.set('n', '<leader>d', '<cmd>lua Snacks.picker.diagnostics_buffer()<cr>')
+keymap.set('n', '<leader>D', '<cmd>lua Snacks.picker.diagnostics()<cr>')
+keymap.set('n', '<leader>z', '<cmd>lua Snacks.zen.zen({toggles={dim=false},win={width=100}})<cr>')
+keymap.set('n', '<leader>;', '<cmd>lua Snacks.picker.commands({layout="select"})<cr>')
+--stylua: ignore
+keymap.set('n', '<leader>:', '<cmd>lua Snacks.picker.grep_word({search=vim.fn.input("Search: ")})<cr>')
+-- override lsp keymaps as snacks handles go to one results or picker for multiple
+keymap.set('n', '<C-]>', '<cmd>lua Snacks.picker.lsp_definitions()<cr>')
+keymap.set('n', 'gD', function()
+    local opts = { bufnr = 0, method = 'textDocument/declaration' }
+    local cmd = '<cmd>lua Snacks.picker.lsp_declarations()<cr>'
+    return #vim.lsp.get_clients(opts) > 0 and cmd or 'gD'
+end, { expr = true, desc = 'LSP Declarations with fallback' })
+keymap.set('n', 'grt', '<cmd>lua Snacks.picker.lsp_type_definitions()<cr>')
+keymap.set('n', 'gri', '<cmd>lua Snacks.picker.lsp_implementations()<cr>')
+keymap.set('n', 'grr', '<cmd>lua Snacks.picker.lsp_references()<cr>')
+keymap.set('n', 'gO', '<cmd>lua Snacks.picker.lsp_symbols()<cr>')
+usercmd('GitDiffPicker', ':lua Snacks.picker.git_diff()<cr>', {})
+usercmd('GitBrowse', function(x)
+    require('snacks.gitbrowse').open({
+        line_start = x.range > 0 and x.line1 or nil,
+        line_end = x.range > 0 and x.line2 or nil,
+    })
+end, { nargs = 0, range = true, desc = 'Open in browser' })
