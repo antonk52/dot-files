@@ -18,11 +18,7 @@ function M.setup()
     })
 
     vim.lsp.config('cssmodules_ls', {
-        -- cmd = {
-        --     'node',
-        --     '/Users/antonk52/Documents/dev/personal/cssmodules-language-server/lib/cli.js',
-        --     '--stdio',
-        -- },
+        -- cmd = {'node', '/Users/antonk52/Documents/dev/personal/cssmodules-language-server/lib/cli.js', '--stdio'},
         init_options = { camelCase = 'dashes' },
     })
 

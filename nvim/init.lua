@@ -1,17 +1,8 @@
--- these mappings have to be set before lazy.nvim plugins
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ','
 
 local usercmd = vim.api.nvim_create_user_command
 local keymap = vim.keymap
-
--- Avoid startup work {{{1
-
-vim.g.loaded_python3_provider = 0
-vim.g.python3_host_skip_check = 1
-vim.g.loaded_node_provider = 0
-vim.g.loaded_ruby_provider = 0
-vim.g.loaded_perl_provider = 0
 
 -- Defaults {{{1
 -- highlight current cursor line
@@ -171,6 +162,13 @@ vim.defer_fn(function()
     pcall(require, 'antonk52.work') -- loads and sets up work plugin if available
 end, 20)
 
+-- Avoid startup work {{{1
+vim.g.loaded_python3_provider = 0
+vim.g.python3_host_skip_check = 1
+vim.g.loaded_node_provider = 0
+vim.g.loaded_ruby_provider = 0
+vim.g.loaded_perl_provider = 0
+
 -- Bootstrap lazy.nvim plugin manager {{{1
 local PLUGINS_LOCATION = vim.fs.normalize('~/dot-files/nvim/plugged')
 local lazypath = PLUGINS_LOCATION .. '/lazy.nvim'
@@ -189,14 +187,14 @@ vim.opt.rtp:prepend(lazypath)
 vim.g.fugitive_legacy_commands = 0
 
 require('lazy').setup({
-    'folke/snacks.nvim',
-    'tpope/vim-fugitive',
-    'b0o/schemastore.nvim',
-    'neovim/nvim-lspconfig',
-    'saghen/blink.cmp',
-    'nvim-mini/mini.nvim',
-    'nvim-treesitter/nvim-treesitter',
-    'jake-stewart/auto-cmdheight.nvim',
+    'https://github.com/folke/snacks.nvim',
+    'https://github.com/tpope/vim-fugitive',
+    'https://github.com/b0o/schemastore.nvim',
+    'https://github.com/neovim/nvim-lspconfig',
+    'https://github.com/saghen/blink.cmp',
+    'https://github.com/nvim-mini/mini.nvim',
+    'https://github.com/nvim-treesitter/nvim-treesitter',
+    'https://github.com/jake-stewart/auto-cmdheight.nvim',
 }, {
     root = PLUGINS_LOCATION,
     performance = {

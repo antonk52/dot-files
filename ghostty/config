@@ -17,7 +17,7 @@ font-family = Fira Code
 cursor-style-blink = false
 
 # bump font size
-font-size = 16
+font-size = 13
 
 window-padding-balance = true
 window-padding-x = 0
