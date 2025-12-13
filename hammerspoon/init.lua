@@ -20,7 +20,7 @@ hs.hotkey.bind(HYPER_KEY, 'R', hs.reload)
 
 -- Setup grid for window management
 hs.grid.setGrid('24x2')
-hs.grid.setMargins({0, 0})  -- no margins, full screen coverage
+hs.grid.setMargins({ 0, 0 }) -- no margins, full screen coverage
 
 -- disable window animation (moving or resizing)
 hs.window.animationDuration = 0
@@ -170,7 +170,9 @@ local function increase_win_width()
         return hs.alert.show('No focused window')
     end
     local cell_before = hs.grid.get(win)
-    if not cell_before then return end
+    if not cell_before then
+        return
+    end
     local align = get_alignment(cell_before)
     -- Resize by 2 grid units for better centering adjustment after resize
     hs.grid.resizeWindowWider(win)
@@ -182,7 +184,7 @@ local function increase_win_width()
             cell_after.x = 0
         elseif align == 'right' then
             cell_after.x = 24 - cell_after.w
-        else  -- center
+        else -- center
             cell_after.x = math.floor((24 - cell_after.w) / 2)
         end
         hs.grid.set(win, cell_after)
@@ -195,7 +197,9 @@ local function decrease_win_width()
         return hs.alert.show('No focused window')
     end
     local cell_before = hs.grid.get(win)
-    if not cell_before then return end
+    if not cell_before then
+        return
+    end
     local align = get_alignment(cell_before)
     -- Resize by 2 grid units for better centering adjustment after resize
     hs.grid.resizeWindowThinner(win)
@@ -207,7 +211,7 @@ local function decrease_win_width()
             cell_after.x = 0
         elseif align == 'right' then
             cell_after.x = 24 - cell_after.w
-        else  -- center
+        else -- center
             cell_after.x = math.floor((24 - cell_after.w) / 2)
         end
         hs.grid.set(win, cell_after)
@@ -215,22 +219,29 @@ local function decrease_win_width()
 end
 
 -- Grid-based resize presets (full height)
-local resize_widths = {12, 16, 8}  -- half -> two-thirds -> third
+local resize_widths = { 12, 16, 8 } -- half -> two-thirds -> third
 local resize_idx = 1
 local function cycle_resize(align)
     local win = hs.window.focusedWindow()
     if not win then
         return hs.alert.show('No focused window')
     end
+    local current_cell = hs.grid.get(win)
+    if current_cell then
+        local current_align = get_alignment(current_cell)
+        if current_align ~= align then
+            resize_idx = 1
+        end
+    end
     local w = resize_widths[resize_idx]
     resize_idx = resize_idx % #resize_widths + 1
     local cell
     if align == 'left' then
-        cell = { x=0, y=0, w=w, h=2 }
+        cell = { x = 0, y = 0, w = w, h = 2 }
     elseif align == 'right' then
-        cell = { x=24-w, y=0, w=w, h=2 }
-    else  -- center
-        cell = { x=(24-w)/2, y=0, w=w, h=2 }
+        cell = { x = 24 - w, y = 0, w = w, h = 2 }
+    else -- center
+        cell = { x = (24 - w) / 2, y = 0, w = w, h = 2 }
     end
     hs.grid.set(win, cell)
 end
@@ -313,18 +324,26 @@ hs.hotkey.bind(HYPER_KEY, 'c', center_or_toggle_resize)
 hs.hotkey.bind(HYPER_KEY, 'n', focus_frontmost_window_on_other_monitor)
 
 -- Additional grid-based bindings
-hs.hotkey.bind(HYPER_KEY, 'h', function() cycle_resize('left') end)
-hs.hotkey.bind(HYPER_KEY, 'l', function() cycle_resize('right') end)
+hs.hotkey.bind(HYPER_KEY, 'h', function()
+    cycle_resize('left')
+end)
+hs.hotkey.bind(HYPER_KEY, 'l', function()
+    cycle_resize('right')
+end)
 hs.hotkey.bind(HYPER_KEY, 'm', function()
     local win = hs.window.focusedWindow()
-    if not win then return end
+    if not win then
+        return
+    end
     local currentScreen = win:screen()
     local nextScreen = currentScreen:next()
     if nextScreen then
         win:moveToScreen(nextScreen)
     end
 end)
-hs.hotkey.bind(HYPER_KEY, 's', function() hs.grid.snap() end)
+hs.hotkey.bind(HYPER_KEY, 's', function()
+    hs.grid.snap()
+end)
 hs.hotkey.bind(HYPER_KEY, 'g', hs.grid.show)
 
 -- Timers - open with HYPER+T
