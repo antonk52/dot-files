@@ -102,7 +102,7 @@ keymap.set('v', '<', '<gv')
 keymap.set('v', '>', '>gv')
 
 keymap.set('n', '<C-t>', '<cmd>tabedit<CR>', { desc = 'Open a new tab' })
-keymap.set('n', '<localleader>T', ':botright sp | term ', { desc = 'Open terminal split' })
+keymap.set('n', '<leader>t', ':botright sp | term ', { desc = 'Open terminal split' })
 keymap.set('t', '<esc><esc>', '<c-\\><c-n>', { desc = 'exit term buffer' })
 
 -- Commands {{{1
@@ -406,7 +406,6 @@ end, { expr = true, desc = 'LSP Declarations with fallback' })
 keymap.set('n', 'grt', '<cmd>lua Snacks.picker.lsp_type_definitions()<cr>')
 keymap.set('n', 'gri', '<cmd>lua Snacks.picker.lsp_implementations()<cr>')
 keymap.set('n', 'grr', '<cmd>lua Snacks.picker.lsp_references()<cr>')
-keymap.set('n', 'gO', '<cmd>lua Snacks.picker.lsp_symbols()<cr>')
 usercmd('GitDiffPicker', ':lua Snacks.picker.git_diff()<cr>', {})
 usercmd('GitBrowse', function(x)
     require('snacks.gitbrowse').open({
