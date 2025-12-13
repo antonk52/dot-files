@@ -1,9 +1,7 @@
 vim.keymap.set('n', '<localleader>t', function()
     -- save cursor position
     local cursor = vim.api.nvim_win_get_cursor(0)
-    local content = vim.api.nvim_get_current_line()
-    local res = vim.fn.match(content, '\\[ \\]')
-    if res == -1 then
+    if vim.api.nvim_get_current_line():find('%[x%]') then
         vim.fn.execute('.s/\\[[x~]\\]/[ ]')
     else
         vim.fn.execute('.s/\\[ \\]/[x]')
@@ -17,6 +15,16 @@ vim.opt_local.spell = true
 vim.opt_local.spellsuggest = 'best'
 vim.bo.spelllang = 'en_us'
 
+vim.b.miniai_config = {
+    custom_textobjects = {
+        L = { '%[().-()%]%(.-%)' }, -- link
+        B = { '%*%*().-()%*%*' }, -- bold
+        I = { '_().-()_' }, -- italic
+        X = { '~~().-()~~' }, -- strikethrough
+        K = { '%[().-()%]%(.-%)' }, -- link
+        E = { '```[%w_%s]*\n().-()\n```' }, -- code block
+    },
+}
 vim.b.minisurround_config = {
     custom_surroundings = {
         -- Markdown link
@@ -39,13 +47,15 @@ vim.b.minisurround_config = {
             input = { '%[().-()%]%(.-%)' },
             output = { left = '_', right = '_' },
         },
+        -- X for strikethrough
+        X = {
+            input = { '%[().-()%]%(.-%)' },
+            output = { left = '~~', right = '~~' },
+        },
         -- E for code
         E = {
-            input = { '%[().-()%]%(.-%)' },
-            output = function()
-                local char = vim.fn.visualmode() == 'V' and '\n```\n' or '`'
-                return { left = char, right = char }
-            end,
+            input = { '```[%w_%s]*\n().-()%s*```' },
+            output = { left = '```\n', right = '\n```' },
         },
     },
 }
@@ -53,3 +63,4 @@ vim.keymap.set('v', '<C-K>', 'ysL', { buffer = 0, desc = 'Add link', remap = tru
 vim.keymap.set('v', '<C-B>', 'ysB', { buffer = 0, desc = 'Add bold', remap = true })
 vim.keymap.set('v', '<C-I>', 'ysI', { buffer = 0, desc = 'Add italic', remap = true })
 vim.keymap.set('v', '<C-E>', 'ysE', { buffer = 0, desc = 'Add code', remap = true })
+vim.keymap.set('v', '<C-X>', 'ysX', { buffer = 0, desc = 'Add strikethrough', remap = true })

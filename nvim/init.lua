@@ -277,6 +277,7 @@ require('mini.hipatterns').setup({
         tailwind = require('antonk52.tailwind').gen_highlighter(),
     },
 })
+require('mini.ai').setup({})
 require('mini.surround').setup({
     mappings = {
         add = 'ys',

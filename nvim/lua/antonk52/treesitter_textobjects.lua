@@ -26,15 +26,11 @@ end
 
 ---@alias ak_position {line: number, col: number}
 
----@alias ak_range {start: ak_position, endd: ak_position}
-
 ---@param outer boolean
----@return ak_range?
+---@return {start: ak_position, endd: ak_position}?
 local function _get_fn_bounds(outer)
-    ---@type TSNode|nil
-    local fn_node = nil
     ---@type TSNode
-    local prev_node = nil
+    local child_node = nil
     local ok, node = pcall(vim.treesitter.get_node)
     if not ok or not node then
         return
@@ -42,40 +38,35 @@ local function _get_fn_bounds(outer)
 
     while node do
         if vim.tbl_contains(FUNCTION_NODES, node:type()) then
-            fn_node = node
             break
         end
-        prev_node = node
-        ---@type TSNode
+        child_node = node
         node = node:parent()
     end
 
-    prev_node = prev_node
-        or (
-            node
-            and (function()
-                for _, inode in ipairs(node:named_children()) do
-                    if inode:type() == 'body' then
-                        return inode
-                    end
-                end
-            end)()
-        )
-
-    if not fn_node then
+    if not node then
         return
     end
+
+    child_node = child_node
+        or (function()
+            for _, inode in ipairs(node:named_children()) do
+                if inode:type() == 'body' then
+                    return inode
+                end
+            end
+        end)()
 
     local start_line, start_col, end_line, end_col = 0, 0, 0, 0
 
     if outer then
-        start_line, start_col, end_line, end_col = fn_node:range()
-    elseif prev_node then
+        start_line, start_col, end_line, end_col = node:range()
+    elseif child_node then
         -- we don't want to select function body, but all its children
-        local total_children = prev_node:named_child_count()
+        local total_children = child_node:named_child_count()
         if total_children > 0 then
-            start_line, start_col = prev_node:named_child(0):range()
-            _, _, end_line, end_col = prev_node:named_child(total_children - 1):range()
+            start_line, start_col = child_node:named_child(0):range()
+            _, _, end_line, end_col = child_node:named_child(total_children - 1):range()
         else
             return nil
         end
