@@ -172,6 +172,8 @@ local function increase_win_width()
     local cell_before = hs.grid.get(win)
     if not cell_before then return end
     local align = get_alignment(cell_before)
+    -- Resize by 2 grid units for better centering adjustment after resize
+    hs.grid.resizeWindowWider(win)
     hs.grid.resizeWindowWider(win)
     -- Re-align after resize
     local cell_after = hs.grid.get(win)
@@ -195,6 +197,8 @@ local function decrease_win_width()
     local cell_before = hs.grid.get(win)
     if not cell_before then return end
     local align = get_alignment(cell_before)
+    -- Resize by 2 grid units for better centering adjustment after resize
+    hs.grid.resizeWindowThinner(win)
     hs.grid.resizeWindowThinner(win)
     -- Re-align after resize
     local cell_after = hs.grid.get(win)
