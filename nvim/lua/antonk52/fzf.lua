@@ -31,7 +31,7 @@ local function fzf(kind)
         end
 
         -- Define the floating window options
-        local width = 100
+        local width = 180
         local height = math.floor(vim.o.lines * 0.8)
 
         local buf = vim.api.nvim_create_buf(false, true) -- Create a scratch buffer

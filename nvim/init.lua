@@ -92,6 +92,7 @@ keymap.set('v', '>', '>gv')
 
 keymap.set('n', '<C-t>', '<cmd>tabedit<CR>', { desc = 'Open a new tab' })
 keymap.set('n', '<leader>t', ':botright sp | term ', { desc = 'Open terminal split' })
+keymap.set('n', '<localleader>j', '<cmd>tabnew | term jjui<cr>', { desc = 'Open jjui' })
 keymap.set('t', '<esc><esc>', '<c-\\><c-n>', { desc = 'exit term buffer' })
 
 usercmd('ToggleRusKeymap', function()
@@ -264,7 +265,7 @@ require('mini.hipatterns').setup({
         note = { pattern = '%f[%w]()NOTE()%f[%W]', group = 'DiagnosticInfo' },
         info = { pattern = '%f[%w]()INFO()%f[%W]', group = 'DiagnosticInfo' },
         high = { pattern = '%f[%w]()HIGH()%f[%W]', group = 'DiagnosticError' },
-        mid = { pattern = '%f[%w]()MID()%f[%W]', group = 'DiagnosticWarn' },
+        mid = { pattern = '%f[%w]()M[IE]D()%f[%W]', group = 'DiagnosticWarn' },
         warn = { pattern = '%f[%w]()WARN()%f[%W]', group = 'DiagnosticWarn' },
         low = { pattern = '%f[%w]()LOW()%f[%W]', group = 'DiagnosticInfo' },
         done = { pattern = '%f[%w]()DONE()%f[%W]', group = 'DiagnosticOk' },
@@ -304,18 +305,20 @@ if vim.fs.root(0, '.git') ~= nil then
 end
 
 -- nvim-treesitter -- NOTE to build run `:TSUpdate`
-require('nvim-treesitter').install({
-    'diff', -- used in vim.pack
-    'go',
-    'javascript',
-    'jsdoc',
-    'json',
-    -- 'jsonc', -- for some reason invalid parser
-    'markdown',
-    'markdown_inline',
-    'tsx',
-    'typescript',
-})
+usercmd('TSInstallAKParsers', function()
+    require('nvim-treesitter').install({
+        'diff', -- used in vim.pack
+        'go',
+        'javascript',
+        'jsdoc',
+        'json',
+        -- 'jsonc', -- for some reason invalid parser
+        'markdown',
+        'markdown_inline',
+        'tsx',
+        'typescript',
+    })
+end, { nargs = 0, desc = 'Install parsers for treesitter' })
 vim.api.nvim_create_autocmd('Filetype', {
     callback = function(ev)
         pcall(vim.treesitter.start, ev.buf)
