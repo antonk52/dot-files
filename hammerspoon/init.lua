@@ -256,6 +256,38 @@ local function center_or_toggle_resize()
     cycle_resize('center')
 end
 
+-- Cycle quarters of the screen: top-left, top-right, bottom-right, bottom-left
+local quarter_positions = {
+    { x = 12, y = 0, w = 12, h = 1 }, -- top-right
+    { x = 12, y = 1, w = 12, h = 1 }, -- bottom-right
+    { x = 0, y = 1, w = 12, h = 1 }, -- bottom-left
+    { x = 0, y = 0, w = 12, h = 1 }, -- top-left
+}
+local function cycle_quarters()
+    local win = hs.window.focusedWindow()
+    if not win then
+        return hs.alert.show('No focused window')
+    end
+    local current_cell = hs.grid.get(win)
+    local current_idx = nil
+    if current_cell then
+        for i, pos in ipairs(quarter_positions) do
+            if
+                current_cell.x == pos.x
+                and current_cell.y == pos.y
+                and current_cell.w == pos.w
+                and current_cell.h == pos.h
+            then
+                current_idx = i
+                break
+            end
+        end
+    end
+    local next_quarter_idx = current_idx and (current_idx % #quarter_positions + 1) or 1
+    local cell = quarter_positions[next_quarter_idx]
+    hs.grid.set(win, cell)
+end
+
 local function focus_frontmost_window_on_other_monitor()
     local current_window = hs.window.focusedWindow()
     local current_screen = hs.screen.mainScreen()
@@ -352,6 +384,7 @@ hs.hotkey.bind(HYPER_KEY, 's', function()
     hs.grid.snap()
 end)
 hs.hotkey.bind(HYPER_KEY, 'g', hs.grid.show)
+hs.hotkey.bind(HYPER_KEY, 'q', cycle_quarters)
 
 -- Timers - open with HYPER+T
 do
