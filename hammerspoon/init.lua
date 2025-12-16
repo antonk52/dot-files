@@ -229,7 +229,14 @@ local function cycle_resize(align)
     local current_cell = hs.grid.get(win)
     if current_cell then
         local current_align = get_alignment(current_cell)
-        if current_align ~= align then
+        local is_in_sizes = false
+        for _, v in ipairs(resize_widths) do
+            if current_cell.w == v then
+                is_in_sizes = true
+                break
+            end
+        end
+        if not (is_in_sizes and current_align == align) then
             resize_idx = 1
         end
     end
