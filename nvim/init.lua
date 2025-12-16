@@ -193,7 +193,7 @@ require('lazy').setup({
     'https://github.com/neovim/nvim-lspconfig',
     'https://github.com/saghen/blink.cmp',
     'https://github.com/nvim-mini/mini.nvim',
-    'https://github.com/nvim-treesitter/nvim-treesitter',
+    { 'https://github.com/nvim-treesitter/nvim-treesitter', branch = 'master' },
     'https://github.com/jake-stewart/auto-cmdheight.nvim',
 }, {
     root = PLUGINS_LOCATION,
@@ -270,7 +270,9 @@ require('mini.hipatterns').setup({
         info = { pattern = '%f[%w]()INFO()%f[%W]', group = 'DiagnosticInfo' },
         high = { pattern = '%f[%w]()HIGH()%f[%W]', group = 'DiagnosticError' },
         mid = { pattern = '%f[%w]()MID()%f[%W]', group = 'DiagnosticWarn' },
+        warn = { pattern = '%f[%w]()WARN()%f[%W]', group = 'DiagnosticWarn' },
         low = { pattern = '%f[%w]()LOW()%f[%W]', group = 'DiagnosticInfo' },
+        done = { pattern = '%f[%w]()DONE()%f[%W]', group = 'DiagnosticOk' },
         ids = { pattern = '%f[%w]()[DTPSNCX]%d+()%f[%W]', group = 'DiagnosticInfo' },
         url = { pattern = '%f[%w]()https*://[^%s]+/*()', group = 'DiagnosticInfo' },
         hex_color = require('mini.hipatterns').gen_highlighter.hex_color(),

@@ -1,32 +1,4 @@
 local M = {}
-local LSP_KIND_TO_ICON = {
-    File = '',
-    Module = '',
-    Namespace = '',
-    Package = '',
-    Class = '',
-    Method = '',
-    Property = '',
-    Field = '',
-    Constructor = '',
-    Enum = '',
-    Interface = '',
-    Function = '',
-    Variable = '',
-    Constant = '',
-    String = '',
-    Number = '',
-    Boolean = '',
-    Array = '',
-    Object = '',
-    Key = '',
-    Null = '',
-    EnumMember = '',
-    Struct = '',
-    Event = '',
-    Operator = '',
-    TypeParameter = '',
-}
 local SPACER = ' │ '
 ---@param group string pass empty string to reset
 local hi_next = function(group)
@@ -117,8 +89,7 @@ vim.api.nvim_create_autocmd({ 'CursorHold', 'InsertLeave', 'WinScrolled', 'BufWi
                             )
                         )
                     then
-                        local icon = LSP_KIND_TO_ICON[vim.lsp.protocol.SymbolKind[symbol.kind]]
-                        named_symbols = named_symbols .. '  ' .. icon .. ' ' .. symbol.name
+                        named_symbols = named_symbols .. '  ' .. symbol.name
                         if symbol.children then
                             process_symbols(symbol.children)
                         end
@@ -128,9 +99,7 @@ vim.api.nvim_create_autocmd({ 'CursorHold', 'InsertLeave', 'WinScrolled', 'BufWi
             end
             process_symbols(result)
 
-            vim.b[bufnr].lsp_location = #named_symbols > 0
-                    and hi_next('Comment') .. named_symbols .. hi_next('')
-                or ''
+            vim.b[bufnr].lsp_location = hi_next('Comment') .. named_symbols .. hi_next('')
             vim.cmd.redrawstatus()
         end)
     end, 50),
@@ -221,16 +190,14 @@ function M.setup()
         desc = 'Do not print changed lines, only added and removed',
         callback = function(data)
             local summary = vim.b[data.buf].minidiff_summary or {}
-            local t = {
-                add = (summary.add or 0) + (summary.change or 0),
-                delete = (summary.delete or 0) + (summary.change or 0),
-            }
+            local add = (summary.add or 0) + (summary.change or 0)
+            local delete = (summary.delete or 0) + (summary.change or 0)
             local res = {}
-            if t.add > 0 then
-                table.insert(res, hi_next('@diff.plus') .. '+' .. t.add)
+            if add > 0 then
+                table.insert(res, hi_next('@diff.plus') .. '+' .. add)
             end
-            if t.delete > 0 then
-                table.insert(res, hi_next('@diff.minus') .. '-' .. t.delete)
+            if delete > 0 then
+                table.insert(res, hi_next('@diff.minus') .. '-' .. delete)
             end
             local str = table.concat(res, ' ')
             vim.b[data.buf].minidiff_summary_string = str
