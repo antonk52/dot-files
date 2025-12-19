@@ -360,6 +360,7 @@ end
 hs.hotkey.bind(HYPER_KEY, 'o', increase_win_width)
 hs.hotkey.bind(HYPER_KEY, 'i', decrease_win_width)
 hs.hotkey.bind(HYPER_KEY, 'c', center_or_toggle_resize)
+hs.hotkey.bind(HYPER_KEY, 'f', hs.grid.maximizeWindow)
 hs.hotkey.bind(HYPER_KEY, 'n', focus_frontmost_window_on_other_monitor)
 
 -- Additional grid-based bindings
@@ -379,9 +380,6 @@ hs.hotkey.bind(HYPER_KEY, 'm', function()
     if nextScreen then
         win:moveToScreen(nextScreen)
     end
-end)
-hs.hotkey.bind(HYPER_KEY, 's', function()
-    hs.grid.snap()
 end)
 hs.hotkey.bind(HYPER_KEY, 'g', hs.grid.show)
 hs.hotkey.bind(HYPER_KEY, 'q', cycle_quarters)
