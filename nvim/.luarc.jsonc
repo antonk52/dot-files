@@ -27,10 +27,14 @@
     "**/plugged/nvim-treesitter/**",
     "**/plugged/plenary.nvim/**",
     "**/plugged/schemastore.nvim/**",
-    "**/plugged/snacks.nvim/**",
+    // "**/plugged/snacks.nvim/**",
   ],
   // "diagnostics.libraryFiles": "Disable",
   "diagnostics.libraryFiles": "Opened",
   "completion.callSnippet": "Replace",
+  "semantic.enable": true,
+  "semantic.annotation": true,
+  "semantic.keyword": false,
+  "semantic.variable": false
   // "codeLens.enable": true,
 }

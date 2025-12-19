@@ -411,7 +411,8 @@ end, { expr = true, desc = 'LSP Declarations with fallback' })
 keymap.set('n', 'grt', '<cmd>lua Snacks.picker.lsp_type_definitions()<cr>')
 keymap.set('n', 'gri', '<cmd>lua Snacks.picker.lsp_implementations()<cr>')
 keymap.set('n', 'grr', '<cmd>lua Snacks.picker.lsp_references()<cr>')
-usercmd('GitDiffPicker', ':lua Snacks.picker.git_diff()<cr>', {})
+usercmd('GitDiffPicker', ':lua Snacks.picker.git_diff({cmd_args={"--ignore-all-space"}})<cr>', {})
+usercmd('GitDiffVerbosePicker', ':lua Snacks.picker.git_diff()<cr>', {})
 usercmd('GitBrowse', function(x)
     require('snacks.gitbrowse').open({
         line_start = x.range > 0 and x.line1 or nil,

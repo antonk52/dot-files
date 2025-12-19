@@ -24,25 +24,13 @@ function M.setup()
 
     vim.lsp.config('biome', { workspace_required = true })
     vim.lsp.config('eslint', { workspace_required = true })
-    vim.lsp.config('lua_ls', {
-        settings = {
-            Lua = {
-                semantic = {
-                    enable = true,
-                    annotation = true,
-                    keyword = false,
-                    variable = false,
-                },
-            },
-        },
-    })
     -- start language servers
     if not vim.endswith(vim.uv.cwd() or vim.fn.getcwd(), '/www') then
         -- `npm install @typescript/native-preview`.
         -- 'tsgo',
         vim.lsp.enable({ 'ts_ls', 'biome', 'eslint' })
     end
-    if vim.env.WORK == nil and vim.fn.has('nvim-0.12') == 1 then
+if vim.env.WORK == nil and vim.fn.has('nvim-0.12') == 1 then
         vim.lsp.enable({ 'copilot' })
         vim.lsp.inline_completion.enable()
         vim.keymap.set('i', '<Tab>', function()

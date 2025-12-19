@@ -150,11 +150,7 @@ local function map_delete()
         current_path = current_path:sub(1, -2)
     end
 
-    vim.notify('Are you sure you want to delete it? [y/N]')
-    local choice = vim.fn.nr2char(vim.fn.getchar() --[[@as integer]])
-    local confirmed = choice == 'y'
-
-    if confirmed then
+    if vim.fn.confirm('Are you sure you want to delete it?', 'Yes\nNo') == 1 then
         vim.fs.rm(current_path, { force = true, recursive = true })
     end
 end
