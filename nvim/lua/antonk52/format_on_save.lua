@@ -11,7 +11,7 @@ function M.format()
         -- Leaving it to unless calls FormatLsp explicitly
         and vim.bo.ft ~= 'json'
         and vim.bo.ft ~= 'jsonc'
-        and #vim.lsp.get_clients({ method = 'textDocument/formatting' }) > 0
+        and #vim.lsp.get_clients({ bufnr = 0, method = 'textDocument/formatting' }) > 0
     then
         vim.lsp.buf.format({
             filter = function(client)
