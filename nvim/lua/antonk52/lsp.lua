@@ -24,6 +24,18 @@ function M.setup()
 
     vim.lsp.config('biome', { workspace_required = true })
     vim.lsp.config('eslint', { workspace_required = true })
+    vim.lsp.config('lua_ls', {
+        settings = {
+            Lua = {
+                semantic = {
+                    enable = true,
+                    annotation = true,
+                    keyword = false,
+                    variable = false,
+                },
+            },
+        },
+    })
     -- start language servers
     if not vim.endswith(vim.uv.cwd() or vim.fn.getcwd(), '/www') then
         -- `npm install @typescript/native-preview`.

@@ -330,7 +330,11 @@ require('nvim-treesitter.configs').setup({
     },
 })
 
-require('auto-cmdheight').setup({ max_lines = 15 })
+if vim.fn.has('nvim-0.12') == 1 then
+    require('vim._extui').enable({ enable = true })
+else
+    require('auto-cmdheight').setup({ max_lines = 15 })
+end
 
 -- snacks.nvim --
 require('snacks').setup({
