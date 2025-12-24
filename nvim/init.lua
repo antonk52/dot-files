@@ -299,8 +299,8 @@ if vim.fs.root(0, '.git') ~= nil then
     usercmd('MiniDiffToggleBufferOverlay', function()
         require('mini.diff').toggle_overlay(0)
     end, { nargs = 0, desc = 'Toggle diff overlay' })
-    keymap.set('n', 'ghr', 'gHgh', { desc = 'Reset hunk under cursor', remap = true })
-    keymap.set('n', 'gha', 'ghgh', { desc = 'Apply hunk under cursor', remap = true })
+    keymap.set('n', 'ghr', 'gHgh', { desc = 'Reset hunk', remap = true })
+    keymap.set('n', 'gha', 'ghgh', { desc = 'Apply hunk', remap = true })
 end
 
 -- nvim-treesitter -- NOTE to build run `:TSUpdate`
