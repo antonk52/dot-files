@@ -39,6 +39,8 @@ export PATH="$HOME"/Library/Python/3.9/bin:$PATH
 export PATH=$PATH:/opt/homebrew/bin
 # go packages
 export PATH=$PATH:"$HOME"/go/bin
+# Amp CLI
+export PATH="$HOME/.amp/bin:$PATH"
 
 source $DOT_FILES/scripts/prompt-pure-min.zsh
 

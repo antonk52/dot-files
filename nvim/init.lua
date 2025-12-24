@@ -4,12 +4,10 @@ vim.g.maplocalleader = ','
 local usercmd = vim.api.nvim_create_user_command
 local keymap = vim.keymap
 
--- Defaults {{{1
 -- highlight current cursor line
 vim.opt.cursorline = true
 -- insert mode caret is an underline
 vim.opt.guicursor = 'i-ci-ve:hor24'
-vim.opt.hlsearch = false -- enabled by n/N keymaps
 -- Show "invisible" characters
 vim.opt.list = true
 vim.opt.listchars = { trail = '∙', tab = '▸ ' }
@@ -96,7 +94,6 @@ keymap.set('n', '<C-t>', '<cmd>tabedit<CR>', { desc = 'Open a new tab' })
 keymap.set('n', '<leader>t', ':botright sp | term ', { desc = 'Open terminal split' })
 keymap.set('t', '<esc><esc>', '<c-\\><c-n>', { desc = 'exit term buffer' })
 
--- Commands {{{1
 usercmd('ToggleRusKeymap', function()
     vim.opt.keymap = vim.o.keymap == '' and 'russian-jcukenmac' or ''
 end, { nargs = 0 })
@@ -120,7 +117,6 @@ vim.filetype.add({
     },
 })
 
--- Autocommands {{{1
 vim.api.nvim_create_autocmd('TermOpen', { command = 'startinsert' })
 
 vim.api.nvim_create_autocmd('TextYankPost', {
@@ -162,14 +158,13 @@ vim.defer_fn(function()
     pcall(require, 'antonk52.work') -- loads and sets up work plugin if available
 end, 20)
 
--- Avoid startup work {{{1
+-- Avoid startup work
 vim.g.loaded_python3_provider = 0
-vim.g.python3_host_skip_check = 1
 vim.g.loaded_node_provider = 0
 vim.g.loaded_ruby_provider = 0
 vim.g.loaded_perl_provider = 0
 
--- Bootstrap lazy.nvim plugin manager {{{1
+-- Bootstrap lazy.nvim plugin manager
 local PLUGINS_LOCATION = vim.fs.normalize('~/dot-files/nvim/plugged')
 local lazypath = PLUGINS_LOCATION .. '/lazy.nvim'
 if not vim.uv.fs_stat(lazypath) then
@@ -193,7 +188,7 @@ require('lazy').setup({
     'https://github.com/neovim/nvim-lspconfig',
     'https://github.com/saghen/blink.cmp',
     'https://github.com/nvim-mini/mini.nvim',
-    { 'https://github.com/nvim-treesitter/nvim-treesitter', branch = 'master' },
+    'https://github.com/nvim-treesitter/nvim-treesitter',
     'https://github.com/jake-stewart/auto-cmdheight.nvim',
 }, {
     root = PLUGINS_LOCATION,
@@ -309,25 +304,22 @@ if vim.fs.root(0, '.git') ~= nil then
 end
 
 -- nvim-treesitter -- NOTE to build run `:TSUpdate`
-if vim.env.WORK and vim.env.WORK_TS_PROXY then
-    require('nvim-treesitter.install').command_extra_args = {
-        curl = { '--proxy', vim.env.WORK_TS_PROXY },
-    }
-end
-require('nvim-treesitter.configs').setup({
-    highlight = { enable = true },
-    ensure_installed = {
-        'diff', -- used in vim.pack
-        'go',
-        'javascript',
-        'jsdoc',
-        'json',
-        'jsonc',
-        'markdown',
-        'markdown_inline',
-        'tsx',
-        'typescript',
-    },
+require('nvim-treesitter').install({
+    'diff', -- used in vim.pack
+    'go',
+    'javascript',
+    'jsdoc',
+    'json',
+    -- 'jsonc', -- for some reason invalid parser
+    'markdown',
+    'markdown_inline',
+    'tsx',
+    'typescript',
+})
+vim.api.nvim_create_autocmd('Filetype', {
+    callback = function(ev)
+        pcall(vim.treesitter.start, ev.buf)
+    end,
 })
 
 if vim.fn.has('nvim-0.12') == 1 then

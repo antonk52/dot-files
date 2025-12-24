@@ -18,12 +18,12 @@ local function easy_motion()
     local is_case_sensitive = needle ~= string.lower(needle)
 
     for lines_i, line_text in ipairs(lines) do
-        if not is_case_sensitive then
-            line_text = string.lower(line_text)
-        end
         local line_idx = lines_i + line_idx_start - 1
         -- skip folded lines
         if vim.fn.foldclosed(line_idx) == -1 then
+            if not is_case_sensitive then
+                line_text = string.lower(line_text)
+            end
             for i = 1, #line_text do
                 if line_text:sub(i, i + 1) == needle then
                     local overlay_char = EM_CHARS[char_idx]
