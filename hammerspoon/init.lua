@@ -288,6 +288,83 @@ local function cycle_quarters()
     hs.grid.set(win, cell)
 end
 
+-- ===================================================
+--   Paired window resizing (current + previous)
+-- ===================================================
+local paired_resize_idx_left = 1
+local paired_resize_idx_right = 1
+
+local function cycle_resize_paired(align)
+    local current_win = hs.window.focusedWindow()
+    if not current_win then
+        return hs.alert.show('No focused window')
+    end
+
+    if #STATE.currentSpaceWindows < 2 then
+        return cycle_resize(align)
+    end
+
+    -- Find previous window
+    local prev_i = prev_idx(STATE.currentSpaceWindows, current_win)
+    local prev_win = STATE.currentSpaceWindows[prev_i]
+
+    if not prev_win or prev_win:screen():id() ~= current_win:screen():id() then
+        return cycle_resize(align)
+    end
+
+    -- Determine which index counter to use
+    local resize_idx = (align == 'left') and paired_resize_idx_left or paired_resize_idx_right
+
+    -- Check if we're still cycling within the same alignment
+    local current_cell = hs.grid.get(current_win)
+    if current_cell then
+        local current_align = get_alignment(current_cell)
+        local is_in_sizes = false
+        for _, v in ipairs(resize_widths) do
+            if current_cell.w == v then
+                is_in_sizes = true
+                break
+            end
+        end
+        if not (is_in_sizes and current_align == align) then
+            resize_idx = 1
+        end
+    end
+
+    local w = resize_widths[resize_idx]
+    local remaining = 24 - w
+
+    -- Set current window
+    local current_cell_new
+    if align == 'left' then
+        current_cell_new = { x = 0, y = 0, w = w, h = 2 }
+    else -- right
+        current_cell_new = { x = remaining, y = 0, w = w, h = 2 }
+    end
+    hs.grid.set(current_win, current_cell_new)
+
+    -- Set previous window to fill remaining space
+    local prev_cell_new
+    if align == 'left' then
+        prev_cell_new = { x = w, y = 0, w = remaining, h = 2 }
+    else -- right
+        prev_cell_new = { x = 0, y = 0, w = remaining, h = 2 }
+    end
+    hs.grid.set(prev_win, prev_cell_new)
+
+    -- Increment and wrap index
+    resize_idx = resize_idx % #resize_widths + 1
+    if align == 'left' then
+        paired_resize_idx_left = resize_idx
+    else
+        paired_resize_idx_right = resize_idx
+    end
+
+    -- Refocus current window
+    current_win:focus()
+    nav_alert(current_win:application():name() .. ' + ' .. prev_win:application():name())
+end
+
 local function focus_frontmost_window_on_other_monitor()
     local current_window = hs.window.focusedWindow()
     local current_screen = hs.screen.mainScreen()
@@ -369,6 +446,12 @@ hs.hotkey.bind(HYPER_KEY, 'h', function()
 end)
 hs.hotkey.bind(HYPER_KEY, 'l', function()
     cycle_resize('right')
+end)
+hs.hotkey.bind(HYPER_KEY, 'u', function()
+    cycle_resize_paired('left')
+end)
+hs.hotkey.bind(HYPER_KEY, 'p', function()
+    cycle_resize_paired('right')
 end)
 hs.hotkey.bind(HYPER_KEY, 'm', function()
     local win = hs.window.focusedWindow()
