@@ -144,6 +144,10 @@ function M.setup()
             swin_hide(swin)
         end,
     })
+
+    vim.api.nvim_create_user_command('ResetScrollbar', function()
+        update_swin_position(swin, 0)
+    end, { nargs = 0 })
 end
 
 return M

@@ -86,6 +86,13 @@ keymap.set('n', '#', '<cmd>set hlsearch<cr>#', { desc = 'highlight search on nav
 
 keymap.set('n', '<tab>', 'za', { desc = 'toggle folds' })
 
+-- multicursor like https://www.kevinli.co/posts/2017-01-19-multiple-cursors-in-500-bytes-of-vimscript/
+vim.keymap.set('n', 'cn', '*``cgn', { desc = 'multicursor' })
+keymap.set('v', 'cn', function()
+    vim.opt.hlsearch = true
+    return 'y/\\V<C-r>=escape(@", "/")<CR><CR>``cgn'
+end, { expr = true, desc = 'multicursor like' })
+
 -- indentation shifts keep selection(`=` should still be preferred)
 keymap.set('v', '<', '<gv')
 keymap.set('v', '>', '>gv')
@@ -326,7 +333,7 @@ vim.api.nvim_create_autocmd('Filetype', {
 })
 
 if vim.fn.has('nvim-0.12') == 1 then
-    require('vim._extui').enable({ enable = true })
+    require('vim._core.ui2').enable({ enable = true })
 else
     require('auto-cmdheight').setup({ max_lines = 15 })
 end

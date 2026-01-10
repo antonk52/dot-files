@@ -87,4 +87,4 @@ function _download_nvim_impl() {
 }
 
 alias get_nvim_nightly="_download_nvim_impl nvim-nightly nightly"
-alias get_nvim="_download_nvim_impl nvim v0.11.0"
+alias get_nvim="_download_nvim_impl nvim v0.11.6"
