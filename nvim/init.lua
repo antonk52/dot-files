@@ -139,6 +139,8 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 require('antonk52.dir_explorer').setup()
 require('antonk52.statusline').setup()
 require('antonk52.infer_shiftwidth').setup()
+require('ak_scroll').setup()
+require('ak_indentline').setup()
 
 vim.defer_fn(function()
     require('antonk52.fzf').setup()
@@ -228,8 +230,6 @@ require('blink.cmp').setup({
     keymap = {
         ['<C-o>'] = { 'select_and_accept', 'snippet_forward', 'fallback' },
         ['<C-u>'] = { 'snippet_backward', 'fallback' },
-        ['<C-k>'] = { 'scroll_documentation_up' },
-        ['<C-j>'] = { 'scroll_documentation_down' },
     },
     cmdline = { enabled = false }, -- let's try mini.cmdline
     completion = {
@@ -254,9 +254,6 @@ require('antonk52.lsp').setup()
 usercmd('GitAddPatch', ':tab G add --patch', { nargs = 0 })
 usercmd('GitAddPatchFile', ':tab G add --patch %', { nargs = 0 })
 usercmd('GitCommit', ':tab G commit', { nargs = 0 })
-usercmd('GitIgnore', function()
-    require('antonk52.git_utils').download_gitignore_file()
-end, { nargs = 0, desc = 'Download .gitignore from github/gitignore' })
 keymap.set('n', '<leader>g', ':G ', { desc = 'Version control' })
 
 -- mini.nvim --
@@ -341,10 +338,6 @@ end
 -- snacks.nvim --
 require('snacks').setup({
     image = {},
-    indent = {
-        indent = { hl = 'Whitespace' },
-        scope = { enabled = false },
-    },
     bigfile = { enabled = true },
     picker = {
         win = {
@@ -373,7 +366,6 @@ require('snacks').setup({
             end,
         },
     },
-    scroll = { animate = { fps = 60, easing = 'inOutQuad' } },
 })
 
 -- mutate snacks telescope layout

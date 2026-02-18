@@ -17,3 +17,5 @@ zsh-autosuggestions
 dependencies
 
 git/private
+.tmp-cache/
+.tmp-state/

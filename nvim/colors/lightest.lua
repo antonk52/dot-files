@@ -52,6 +52,8 @@ local groups = {
     CursorColumn = { link = 'CursorLine' },
     ColorColumn = { link = 'CursorLine' },
     WinSeparator = { fg = colors.dark_1 },
+    IndentLine = { link = 'WinSeparator' },
+    IndentLineCurrent = { link = 'NonText' },
 
     DiagnosticError = { fg = colors.red },
     DiagnosticWarn = { fg = colors.yellow },

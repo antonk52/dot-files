@@ -51,6 +51,8 @@ local groups = {
     WarningMsg = { fg = colors.c08 },
     WildMenu = { fg = colors.c08, bg = colors.c0A },
     WinSeparator = { fg = colors.c02 },
+    IndentLine = { link = 'WinSeparator' },
+    IndentLineCurrent = { link = 'NonText' },
     Title = { fg = colors.c0D },
     Conceal = { fg = colors.c0D, bg = colors.c00 },
     Cursor = { fg = colors.c00, bg = colors.c05 },
