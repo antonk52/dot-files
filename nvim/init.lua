@@ -139,10 +139,10 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 require('antonk52.dir_explorer').setup()
 require('antonk52.statusline').setup()
 require('antonk52.infer_shiftwidth').setup()
-require('ak_scroll').setup()
-require('ak_indentline').setup()
 
 vim.defer_fn(function()
+    require('ak_scroll').setup()
+    require('ak_indentline').setup()
     require('antonk52.fzf').setup()
     require('antonk52.scrollbar').setup()
     require('antonk52.debug_nvim').setup()
@@ -198,7 +198,6 @@ require('lazy').setup({
     'https://github.com/neovim/nvim-lspconfig',
     'https://github.com/saghen/blink.cmp',
     'https://github.com/nvim-mini/mini.nvim',
-    'https://github.com/nvim-treesitter/nvim-treesitter',
     'https://github.com/jake-stewart/auto-cmdheight.nvim',
 }, {
     root = PLUGINS_LOCATION,
@@ -307,27 +306,6 @@ if vim.fs.root(0, '.git') ~= nil then
     keymap.set('n', 'ghr', 'gHgh', { desc = 'Reset hunk', remap = true })
     keymap.set('n', 'gha', 'ghgh', { desc = 'Apply hunk', remap = true })
 end
-
--- nvim-treesitter -- NOTE to build run `:TSUpdate`
-usercmd('TSInstallAKParsers', function()
-    require('nvim-treesitter').install({
-        'diff', -- used in vim.pack
-        'go',
-        'javascript',
-        'jsdoc',
-        'json',
-        -- 'jsonc', -- for some reason invalid parser
-        'markdown',
-        'markdown_inline',
-        'tsx',
-        'typescript',
-    })
-end, { nargs = 0, desc = 'Install parsers for treesitter' })
-vim.api.nvim_create_autocmd('Filetype', {
-    callback = function(ev)
-        pcall(vim.treesitter.start, ev.buf)
-    end,
-})
 
 if vim.fn.has('nvim-0.12') == 1 then
     require('vim._core.ui2').enable({ enable = true })
