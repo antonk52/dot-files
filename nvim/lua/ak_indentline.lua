@@ -12,7 +12,15 @@ local INVALID = -1
 -- Behavior options (edit here if you want to tune behavior).
 local INDENT_CHAR = '│'
 local MIN_LEVEL = 2
-local EXCLUDE = { 'dashboard', 'lazy', 'help', 'nofile', 'terminal', 'prompt', 'qf' }
+local EXCLUDE = {
+    dashboard = true,
+    lazy = true,
+    help = true,
+    nofile = true,
+    terminal = true,
+    prompt = true,
+    qf = true,
+}
 
 local EXTMARK_OPTS = {
     virt_text = { { INDENT_CHAR, 'IndentLine' } },
@@ -42,14 +50,7 @@ local function get_shiftwidth(bufnr)
 end
 
 local function is_excluded(bufnr)
-    local ft = vim.bo[bufnr].filetype
-    local buftype = vim.bo[bufnr].buftype
-    for _, value in ipairs(EXCLUDE) do
-        if value == ft or value == buftype then
-            return true
-        end
-    end
-    return false
+    return EXCLUDE[vim.bo[bufnr].filetype] or EXCLUDE[vim.bo[bufnr].buftype]
 end
 
 local function read_line(bufnr, lnum)
@@ -113,12 +114,8 @@ end
 local function find_current_range(bufnr, target_indent)
     context.range_srow = find_boundary(bufnr, context.currow - 1, -1, target_indent)
     context.range_erow = find_boundary(bufnr, context.currow + 1, 1, target_indent)
-    if context.range_srow == nil then
-        context.range_srow = -1
-    end
-    if context.range_erow == nil then
-        context.range_erow = context.count
-    end
+    context.range_srow = context.range_srow or -1
+    context.range_erow = context.range_erow or context.count
     context.cur_level = math.max(1, math.ceil(target_indent / context.step))
 end
 
@@ -130,13 +127,9 @@ local function on_line(_, _, bufnr, row)
 
     local currow_insert = api.nvim_get_mode().mode == 'i' and context.currow == row
     local total_levels = math.ceil(sp.indent / context.step)
+    local row_in_curblock = row > context.range_srow and row <= context.range_erow
     for level = 1, total_levels do
-        local col
-        if context.is_tab then
-            col = level - 1
-        else
-            col = (level - 1) * context.step
-        end
+        local col = context.is_tab and (level - 1) or (level - 1) * context.step
 
         if
             col >= context.leftcol
@@ -144,7 +137,6 @@ local function on_line(_, _, bufnr, row)
             and col < sp.indent_cols
             and (not currow_insert or col ~= context.curcol)
         then
-            local row_in_curblock = row > context.range_srow and row <= context.range_erow
             local higroup = row_in_curblock and level == context.cur_level and 'IndentLineCurrent'
                 or 'IndentLine'
             EXTMARK_OPTS.virt_text[1][2] = higroup

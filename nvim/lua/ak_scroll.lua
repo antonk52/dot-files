@@ -10,7 +10,6 @@ local SCROLL_DOWN = vim.api.nvim_replace_termcodes('<c-e>', true, true, true)
 local WHEEL_UP = vim.api.nvim_replace_termcodes('<ScrollWheelUp>', true, true, true)
 local WHEEL_DOWN = vim.api.nvim_replace_termcodes('<ScrollWheelDown>', true, true, true)
 
-local enabled = false
 local mouse_scrolling = false
 local on_key_ns = nil
 local states = {}
@@ -46,8 +45,7 @@ local function is_enabled(buf)
         return value
     end
 
-    return enabled
-        and not vim.o.paste
+    return not vim.o.paste
         and vim.fn.reg_executing() == ''
         and vim.fn.reg_recording() == ''
         and resolve('snacks_scroll', true)
@@ -168,6 +166,14 @@ local function winsaveview(win)
     return vim.api.nvim_win_call(win, vim.fn.winsaveview)
 end
 
+local function sync_current(state)
+    if state and vim.api.nvim_win_is_valid(state.win) then
+        state.current = winsaveview(state.win)
+        return true
+    end
+    return false
+end
+
 function State:wo(opts)
     if not opts then
         if vim.api.nvim_win_is_valid(self.win) then
@@ -194,30 +200,32 @@ function State:stop()
 end
 
 function State:valid()
-    return enabled
-        and states[self.win] == self
+    return states[self.win] == self
         and vim.api.nvim_win_is_valid(self.win)
         and vim.api.nvim_buf_is_valid(self.buf)
         and vim.api.nvim_win_get_buf(self.win) == self.buf
         and vim.api.nvim_buf_get_changedtick(self.buf) == self.changedtick
 end
 
+local function drop_state(win)
+    local state = states[win]
+    if state then
+        state:stop()
+        states[win] = nil
+    end
+end
+
 function State.get(win)
     local buf = vim.api.nvim_win_is_valid(win) and vim.api.nvim_win_get_buf(win)
     if not buf or not is_enabled(buf) then
-        if states[win] then
-            states[win]:stop()
-            states[win] = nil
-        end
+        drop_state(win)
         return nil
     end
 
     local view = winsaveview(win)
     local state = states[win]
     if not (state and state:valid()) then
-        if state then
-            state:stop()
-        end
+        drop_state(win)
         state = setmetatable({}, State)
         state.win = win
         state.buf = buf
@@ -304,9 +312,7 @@ local function check(win)
         move_to = vim.fn.winline()
         vim.fn.winrestview(state.current)
         move_from = vim.fn.winline()
-        if vim.api.nvim_win_is_valid(state.win) then
-            state.current = winsaveview(state.win)
-        end
+        sync_current(state)
         scrolls = scroll_lines(state.win, state.current, target)
         col_from = vim.fn.virtcol({ state.current.lnum, state.current.col })
         col_to = vim.fn.virtcol({ target.lnum, target.col })
@@ -316,9 +322,7 @@ local function check(win)
         vim.api.nvim_win_call(state.win, function()
             vim.fn.winrestview(target)
         end)
-        if vim.api.nvim_win_is_valid(state.win) then
-            state.current = winsaveview(state.win)
-        end
+        sync_current(state)
         state:stop()
         return
     end
@@ -339,31 +343,26 @@ local function check(win)
         vim.api.nvim_win_call(win, function()
             if done then
                 vim.fn.winrestview(target)
-                if vim.api.nvim_win_is_valid(state.win) then
-                    state.current = winsaveview(state.win)
-                end
+                sync_current(state)
                 state:stop()
                 return
             end
 
             local count = vim.v.count
-            local commands = {}
+            local scroll_cmd = ''
 
             local scroll_target = math.floor(value)
             local scroll = scroll_target - scrolled
             if scroll > 0 then
                 scrolled = scrolled + scroll
-                commands[#commands + 1] = ('%d%s'):format(scroll, down and SCROLL_DOWN or SCROLL_UP)
+                scroll_cmd = ('%d%s'):format(scroll, down and SCROLL_DOWN or SCROLL_UP)
             end
 
             local move = math.floor(value * math.abs(move_to - move_from) / scrolls)
             local move_target = move_from + ((move_to < move_from) and -1 or 1) * move
-            commands[#commands + 1] = ('%dH'):format(move_target)
 
             local virtcol = math.floor(col_from + (col_to - col_from) * value / scrolls)
-            commands[#commands + 1] = ('%d|'):format(virtcol + 1)
-
-            vim.cmd(('keepjumps normal! %s'):format(table.concat(commands, '')))
+            vim.cmd(('keepjumps normal! %s%dH%d|'):format(scroll_cmd, move_target, virtcol + 1))
 
             if vim.v.count ~= count then
                 local cursor = vim.api.nvim_win_get_cursor(win)
@@ -371,15 +370,12 @@ local function check(win)
                 vim.api.nvim_win_set_cursor(win, cursor)
             end
 
-            if vim.api.nvim_win_is_valid(state.win) then
-                state.current = winsaveview(state.win)
-            end
+            sync_current(state)
         end)
     end)
 end
 
 function M.setup()
-    enabled = true
     states = {}
     mouse_scrolling = false
 
@@ -399,7 +395,7 @@ function M.setup()
         State.get(win)
     end
 
-    local group = vim.api.nvim_create_augroup('codex_scroll', { clear = true })
+    local group = vim.api.nvim_create_augroup('ak_scroll', { clear = true })
 
     vim.api.nvim_create_autocmd('BufWinEnter', {
         group = group,
@@ -419,10 +415,7 @@ function M.setup()
         group = group,
         callback = vim.schedule_wrap(function(ev)
             each_buf_win(ev.buf, function(win)
-                local state = states[win]
-                if state and vim.api.nvim_win_is_valid(state.win) then
-                    state.current = winsaveview(state.win)
-                end
+                sync_current(states[win])
             end)
         end),
     })
@@ -432,11 +425,7 @@ function M.setup()
         callback = function(ev)
             if (ev.file == '/' or ev.file == '?') and vim.o.incsearch then
                 each_buf_win(ev.buf, function(win)
-                    local state = states[win]
-                    if state then
-                        state:stop()
-                        states[win] = nil
-                    end
+                    drop_state(win)
                 end)
             end
         end,
