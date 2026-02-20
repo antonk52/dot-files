@@ -133,9 +133,9 @@ local groups = {
     MiniCursorWord = { link = 'Visual' },
     MiniCursorWordCurrent = { link = 'CursorLine' },
 
-    SnacksPickerDir = { link = 'Directory' },
-    SnacksPickerCmd = { link = 'Identifier' },
-    SnacksPickerPrompt = { link = 'Identifier' },
+    MiniPickBorderText = { link = 'Comment' },
+    MiniPickMatchRanges = { link = 'DiagnosticWarn' },
+    MiniPickPrompt = { link = 'Normal' },
 
     -- AI Suggestions
     AISuggestion = { fg = colors.c03, italic = true },

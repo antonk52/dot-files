@@ -192,7 +192,6 @@ vim.opt.rtp:prepend(lazypath)
 vim.g.fugitive_legacy_commands = 0
 
 require('lazy').setup({
-    'https://github.com/folke/snacks.nvim',
     'https://github.com/tpope/vim-fugitive',
     'https://github.com/b0o/schemastore.nvim',
     'https://github.com/neovim/nvim-lspconfig',
@@ -261,6 +260,29 @@ require('mini.pairs').setup() -- autoclose ([{
 require('mini.cursorword').setup({ delay = 300 })
 require('mini.cmdline').setup({})
 require('mini.splitjoin').setup() -- gS to toggle listy things
+local mini_pick = require('mini.pick')
+local mini_extra = require('mini.extra')
+
+mini_pick.setup({
+    source = {
+        show = function(buf_id, items, query)
+            mini_pick.default_show(buf_id, items, query, { show_icons = false })
+        end,
+    },
+})
+mini_extra.setup({})
+
+keymap.set('n', '<leader>b', '<cmd>Pick buffers<cr>')
+keymap.set('n', '<leader>/', "<cmd>Pick buf_lines scope='current'<cr>")
+keymap.set('n', '<leader>r', '<cmd>Pick resume<cr>')
+keymap.set('n', '<leader>T', ':Pick ')
+keymap.set('n', '<leader>u', "<cmd>Pick list scope='change'<cr>")
+keymap.set('n', '<leader>d', "<cmd>Pick diagnostic scope='current'<cr>")
+keymap.set('n', '<leader>D', "<cmd>Pick diagnostic scope='all'<cr>")
+keymap.set('n', '<leader>;', '<cmd>Pick commands<cr>')
+keymap.set('n', '<leader>:', '<cmd>Pick grep<cr>')
+usercmd('GitDiffVerbosePicker', 'lua MiniExtra.pickers.git_hunks()<cr>', {})
+
 require('mini.hipatterns').setup({
     highlighters = {
         fixme = { pattern = '%f[%w]()FIXME()%f[%W]', group = 'DiagnosticError' },
@@ -313,80 +335,16 @@ else
     require('auto-cmdheight').setup({ max_lines = 15 })
 end
 
--- snacks.nvim --
-require('snacks').setup({
-    image = {},
-    bigfile = { enabled = true },
-    picker = {
-        win = {
-            input = {
-                keys = {
-                    ['<Esc>'] = { 'close', mode = { 'i', 'n' } },
-                },
-            },
-        },
-        layout = 'telescope',
-        icons = { files = { enabled = false } },
-        formatters = { file = { truncate = 120 } },
-        actions = {
-            -- immediately execute the command if it doesn't require any arguments
-            cmd = function(picker, item)
-                picker:close()
-                if item and item.cmd then
-                    vim.schedule(function()
-                        if item.command and (item.command.nargs ~= '0') then
-                            vim.api.nvim_input(':' .. item.cmd .. ' ')
-                        else
-                            vim.cmd(item.cmd)
-                        end
-                    end)
-                end
-            end,
-        },
-    },
-})
-
--- mutate snacks telescope layout
-local layouts = require('snacks.picker.config.layouts')
----@type snacks.picker.layout.Config
-local t = layouts.telescope
-
-t.layout[1][1].border = { '┌', '─', '┐', '│', '', '', '', '│' }
-t.layout[1][2].border = { '├', '─', '┤', '│', '┘', '─', '└', '│' }
-t.layout[2].border = 'single'
-t.layout.width = 190
-
--- use telescope layout for vim.ui.select
-layouts.select = vim.tbl_deep_extend('force', {}, t, {
-    layout = { width = 80, min_height = 9, height = 0.6 },
-    preview = false,
-})
-
-keymap.set('n', '<leader>b', '<cmd>lua Snacks.picker.buffers()<cr>')
-keymap.set('n', '<leader>/', '<cmd>lua Snacks.picker.lines({layout= "telescope"})<cr>')
-keymap.set('n', '<leader>r', '<cmd>lua Snacks.picker.resume()<cr>')
-keymap.set('n', '<leader>T', '<cmd>lua Snacks.picker.pick()<cr>')
-keymap.set('n', '<leader>u', '<cmd>lua Snacks.picker.undo()<cr>')
-keymap.set('n', '<leader>d', '<cmd>lua Snacks.picker.diagnostics_buffer()<cr>')
-keymap.set('n', '<leader>D', '<cmd>lua Snacks.picker.diagnostics()<cr>')
-keymap.set('n', '<leader>z', '<cmd>lua Snacks.zen.zen({toggles={dim=false},win={width=100}})<cr>')
-keymap.set('n', '<leader>;', '<cmd>lua Snacks.picker.commands({layout="select"})<cr>')
---stylua: ignore
-keymap.set('n', '<leader>:', '<cmd>lua Snacks.picker.grep_word({search=vim.fn.input("Search: ")})<cr>')
--- override lsp keymaps as snacks handles go to one results or picker for multiple
-keymap.set('n', '<C-]>', '<cmd>lua Snacks.picker.lsp_definitions()<cr>')
 keymap.set('n', 'gD', function()
     local opts = { bufnr = 0, method = 'textDocument/declaration' }
-    local cmd = '<cmd>lua Snacks.picker.lsp_declarations()<cr>'
+    local cmd = '<cmd>lua vim.lsp.buf.declarations()<cr>'
     return #vim.lsp.get_clients(opts) > 0 and cmd or 'gD'
 end, { expr = true, desc = 'LSP Declarations with fallback' })
-keymap.set('n', 'grt', '<cmd>lua Snacks.picker.lsp_type_definitions()<cr>')
-keymap.set('n', 'gri', '<cmd>lua Snacks.picker.lsp_implementations()<cr>')
-keymap.set('n', 'grr', '<cmd>lua Snacks.picker.lsp_references()<cr>')
-usercmd('GitDiffPicker', ':lua Snacks.picker.git_diff({cmd_args={"--ignore-all-space"}})<cr>', {})
-usercmd('GitDiffVerbosePicker', ':lua Snacks.picker.git_diff()<cr>', {})
+usercmd('GitDiffPicker', function()
+    require('antonk52.git').git_diff_picker()
+end, {})
 usercmd('GitBrowse', function(x)
-    require('snacks.gitbrowse').open({
+    require('antonk52.git').git_browse({
         line_start = x.range > 0 and x.line1 or nil,
         line_end = x.range > 0 and x.line2 or nil,
     })

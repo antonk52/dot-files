@@ -4,7 +4,7 @@
 shell-integration-features = cursor,no-sudo,no-title
 
 # alacritty has a faster scroll
-mouse-scroll-multiplier = 1.2
+mouse-scroll-multiplier = 1.1
 
 # darken from #fff so it is easier on the eyes
 foreground = #f5f7ff
