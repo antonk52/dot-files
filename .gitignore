@@ -22,3 +22,4 @@ git/private
 
 .nvimlog
 nvim.log
+nvim/pack

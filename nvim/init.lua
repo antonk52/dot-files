@@ -174,55 +174,48 @@ vim.g.loaded_node_provider = 0
 vim.g.loaded_ruby_provider = 0
 vim.g.loaded_perl_provider = 0
 
--- Bootstrap lazy.nvim plugin manager
-local PLUGINS_LOCATION = vim.fs.normalize('~/dot-files/nvim/plugged')
-local lazypath = PLUGINS_LOCATION .. '/lazy.nvim'
-if not vim.uv.fs_stat(lazypath) then
+-- Disable selected built-in runtime plugins
+vim.g.loaded_2html_plugin = 1
+vim.g.loaded_gzip = 1
+vim.g.loaded_netrw = 1
+vim.g.loaded_netrwFileHandlers = 1
+vim.g.loaded_netrwPlugin = 1
+vim.g.loaded_netrwSettings = 1
+vim.g.loaded_remote_plugins = 1
+vim.g.loaded_tar = 1
+vim.g.loaded_tarPlugin = 1
+vim.g.loaded_tohtml = 1
+vim.g.loaded_tutor = 1
+vim.g.loaded_tutor_mode_plugin = 1
+vim.g.loaded_zip = 1
+vim.g.loaded_zipPlugin = 1
+
+-- Bootstrap mini.deps plugin manager
+local PLUGINS_ROOT = vim.fs.normalize('~/dot-files/nvim')
+local MINI_PATH = PLUGINS_ROOT .. '/plugged/mini.nvim'
+if not vim.uv.fs_stat(MINI_PATH) then
     vim.system({
         'git',
         'clone',
         '--filter=blob:none',
-        'https://github.com/folke/lazy.nvim.git',
-        '--branch=stable',
-        lazypath,
+        'https://github.com/nvim-mini/mini.nvim',
+        MINI_PATH,
     }):wait()
 end
-vim.opt.rtp:prepend(lazypath)
+vim.opt.rtp:prepend(MINI_PATH)
 
 vim.g.fugitive_legacy_commands = 0
 
-require('lazy').setup({
-    'https://github.com/tpope/vim-fugitive',
-    'https://github.com/b0o/schemastore.nvim',
-    'https://github.com/neovim/nvim-lspconfig',
-    'https://github.com/saghen/blink.cmp',
-    'https://github.com/nvim-mini/mini.nvim',
-    'https://github.com/jake-stewart/auto-cmdheight.nvim',
-}, {
-    root = PLUGINS_LOCATION,
-    performance = {
-        rtp = {
-            disabled_plugins = {
-                '2html_plugin',
-                'gzip',
-                'netrw',
-                'netrwFileHandlers',
-                'netrwPlugin',
-                'netrwSettings',
-                'rplugin', -- remote plugins
-                'tar',
-                'tarPlugin',
-                'tohtml',
-                'tutor',
-                'tutor_mode_plugin',
-                'zip',
-                'zipPlugin',
-            },
-        },
-    },
-    pkg = { enabled = false },
-    readme = { enabled = false },
-})
+require('mini.deps').setup({ path = { package = PLUGINS_ROOT } })
+local add = require('mini.deps').add
+
+add({ source = 'tpope/vim-fugitive', checkout = '61b51c09b7c9ce04e821f6cf76ea4f6f903e3cf4' })
+add({ source = 'b0o/schemastore.nvim', checkout = '187cd24e8714221679ab8ea3ea02da80e05e8513' })
+add({ source = 'neovim/nvim-lspconfig', checkout = '44acfe887d4056f704ccc4f17513ed41c9e2b2e6' })
+add({ source = 'saghen/blink.cmp', checkout = 'b4d379393882561f9055abe780342ee00f02c573' })
+add({ source = 'nvim-mini/mini.nvim', checkout = 'dbb073bd2ed4a7bb35daafc7989567f0ff1426ee' })
+--stylua: ignore
+add({ source = 'jake-stewart/auto-cmdheight.nvim', checkout = '82619eab0268f27024e1e0981ec3721a003ab2b7' })
 
 require('blink.cmp').setup({
     keymap = {
