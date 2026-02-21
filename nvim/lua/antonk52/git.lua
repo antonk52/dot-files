@@ -1,7 +1,5 @@
 local M = {}
 
-local mini_pick = require('mini.pick')
-
 local remote_patterns = {
     { '^(https?://.*)%.git$', '%1' },
     { '^git@(.+):(.+)%.git$', 'https://%1/%2' },
@@ -92,94 +90,6 @@ local function make_file_url(repo, branch, file, line_start, line_end)
         return string.format('%s/tree/%s/item/%s%s', repo, branch_ref, file_path, line_anchor)
     end
     return string.format('%s/blob/%s/%s%s', repo, branch_ref, file_path, line_anchor)
-end
-
-local function parse_git_diff_hunks(lines)
-    local header_pattern = '^diff %-%-git'
-    local hunk_pattern = '^@@ %-%d+,?%d* %+(%d+),?%d* @@'
-    local from_path_pattern = '^%-%-%- [ai]/(.*)$'
-    local to_path_pattern = '^%+%+%+ [bw]/(.*)$'
-
-    local cur_header, cur_path, is_in_hunk = {}, nil, false
-    local items = {}
-    for _, line in ipairs(lines) do
-        if line:find(header_pattern) ~= nil then
-            is_in_hunk = false
-            cur_header = {}
-        end
-
-        local path_match = line:match(to_path_pattern) or line:match(from_path_pattern)
-        if path_match ~= nil and path_match ~= 'dev/null' and not is_in_hunk then
-            cur_path = path_match
-        end
-
-        local hunk_start = line:match(hunk_pattern)
-        if hunk_start ~= nil then
-            is_in_hunk = true
-            local item = {
-                path = cur_path,
-                lnum = tonumber(hunk_start),
-                col = 1,
-                header = vim.deepcopy(cur_header),
-                hunk = {},
-            }
-            table.insert(items, item)
-        end
-
-        if is_in_hunk then
-            table.insert(items[#items].hunk, line)
-        else
-            table.insert(cur_header, line)
-        end
-    end
-
-    for _, item in ipairs(items) do
-        for i = 2, #item.hunk do
-            if item.hunk[i]:find('^[+-]') ~= nil then
-                item.lnum = item.lnum + i - 2
-                break
-            end
-        end
-
-        local coords, title = item.hunk[1]:match('@@ (.-) @@ ?(.*)$')
-        coords, title = coords or '', title or ''
-        item.text = string.format('%s │ %s │ %s', item.path or '', coords, title)
-    end
-
-    return items
-end
-
-function M.git_diff_picker()
-    local repo_root = get_repo_root()
-    if repo_root == nil then
-        vim.notify('GitDiffPicker: current directory is not in a Git repo.', vim.log.levels.WARN)
-        return
-    end
-
-    local command = { 'git', 'diff', '--no-color', '--unified=3', '--ignore-all-space' }
-
-    local set_items = vim.schedule_wrap(function()
-        mini_pick.set_picker_items_from_cli(command, {
-            spawn_opts = { cwd = repo_root },
-            postprocess = parse_git_diff_hunks,
-        })
-    end)
-
-    mini_pick.start({
-        source = {
-            name = 'Git diff (--ignore-all-space)',
-            cwd = repo_root,
-            items = set_items,
-            preview = function(buf_id, item)
-                if item == nil then
-                    return
-                end
-                local shown_lines = vim.list_extend(vim.deepcopy(item.header), item.hunk)
-                vim.api.nvim_buf_set_lines(buf_id, 0, -1, false, shown_lines)
-                vim.bo[buf_id].filetype = 'diff'
-            end,
-        },
-    })
 end
 
 function M.git_browse(opts)

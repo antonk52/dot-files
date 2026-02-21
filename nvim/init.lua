@@ -101,6 +101,11 @@ keymap.set('n', '<C-t>', '<cmd>tabedit<CR>', { desc = 'Open a new tab' })
 keymap.set('n', '<leader>t', ':botright sp | term ', { desc = 'Open terminal split' })
 keymap.set('n', '<localleader>j', '<cmd>tabnew | term jjui<cr>', { desc = 'Open jjui' })
 keymap.set('t', '<esc><esc>', '<c-\\><c-n>', { desc = 'exit term buffer' })
+keymap.set('n', 'gD', function()
+    local opts = { bufnr = 0, method = 'textDocument/declaration' }
+    local cmd = '<cmd>lua vim.lsp.buf.declarations()<cr>'
+    return #vim.lsp.get_clients(opts) > 0 and cmd or 'gD'
+end, { expr = true, desc = 'LSP Declarations with fallback' })
 
 usercmd('ToggleRusKeymap', function()
     vim.opt.keymap = vim.o.keymap == '' and 'russian-jcukenmac' or ''
@@ -114,6 +119,12 @@ usercmd('Tsc', ':botright sp | term npx tsc --noEmit', {})
 usercmd('TestBuffer', ':botright sp | term npm run test -- %', {})
 usercmd('BunRun', ':!bun run %', {})
 usercmd('NodeRun', ':!node %', {})
+usercmd('GitBrowse', function(x)
+    require('antonk52.git').git_browse({
+        line_start = x.range > 0 and x.line1 or nil,
+        line_end = x.range > 0 and x.line2 or nil,
+    })
+end, { nargs = 0, range = true, desc = 'Open in browser' })
 
 vim.filetype.add({
     filename = { ['.eslintrc.json'] = 'jsonc' },
@@ -253,17 +264,14 @@ require('mini.pairs').setup() -- autoclose ([{
 require('mini.cursorword').setup({ delay = 300 })
 require('mini.cmdline').setup({})
 require('mini.splitjoin').setup() -- gS to toggle listy things
-local mini_pick = require('mini.pick')
-local mini_extra = require('mini.extra')
-
-mini_pick.setup({
+require('mini.pick').setup({
     source = {
         show = function(buf_id, items, query)
-            mini_pick.default_show(buf_id, items, query, { show_icons = false })
+            require('mini.pick').default_show(buf_id, items, query, { show_icons = false })
         end,
     },
 })
-mini_extra.setup({})
+require('mini.extra').setup({})
 
 keymap.set('n', '<leader>b', '<cmd>Pick buffers<cr>')
 keymap.set('n', '<leader>/', "<cmd>Pick buf_lines scope='current'<cr>")
@@ -274,7 +282,7 @@ keymap.set('n', '<leader>d', "<cmd>Pick diagnostic scope='current'<cr>")
 keymap.set('n', '<leader>D', "<cmd>Pick diagnostic scope='all'<cr>")
 keymap.set('n', '<leader>;', '<cmd>Pick commands<cr>')
 keymap.set('n', '<leader>:', '<cmd>Pick grep<cr>')
-usercmd('GitDiffVerbosePicker', 'lua MiniExtra.pickers.git_hunks()<cr>', {})
+usercmd('GitDiffPicker', 'lua MiniExtra.pickers.git_hunks()<cr>', {})
 
 require('mini.hipatterns').setup({
     highlighters = {
@@ -327,18 +335,3 @@ if vim.fn.has('nvim-0.12') == 1 then
 else
     require('auto-cmdheight').setup({ max_lines = 15 })
 end
-
-keymap.set('n', 'gD', function()
-    local opts = { bufnr = 0, method = 'textDocument/declaration' }
-    local cmd = '<cmd>lua vim.lsp.buf.declarations()<cr>'
-    return #vim.lsp.get_clients(opts) > 0 and cmd or 'gD'
-end, { expr = true, desc = 'LSP Declarations with fallback' })
-usercmd('GitDiffPicker', function()
-    require('antonk52.git').git_diff_picker()
-end, {})
-usercmd('GitBrowse', function(x)
-    require('antonk52.git').git_browse({
-        line_start = x.range > 0 and x.line1 or nil,
-        line_end = x.range > 0 and x.line2 or nil,
-    })
-end, { nargs = 0, range = true, desc = 'Open in browser' })
