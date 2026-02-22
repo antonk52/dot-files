@@ -220,13 +220,12 @@ vim.g.fugitive_legacy_commands = 0
 require('mini.deps').setup({ path = { package = PLUGINS_ROOT } })
 local add = require('mini.deps').add
 
-add({ source = 'tpope/vim-fugitive', checkout = '61b51c09b7c9ce04e821f6cf76ea4f6f903e3cf4' })
-add({ source = 'b0o/schemastore.nvim', checkout = '187cd24e8714221679ab8ea3ea02da80e05e8513' })
-add({ source = 'neovim/nvim-lspconfig', checkout = '44acfe887d4056f704ccc4f17513ed41c9e2b2e6' })
-add({ source = 'saghen/blink.cmp', checkout = 'b4d379393882561f9055abe780342ee00f02c573' })
-add({ source = 'nvim-mini/mini.nvim', checkout = 'dbb073bd2ed4a7bb35daafc7989567f0ff1426ee' })
---stylua: ignore
-add({ source = 'jake-stewart/auto-cmdheight.nvim', checkout = '82619eab0268f27024e1e0981ec3721a003ab2b7' })
+add({ source = 'tpope/vim-fugitive', checkout = '61b51c0' })
+add({ source = 'b0o/schemastore.nvim', checkout = '84d86aa' })
+add({ source = 'neovim/nvim-lspconfig', checkout = '5a855bc' })
+add({ source = 'saghen/blink.cmp', checkout = 'b4d3793' })
+add({ source = 'nvim-mini/mini.nvim', checkout = 'ccfc8c3' })
+add({ source = 'jake-stewart/auto-cmdheight.nvim', checkout = '82619ea' })
 
 require('blink.cmp').setup({
     keymap = {
