@@ -61,7 +61,7 @@ alias q='quit'
 alias docker_stop_all='docker stop "$(docker ps -q)"'
 
 export NOTES_PATH="$HOME"/Documents/notes
-alias notes="cd $NOTES_PATH && nvim -c NotesStart && cd -"
+alias notes="cd $NOTES_PATH && nvim \"${NOTES_PATH}/$(date +%Y)/$(date +%m).md\" -c NotesStart && cd -"
 
 alias nnvim="~/Downloads/nvim-nightly/bin/nvim"
 
