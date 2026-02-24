@@ -48,6 +48,7 @@ function M.setup()
         'selene3p_ls',
         'stylua3p_ls',
         'lua_ls',
+        'ak_filepaths',
         -- 'emmylua_ls',
     })
 end

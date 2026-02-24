@@ -202,7 +202,7 @@ vim.g.loaded_zip = 1
 vim.g.loaded_zipPlugin = 1
 
 -- Bootstrap mini.deps plugin manager
-local PLUGINS_ROOT = vim.fs.normalize('~/dot-files/nvim')
+local PLUGINS_ROOT = vim.env.HOME .. '/dot-files/nvim'
 local MINI_PATH = PLUGINS_ROOT .. '/plugged/mini.nvim'
 if not vim.uv.fs_stat(MINI_PATH) then
     vim.system({
@@ -222,32 +222,9 @@ local add = require('mini.deps').add
 
 add({ source = 'tpope/vim-fugitive', checkout = '61b51c0' })
 add({ source = 'b0o/schemastore.nvim', checkout = '84d86aa' })
-add({ source = 'neovim/nvim-lspconfig', checkout = '5a855bc' })
-add({ source = 'saghen/blink.cmp', checkout = 'b4d3793' })
+add({ source = 'neovim/nvim-lspconfig', checkout = 'ab5139c' })
 add({ source = 'nvim-mini/mini.nvim', checkout = 'ccfc8c3' })
 add({ source = 'jake-stewart/auto-cmdheight.nvim', checkout = '82619ea' })
-
-require('blink.cmp').setup({
-    keymap = {
-        ['<C-o>'] = { 'select_and_accept', 'snippet_forward', 'fallback' },
-        ['<C-u>'] = { 'snippet_backward', 'fallback' },
-    },
-    cmdline = { enabled = false }, -- let's try mini.cmdline
-    completion = {
-        menu = { border = 'none' },
-        documentation = {
-            auto_show = true,
-            window = {
-                direction_priority = {
-                    menu_north = { 'e', 'n' },
-                    menu_south = { 'e', 'n' },
-                },
-            },
-        },
-    },
-    signature = { enabled = true },
-    fuzzy = { implementation = 'lua' },
-})
 
 require('antonk52.lsp').setup()
 
@@ -261,12 +238,16 @@ keymap.set('n', '<leader>g', ':G ', { desc = 'Version control' })
 require('mini.bracketed').setup()
 require('mini.pairs').setup() -- autoclose ([{
 require('mini.cursorword').setup({ delay = 300 })
+require('mini.completion').setup({})
 require('mini.cmdline').setup({})
 require('mini.splitjoin').setup() -- gS to toggle listy things
 require('mini.pick').setup({
     source = {
         show = function(buf_id, items, query)
             require('mini.pick').default_show(buf_id, items, query, { show_icons = false })
+        end,
+        preview = function(buf_id, item)
+            require('mini.pick').default_preview(buf_id, item, { line_position = 'center' })
         end,
     },
 })
@@ -329,8 +310,4 @@ if vim.fs.root(0, '.git') ~= nil then
     keymap.set('n', 'gha', 'ghgh', { desc = 'Apply hunk', remap = true })
 end
 
-if vim.fn.has('nvim-0.12') == 1 then
-    require('vim._core.ui2').enable({ enable = true })
-else
-    require('auto-cmdheight').setup({ max_lines = 15 })
-end
+require('auto-cmdheight').setup({ max_lines = 15 })

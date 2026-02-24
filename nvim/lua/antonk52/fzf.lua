@@ -25,9 +25,6 @@ local function fzf(kind)
         if kind == 'files' then
             if vim.fs.root(0, '.git') ~= nil then
                 fzf_cmd = 'git ls-files | fzf --prompt "GitFiles> "'
-            -- fd is faster than `hg files .` even though less accurate
-            -- elseif vim.fs.root(0, '.hg') ~= nil then
-            --     fzf_cmd = 'hg files . | fzf --prompt "HgFiles> "'
             else
                 local find_command = { 'fd', '--type', 'file', '--hidden', '-E', '.DS_Store' }
                 for _, p in ipairs(get_ignore_patterns()) do

@@ -1,6 +1,18 @@
 local M = {}
 local usercmd = vim.api.nvim_create_user_command
 
+local function format_bytes(bytes)
+    if bytes == 0 then return '0 B (0 bytes)' end
+    local units = { 'B', 'KB', 'MB', 'GB' }
+    local size = bytes
+    local unit_idx = 1
+    while size >= 1024 and unit_idx < #units do
+        size = size / 1024
+        unit_idx = unit_idx + 1
+    end
+    return string.format('%.2f %s (%d bytes)', size, units[unit_idx], bytes)
+end
+
 function M.setup()
     usercmd('ListLSPSupportedCommands', function()
         for _, client in ipairs(vim.lsp.get_clients()) do
@@ -23,14 +35,18 @@ function M.setup()
     end, {})
 
     vim.keymap.set('n', '<C-g>', function()
+        local stat = vim.uv.fs_stat(vim.api.nvim_buf_get_name(0)) or {}
+        -- print human friendly stat
         vim.notify(table.concat({
             'Buffer info:',
+            '* Basename: ' .. vim.fn.expand('%:t'),
             '* Rel path: ' .. vim.fn.expand('%'),
             '* Abs path: ' .. vim.fn.expand('%:p'),
             '* Filetype: ' .. vim.bo.filetype,
             '* Shift width: ' .. vim.bo.shiftwidth,
             '* Expand tab: ' .. tostring(vim.bo.expandtab),
             '* Encoding: ' .. vim.bo.fileencoding,
+            '* File size: ' .. format_bytes(stat.size or 0),
             '* LS: ' .. table.concat(
                 vim.tbl_map(function(x)
                     return x.name
