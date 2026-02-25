@@ -466,6 +466,70 @@ hs.hotkey.bind(HYPER_KEY, 'm', function()
 end)
 hs.hotkey.bind(HYPER_KEY, 'q', cycle_quarters)
 
+-- ===================================================
+--   Brightness control (F1/F2)
+-- ===================================================
+local M1DDC = '/opt/homebrew/bin/m1ddc'
+
+local function get_external_display_uuid(screen_name)
+    local output = hs.execute(M1DDC .. ' display list')
+    if not output then
+        return nil
+    end
+    for line in output:gmatch('[^\n]+') do
+        local name, uuid = line:match('%[%d+%]%s+(.-)%s+%((.-)%)')
+        if name and name ~= '(null)' and screen_name:find(name, 1, true) then
+            return uuid
+        end
+    end
+    return nil
+end
+
+local function adjust_brightness(delta)
+    local screen = hs.screen.mainScreen()
+    if not screen then
+        return
+    end
+
+    if screen:name():find('Built%-in') then
+        local current = screen:getBrightness()
+        if not current then
+            return nav_alert('Cannot read brightness')
+        end
+        local new_val = math.max(0, math.min(1, current + delta / 100))
+        screen:setBrightness(new_val)
+        nav_alert('Brightness: ' .. math.floor(new_val * 100) .. '%')
+    else
+        local uuid = get_external_display_uuid(screen:name())
+        if not uuid then
+            return nav_alert('Display not found in m1ddc')
+        end
+        local cmd = M1DDC .. ' display ' .. uuid .. ' chg luminance ' .. delta
+        local output = hs.execute(cmd)
+        local new_val = output and tonumber(output:match('%d+'))
+        if new_val then
+            nav_alert('Brightness: ' .. new_val .. '%')
+        else
+            nav_alert('m1ddc failed')
+        end
+    end
+end
+
+hs.eventtap.new({ hs.eventtap.event.types.systemDefined }, function(event)
+    local data = event:systemKey()
+    if not data or not data.down then
+        return false
+    end
+    if data.key == 'BRIGHTNESS_DOWN' then
+        adjust_brightness(-10)
+        return true
+    elseif data.key == 'BRIGHTNESS_UP' then
+        adjust_brightness(10)
+        return true
+    end
+    return false
+end):start()
+
 -- Timers - open with HYPER+T
 do
     local timerRef = nil -- fires at end

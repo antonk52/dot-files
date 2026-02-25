@@ -10,6 +10,9 @@ export DOT_FILES="$HOME"/dot-files
 export LANG=en_US.UTF-8
 # reduce the timeout between switching modes
 export KEYTIMEOUT=1
+# disable telemetry in github cli
+export GH_TELEMETRY=false
+export DO_NOT_TRACK=true
 
 # ============================================== HISTORY
 export HISTFILE="$HOME"/.zsh_history

@@ -166,6 +166,7 @@ setup_brew() {
     brew install jq
     brew install lua-language-server
     brew install luacheck
+    brew install m1ddc
     brew install neovim
     brew install node
     brew install openssl
@@ -183,7 +184,6 @@ setup_brew() {
     brew install hammerspoon
     brew install karabiner-elements
     brew install keycastr
-    brew install monitorcontrol
     brew install raycast
     brew install vlc
 
