@@ -23,7 +23,7 @@ end
 
 local function throttle(fn, delay)
     local timer = vim.loop.new_timer() --[[ @as uv.uv_timer_t ]]
-    return function(a, b)
+    return function(a, b, c)
         if timer:is_active() then
             timer:stop()
         end
@@ -31,13 +31,17 @@ local function throttle(fn, delay)
             delay,
             0,
             vim.schedule_wrap(function()
-                fn(a, b)
+                fn(a, b, c)
             end)
         )
     end
 end
 
-local update_swin_position = throttle(function(swin, bufnr)
+local CHAR_FULL = '▐'
+local CHAR_UPPER = '▝'
+local CHAR_LOWER = '▗'
+
+local update_swin_position = throttle(function(swin, sbuf, bufnr)
     if not vim.api.nvim_win_is_valid(swin) then
         return
     elseif not vim.api.nvim_buf_is_valid(bufnr) then
@@ -52,18 +56,37 @@ local update_swin_position = throttle(function(swin, bufnr)
     local win_width = vim.api.nvim_win_get_width(0)
     local top_line = vim.fn.line('w0')
 
-    local swin_top = math.floor((top_line / total_lines) * win_height)
+    local swin_top_frac = (top_line / total_lines) * win_height
+    local swin_top = math.floor(swin_top_frac)
+    local top_half = (swin_top_frac - swin_top) >= 0.5
 
-    local swin_height = math.floor((win_height / total_lines) * win_height)
-    if swin_height < 1 then
-        swin_height = 1
-    elseif swin_height > win_height then
-        swin_height = win_height
-    end
+    local swin_height_frac = (win_height / total_lines) * win_height
+    local base_height = math.max(1, math.min(win_height, math.floor(swin_height_frac + 0.5)))
 
     local bottom_line = vim.fn.line('w$')
     if bottom_line == total_lines then
-        swin_top = win_height - swin_height
+        swin_top = win_height - base_height
+        top_half = false
+    end
+
+    local swin_height = base_height
+    local top_char = CHAR_FULL
+    local bottom_char = CHAR_FULL
+
+    if top_half and base_height < win_height then
+        swin_height = base_height + 1
+        top_char = CHAR_LOWER
+        bottom_char = CHAR_UPPER
+    end
+
+    vim.api.nvim_buf_set_lines(sbuf, 0, 1, false, { top_char })
+    vim.api.nvim_buf_set_lines(sbuf, swin_height - 1, swin_height, false, { bottom_char })
+    if swin_height > 2 then
+        local mid = {}
+        for _ = 2, swin_height - 1 do
+            mid[#mid + 1] = CHAR_FULL
+        end
+        vim.api.nvim_buf_set_lines(sbuf, 1, swin_height - 1, false, mid)
     end
 
     vim.api.nvim_win_set_height(swin, swin_height)
@@ -93,7 +116,7 @@ function M.setup()
     vim.api.nvim_set_option_value('winhighlight', 'NormalNC:WinSeparator', { win = swin })
 
     -- update position for the initial buffer on nvim enter
-    update_swin_position(swin, 0)
+    update_swin_position(swin, sbuf, 0)
 
     -- subscribe to events for window movement
     vim.api.nvim_create_autocmd('BufEnter', {
@@ -119,7 +142,7 @@ function M.setup()
                     return swin_hide(swin)
                 end
 
-                update_swin_position(swin, bufnr)
+                update_swin_position(swin, sbuf, bufnr)
 
                 vim.api.nvim_create_autocmd(
                     { 'WinScrolled', 'WinResized', 'FocusGained', 'WinEnter' },
@@ -129,7 +152,7 @@ function M.setup()
                             if not vim.api.nvim_buf_is_valid(bufnr) then
                                 return swin_hide(swin)
                             end
-                            update_swin_position(swin, bufnr)
+                            update_swin_position(swin, sbuf, bufnr)
                         end,
                     }
                 )
@@ -146,7 +169,7 @@ function M.setup()
     })
 
     vim.api.nvim_create_user_command('ResetScrollbar', function()
-        update_swin_position(swin, 0)
+        update_swin_position(swin, sbuf, 0)
     end, { nargs = 0 })
 end
 
