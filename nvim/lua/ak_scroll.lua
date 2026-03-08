@@ -48,8 +48,8 @@ local function is_enabled(buf)
     return not vim.o.paste
         and vim.fn.reg_executing() == ''
         and vim.fn.reg_recording() == ''
-        and resolve('snacks_scroll', true)
         and vim.bo[buf].buftype ~= 'terminal'
+        and resolve('snacks_scroll', true)
         and resolve('snacks_animate', true)
         and resolve('snacks_animate_scroll', true)
 end
@@ -166,6 +166,10 @@ local function winsaveview(win)
     return vim.api.nvim_win_call(win, vim.fn.winsaveview)
 end
 
+local function is_float(win)
+    return vim.api.nvim_win_get_config(win).relative ~= ''
+end
+
 local function sync_current(state)
     if state and vim.api.nvim_win_is_valid(state.win) then
         state.current = winsaveview(state.win)
@@ -216,8 +220,13 @@ local function drop_state(win)
 end
 
 function State.get(win)
-    local buf = vim.api.nvim_win_is_valid(win) and vim.api.nvim_win_get_buf(win)
-    if not buf or not is_enabled(buf) then
+    if not vim.api.nvim_win_is_valid(win) or is_float(win) then
+        drop_state(win)
+        return nil
+    end
+
+    local buf = vim.api.nvim_win_get_buf(win)
+    if not is_enabled(buf) then
         drop_state(win)
         return nil
     end
@@ -340,7 +349,7 @@ local function check(win)
             return
         end
 
-        vim.api.nvim_win_call(win, function()
+        local ok = pcall(vim.api.nvim_win_call, win, function()
             if done then
                 vim.fn.winrestview(target)
                 sync_current(state)
@@ -363,6 +372,10 @@ local function check(win)
 
             local virtcol = math.floor(col_from + (col_to - col_from) * value / scrolls)
             vim.cmd(('keepjumps normal! %s%dH%d|'):format(scroll_cmd, move_target, virtcol + 1))
+            if not state:valid() then
+                state:stop()
+                return
+            end
 
             if vim.v.count ~= count then
                 local cursor = vim.api.nvim_win_get_cursor(win)
@@ -372,6 +385,9 @@ local function check(win)
 
             sync_current(state)
         end)
+        if not ok then
+            state:stop()
+        end
     end)
 end
 
