@@ -9,15 +9,18 @@ mouse-scroll-multiplier = 1.1
 # darken from #fff so it is easier on the eyes
 foreground = #f5f7ff
 
-# disable ligatures
+# disable ligatures @
 font-feature = -calt
-font-family = Fira Code
+# font-family = Fira Code
+
+# default font line height renders taller than Fira Code
+adjust-cell-height = 1
 
 # do not blink
 cursor-style-blink = false
 
 # bump font size
-font-size = 13
+font-size = 14
 
 window-padding-balance = true
 window-padding-x = 0
@@ -25,4 +28,5 @@ window-padding-y = 0
 
 quit-after-last-window-closed = true
 
-auto-update-channel = stable
+# auto-update-channel = stable
+auto-update-channel = tip
