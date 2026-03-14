@@ -91,8 +91,11 @@ local groups = {
     ['@lsp.type.decorator'] = { fg = colors.dark_4 },
 
     -- Plugins
-    MiniCursorWord = { link = 'Visual' },
-    MiniCursorwordCurrent = { bg = colors.light_4 },
+    MiniCursorWord = { bg = colors.light_2 },
+    MiniCursorwordCurrent = { bg = colors.light_3 },
+
+    MiniPickMatchCurrent = { bg = colors.light_3 },
+    MiniPickMatchRanges = { bold = true },
 
     SnacksPickerDir = { link = 'Directory' },
     SnacksPickerCmd = { link = 'Identifier' },
