@@ -9,6 +9,12 @@ local SCROLL_UP = vim.api.nvim_replace_termcodes('<c-y>', true, true, true)
 local SCROLL_DOWN = vim.api.nvim_replace_termcodes('<c-e>', true, true, true)
 local WHEEL_UP = vim.api.nvim_replace_termcodes('<ScrollWheelUp>', true, true, true)
 local WHEEL_DOWN = vim.api.nvim_replace_termcodes('<ScrollWheelDown>', true, true, true)
+local WHEEL_LEFT = vim.api.nvim_replace_termcodes('<ScrollWheelLeft>', true, true, true)
+local WHEEL_RIGHT = vim.api.nvim_replace_termcodes('<ScrollWheelRight>', true, true, true)
+local WHEEL_SHIFT_UP = vim.api.nvim_replace_termcodes('<S-ScrollWheelUp>', true, true, true)
+local WHEEL_SHIFT_DOWN = vim.api.nvim_replace_termcodes('<S-ScrollWheelDown>', true, true, true)
+local WHEEL_SHIFT_LEFT = vim.api.nvim_replace_termcodes('<S-ScrollWheelLeft>', true, true, true)
+local WHEEL_SHIFT_RIGHT = vim.api.nvim_replace_termcodes('<S-ScrollWheelRight>', true, true, true)
 
 local mouse_scrolling = false
 local on_key_ns = nil
@@ -25,6 +31,17 @@ local SCROLL_ANIMATE_REPEAT = {
     duration = { step = 5, total = 50 },
     easing = 'linear',
 }
+
+local function is_mouse_scroll_key(key)
+    return key == WHEEL_UP
+        or key == WHEEL_DOWN
+        or key == WHEEL_LEFT
+        or key == WHEEL_RIGHT
+        or key == WHEEL_SHIFT_UP
+        or key == WHEEL_SHIFT_DOWN
+        or key == WHEEL_SHIFT_LEFT
+        or key == WHEEL_SHIFT_RIGHT
+end
 
 local function is_enabled(buf)
     if not buf then
@@ -219,6 +236,12 @@ local function drop_state(win)
     end
 end
 
+local function stop_all()
+    for win in pairs(states) do
+        drop_state(win)
+    end
+end
+
 function State.get(win)
     if not vim.api.nvim_win_is_valid(win) or is_float(win) then
         drop_state(win)
@@ -391,6 +414,30 @@ local function check(win)
     end)
 end
 
+local function set_enabled(enabled)
+    vim.g.smooth_scroll = enabled
+    if not enabled then
+        stop_all()
+        return
+    end
+
+    for _, win in ipairs(vim.api.nvim_list_wins()) do
+        State.get(win)
+    end
+end
+
+function M.enable()
+    set_enabled(true)
+end
+
+function M.disable()
+    set_enabled(false)
+end
+
+function M.toggle()
+    set_enabled(not vim.g.smooth_scroll)
+end
+
 function M.setup()
     states = {}
     mouse_scrolling = false
@@ -401,8 +448,7 @@ function M.setup()
     end
 
     on_key_ns = vim.on_key(function(resolved, typed)
-        local key = typed or resolved
-        if key == WHEEL_UP or key == WHEEL_DOWN then
+        if is_mouse_scroll_key(resolved) or is_mouse_scroll_key(typed) then
             mouse_scrolling = true
         end
     end)
@@ -457,6 +503,22 @@ function M.setup()
                 end
             end
         end,
+    })
+
+    pcall(vim.api.nvim_del_user_command, 'ScrollEnable')
+    pcall(vim.api.nvim_del_user_command, 'ScrollDisable')
+    pcall(vim.api.nvim_del_user_command, 'ScrollToggle')
+
+    vim.api.nvim_create_user_command('ScrollEnable', M.enable, {
+        desc = 'Enable animated scrolling',
+    })
+
+    vim.api.nvim_create_user_command('ScrollDisable', M.disable, {
+        desc = 'Disable animated scrolling',
+    })
+
+    vim.api.nvim_create_user_command('ScrollToggle', M.toggle, {
+        desc = 'Toggle animated scrolling',
     })
 end
 
