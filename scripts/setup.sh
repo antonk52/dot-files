@@ -190,6 +190,7 @@ setup_brew() {
     echo "  Installing fonts..."
     brew tap homebrew/cask-fonts
     brew install font-fira-code
+    brew install font-jetbrains-mono
 
     echo "✅ Homebrew setup complete"
 }

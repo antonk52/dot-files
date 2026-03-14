@@ -221,9 +221,9 @@ require('mini.deps').setup({ path = { package = PLUGINS_ROOT } })
 local add = require('mini.deps').add
 
 add({ source = 'tpope/vim-fugitive', checkout = '61b51c0' })
-add({ source = 'b0o/schemastore.nvim', checkout = '84d86aa' })
-add({ source = 'neovim/nvim-lspconfig', checkout = 'ab5139c' })
-add({ source = 'nvim-mini/mini.nvim', checkout = 'ccfc8c3' })
+add({ source = 'b0o/schemastore.nvim', checkout = 'e75f236' })
+add({ source = 'neovim/nvim-lspconfig', checkout = '2163c54' })
+add({ source = 'nvim-mini/mini.nvim', checkout = 'cad365c' })
 add({ source = 'jake-stewart/auto-cmdheight.nvim', checkout = '82619ea' })
 
 require('antonk52.lsp').setup()
@@ -239,6 +239,7 @@ require('mini.bracketed').setup()
 require('mini.pairs').setup() -- autoclose ([{
 require('mini.cursorword').setup({ delay = 300 })
 require('mini.completion').setup({})
+vim.opt.completeopt:append('fuzzy')
 require('mini.cmdline').setup({})
 require('mini.splitjoin').setup() -- gS to toggle listy things
 require('mini.pick').setup({
@@ -253,8 +254,129 @@ require('mini.pick').setup({
 })
 require('mini.extra').setup({})
 
+do
+    local query_is_ignorecase = function(query)
+        if not vim.o.ignorecase then
+            return false
+        elseif not vim.o.smartcase then
+            return true
+        end
+
+        local prompt = table.concat(query)
+        return prompt == prompt:lower()
+    end
+
+    local match_query_group = function(query)
+        local parts = { {} }
+        for _, x in ipairs(query) do
+            local is_whitespace = x:find('^%s+$') ~= nil
+            if is_whitespace then
+                table.insert(parts, {})
+            else
+                table.insert(parts[#parts], x)
+            end
+        end
+
+        return #parts > 1, vim.tbl_map(table.concat, parts)
+    end
+
+    local match_find_query = function(s, query, init)
+        local first, to = string.find(s, query[1], init, true)
+        if first == nil then
+            return nil, nil
+        end
+
+        local last = first --[[@as number?]]
+        for i = 2, #query do
+            last, to = string.find(s, query[i], to + 1, true)
+            if not last then
+                return nil, nil
+            end
+        end
+
+        return first, last
+    end
+
+    local buf_lines_match_col = function(line, query)
+        if type(line) ~= 'string' or #query == 0 then
+            return nil
+        elseif query_is_ignorecase(query) then
+            line = line:lower()
+            query = vim.tbl_map(string.lower, query)
+        end
+
+        local is_fuzzy_forced = query[1] == '*'
+        local is_exact_plain = query[1] == "'"
+        local is_exact_start = query[1] == '^'
+        local is_exact_end = query[#query] == '$'
+        local is_grouped, grouped_parts = match_query_group(query)
+
+        if is_fuzzy_forced or is_exact_plain or is_exact_start or is_exact_end then
+            local start_offset = (is_fuzzy_forced or is_exact_plain or is_exact_start) and 2 or 1
+            local end_offset = #query
+                - ((not is_fuzzy_forced and not is_exact_plain and is_exact_end) and 1 or 0)
+            query = vim.list_slice(query, start_offset, end_offset)
+        elseif is_grouped then
+            query = grouped_parts
+        end
+
+        if #query == 0 then
+            return nil
+        end
+
+        local is_fuzzy_plain = not (is_exact_plain or is_exact_start or is_exact_end) and #query > 1
+        if is_fuzzy_forced or is_fuzzy_plain then
+            local first, last = match_find_query(line, query, 1)
+            if first == nil then
+                return nil
+            elseif first == last then
+                return first
+            end
+
+            local best_first, _best_last, best_width = first, last, last - first
+            while last do
+                local width = last - first
+                if width < best_width then
+                    best_first, _best_last, best_width = first, last, width
+                end
+                first, last = match_find_query(line, query, first + 1)
+            end
+
+            return best_first
+        end
+
+        local prefix = is_exact_start and '^' or ''
+        local suffix = is_exact_end and '$' or ''
+        local pattern = prefix .. vim.pesc(table.concat(query)) .. suffix
+        return string.find(line, pattern)
+    end
+
+    local choose_buf_line_at_match = function(item)
+        local query = require('mini.pick').get_picker_query() or {}
+        local line = vim.api.nvim_buf_get_lines(item.bufnr, item.lnum - 1, item.lnum, false)[1]
+        local col = buf_lines_match_col(line, query)
+
+        if col then
+            item.col = col
+        end
+
+        return require('mini.pick').default_choose(item)
+    end
+
+    keymap.set('n', '<leader>/', function()
+        require('mini.extra').pickers.buf_lines(
+            { scope = 'current' },
+            { source = { choose = choose_buf_line_at_match } }
+        )
+    end)
+    keymap.set('n', '<leader>?', function()
+        require('mini.extra').pickers.buf_lines(
+            { scope = 'all' },
+            { source = { choose = choose_buf_line_at_match } }
+        )
+    end)
+end
 keymap.set('n', '<leader>b', '<cmd>Pick buffers<cr>')
-keymap.set('n', '<leader>/', "<cmd>Pick buf_lines scope='current'<cr>")
 keymap.set('n', '<leader>r', '<cmd>Pick resume<cr>')
 keymap.set('n', '<leader>T', ':Pick ')
 keymap.set('n', '<leader>u', "<cmd>Pick list scope='change'<cr>")
@@ -262,6 +384,7 @@ keymap.set('n', '<leader>d', "<cmd>Pick diagnostic scope='current'<cr>")
 keymap.set('n', '<leader>D', "<cmd>Pick diagnostic scope='all'<cr>")
 keymap.set('n', '<leader>;', '<cmd>Pick commands<cr>')
 keymap.set('n', '<leader>:', '<cmd>Pick grep<cr>')
+keymap.set('n', '<leader>G', '<cmd>Pick grep_live<cr>')
 usercmd('GitDiffPicker', 'lua MiniExtra.pickers.git_hunks()<cr>', {})
 
 require('mini.hipatterns').setup({
@@ -281,7 +404,8 @@ require('mini.hipatterns').setup({
         tailwind = require('antonk52.tailwind').gen_highlighter(),
     },
 })
-require('mini.ai').setup({})
+-- disable those as they conflict with treesitter selection in nvim 0.12
+require('mini.ai').setup({ mappings = { around_next = '', inside_next = '' } })
 require('mini.surround').setup({
     mappings = {
         add = 'ys',
@@ -300,7 +424,7 @@ if vim.fs.root(0, '.git') ~= nil then
     require('mini.diff').setup({
         view = {
             style = 'sign',
-            signs = { add = '+', change = '+', delete = '_' },
+            signs = { add = '+', change = '~', delete = '_' },
         },
     })
     usercmd('MiniDiffToggleBufferOverlay', function()
