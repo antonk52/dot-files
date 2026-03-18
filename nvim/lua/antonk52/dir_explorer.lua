@@ -270,6 +270,12 @@ local function explorer_refresh(self, entries)
                         local linenr = i - 1
                         local col = 0
                         vim.schedule(function()
+                            if not vim.api.nvim_buf_is_valid(self.buf) then
+                                return
+                            end
+                            if linenr >= vim.api.nvim_buf_line_count(self.buf) then
+                                return
+                            end
                             vim.api.nvim_buf_set_extmark(self.buf, ns_id_symlinks, linenr, col, {
                                 virt_text = { { '⏤⏤► ' .. target, 'Comment' } },
                                 hl_mode = 'combine',
