@@ -1,0 +1,24 @@
+{
+  "plugins": {
+    "auto-cmdheight.nvim": {
+      "rev": "82619eab0268f27024e1e0981ec3721a003ab2b7",
+      "src": "https://github.com/jake-stewart/auto-cmdheight.nvim"
+    },
+    "mini.nvim": {
+      "rev": "debd726e1b620e9934d554c2772de2e99cd3ccbe",
+      "src": "https://github.com/nvim-mini/mini.nvim"
+    },
+    "nvim-lspconfig": {
+      "rev": "16812abf0e8d8175155f26143a8504e8253e92b0",
+      "src": "https://github.com/neovim/nvim-lspconfig"
+    },
+    "schemastore.nvim": {
+      "rev": "25a82a141dc0caf3b9b82002a35caf3c9feab741",
+      "src": "https://github.com/b0o/schemastore.nvim"
+    },
+    "vim-fugitive": {
+      "rev": "3b753cf8c6a4dcde6edee8827d464ba9b8c4a6f0",
+      "src": "https://github.com/tpope/vim-fugitive"
+    }
+  }
+}

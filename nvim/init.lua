@@ -217,14 +217,13 @@ vim.opt.rtp:prepend(MINI_PATH)
 
 vim.g.fugitive_legacy_commands = 0
 
-require('mini.deps').setup({ path = { package = PLUGINS_ROOT } })
-local add = require('mini.deps').add
-
-add({ source = 'tpope/vim-fugitive', checkout = '61b51c0' })
-add({ source = 'b0o/schemastore.nvim', checkout = 'e75f236' })
-add({ source = 'neovim/nvim-lspconfig', checkout = '2163c54' })
-add({ source = 'nvim-mini/mini.nvim', checkout = 'cad365c' })
-add({ source = 'jake-stewart/auto-cmdheight.nvim', checkout = '82619ea' })
+vim.pack.add({
+    'https://github.com/tpope/vim-fugitive',
+    'https://github.com/b0o/schemastore.nvim',
+    'https://github.com/neovim/nvim-lspconfig',
+    'https://github.com/nvim-mini/mini.nvim',
+    'https://github.com/jake-stewart/auto-cmdheight.nvim',
+})
 
 require('antonk52.lsp').setup()
 

@@ -24,7 +24,7 @@ function M.setup()
     if not vim.endswith(vim.uv.cwd() or vim.fn.getcwd(), '/www') then
         vim.lsp.enable({ 'ts_ls', 'biome', 'eslint' })
     end
-    if vim.env.WORK == nil and vim.fn.has('nvim-0.12') == 1 then
+    if vim.env.WORK == nil then
         vim.lsp.enable({ 'copilot' })
         vim.lsp.inline_completion.enable()
         vim.keymap.set('i', '<Tab>', function()

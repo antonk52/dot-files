@@ -13,25 +13,19 @@
   "workspace.library": [
     "$VIMRUNTIME",
     "lua",
-    "nvim-test",
-    // TODO remove after 0.12 update
-    "${3rd}/luv/library",
-    "${3rd}/busted/library"
+    "nvim-test"
   ],
   "workspace.ignoreDir": [
     "**/tests/**",
-    "**/plugged/blink.cmp/**",
-    "**/plugged/codecompanion.nvim/**",
     "**/plugged/mini.nvim/**",
     "**/plugged/nvim-lspconfig/**",
     "**/plugged/nvim-treesitter/**",
-    "**/plugged/plenary.nvim/**",
-    "**/plugged/schemastore.nvim/**",
-    // "**/plugged/snacks.nvim/**",
+    "**/plugged/schemastore.nvim/**"
   ],
   // "diagnostics.libraryFiles": "Disable",
   "diagnostics.libraryFiles": "Opened",
   "completion.callSnippet": "Replace",
+  "completion.showParams": false,
   "semantic.enable": true,
   "semantic.annotation": true,
   "semantic.keyword": false,
