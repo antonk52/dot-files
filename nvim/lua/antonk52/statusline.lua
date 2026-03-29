@@ -127,45 +127,11 @@ function _G.print_statusline_extras()
 end
 
 function M.setup()
-    if vim.diagnostic.status then
-        local status = vim.diagnostic.status
-        -- wrap vim.diagnostic.status to append separator if there are diagnostics,
-        -- you cannot wrap statusline evals `%{%` with `%(` if eval has color reset string
-        vim.diagnostic.status = function()
-            local res = status()
-            return res .. (res ~= '' and SPACER or '')
-        end
-    else
-        local hl_map = { 'Error', 'Warn', 'Info', 'Hint' }
-        vim.diagnostic.status = function()
-            local counts = vim.diagnostic.count(0)
-            local user_signs = vim.tbl_get(
-                vim.diagnostic.config() --[[@as vim.diagnostic.Opts]],
-                'signs',
-                'text'
-            ) or {}
-            local signs = vim.tbl_extend('keep', user_signs, { 'E', 'W', 'I', 'H' })
-            local result_str = vim.iter(pairs(counts))
-                :map(function(severity, count)
-                    if count == 0 then
-                        return ''
-                    end
-                    return hi_next('DiagnosticSign' .. hl_map[severity])
-                        .. ('%s:%s'):format(signs[severity], count)
-                        .. hi_next('')
-                end)
-                :join(' ')
-
-            return result_str .. (result_str ~= '' and SPACER or '')
-        end
-        vim.api.nvim_create_autocmd('DiagnosticChanged', {
-            pattern = '*',
-            desc = 'Refresh statusline on DiagnosticChanged',
-            -- schedule redraw, otherwise throws when exiting fugitive status
-            callback = debounce(function()
-                vim.cmd.redrawstatus()
-            end, 30),
-        })
+    -- wrap vim.diagnostic.status to append separator if there are diagnostics,
+    -- you cannot wrap statusline evals `%{%` with `%(` if eval has color reset string
+    function _G.ak_diagnostic_status()
+        local res = vim.diagnostic.status()
+        return res .. (res ~= '' and SPACER or '')
     end
     vim.opt.statusline = table.concat({
         ' %f%( %m%)', -- filename, modified, readonly
@@ -173,7 +139,7 @@ function M.setup()
         '%{%get(b:, "lsp_location", "")%}', -- lsp symbols
         '%= ', -- left align
         '%(%{get(g:, "lsp_status")} │ %)', -- lsp status
-        '%{%v:lua.vim.diagnostic.status()%}', -- diagnostics
+        '%{%v:lua.ak_diagnostic_status()%}', -- diagnostics
         '%{%get(b:, "minidiff_summary_string", "")%}', -- git diff
         '%{%v:lua.print_statusline_extras()%}', -- work extras
         '%l:%c ', -- 'line:column'
