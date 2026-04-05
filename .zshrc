@@ -83,19 +83,21 @@ _setup_completion() {
     # autojump with `j`
     ZSHZ_CMD=j source_if_exists "$DOT_FILES"/dependencies/zsh-z/zsh-z.plugin.zsh
 
-    # load edit-command-line widget
-    autoload -U edit-command-line
-    zle -N edit-command-line
-
     bindkey "^R" history-incremental-search-backward
-    # ctrl+v to edit command in vim
-    bindkey "^v" edit-command-line
 
     # source personal aliases
     source "$DOT_FILES/shell-aliases"
 
     # Vi mode for command line
     bindkey -v
+
+    # load edit-command-line widget
+    autoload -U edit-command-line
+    zle -N edit-command-line
+
+    # ctrl+v to edit command in $EDITOR from vi keymaps
+    bindkey -M viins '^V' edit-command-line
+    bindkey -M vicmd '^V' edit-command-line
 
     unfunction _setup_completion
 }

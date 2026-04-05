@@ -223,9 +223,28 @@ vim.pack.add({
     'https://github.com/neovim/nvim-lspconfig',
     'https://github.com/nvim-mini/mini.nvim',
     'https://github.com/jake-stewart/auto-cmdheight.nvim',
+    'https://github.com/nvim-treesitter/nvim-treesitter',
 })
 
 require('antonk52.lsp').setup()
+
+require('nvim-treesitter').setup({})
+usercmd('TSInstallParsers', function()
+    require('nvim-treesitter').install({
+        'javascript',
+        'jsdoc',
+        'typescript',
+        'tsx',
+        'go',
+        'yaml',
+        'gitcommit',
+    })
+end, { nargs = 0 })
+vim.api.nvim_create_autocmd('FileType', {
+    callback = function()
+        pcall(vim.treesitter.start)
+    end,
+})
 
 -- git & fugitive --
 usercmd('GitAddPatch', ':tab G add --patch', { nargs = 0 })
