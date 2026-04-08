@@ -1,5 +1,3 @@
-pcall(vim.treesitter.start, 0)
-
 vim.keymap.set('n', '<localleader>t', function()
     -- save cursor position
     local cursor = vim.api.nvim_win_get_cursor(0)

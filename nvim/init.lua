@@ -125,6 +125,8 @@ usercmd('GitBrowse', function(x)
         line_end = x.range > 0 and x.line2 or nil,
     })
 end, { nargs = 0, range = true, desc = 'Open in browser' })
+usercmd('PackUpdate', ':lua vim.pack.update()<cr>', { nargs = 0 })
+usercmd('PackRemovePlugins', '!rm -rf ~/.local/share/nvim/site', { nargs = 0 })
 
 vim.filetype.add({
     filename = { ['.eslintrc.json'] = 'jsonc' },
@@ -186,7 +188,6 @@ vim.g.loaded_ruby_provider = 0
 vim.g.loaded_perl_provider = 0
 
 -- Disable selected built-in runtime plugins
-vim.g.loaded_2html_plugin = 1
 vim.g.loaded_gzip = 1
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwFileHandlers = 1
@@ -195,25 +196,10 @@ vim.g.loaded_netrwSettings = 1
 vim.g.loaded_remote_plugins = 1
 vim.g.loaded_tar = 1
 vim.g.loaded_tarPlugin = 1
-vim.g.loaded_tohtml = 1
 vim.g.loaded_tutor = 1
 vim.g.loaded_tutor_mode_plugin = 1
 vim.g.loaded_zip = 1
 vim.g.loaded_zipPlugin = 1
-
--- Bootstrap mini.deps plugin manager
-local PLUGINS_ROOT = vim.env.HOME .. '/dot-files/nvim'
-local MINI_PATH = PLUGINS_ROOT .. '/plugged/mini.nvim'
-if not vim.uv.fs_stat(MINI_PATH) then
-    vim.system({
-        'git',
-        'clone',
-        '--filter=blob:none',
-        'https://github.com/nvim-mini/mini.nvim',
-        MINI_PATH,
-    }):wait()
-end
-vim.opt.rtp:prepend(MINI_PATH)
 
 vim.g.fugitive_legacy_commands = 0
 
