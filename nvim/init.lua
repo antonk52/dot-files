@@ -247,6 +247,15 @@ vim.opt.completeopt:append('fuzzy')
 require('mini.cmdline').setup({})
 require('mini.splitjoin').setup() -- gS to toggle listy things
 require('mini.pick').setup({
+    window = {
+        config = function()
+            return {
+                width = math.min(140, vim.o.columns - 2),
+                height = math.min(32, vim.o.lines - 3),
+            }
+        end,
+    },
+    options = { content_from_bottom = true },
     source = {
         show = function(buf_id, items, query)
             require('mini.pick').default_show(buf_id, items, query, { show_icons = false })

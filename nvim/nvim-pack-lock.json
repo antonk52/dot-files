@@ -5,11 +5,11 @@
       "src": "https://github.com/jake-stewart/auto-cmdheight.nvim"
     },
     "mini.nvim": {
-      "rev": "27a3e747a4e603b4121f5759e74020430ec7b7d5",
+      "rev": "418ef4930ddabe80f449c6f1323f8b6abb172d1c",
       "src": "https://github.com/nvim-mini/mini.nvim"
     },
     "nvim-lspconfig": {
-      "rev": "8a9378a822719346a0288fa004dab302ca3c0a8f",
+      "rev": "4b7fbaa239c5db6b36f424a4521ca9f1a401be33",
       "src": "https://github.com/neovim/nvim-lspconfig"
     },
     "nvim-treesitter": {
@@ -17,7 +17,7 @@
       "src": "https://github.com/nvim-treesitter/nvim-treesitter"
     },
     "schemastore.nvim": {
-      "rev": "b2e84d00db4d5432f471d58898e796b478f075a7",
+      "rev": "250aed7415ddd6cb3ea321490c7b35094ed9148d",
       "src": "https://github.com/b0o/schemastore.nvim"
     },
     "vim-fugitive": {
