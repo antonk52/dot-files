@@ -37,9 +37,12 @@ local function throttle(fn, delay)
     end
 end
 
+-- https://en.wikipedia.org/wiki/List_of_Unicode_characters#Block_Elements
 local CHAR_FULL = '▐'
 local CHAR_UPPER = '▝'
 local CHAR_LOWER = '▗'
+-- █ alternative finer characters
+--              ▔🮂🮃▀🮄🮅🮆█▇▆▅▄▃▂▁
 
 local update_swin_position = throttle(function(swin, sbuf, bufnr)
     if not vim.api.nvim_win_is_valid(swin) then
@@ -50,7 +53,7 @@ local update_swin_position = throttle(function(swin, sbuf, bufnr)
     local total_lines = vim.api.nvim_buf_line_count(bufnr)
     local win_height = vim.api.nvim_win_get_height(0)
 
-    if win_height > total_lines then
+    if win_height >= total_lines then
         return swin_hide(swin)
     end
     local win_width = vim.api.nvim_win_get_width(0)
@@ -61,20 +64,19 @@ local update_swin_position = throttle(function(swin, sbuf, bufnr)
     local top_half = (swin_top_frac - swin_top) >= 0.5
 
     local swin_height_frac = (win_height / total_lines) * win_height
-    local base_height = math.max(1, math.min(win_height, math.floor(swin_height_frac + 0.5)))
+    local swin_height = math.max(1, math.min(win_height, math.floor(swin_height_frac + 0.5)))
 
     local bottom_line = vim.fn.line('w$')
     if bottom_line == total_lines then
-        swin_top = win_height - base_height
+        swin_top = win_height - swin_height
         top_half = false
     end
 
-    local swin_height = base_height
     local top_char = CHAR_FULL
     local bottom_char = CHAR_FULL
 
-    if top_half and base_height < win_height then
-        swin_height = base_height + 1
+    if top_half and swin_height < win_height then
+        swin_height = swin_height + 1
         top_char = CHAR_LOWER
         bottom_char = CHAR_UPPER
     end
@@ -100,15 +102,8 @@ local update_swin_position = throttle(function(swin, sbuf, bufnr)
 end, vim.env.SSH and 32 or 8)
 
 function M.setup()
-    -- https://en.wikipedia.org/wiki/List_of_Unicode_characters#Block_Elements
-    local swin_char = '▐'
-    local swin_buf_lines = {}
-    while #swin_buf_lines < 100 do
-        table.insert(swin_buf_lines, swin_char)
-    end
     -- scrollbar buffer
     local sbuf = vim.api.nvim_create_buf(false, true)
-    vim.api.nvim_buf_set_lines(sbuf, 0, -1, false, swin_buf_lines)
     -- create a popup with scrollbar
     local swin = vim.api.nvim_open_win(sbuf, false, LAST_CONFIG)
 

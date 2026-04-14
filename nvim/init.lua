@@ -152,12 +152,12 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 require('antonk52.dir_explorer').setup()
 require('antonk52.statusline').setup()
 require('antonk52.infer_shiftwidth').setup()
+require('antonk52.scrollbar').setup()
 
 vim.defer_fn(function()
     require('ak_scroll').setup()
     require('ak_indentline').setup()
     require('antonk52.fzf').setup()
-    require('antonk52.scrollbar').setup()
     require('antonk52.debug_nvim').setup()
     require('antonk52.qf').setup()
     require('antonk52.treesitter_textobjects').setup()
