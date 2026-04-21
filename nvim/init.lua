@@ -412,7 +412,7 @@ require('mini.hipatterns').setup({
         low = { pattern = '%f[%w]()LOW()%f[%W]', group = 'DiagnosticInfo' },
         done = { pattern = '%f[%w]()DONE()%f[%W]', group = 'DiagnosticOk' },
         ids = { pattern = '%f[%w]()[DTPSNCX]%d+()%f[%W]', group = 'DiagnosticInfo' },
-        url = { pattern = '%f[%w]()https*://[^%s]+/*()', group = 'DiagnosticInfo' },
+        url = { pattern = '%f[%w]()https*://[^%s^(^)]+/*()', group = 'DiagnosticInfo' },
         hex_color = require('mini.hipatterns').gen_highlighter.hex_color(),
         tailwind = require('antonk52.tailwind').gen_highlighter(),
     },
