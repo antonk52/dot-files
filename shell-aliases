@@ -61,7 +61,20 @@ alias q='quit'
 alias docker_stop_all='docker stop "$(docker ps -q)"'
 
 export NOTES_PATH="$HOME"/Documents/notes
-alias notes="cd $NOTES_PATH && nvim \"${NOTES_PATH}/$(date +%Y)/$(date +%m).md\" -c NotesStart && cd -"
+# only set tmux window name if we're in a tmux session
+function notes() {
+    local session_name=""
+    if [ -n "$TMUX" ]; then
+        session_name="$(tmux display-message -p '#W')"
+        tmux rename-window notes
+    fi
+    cd "$NOTES_PATH"
+    nvim "$(date +%Y)/$(date +%m).md" -c "NotesStart"
+    cd -
+    if [ -n "$TMUX" ]; then
+        tmux rename-window "$session_name"
+    fi
+}
 
 alias nnvim="~/Downloads/nvim-nightly/bin/nvim"
 
