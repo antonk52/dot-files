@@ -430,7 +430,77 @@ require('mini.hipatterns').setup({
     },
 })
 -- disable those as they conflict with treesitter selection in nvim 0.12
-require('mini.ai').setup({ mappings = { around_next = '', inside_next = '' } })
+require('mini.ai').setup({
+    -- default maps for `il` and `al` for *last textobject*
+    mappings = { around_next = '', inside_next = '', around_last = '', inside_last = '' },
+    custom_textobjects = {
+        l = function(ai_type)
+            local line_num = vim.fn.line('.')
+            local line = vim.fn.getline(line_num)
+            if ai_type == 'i' then
+                local from_col = line:find('%S') or 1
+                local to_col = (line:match('.*%S()') or 2) - 1
+                return {
+                    from = { line = line_num, col = from_col },
+                    to = { line = line_num, col = to_col },
+                }
+            end
+            return {
+                from = { line = line_num, col = 1 },
+                to = { line = line_num, col = math.max(line:len(), 1) },
+            }
+        end,
+        i = function(ai_type)
+            local cur_line = vim.fn.line('.')
+            local cur_indent = vim.fn.indent(cur_line)
+            if vim.fn.getline(cur_line):match('^%s*$') then
+                for offset = 1, vim.fn.line('$') do
+                    for _, l in ipairs({ cur_line - offset, cur_line + offset }) do
+                        if
+                            l >= 1
+                            and l <= vim.fn.line('$')
+                            and not vim.fn.getline(l):match('^%s*$')
+                        then
+                            cur_indent = vim.fn.indent(l)
+                            goto found
+                        end
+                    end
+                end
+                ::found::
+            end
+            local top, bottom, last = cur_line, cur_line, vim.fn.line('$')
+            while
+                top > 1
+                and (vim.fn.getline(top - 1):match('^%s*$') or vim.fn.indent(top - 1) >= cur_indent)
+            do
+                top = top - 1
+            end
+            while
+                bottom < last
+                and (
+                    vim.fn.getline(bottom + 1):match('^%s*$')
+                    or vim.fn.indent(bottom + 1) >= cur_indent
+                )
+            do
+                bottom = bottom + 1
+            end
+            while bottom > top and vim.fn.getline(bottom):match('^%s*$') do
+                bottom = bottom - 1
+            end
+            while top < bottom and vim.fn.getline(top):match('^%s*$') do
+                top = top + 1
+            end
+            if ai_type == 'a' and top > 1 then
+                top = top - 1
+            end
+            return {
+                from = { line = top, col = 1 },
+                to = { line = bottom, col = math.max(vim.fn.getline(bottom):len(), 1) },
+                vis_mode = 'V',
+            }
+        end,
+    },
+})
 require('mini.surround').setup({
     mappings = {
         add = 'ys',
