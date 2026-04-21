@@ -4,6 +4,7 @@ vim.g.maplocalleader = ','
 local usercmd = vim.api.nvim_create_user_command
 local keymap = vim.keymap
 
+vim.opt.termguicolors = true
 -- highlight current cursor line
 vim.opt.cursorline = true
 -- insert mode caret is an underline
