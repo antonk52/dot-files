@@ -3,8 +3,8 @@ local EASYMOTION_NS = vim.api.nvim_create_namespace('EASYMOTION_NS')
 local EM_CHARS = vim.split('fjdkslgha;rueiwotyqpvbcnxmzFJDKSLGHARUEIWOTYQPVBCNXMZ', '')
 
 local function easy_motion()
-    local char1 = vim.fn.nr2char(vim.fn.getchar() --[[@as number]])
-    local char2 = vim.fn.nr2char(vim.fn.getchar() --[[@as number]])
+    local char1 = vim.fn.getcharstr()
+    local char2 = vim.fn.getcharstr()
     local line_idx_start, line_idx_end = vim.fn.line('w0'), vim.fn.line('w$')
     local bufnr = vim.api.nvim_get_current_buf()
     vim.api.nvim_buf_clear_namespace(bufnr, EASYMOTION_NS, 0, -1)
@@ -49,7 +49,7 @@ local function easy_motion()
 
     -- otherwise setting extmarks and waiting for next char is on the same frame
     vim.schedule(function()
-        local next_char = vim.fn.nr2char(vim.fn.getchar() --[[@as number]])
+        local next_char = vim.fn.getcharstr()
         if extmarks[next_char] then
             local pos = extmarks[next_char]
             -- to make <C-o> work

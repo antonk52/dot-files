@@ -169,6 +169,7 @@ local groups = {
     ['@keyword.conditional'] = { link = 'Conditional' },
     ['@keyword.conditional.tsx'] = { link = 'Conditional' },
     ['@keyword.function'] = { fg = colors.c0E },
+    ['@keyword.repeat'] = { fg = colors.c0E },
     ['@keyword.return'] = { fg = colors.c08, bold = true },
     ['@markup.strikethrough'] = { fg = colors.c04, strikethrough = true },
     ['@method'] = { fg = colors.c05 },

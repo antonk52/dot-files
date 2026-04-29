@@ -57,12 +57,6 @@ vim.cmd.color('lake_contrast')
 
 keymap.set('n', '<C-s>', '<cmd>lua vim.lsp.buf.signature_help()<cr>', { desc = 'Signature help' })
 keymap.set('n', '<leader>L', '<cmd>lua vim.diagnostic.open_float()<cr>', { desc = 'Line errors' })
-keymap.set('n', ']e', function()
-    vim.diagnostic.jump({ count = 1, severity = 1 })
-end, { desc = 'Next error diagnostic' })
-keymap.set('n', '[e', function()
-    vim.diagnostic.jump({ count = -1, severity = 1 })
-end, { desc = 'Prev error diagnostic' })
 
 keymap.set('n', '<leader>N', '<cmd>lua require("ak_npm").run()<cr>', { desc = 'Run npm scripts' })
 
@@ -88,7 +82,7 @@ keymap.set('n', '#', '<cmd>set hlsearch<cr>#', { desc = 'highlight search on nav
 keymap.set('n', '<tab>', 'za', { desc = 'toggle folds' })
 
 -- multicursor like https://www.kevinli.co/posts/2017-01-19-multiple-cursors-in-500-bytes-of-vimscript/
-vim.keymap.set('n', 'cn', '*``cgn', { desc = 'multicursor' })
+keymap.set('n', 'cn', '*``cgn', { desc = 'multicursor' })
 keymap.set('v', 'cn', function()
     vim.opt.hlsearch = true
     return 'y/\\V<C-r>=escape(@", "/")<CR><CR>``cgn'
@@ -246,7 +240,9 @@ usercmd('GitCommit', ':tab G commit', { nargs = 0 })
 keymap.set('n', '<leader>g', ':G ', { desc = 'Version control' })
 
 -- mini.nvim --
-require('mini.bracketed').setup()
+require('mini.bracketed').setup({
+    diagnostic = { suffix = 'e', options = { severity = vim.diagnostic.severity.ERROR } },
+})
 require('mini.pairs').setup() -- autoclose ([{
 require('mini.cursorword').setup({ delay = 300 })
 require('mini.completion').setup({})
@@ -412,16 +408,12 @@ keymap.set('n', '<leader>:', '<cmd>Pick grep<cr>')
 keymap.set('n', '<leader>G', '<cmd>Pick grep_live<cr>')
 usercmd('GitDiffPicker', 'lua MiniExtra.pickers.git_hunks()<cr>', {})
 
+local words = require('mini.extra').gen_highlighter.words
 require('mini.hipatterns').setup({
     highlighters = {
-        fixme = { pattern = '%f[%w]()FIXME()%f[%W]', group = 'DiagnosticError' },
-        todo = { pattern = '%f[%w]()TODO()%f[%W]', group = 'DiagnosticWarn' },
-        note = { pattern = '%f[%w]()NOTE()%f[%W]', group = 'DiagnosticInfo' },
-        info = { pattern = '%f[%w]()INFO()%f[%W]', group = 'DiagnosticInfo' },
-        high = { pattern = '%f[%w]()HIGH()%f[%W]', group = 'DiagnosticError' },
-        mid = { pattern = '%f[%w]()M[IE]D()%f[%W]', group = 'DiagnosticWarn' },
-        warn = { pattern = '%f[%w]()WARN()%f[%W]', group = 'DiagnosticWarn' },
-        low = { pattern = '%f[%w]()LOW()%f[%W]', group = 'DiagnosticInfo' },
+        err = words({ 'FIXME', 'HIGH' }, 'DiagnosticError'),
+        warn = words({ 'TODO', 'MID', 'MED', 'WARN' }, 'DiagnosticWarn'),
+        info = words({ 'INFO', 'NOTE', 'LOW' }, 'DiagnosticInfo'),
         done = { pattern = '%f[%w]()DONE()%f[%W]', group = 'DiagnosticOk' },
         ids = { pattern = '%f[%w]()[DTPSNCX]%d+()%f[%W]', group = 'DiagnosticInfo' },
         url = { pattern = '%f[%w]()https*://[^%s^(^)]+/*()', group = 'DiagnosticInfo' },
@@ -434,71 +426,8 @@ require('mini.ai').setup({
     -- default maps for `il` and `al` for *last textobject*
     mappings = { around_next = '', inside_next = '', around_last = '', inside_last = '' },
     custom_textobjects = {
-        l = function(ai_type)
-            local line_num = vim.fn.line('.')
-            local line = vim.fn.getline(line_num)
-            if ai_type == 'i' then
-                local from_col = line:find('%S') or 1
-                local to_col = (line:match('.*%S()') or 2) - 1
-                return {
-                    from = { line = line_num, col = from_col },
-                    to = { line = line_num, col = to_col },
-                }
-            end
-            return {
-                from = { line = line_num, col = 1 },
-                to = { line = line_num, col = math.max(line:len(), 1) },
-            }
-        end,
-        i = function(ai_type)
-            local cur_line = vim.fn.line('.')
-            local cur_indent = vim.fn.indent(cur_line)
-            if vim.fn.getline(cur_line):match('^%s*$') then
-                for offset = 1, vim.fn.line('$') do
-                    for _, l in ipairs({ cur_line - offset, cur_line + offset }) do
-                        if
-                            l >= 1
-                            and l <= vim.fn.line('$')
-                            and not vim.fn.getline(l):match('^%s*$')
-                        then
-                            cur_indent = vim.fn.indent(l)
-                            goto found
-                        end
-                    end
-                end
-                ::found::
-            end
-            local top, bottom, last = cur_line, cur_line, vim.fn.line('$')
-            while
-                top > 1
-                and (vim.fn.getline(top - 1):match('^%s*$') or vim.fn.indent(top - 1) >= cur_indent)
-            do
-                top = top - 1
-            end
-            while
-                bottom < last
-                and (
-                    vim.fn.getline(bottom + 1):match('^%s*$')
-                    or vim.fn.indent(bottom + 1) >= cur_indent
-                )
-            do
-                bottom = bottom + 1
-            end
-            while bottom > top and vim.fn.getline(bottom):match('^%s*$') do
-                bottom = bottom - 1
-            end
-            while top < bottom and vim.fn.getline(top):match('^%s*$') do
-                top = top + 1
-            end
-            if ai_type == 'a' and top > 1 then
-                top = top - 1
-            end
-            return {
-                from = { line = top, col = 1 },
-                to = { line = bottom, col = math.max(vim.fn.getline(bottom):len(), 1) },
-                vis_mode = 'V',
-            }
-        end,
+        l = require('mini.extra').gen_ai_spec.line(),
+        i = require('mini.extra').gen_ai_spec.indent(),
     },
 })
 require('mini.surround').setup({
