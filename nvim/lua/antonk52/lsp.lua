@@ -44,7 +44,7 @@ function M.setup()
         'jsonls',
         'cssls',
         'cssmodules_ls',
-        'tailwindcss',
+        -- 'tailwindcss',
         'selene3p_ls',
         'stylua3p_ls',
         'lua_ls',

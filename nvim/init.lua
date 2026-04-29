@@ -225,6 +225,12 @@ usercmd('TSInstallParsers', function()
         'go',
         'yaml',
         'gitcommit',
+        'diff',
+        'html',
+        'php',
+        'hack',
+        'bash',
+        'zsh',
     })
 end, { nargs = 0 })
 vim.api.nvim_create_autocmd('FileType', {
@@ -250,9 +256,14 @@ require('mini.splitjoin').setup() -- gS to toggle listy things
 require('mini.pick').setup({
     window = {
         config = function()
+            local width = math.min(140, vim.o.columns - 2)
+            local height = math.min(32, vim.o.lines - 3)
             return {
-                width = math.min(140, vim.o.columns - 2),
-                height = math.min(32, vim.o.lines - 3),
+                anchor = 'NW',
+                width = width,
+                height = height,
+                col = math.floor((vim.o.columns - width) / 2),
+                row = math.floor((vim.o.lines - height - 1) / 2),
             }
         end,
     },
@@ -415,7 +426,7 @@ require('mini.hipatterns').setup({
         ids = { pattern = '%f[%w]()[DTPSNCX]%d+()%f[%W]', group = 'DiagnosticInfo' },
         url = { pattern = '%f[%w]()https*://[^%s^(^)]+/*()', group = 'DiagnosticInfo' },
         hex_color = require('mini.hipatterns').gen_highlighter.hex_color(),
-        tailwind = require('antonk52.tailwind').gen_highlighter(),
+        -- tailwind = require('antonk52.tailwind').gen_highlighter(),
     },
 })
 -- disable those as they conflict with treesitter selection in nvim 0.12

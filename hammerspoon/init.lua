@@ -464,7 +464,6 @@ hs.hotkey.bind(HYPER_KEY, 'm', function()
         win:moveToScreen(nextScreen)
     end
 end)
-hs.hotkey.bind(HYPER_KEY, 'g', hs.grid.show)
 hs.hotkey.bind(HYPER_KEY, 'q', cycle_quarters)
 
 -- Timers - open with HYPER+T
