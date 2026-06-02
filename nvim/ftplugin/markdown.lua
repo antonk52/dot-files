@@ -15,6 +15,10 @@ vim.opt_local.spell = true
 vim.opt_local.spellsuggest = 'best'
 vim.bo.spelllang = 'en_us'
 
+-- Fold heading sections (primary) and lists (secondary)
+vim.opt_local.foldmethod = 'expr'
+vim.opt_local.foldexpr = "v:lua.require'antonk52.markdown_fold'.expr()"
+
 vim.b.miniai_config = {
     custom_textobjects = {
         L = { '%[().-()%]%(.-%)' }, -- link
