@@ -2,12 +2,61 @@
 
 set -euo pipefail
 
-DOTS="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+BOOTSTRAP_DIR="${DOT_FILES_DIR:-$HOME/dot-files}"
+REPO_URL="${DOT_FILES_REPO_URL:-https://github.com/antonk52/dot-files.git}"
+RUNNING_FROM_CHECKOUT=false
+
+SCRIPT_SOURCE="${BASH_SOURCE[0]:-}"
+if [[ -n "$SCRIPT_SOURCE" && "$SCRIPT_SOURCE" != "-" && -f "$SCRIPT_SOURCE" ]]; then
+    SCRIPT_DIR="$(cd "$(dirname "$SCRIPT_SOURCE")" 2>/dev/null && pwd -P || true)"
+    if [[ -n "${SCRIPT_DIR:-}" && -f "$SCRIPT_DIR/setup.sh" ]]; then
+        DOTS="$(cd "$SCRIPT_DIR/.." && pwd -P)"
+        RUNNING_FROM_CHECKOUT=true
+    else
+        DOTS="$BOOTSTRAP_DIR"
+    fi
+else
+    DOTS="$BOOTSTRAP_DIR"
+fi
 
 # ============================================== UTILITY FUNCTIONS
 
 is_macos() {
     [[ "$OSTYPE" == "darwin"* ]]
+}
+
+command_exists() {
+    command -v "$1" >/dev/null 2>&1
+}
+
+is_git_checkout() {
+    local path="$1"
+
+    [[ -d "$path/.git" || -f "$path/.git" ]] && return 0
+    command_exists git && git -C "$path" rev-parse --is-inside-work-tree >/dev/null 2>&1
+}
+
+bootstrap_repo() {
+    echo "📦 Bootstrapping dot-files repo..."
+
+    if is_git_checkout "$BOOTSTRAP_DIR"; then
+        echo "  ✓ $BOOTSTRAP_DIR already exists"
+        return 0
+    fi
+
+    if [[ -e "$BOOTSTRAP_DIR" ]]; then
+        echo "❌ $BOOTSTRAP_DIR exists but is not a git checkout"
+        echo "   Move it aside or set DOT_FILES_DIR to a different path."
+        return 1
+    fi
+
+    if ! command_exists git; then
+        echo "❌ git is required to clone $REPO_URL"
+        return 1
+    fi
+
+    git clone --recurse-submodules "$REPO_URL" "$BOOTSTRAP_DIR"
+    echo "✅ dot-files cloned to $BOOTSTRAP_DIR"
 }
 
 # ============================================== SETUP SECTIONS
@@ -229,7 +278,7 @@ setup_npm() {
 
 show_help() {
     echo ""
-    echo "Usage: ./scripts/setup.sh [links|mac|brew|npm]"
+    echo "Usage: ./scripts/setup.sh [bootstrap|links|mac|brew|npm]"
     echo ""
 }
 
@@ -245,6 +294,13 @@ main() {
         exit 0
     fi
 
+    if [[ "$RUNNING_FROM_CHECKOUT" != true ]]; then
+        bootstrap_repo
+        echo ""
+        echo "➡️  Continuing from $BOOTSTRAP_DIR/scripts/setup.sh"
+        exec /bin/bash "$BOOTSTRAP_DIR/scripts/setup.sh" "$@"
+    fi
+
     # If no arguments, run all sections
     if [[ $# -eq 0 ]]; then
         setup_links
@@ -258,6 +314,9 @@ main() {
         # Run only specified sections
         for section in "$@"; do
             case "$section" in
+                bootstrap)
+                    bootstrap_repo
+                    ;;
                 links)
                     setup_links
                     ;;
