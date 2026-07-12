@@ -55,6 +55,8 @@ end
 local STATE = {
     currentSpaceWindows = {},
     last_focused_window_by_screen = {}, -- track last focused window for each screen
+    -- Eventtaps must be retained or Lua GC can stop them after startup.
+    brightness_eventtap = nil,
 }
 -- on window close or open update the list of windows
 
@@ -515,20 +517,28 @@ local function adjust_brightness(delta)
     end
 end
 
-hs.eventtap.new({ hs.eventtap.event.types.systemDefined }, function(event)
-    local data = event:systemKey()
-    if not data or not data.down then
+local function queue_brightness_adjustment(delta)
+    hs.timer.doAfter(0, function()
+        adjust_brightness(delta)
+    end)
+end
+
+STATE.brightness_eventtap = hs.eventtap
+    .new({ hs.eventtap.event.types.systemDefined }, function(event)
+        local data = event:systemKey()
+        if not data or not data.down then
+            return false
+        end
+        if data.key == 'BRIGHTNESS_DOWN' then
+            queue_brightness_adjustment(-10)
+            return true
+        elseif data.key == 'BRIGHTNESS_UP' then
+            queue_brightness_adjustment(10)
+            return true
+        end
         return false
-    end
-    if data.key == 'BRIGHTNESS_DOWN' then
-        adjust_brightness(-10)
-        return true
-    elseif data.key == 'BRIGHTNESS_UP' then
-        adjust_brightness(10)
-        return true
-    end
-    return false
-end):start()
+    end)
+    :start()
 
 -- Timers - open with HYPER+T
 do
