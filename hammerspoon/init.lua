@@ -166,6 +166,31 @@ local function get_alignment(cell)
     end
 end
 
+-- Grid set that right-aligns/centers non-resizable windows (e.g. Simulator).
+local function grid_set(win, cell)
+    hs.grid.set(win, cell)
+    local align = get_alignment(cell)
+    if align == 'left' then
+        return
+    end
+    local screen_frame = win:screen():frame()
+    local frame = win:frame()
+    if align == 'right' then
+        local cell_right = screen_frame.x + screen_frame.w
+        if frame.x + frame.w < cell_right - 1 then
+            frame.x = cell_right - frame.w
+            win:setFrame(frame)
+        end
+    else -- center
+        local cell_center = screen_frame.x + screen_frame.w * (cell.x + cell.w / 2) / 24
+        local new_x = cell_center - frame.w / 2
+        if math.abs(new_x - frame.x) > 1 then
+            frame.x = new_x
+            win:setFrame(frame)
+        end
+    end
+end
+
 local function increase_win_width()
     local win = hs.window.focusedWindow()
     if not win then
@@ -189,7 +214,7 @@ local function increase_win_width()
         else -- center
             cell_after.x = math.floor((24 - cell_after.w) / 2)
         end
-        hs.grid.set(win, cell_after)
+        grid_set(win, cell_after)
     end
 end
 
@@ -216,7 +241,7 @@ local function decrease_win_width()
         else -- center
             cell_after.x = math.floor((24 - cell_after.w) / 2)
         end
-        hs.grid.set(win, cell_after)
+        grid_set(win, cell_after)
     end
 end
 
@@ -252,7 +277,7 @@ local function cycle_resize(align)
     else -- center
         cell = { x = (24 - w) / 2, y = 0, w = w, h = 2 }
     end
-    hs.grid.set(win, cell)
+    grid_set(win, cell)
 end
 local function center_or_toggle_resize()
     cycle_resize('center')
@@ -287,7 +312,7 @@ local function cycle_quarters()
     end
     local next_quarter_idx = current_idx and (current_idx % #quarter_positions + 1) or 1
     local cell = quarter_positions[next_quarter_idx]
-    hs.grid.set(win, cell)
+    grid_set(win, cell)
 end
 
 -- ===================================================
@@ -343,7 +368,7 @@ local function cycle_resize_paired(align)
     else -- right
         current_cell_new = { x = remaining, y = 0, w = w, h = 2 }
     end
-    hs.grid.set(current_win, current_cell_new)
+    grid_set(current_win, current_cell_new)
 
     -- Set previous window to fill remaining space
     local prev_cell_new
@@ -352,7 +377,7 @@ local function cycle_resize_paired(align)
     else -- right
         prev_cell_new = { x = 0, y = 0, w = remaining, h = 2 }
     end
-    hs.grid.set(prev_win, prev_cell_new)
+    grid_set(prev_win, prev_cell_new)
 
     -- Increment and wrap index
     resize_idx = resize_idx % #resize_widths + 1
