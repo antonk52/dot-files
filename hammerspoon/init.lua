@@ -539,6 +539,7 @@ hs.hotkey.bind(HYPER_KEY, 'q', cycle_quarters)
 --   Brightness control (F1/F2)
 -- ===================================================
 local M1DDC = '/opt/homebrew/bin/m1ddc'
+local BRIGHTNESS_STEPS = { 1, 5, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100 }
 
 local function get_external_display_uuid(screen_name)
     local output = hs.execute(M1DDC .. ' display list')
@@ -554,7 +555,26 @@ local function get_external_display_uuid(screen_name)
     return nil
 end
 
-local function adjust_brightness(delta)
+local function next_brightness_step(current, direction)
+    if direction > 0 then
+        for _, step in ipairs(BRIGHTNESS_STEPS) do
+            if step > current + 0.0001 then
+                return step
+            end
+        end
+        return 100
+    end
+
+    for i = #BRIGHTNESS_STEPS, 1, -1 do
+        local step = BRIGHTNESS_STEPS[i]
+        if step < current - 0.0001 then
+            return step
+        end
+    end
+    return BRIGHTNESS_STEPS[1]
+end
+
+local function adjust_brightness(direction)
     local screen = hs.screen.mainScreen()
     if not screen then
         return
@@ -565,22 +585,26 @@ local function adjust_brightness(delta)
         if not current then
             return nav_alert('Cannot read brightness')
         end
-        local new_val = math.max(0, math.min(1, current + delta / 100))
-        screen:setBrightness(new_val)
-        nav_alert('Brightness: ' .. math.floor(new_val * 100) .. '%')
+        local new_val = next_brightness_step(current * 100, direction)
+        screen:setBrightness(new_val / 100)
+        nav_alert('Brightness: ' .. new_val .. '%')
     else
         local uuid = get_external_display_uuid(screen:name())
         if not uuid then
             return nav_alert('Display not found in m1ddc')
         end
-        local cmd = M1DDC .. ' display ' .. uuid .. ' chg luminance ' .. delta
-        local output = hs.execute(cmd)
-        local new_val = output and tonumber(output:match('%d+'))
-        if new_val then
-            nav_alert('Brightness: ' .. new_val .. '%')
-        else
-            nav_alert('m1ddc failed')
+        local cmd = M1DDC .. ' display ' .. uuid
+        local output, ok = hs.execute(cmd .. ' get luminance')
+        local current = ok and tonumber(output:match('%d+'))
+        if not current then
+            return nav_alert('Cannot read brightness')
         end
+        local new_val = next_brightness_step(current, direction)
+        local _, set_ok = hs.execute(cmd .. ' set luminance ' .. new_val)
+        if not set_ok then
+            return nav_alert('m1ddc failed')
+        end
+        nav_alert('Brightness: ' .. new_val .. '%')
     end
 end
 
@@ -597,10 +621,10 @@ STATE.brightness_eventtap = hs.eventtap
             return false
         end
         if data.key == 'BRIGHTNESS_DOWN' then
-            queue_brightness_adjustment(-10)
+            queue_brightness_adjustment(-1)
             return true
         elseif data.key == 'BRIGHTNESS_UP' then
-            queue_brightness_adjustment(10)
+            queue_brightness_adjustment(1)
             return true
         end
         return false
