@@ -283,6 +283,48 @@ local function center_or_toggle_resize()
     cycle_resize('center')
 end
 
+-- Cycle maximized -> almost fullscreen -> smaller, centered on both axes.
+local fullscreen_sizes = { 1, 0.9, 0.75 }
+local centered_aspect_ratio = 0.98 -- width / height: slightly taller than wide
+local function cycle_fullscreen_resize()
+    local win = hs.window.focusedWindow()
+    if not win then
+        return hs.alert.show('No focused window')
+    end
+    local screen_frame = win:screen():frame()
+    local current_frame = win:frame()
+    local next_idx = 1
+    local frames = {}
+    for i, size in ipairs(fullscreen_sizes) do
+        local w, h = screen_frame.w, screen_frame.h
+        if size ~= 1 then
+            h = math.min(screen_frame.h * size, screen_frame.w * size / centered_aspect_ratio)
+            w = h * centered_aspect_ratio
+        end
+        local frame = {
+            x = screen_frame.x + (screen_frame.w - w) / 2,
+            y = screen_frame.y + (screen_frame.h - h) / 2,
+            w = w,
+            h = h,
+        }
+        frames[i] = frame
+        if
+            math.abs(current_frame.x - frame.x) <= 2
+            and math.abs(current_frame.y - frame.y) <= 2
+            and math.abs(current_frame.w - frame.w) <= 2
+            and math.abs(current_frame.h - frame.h) <= 2
+        then
+            next_idx = i % #fullscreen_sizes + 1
+        end
+    end
+    win:setFrame(frames[next_idx])
+    -- Center the actual size too, for windows with resize constraints.
+    local frame = win:frame()
+    frame.x = screen_frame.x + (screen_frame.w - frame.w) / 2
+    frame.y = screen_frame.y + (screen_frame.h - frame.h) / 2
+    win:setFrame(frame)
+end
+
 -- Cycle quarters of the screen: top-left, top-right, bottom-right, bottom-left
 local quarter_positions = {
     { x = 12, y = 0, w = 12, h = 1 }, -- top-right
@@ -464,7 +506,7 @@ end
 hs.hotkey.bind(HYPER_KEY, 'o', increase_win_width)
 hs.hotkey.bind(HYPER_KEY, 'i', decrease_win_width)
 hs.hotkey.bind(HYPER_KEY, 'c', center_or_toggle_resize)
-hs.hotkey.bind(HYPER_KEY, 'f', hs.grid.maximizeWindow)
+hs.hotkey.bind(HYPER_KEY, 'f', cycle_fullscreen_resize)
 hs.hotkey.bind(HYPER_KEY, 'n', focus_frontmost_window_on_other_monitor)
 
 -- Additional grid-based bindings
